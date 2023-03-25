@@ -5,6 +5,8 @@
       "name": "api"
     },
     { "path": "apps/webapp", "name": "webapp" },
+    { "path": "libs/auth", "name": "auth" },
+    { "path": "libs/models", "name": "models" },
     { "name": "project", "path": "./" }
   ],
   "settings": {

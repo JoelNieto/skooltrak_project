@@ -64,12 +64,12 @@
         },
         "development": {
           "browserTarget": "webapp:build:development"
-        },
-        "options": {
-          "port": 4200,
-          "publicHost": "http://localhost:4200",
-          "proxyConfig": "apps/webapp/proxy.conf.json"
         }
+      },
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200",
+        "proxyConfig": "apps/webapp/proxy.conf.json"
       },
       "defaultConfiguration": "development"
     },

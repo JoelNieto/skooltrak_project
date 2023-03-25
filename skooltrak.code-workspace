@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "path": "apps/api",
+      "name": "api"
+    },
+    { "path": "apps/webapp", "name": "webapp" },
+    { "name": "project", "path": "./" }
+  ],
+  "settings": {
+    "errorLens.onSave": true,
+    "editor.formatOnSave": true,
+    "typescriptHero.imports.organizeOnSave": true
+  }
+}

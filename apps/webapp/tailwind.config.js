@@ -9,7 +9,11 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Poppins', 'Helvetica Neue', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

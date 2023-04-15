@@ -7,6 +7,7 @@
     { "path": "apps/webapp", "name": "webapp" },
     { "path": "libs/auth", "name": "auth" },
     { "path": "libs/models", "name": "models" },
+    { "path": "libs/ui", "name": "ui" },
     { "name": "project", "path": "./" }
   ],
   "settings": {

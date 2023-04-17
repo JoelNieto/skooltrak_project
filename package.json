@@ -50,6 +50,7 @@
     "@nrwl/webpack": "15.8.9",
     "@nrwl/workspace": "15.8.9",
     "@schematics/angular": "~15.2.0",
+    "@tailwindcss/forms": "^0.5.3",
     "@types/jest": "^29.4.0",
     "@types/node": "~18.7.1",
     "@typescript-eslint/eslint-plugin": "^5.36.1",

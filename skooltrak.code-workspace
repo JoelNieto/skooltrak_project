@@ -13,6 +13,7 @@
   "settings": {
     "errorLens.onSave": true,
     "editor.formatOnSave": true,
-    "typescriptHero.imports.organizeOnSave": true
+    "typescriptHero.imports.organizeOnSave": true,
+    "cSpell.words": ["tailwindcss"]
   }
 }

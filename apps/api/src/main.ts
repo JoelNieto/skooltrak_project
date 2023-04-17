@@ -1,7 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -14,7 +10,8 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Skooltrak API')
     .setDescription('Skooltrak API build with NestJS')
-    .setVersion('2.0')
+    .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

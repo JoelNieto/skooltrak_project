@@ -111,6 +111,7 @@
   "tags": [],
   "implicitDependencies": [
     "auth",
-    "ui"
+    "ui",
+    "models"
   ]
 }

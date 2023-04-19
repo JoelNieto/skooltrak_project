@@ -5,6 +5,7 @@
       "name": "api"
     },
     { "path": "apps/webapp", "name": "webapp" },
+    { "path": "apps/back-office", "name": "back-office" },
     { "path": "libs/auth", "name": "auth" },
     { "path": "libs/models", "name": "models" },
     { "path": "libs/ui", "name": "ui" },

@@ -15,8 +15,8 @@ import { RouterLink } from '@angular/router';
           class="flex items-center text-2xl font-semibold mb-6 text-gray-900 dark:text-white"
         >
           <img
-            class="w-8 h-8 mr-2"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+            class="w-10 h-10 mr-2"
+            src="https://www.skooltrak.com/assets/img/logo.png"
             alt="logo"
           />
           Skooltrak

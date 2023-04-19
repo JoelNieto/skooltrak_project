@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'skooltrak-label',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: ` <p>label works!</p> `,
   styles: [],
 })

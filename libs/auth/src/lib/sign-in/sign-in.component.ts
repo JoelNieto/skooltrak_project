@@ -1,23 +1,10 @@
 import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
-import { InputComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'skooltrak-sign-in',
   standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    InputComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    RouterLink,
-  ],
+  imports: [RouterLink],
   template: `<section class="bg-gray-50 dark:bg-gray-800 font-sans">
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
@@ -27,8 +14,8 @@ import { InputComponent } from '@skooltrak/ui';
         class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
       >
         <img
-          class="w-8 h-8 mr-2"
-          src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+          class="w-10 h-10 mr-2"
+          src="https://www.skooltrak.com/assets/img/logo.png"
           alt="logo"
         />
         Skooltrak

@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'skooltrak-root',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterOutlet],
   template: `<router-outlet></router-outlet>`,
   styles: [],
 })

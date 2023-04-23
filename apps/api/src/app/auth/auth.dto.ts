@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SignUpCredentials } from '@skooltrak/models';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class SignUpDTO implements SignUpCredentials {
   @ApiProperty({
@@ -18,4 +18,8 @@ export class SignUpDTO implements SignUpCredentials {
   @ApiProperty({ example: 'abcd1234', required: true })
   @IsString()
   password: string;
+
+  @ApiProperty({ default: false, required: false })
+  @IsOptional()
+  admin: boolean;
 }

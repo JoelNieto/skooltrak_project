@@ -8,7 +8,11 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Rubik', 'Helvetica Neue', 'sans-serif'],
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };

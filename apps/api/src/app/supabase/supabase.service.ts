@@ -28,7 +28,10 @@ export class SupabaseService {
       this.config.get('SUPABASE_URL'),
       this.config.get('SUPABASE_KEY'),
       {
-        auth: { autoRefreshToken: true, detectSessionInUrl: false },
+        auth: {
+          autoRefreshToken: true,
+          detectSessionInUrl: false,
+        },
         global: {
           headers: {
             Authorization: ExtractJwt.fromAuthHeaderAsBearerToken()(
@@ -38,6 +41,7 @@ export class SupabaseService {
         },
       }
     );
+    this.logger.log('Auth has been set!');
     return this.clientInstance;
   }
 }

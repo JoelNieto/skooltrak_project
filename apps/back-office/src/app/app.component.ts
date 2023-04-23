@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent, RouterModule],
+  imports: [RouterModule],
   selector: 'skooltrak-root',
-  template: `<skooltrak-nx-welcome></skooltrak-nx-welcome>
-    <router-outlet></router-outlet>`,
+  template: ` <router-outlet></router-outlet>`,
   styles: [''],
 })
 export class AppComponent {

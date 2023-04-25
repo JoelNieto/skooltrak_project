@@ -9,7 +9,7 @@
     { "path": "libs/auth", "name": "auth" },
     { "path": "libs/models", "name": "models" },
     { "path": "libs/ui", "name": "ui" },
-    { "name": "project", "path": "./" }
+    { "path": "libs/environments", "name": "envs" }
   ],
   "settings": {
     "errorLens.onSave": true,

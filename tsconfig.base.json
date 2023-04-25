@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@skooltrak/auth": ["libs/auth/src/index.ts"],
+      "@skooltrak/environments": ["libs/environments/src/index.ts"],
       "@skooltrak/models": ["libs/models/src/index.ts"],
       "@skooltrak/ui": ["libs/ui/src/index.ts"]
     }

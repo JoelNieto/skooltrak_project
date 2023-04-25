@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Rubik', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Inter', 'Helvetica Neue', 'sans-serif'],
       },
     },
   },

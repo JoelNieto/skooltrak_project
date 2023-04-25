@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'skooltrak-sign-in',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ReactiveFormsModule, FormsModule],
+  providers: [SupabaseService],
   template: `<section class="bg-gray-50 dark:bg-gray-800 font-sans">
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
@@ -24,32 +28,33 @@ import { RouterLink } from '@angular/router';
         class="w-full bg-white rounded-xl p-6 space-y-4 md:space-y-6 sm:p-8 shadow-xl dark:border md:mt-0 sm:max-w-md dark:bg-gray-600 dark:border-gray-700"
       >
         <h1
-          class="text-xl font-bold font-mono  leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+          class="text-xl font-bold font-mono leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
         >
           Sign in to your account
         </h1>
-        <form class="space-y-4 md:space-y-6" action="#">
+        <form
+          class="space-y-4 md:space-y-6"
+          [formGroup]="form"
+          (ngSubmit)="signIn()"
+        >
           <div>
-            <label
-              for="email"
-              class="block mb-2 text-sm font-sans font-medium text-gray-600 dark:text-white"
-              >Your email</label
-            >
+            <label for="email" class="label">Your email</label>
             <input
+              formControlName="email"
               type="email"
               name="email"
               id="email"
               class="input"
+              autocomplete="email"
               placeholder="name@company.com"
-              required=""
+              required
             />
           </div>
           <div>
-            <label
-              class="block mb-2 font-sans text-gray-500 font-medium dark:text-white"
-              >Password</label
-            >
+            <label class="label">Password</label>
             <input
+              formControlName="password"
+              autocomplete="current-password"
               class="input"
               type="password"
               name="password"
@@ -83,7 +88,8 @@ import { RouterLink } from '@angular/router';
           </div>
           <button
             type="submit"
-            class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
+            [disabled]="form.invalid"
+            class="w-full text-white disabled:opacity-75 disabled:cursor-not-allowed bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
           >
             Sign in
           </button>
@@ -103,8 +109,39 @@ import { RouterLink } from '@angular/router';
     `
       .input {
         @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500;
+        &.ng-invalid.ng-dirty {
+          @apply border-red-300 focus:ring-pink-600 focus:border-pink-600;
+        }
+      }
+
+      .label {
+        @apply block mb-2 text-sm font-sans text-gray-500 font-medium dark:text-white;
       }
     `,
   ],
 })
-export class SignInComponent {}
+export class SignInComponent {
+  private supabase = inject(SupabaseService);
+
+  form = new FormGroup({
+    email: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    password: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(6)],
+      nonNullable: true,
+    }),
+  });
+
+  async signIn() {
+    const { email, password } = this.form.getRawValue();
+    const { data, error } = await this.supabase.signInWithEmail(
+      email,
+      password
+    );
+    if (error) console.error(error);
+    console.log((await this.supabase.profile()).data);
+    console.log(data);
+  }
+}

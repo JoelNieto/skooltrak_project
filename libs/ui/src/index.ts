@@ -1,1 +1,1 @@
-export * from './lib/input/input.component';
+export * from './lib/dashboard/dashboard.component';

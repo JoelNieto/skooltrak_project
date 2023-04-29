@@ -5,8 +5,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   selector: 'skooltrak-dashboard',
   standalone: true,
   imports: [RouterOutlet, RouterLinkActive, RouterLink],
-  template: `<div class="flex bg-slate-100 w-full h-screen">
-    <aside class="bg-sky-700 p-2 md:w-64 w-48 flex-none h-full top-0 left-0">
+  template: `<div class="flex bg-white w-full h-screen">
+    <aside class="bg-gray-100 p-2 md:w-64 w-48 flex-none h-full top-0 left-0">
       <div class="flex flex-col p-3">
         <a
           href="#"
@@ -23,7 +23,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
             <a
               routerLinkActive="active"
               [routerLink]="['home']"
-              class="text-gray-200 flex items-center rounded-lg gap-3 hover:bg-sky-800 p-2 cursor-pointer font-sans"
+              class="text-gray-700 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
               rou
             >
               <svg
@@ -47,7 +47,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
             <a
               routerLinkActive="active"
               [routerLink]="['schools']"
-              class="text-gray-200 flex items-center rounded-lg gap-3 hover:bg-sky-800 p-2 cursor-pointer font-sans"
+              class="text-gray-700 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +76,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styles: [
     `
       .active {
-        @apply bg-sky-800;
+        @apply text-sky-600 bg-gray-200 font-semibold;
       }
     `,
   ],

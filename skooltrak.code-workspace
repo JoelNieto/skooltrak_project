@@ -9,12 +9,13 @@
     { "path": "libs/auth", "name": "auth" },
     { "path": "libs/models", "name": "models" },
     { "path": "libs/ui", "name": "ui" },
-    { "path": "libs/environments", "name": "envs" }
+    { "path": "libs/environments", "name": "envs" },
+    { "path": "./", "name": "project" }
   ],
   "settings": {
     "errorLens.onSave": true,
     "editor.formatOnSave": true,
     "typescriptHero.imports.organizeOnSave": true,
-    "cSpell.words": ["Supabase", "tailwindcss"]
+    "cSpell.words": ["Supabase", "tailwindcss", "typeorm"]
   }
 }

@@ -1,5 +1,5 @@
 export type EntityBase = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  _id: string;
+  created_at: Date;
+  updated_at: Date;
 };

@@ -7,22 +7,15 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/webapp",
         "index": "apps/webapp/src/index.html",
         "main": "apps/webapp/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/webapp/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/webapp/src/favicon.ico",
-          "apps/webapp/src/assets"
-        ],
+        "assets": ["apps/webapp/src/favicon.ico", "apps/webapp/src/assets"],
         "styles": [
           "@angular/material/prebuilt-themes/indigo-pink.css",
           "apps/webapp/src/styles.scss"
@@ -86,22 +79,15 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "apps/webapp/**/*.ts",
-          "apps/webapp/**/*.html"
-        ]
+        "lintFilePatterns": ["apps/webapp/**/*.ts", "apps/webapp/**/*.html"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/webapp/jest.config.ts",
         "passWithNoTests": true
@@ -115,9 +101,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "auth",
-    "ui",
-    "models"
-  ]
+  "implicitDependencies": ["auth", "ui", "models"]
 }

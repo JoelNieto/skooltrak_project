@@ -1,4 +1,5 @@
 import { EntityBase } from '../entity';
+import { Level } from './levels.model';
 
 export type School = EntityBase & {
   full_name: string;
@@ -7,4 +8,6 @@ export type School = EntityBase & {
   website: string;
   address: string;
   motto: string;
+  levels: Level[];
+  is_public: boolean;
 };

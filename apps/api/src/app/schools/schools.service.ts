@@ -26,6 +26,6 @@ export class SchoolsService {
   }
 
   async remove(_id: string) {
-    await this.schools.delete(_id);
+    await this.schools.delete({ _id });
   }
 }

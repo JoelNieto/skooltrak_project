@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { School } from '@skooltrak/models';
 import { IsOptional, IsString } from 'class-validator';
 
-import { DtoBase } from '../../shared/base.entity';
+import { DtoBase } from '../../shared/db/base.entity';
 
-export class CreateSchoolDto implements DtoBase<School> {
+export class CreateSchoolDto implements Partial<DtoBase<School>> {
   @ApiProperty({ required: true })
   @IsString()
   full_name: string;

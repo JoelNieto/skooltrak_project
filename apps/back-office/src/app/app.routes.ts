@@ -13,8 +13,9 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'schools',
-        loadComponent: () =>
-          import('./schools/schools.component').then((x) => x.SchoolsComponent),
+        title: 'Schools',
+        loadChildren: () =>
+          import('./schools/routes').then((x) => x.SCHOOLS_ROUTES),
       },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],

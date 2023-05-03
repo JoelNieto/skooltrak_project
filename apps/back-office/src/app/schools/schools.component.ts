@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'skooltrak-schools',
+  imports: [RouterOutlet],
   standalone: true,
-  template: `<h2 class="leading-tight tracking-tight text-2xl font-bold">
-    Schools
-  </h2>`,
+  template: ` <router-outlet />`,
 })
 export class SchoolsComponent {}

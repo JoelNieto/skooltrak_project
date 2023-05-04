@@ -1,13 +1,9 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { appConfig } from './app/app.config';
+
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 
 import { AppComponent } from './app/app.component';
-import { appRoutes } from './app/app.routes';
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideHttpClient(withInterceptorsFromDi()),
-    provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
-  ],
-}).catch((err) => console.error(err));
+bootstrapApplication(AppComponent, appConfig).catch((err) =>
+  console.error(err)
+);

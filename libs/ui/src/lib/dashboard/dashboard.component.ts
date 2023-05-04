@@ -6,7 +6,9 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet, RouterLinkActive, RouterLink],
   template: `<div class="flex bg-white w-full h-screen">
-    <aside class="bg-gray-100 p-2 md:w-64 w-48 flex-none h-full top-0 left-0">
+    <aside
+      class="bg-gray-50 border dark:bg-gray-800 p-2 md:w-64 w-48 flex-none h-full top-0 left-0"
+    >
       <div class="flex flex-col p-3">
         <a
           href="#"
@@ -23,7 +25,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
             <a
               routerLinkActive="active"
               [routerLink]="['home']"
-              class="text-gray-700 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
+              class="text-gray-700 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
               rou
             >
               <svg
@@ -47,7 +49,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
             <a
               routerLinkActive="active"
               [routerLink]="['schools']"
-              class="text-gray-700 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
+              class="text-gray-700 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -69,14 +71,14 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         </ul>
       </div>
     </aside>
-    <main class="flex-auto p-10">
+    <main class="flex-auto p-10 bg-gray-50 dark:bg-gray-600">
       <ng-content select="[content]"></ng-content>
     </main>
   </div> `,
   styles: [
     `
       .active {
-        @apply text-sky-600 bg-gray-200 font-semibold;
+        @apply text-sky-600 bg-sky-100 bg-opacity-50 dark:bg-gray-700 dark:text-sky-100 font-semibold;
       }
     `,
   ],

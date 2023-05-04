@@ -11,8 +11,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter', 'Helvetica Neue', 'sans-serif'],
+        serif: ['Bitter', 'Times New Roman', 'Times', 'serif'],
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
 };

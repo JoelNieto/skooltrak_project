@@ -8,6 +8,9 @@ export type School = EntityBase & {
   website: string;
   address: string;
   motto: string;
+  contact_email: string;
+  contact_phone: string;
   levels: Level[];
   is_public: boolean;
+  active: boolean;
 };

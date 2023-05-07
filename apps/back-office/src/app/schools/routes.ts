@@ -13,6 +13,20 @@ export const SCHOOLS_ROUTES: Routes = [
             (x) => x.SchoolsListComponent
           ),
       },
+      {
+        path: 'details',
+        loadComponent: () =>
+          import('./schools-details/schools-details.component').then(
+            (x) => x.SchoolsDetailsComponent
+          ),
+      },
+      {
+        path: 'edit',
+        loadComponent: () =>
+          import('./schools-form/schools-form.component').then(
+            (x) => x.SchoolsFormComponent
+          ),
+      },
       { path: '', redirectTo: 'all', pathMatch: 'full' },
     ],
   },

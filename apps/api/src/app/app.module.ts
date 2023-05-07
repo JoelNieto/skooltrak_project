@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { getEnvPath } from '../common/helper/env.helper';
@@ -28,15 +28,18 @@ const envFilePath = getEnvPath(`${process.cwd()}/apps/api/src/common/env`);
       envFilePath,
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: '127.0.0.1',
-      port: 5432,
-      username: 'joelnieto',
-      database: 'skooltrak',
-      entities: [School, Level, Degree, StudyPlan, Subject, Course],
-      synchronize: true,
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get<string>('HOST'),
+        port: config.get<number>('DB_ PORT'),
+        username: config.get<string>('USERNAME'),
+        database: config.get<string>('DATABASE'),
+        entities: [School, Level, Degree, StudyPlan, Subject, Course],
+        synchronize: config.get<boolean>('SYNCHRONIZE'),
+      }),
+      inject: [ConfigService],
     }),
     SupabaseModule,
     AuthModule,

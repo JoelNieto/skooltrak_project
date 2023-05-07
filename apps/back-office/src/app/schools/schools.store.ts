@@ -8,6 +8,7 @@ import { SchoolsService } from './schools.service';
 type State = {
   schools: School[];
   loading: boolean;
+  selected?: string | undefined;
 };
 
 @Injectable()
@@ -15,11 +16,19 @@ export class SchoolsStore extends ComponentStore<State> implements OnStoreInit {
   private service = inject(SchoolsService);
 
   readonly schools$ = this.select((state) => state.schools);
+  readonly selectedId$ = this.select((state) => state.selected);
+  readonly selected$ = this.select((state) =>
+    state.selected ? state.schools.find((x) => x._id === state.selected) : null
+  );
 
   private readonly setSchools = this.updater((state, schools: School[]) => ({
     ...state,
     schools,
   }));
+
+  readonly setSelected = this.updater(
+    (state, selected: string | undefined): State => ({ ...state, selected })
+  );
 
   readonly fetchSchools = this.effect(() => {
     return this.service.getAll().pipe(

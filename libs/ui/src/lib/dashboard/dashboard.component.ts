@@ -7,7 +7,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   imports: [RouterOutlet, RouterLinkActive, RouterLink],
   template: `<div class="flex bg-white w-full h-screen">
     <aside
-      class="bg-gray-50 border dark:bg-gray-800 p-2 md:w-64 w-48 flex-none h-full top-0 left-0"
+      class="bg-gray-100 dark:bg-gray-800 p-2 md:w-64 w-48 flex-none h-full top-0 left-0"
     >
       <div class="flex flex-col p-3">
         <a
@@ -24,8 +24,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <li>
             <a
               routerLinkActive="active"
-              [routerLink]="['home']"
-              class="text-gray-700 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
+              routerLink="home"
+              class="text-gray-700 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-blue-600 p-2 cursor-pointer font-mono"
               rou
             >
               <svg
@@ -48,8 +48,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <li>
             <a
               routerLinkActive="active"
-              [routerLink]="['schools']"
-              class="text-gray-700 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-sky-600 p-2 cursor-pointer font-sans"
+              routerLink="schools"
+              class="text-gray-700 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-blue-600 p-2 cursor-pointer font-mono"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styles: [
     `
       .active {
-        @apply text-sky-600 bg-sky-100 bg-opacity-50 dark:bg-gray-700 dark:text-sky-100 font-semibold;
+        @apply text-blue-600 bg-blue-200 bg-opacity-50 dark:bg-gray-700 dark:text-sky-100 font-semibold;
       }
     `,
   ],

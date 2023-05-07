@@ -1,9 +1,5 @@
 {
   "folders": [
-    {
-      "path": "apps/api",
-      "name": "api"
-    },
     { "path": "apps/webapp", "name": "webapp" },
     { "path": "apps/back-office", "name": "back-office" },
     { "path": "libs/auth", "name": "auth" },

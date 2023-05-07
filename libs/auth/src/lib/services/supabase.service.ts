@@ -25,6 +25,8 @@ export class SupabaseService {
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
+
+
   signInWithEmail(email: string, password: string) {
     return this.supabase.auth.signInWithPassword({ email, password });
   }

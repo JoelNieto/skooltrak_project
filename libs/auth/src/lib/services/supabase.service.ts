@@ -4,16 +4,16 @@ import { AuthChangeEvent, createClient, Session, SupabaseClient } from '@supabas
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
-  private supabase: SupabaseClient;
+  public client: SupabaseClient;
   constructor() {
-    this.supabase = createClient(
+    this.client = createClient(
       environment.supabase.url,
       environment.supabase.key
     );
   }
 
   profile() {
-    return this.supabase
+    return this.client
       .from('profiles')
       .select('id,full_name,avatar_url,username')
       .single();
@@ -22,16 +22,20 @@ export class SupabaseService {
   authChanges(
     callback: (event: AuthChangeEvent, session: Session | null) => void
   ) {
-    return this.supabase.auth.onAuthStateChange(callback);
+    return this.client.auth.onAuthStateChange(callback);
   }
 
-
+  inviteUser(email: string) {
+    this.client.auth.admin.inviteUserByEmail(email, {
+      data: {},
+    });
+  }
 
   signInWithEmail(email: string, password: string) {
-    return this.supabase.auth.signInWithPassword({ email, password });
+    return this.client.auth.signInWithPassword({ email, password });
   }
 
   signOut() {
-    return this.supabase.auth.signOut();
+    return this.client.auth.signOut();
   }
 }

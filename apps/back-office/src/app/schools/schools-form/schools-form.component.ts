@@ -1,3 +1,4 @@
+import { NgFor } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
@@ -6,22 +7,27 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { filter, switchMap, tap } from 'rxjs';
+import { SupabaseService } from '@skooltrak/auth';
+import { Country, SchoolType } from '@skooltrak/models';
 
 import { SchoolsStore } from '../schools.store';
 
 @Component({
   selector: 'skooltrak-schools-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
-  template: `<div class="rounded p-4 flex flex-col bg-white dark:bg-gray-800">
+  imports: [ReactiveFormsModule, NgFor],
+  providers: [SupabaseService],
+  template: `<div
+    class="rounded-xl pt-4 flex flex-col bg-white dark:bg-gray-600 dark:border-none"
+  >
     <h2
-      class="text-2xl text-gray-700 dark:text-gray-200 font-mono font-semibold"
+      class="text-xl text-gray-500 dark:text-gray-200 font-mono font-semibold"
     >
       School details
     </h2>
     <form
       [formGroup]="form"
+      (ngSubmit)="saveSchool()"
       class="grid lg:grid-cols-4 md:grid-cols-2  grid-cols-1 gap-4 mt-2"
     >
       <div>
@@ -36,60 +42,96 @@ import { SchoolsStore } from '../schools.store';
       <div>
         <label class="label" for="full_name">Full name</label>
         <input
-          formControlName="short_name"
+          formControlName="full_name"
           type="text"
           name="full_name"
           class="input"
         />
       </div>
       <div>
-        <label class="label" for="name">Address</label>
-        <input type="text" name="name" class="input" />
+        <label class="label" for="address">Address</label>
+        <input
+          type="text"
+          name="address"
+          class="input"
+          formControlName="address"
+        />
       </div>
       <div>
-        <label class="label" for="name">Motto</label>
-        <input type="text" name="name" class="input" />
+        <label class="label" for="motto">Motto</label>
+        <input type="text" name="motto" class="input" formControlName="motto" />
       </div>
       <div>
-        <label class="label" for="name">Website</label>
-        <input type="text" name="name" class="input" />
+        <label class="label" for="website">Website</label>
+        <input
+          type="url"
+          name="website"
+          class="input"
+          formControlName="website"
+        />
       </div>
       <div>
-        <label class="label" for="name">Contact email</label>
-        <input type="email" name="name" class="input" />
+        <label class="label" for="contact_email">Contact email</label>
+        <input
+          type="email"
+          name="contact_email"
+          class="input"
+          formControlName="contact_email"
+        />
       </div>
       <div>
-        <label class="label" for="name">Contact phone</label>
-        <input type="text" name="name" class="input" />
+        <label class="label" for="contact_phone">Contact phone</label>
+        <input
+          type="tel"
+          name="contact_phone"
+          class="input"
+          formControlName="contact_phone"
+        />
       </div>
       <div>
-        <label
-          class="block mb-2 font-sans text-gray-700 font-medium dark:text-white"
-          for="role"
-          >Role</label
+        <label class="label" for="country">Country</label>
+        <select
+          name="country"
+          class="input"
+          placeholder="name@company.com"
+          formControlName="country_id"
         >
-        <select name="role" class="input" placeholder="name@company.com">
-          <option selected disabled>Choose a role</option>
-          <option>Student</option>
-          <option>Teacher</option>
-          <option>Administrator</option>
+          <option selected disabled>Choose a country</option>
+          <option *ngFor="let country of countries" [value]="country.id">
+            {{ country.name }}
+          </option>
         </select>
       </div>
-      <div class="flex items-start">
-        <div class="flex items-center h-5">
-          <input
-            id="remember"
-            aria-describedby="remember"
-            type="checkbox"
-            class="w-6 h-6 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-teal-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-teal-600 dark:ring-offset-gray-800"
-            required=""
-          />
+      <div>
+        <label class="label" for="country">Type</label>
+        <select name="type" class="input" formControlName="type">
+          <option selected disabled>Choose a type</option>
+          <option value="Private">Private</option>
+          <option value="Public">Public</option>
+        </select>
+      </div>
+      <div class="flex justify-between items-center col-span-4">
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <input
+              aria-describedby="active"
+              type="checkbox"
+              formControlName="active"
+              class="w-6 h-6 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-teal-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-teal-600 dark:ring-offset-gray-800"
+            />
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="active" class="text-gray-500 dark:text-gray-300"
+              >Active</label
+            >
+          </div>
         </div>
-        <div class="ml-3 text-sm">
-          <label for="remember" class="text-gray-500 dark:text-gray-300"
-            >Active</label
-          >
-        </div>
+        <button
+          type="submit"
+          class="text-white disabled:opacity-75 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Save changes
+        </button>
       </div>
     </form>
   </div>`,
@@ -105,39 +147,59 @@ import { SchoolsStore } from '../schools.store';
   ],
 })
 export class SchoolsFormComponent implements OnInit {
-  private store = inject(SchoolsStore);
-  private route = inject(ActivatedRoute);
-  public school$ = this.store.selected$;
+  store = inject(SchoolsStore);
+  private school = this.store.selected$;
+  supabase = inject(SupabaseService);
 
+  countries?: Partial<Country>[] | null;
+  route = inject(ActivatedRoute);
   form = new FormGroup({
     short_name: new FormControl<string>('', {
       validators: [Validators.required, Validators.maxLength(50)],
+      nonNullable: true,
     }),
-    fullName: new FormControl<string>('', {
+    full_name: new FormControl<string>('', {
       validators: [Validators.minLength(10)],
+      nonNullable: true,
     }),
-    address: new FormControl<string>(''),
-    motto: new FormControl<string>(''),
-    logo_url: new FormControl<string>(''),
-    website: new FormControl<string>(''),
-    contact_email: new FormControl<string>(''),
-    contact_phone: new FormControl<string>(''),
-    active: new FormControl<boolean>(true),
-    is_public: new FormControl<boolean>(true),
+    address: new FormControl<string>('', { nonNullable: true }),
+    motto: new FormControl<string>('', { nonNullable: true }),
+    logo_url: new FormControl<string>('', { nonNullable: true }),
+    website: new FormControl<string>('', { nonNullable: true }),
+    contact_email: new FormControl<string>('', { nonNullable: true }),
+    contact_phone: new FormControl<string>('', { nonNullable: true }),
+    active: new FormControl<boolean>(true, { nonNullable: true }),
+    type: new FormControl<SchoolType>(SchoolType.Private, {
+      nonNullable: true,
+    }),
+    country_id: new FormControl<number | undefined>(undefined, {
+      nonNullable: true,
+    }),
   });
 
-  ngOnInit(): void {
-    this.school$
-      .pipe(
-        tap((school) => console.log(school)),
-        filter((school) => !school),
-        switchMap(() => this.route.queryParams.pipe(filter(({ id }) => !!id)))
-      )
-      .subscribe({
-        next: ({ id }) => {
-          console.log(id);
-          this.store.setSelected(id);
-        },
-      });
+  async ngOnInit(): Promise<void> {
+    this.route.queryParams.subscribe({
+      next: ({ id }) => id!! && this.store.setSelected(id),
+    });
+
+    this.school.subscribe({
+      next: (school) => {
+        school!! && this.form.patchValue(school);
+      },
+    });
+
+    const { data, error } = await this.supabase.client
+      .from('country')
+      .select('*')
+      .order('name', { ascending: true })
+      .eq('active', true);
+    if (error) {
+      throw error;
+    } else this.countries = data;
+  }
+
+  async saveSchool() {
+    const value = this.form.getRawValue();
+    this.store.createSchool(value);
   }
 }

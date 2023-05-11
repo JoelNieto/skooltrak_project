@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { LetModule } from '@ngrx/component';
-
-import { SchoolsStore } from '../schools.store';
+import { LetDirective } from '@ngrx/component';
+import { SupabaseService } from '@skooltrak/auth';
+import { School } from '@skooltrak/models';
 
 @Component({
   selector: 'skooltrak-schools-details',
   standalone: true,
-  imports: [LetModule, RouterLink],
-  template: `<ng-container *ngrxLet="school$ as school">
+  imports: [LetDirective, RouterLink],
+  template: `
     <div
-      class="rounded-lg p-4 flex flex-col gap-2 items-center bg-white dark:bg-gray-700"
+      class="rounded-lg p-4 flex flex-col gap-2 items-center bg-white dark:bg-gray-700 border dark:border-none"
     >
       <img [src]="school?.logo_url" class="h-24 max-w-full mb-2" alt="" />
       <h2 class="text-2xl font-bold font-mono text-gray-700 dark:text-gray-100">
@@ -18,7 +18,7 @@ import { SchoolsStore } from '../schools.store';
       </h2>
       <a
         routerLink="../edit"
-        [queryParams]="{ id: school?._id }"
+        [queryParams]="{ id: school?.id }"
         class="mr-4 bg-green-500 text-white text-sm rounded py-1 px-3 flex gap-1"
       >
         <svg
@@ -85,19 +85,23 @@ import { SchoolsStore } from '../schools.store';
         {{ school?.motto }}
       </p>
     </div>
-  </ng-container> `,
+  `,
   styles: [],
 })
 export class SchoolsDetailsComponent implements OnInit {
-  private readonly store = inject(SchoolsStore);
-  public school$ = this.store.selected$;
+  private supabase = inject(SupabaseService);
   private route = inject(ActivatedRoute);
+  public school?: School;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe({
-      next: ({ id }) => {
-        console.log(id);
-        this.store.setSelected(id);
+      next: async ({ id }) => {
+        const { data, error } = await this.supabase.client
+          .from('school')
+          .select('*')
+          .eq('id', id)
+          .single();
+        data!! && (this.school = data as School);
       },
     });
   }

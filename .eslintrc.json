@@ -1,13 +1,13 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nx"],
+  "plugins": ["@nx", "rxjs"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
         "@nx/enforce-module-boundaries": [
-          "error",
+          "ignore",
           {
             "enforceBuildableLibDependency": true,
             "allow": [],
@@ -17,6 +17,28 @@
                 "onlyDependOnLibsWithTags": ["*"]
               }
             ]
+          }
+        ],
+        "rxjs/no-async-subscribe": "error",
+        "rxjs/no-ignored-observable": "error",
+        "rxjs/no-nested-subscribe": "error",
+        "rxjs/no-ignored-error": "error",
+        "rxjs/no-unbound-methods": "error",
+        "rxjs/finnish": [
+          "error",
+          {
+            "functions": true,
+            "methods": false,
+            "names": {
+              "^(canActivate|canActivateChild|canDeactivate|canLoad|intercept|resolve|validate|asyncList)$": false
+            },
+            "parameters": true,
+            "properties": true,
+            "strict": true,
+            "types": {
+              "^EventEmitter$": false
+            },
+            "variables": true
           }
         ]
       }

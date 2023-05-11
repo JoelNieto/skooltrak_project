@@ -71,7 +71,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         </ul>
       </div>
     </aside>
-    <main class="flex-auto p-10 bg-gray-50 dark:bg-gray-600">
+    <main class="flex-auto p-10 bg-white dark:bg-gray-600">
       <ng-content select="[content]"></ng-content>
     </main>
   </div> `,

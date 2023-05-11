@@ -1,8 +1,10 @@
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
+  { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
   {
-    path: '',
+    path: 'app',
+    canActivateChild: [],
     loadComponent: () =>
       import('./admin/admin.component').then((x) => x.AdminComponent),
     children: [

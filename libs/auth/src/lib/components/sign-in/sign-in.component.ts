@@ -125,7 +125,7 @@ export class SignInComponent {
 
   form = new FormGroup({
     email: new FormControl<string>('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.email],
       nonNullable: true,
     }),
     password: new FormControl('', {
@@ -136,12 +136,11 @@ export class SignInComponent {
 
   async signIn() {
     const { email, password } = this.form.getRawValue();
-    const { data, error } = await this.supabase.signInWithEmail(
-      email,
-      password
-    );
-    if (error) console.error(error);
-    console.log((await this.supabase.profile()).data);
-    console.log(data);
+    const {
+      data: { user },
+      error,
+    } = await this.supabase.signInWithEmail(email, password);
+    if (error) console.info(error);
+    console.log(user);
   }
 }

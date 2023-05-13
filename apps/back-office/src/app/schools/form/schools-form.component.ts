@@ -1,24 +1,20 @@
 import { NgFor } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, effect, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { SupabaseService } from '@skooltrak/auth';
-import { Country, SchoolType } from '@skooltrak/models';
+import { provideComponentStore } from '@ngrx/component-store';
+import { SchoolType } from '@skooltrak/models';
 
 import { SchoolsStore } from '../schools.store';
+import { SchoolsFormStore } from './schools-form.store';
 
 @Component({
   selector: 'skooltrak-schools-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgFor],
-  providers: [SupabaseService],
+  providers: [provideComponentStore(SchoolsFormStore)],
   template: `<div
-    class="rounded-xl pt-4 flex flex-col bg-white dark:bg-gray-600 dark:border-none"
+    class="rounded-xl flex flex-col bg-white dark:bg-gray-800 dark:border-none"
   >
     <h2
       class="text-xl text-gray-500 dark:text-gray-200 font-mono font-semibold"
@@ -97,7 +93,7 @@ import { SchoolsStore } from '../schools.store';
           formControlName="country_id"
         >
           <option selected disabled>Choose a country</option>
-          <option *ngFor="let country of countries" [value]="country.id">
+          <option *ngFor="let country of countries()" [value]="country.id">
             {{ country.name }}
           </option>
         </select>
@@ -148,10 +144,10 @@ import { SchoolsStore } from '../schools.store';
 })
 export class SchoolsFormComponent implements OnInit {
   store = inject(SchoolsStore);
-  private school = this.store.selected$;
-  supabase = inject(SupabaseService);
+  state = inject(SchoolsFormStore);
+  private school = this.store.selected;
 
-  countries?: Partial<Country>[] | null;
+  public countries = this.state.countries;
   route = inject(ActivatedRoute);
   form = new FormGroup({
     short_name: new FormControl<string>('', {
@@ -177,29 +173,21 @@ export class SchoolsFormComponent implements OnInit {
     }),
   });
 
-  async ngOnInit(): Promise<void> {
-    this.route.queryParams.subscribe({
-      next: ({ id }) => id!! && this.store.setSelected(id),
+  constructor() {
+    effect(() => {
+      this.form.patchValue(this.school()!);
     });
-
-    this.school.subscribe({
-      next: (school) => {
-        school!! && this.form.patchValue(school);
-      },
-    });
-
-    const { data, error } = await this.supabase.client
-      .from('country')
-      .select('*')
-      .order('name', { ascending: true })
-      .eq('active', true);
-    if (error) {
-      throw error;
-    } else this.countries = data;
   }
 
-  async saveSchool() {
-    const value = this.form.getRawValue();
-    this.store.createSchool(value);
+  ngOnInit(): void {
+    this.route.queryParams.subscribe({
+      next: ({ id }) => !!id && this.store.setSelected(id),
+    });
+  }
+
+  saveSchool() {
+    let value: any = this.form.getRawValue();
+    value = this.school()!! ? { ...value, id: this.school()?.id } : value;
+    this.store.saveSchool(value);
   }
 }

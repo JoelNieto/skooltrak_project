@@ -9,21 +9,38 @@ export const SCHOOLS_ROUTES: Routes = [
       {
         path: 'all',
         loadComponent: () =>
-          import('./schools-list/schools-list.component').then(
+          import('./list/schools-list.component').then(
             (x) => x.SchoolsListComponent
           ),
       },
       {
         path: 'details',
         loadComponent: () =>
-          import('./schools-details/schools-details.component').then(
+          import('./details/schools-details.component').then(
             (x) => x.SchoolsDetailsComponent
           ),
+        children: [
+          {
+            path: 'admins',
+            loadComponent: () =>
+              import('./admins/schools-admins.component').then(
+                (x) => x.SchoolsAdminsComponent
+              ),
+          },
+          { path: '', redirectTo: 'admins', pathMatch: 'full' },
+        ],
       },
       {
         path: 'edit',
         loadComponent: () =>
-          import('./schools-form/schools-form.component').then(
+          import('./form/schools-form.component').then(
+            (x) => x.SchoolsFormComponent
+          ),
+      },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./form/schools-form.component').then(
             (x) => x.SchoolsFormComponent
           ),
       },

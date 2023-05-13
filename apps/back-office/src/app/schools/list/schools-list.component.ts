@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
+import { DatePipe, NgFor } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgHeroiconsModule } from '@dimaslz/ng-heroicons';
@@ -8,12 +8,12 @@ import { SchoolsStore } from '../schools.store';
 @Component({
   selector: 'skooltrak-schools-list',
   standalone: true,
-  imports: [NgFor, AsyncPipe, DatePipe, RouterLink, NgHeroiconsModule],
-  template: `<h2
+  imports: [NgFor, DatePipe, RouterLink, NgHeroiconsModule],
+  template: `<h3
       class="leading-tight tracking-tight text-gray-500 dark:text-gray-200 text-xl font-mono font-bold"
     >
       All
-    </h2>
+    </h3>
     <div class="relative overflow-x-auto mt-4 rounded-lg">
       <div class="flex justify-between mb-4 py-2 px-1">
         <div>
@@ -22,19 +22,9 @@ import { SchoolsStore } from '../schools.store';
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
             >
-              <svg
+              <magnifying-glass-outline-icon
                 class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
+              />
             </div>
             <input
               type="text"
@@ -45,7 +35,7 @@ import { SchoolsStore } from '../schools.store';
           </div>
         </div>
         <a
-          routerLink="../edit"
+          routerLink="../new"
           class="text-white disabled:opacity-75 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           New
@@ -55,11 +45,12 @@ import { SchoolsStore } from '../schools.store';
         <thead
           class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
         >
-          <tr>
+          <tr class="cursor-pointer">
             <th scope="col" class="px-6 py-3">Name</th>
             <th scope="col" class="px-6 py-3">Short name</th>
             <th scope="col" class="px-6 py-3">Type</th>
             <th score="col" class="px-6 py-3">Country</th>
+            <th scope="col" class="px-6 py-3">Created By</th>
             <th scope="col" class="px-6 py-3">Created</th>
             <th scope="col" class="px-6 py-3">Actions</th>
           </tr>
@@ -67,7 +58,7 @@ import { SchoolsStore } from '../schools.store';
         <tbody>
           <tr
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-            *ngFor="let school of schools$ | async"
+            *ngFor="let school of schools()"
           >
             <th
               scope="row"
@@ -94,6 +85,9 @@ import { SchoolsStore } from '../schools.store';
             </td>
             <td class="px-6 py-4">
               {{ school.country.name }}
+            </td>
+            <td class="px-6 py-4">
+              {{ school.profile?.full_name }}
             </td>
             <td class="px-6 py-4">{{ school.created_at | date : 'medium' }}</td>
             <td class="px-6 py-4 ">
@@ -124,7 +118,7 @@ import { SchoolsStore } from '../schools.store';
 })
 export class SchoolsListComponent implements OnInit {
   private store = inject(SchoolsStore);
-  public schools$ = this.store.schools$;
+  public schools = this.store.schools;
 
   ngOnInit(): void {
     this.store.setSelected(undefined);

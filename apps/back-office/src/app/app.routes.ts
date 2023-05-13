@@ -19,6 +19,12 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./schools/routes').then((x) => x.SCHOOLS_ROUTES),
       },
+      {
+        path: 'subjects',
+        title: 'Subjects',
+        loadChildren: () =>
+          import('./subjects/routes').then((x) => x.SUBJECTS_ROUTES),
+      },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

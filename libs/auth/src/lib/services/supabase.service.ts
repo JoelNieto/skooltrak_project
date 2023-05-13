@@ -14,7 +14,7 @@ export class SupabaseService {
 
   profile() {
     return this.client
-      .from('profiles')
+      .from('profile')
       .select('id,full_name,avatar_url,username')
       .single();
   }

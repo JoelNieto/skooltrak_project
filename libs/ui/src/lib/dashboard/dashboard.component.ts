@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgHeroiconsModule } from '@dimaslz/ng-heroicons';
@@ -181,8 +186,8 @@ import { from } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  public subapase = inject(SupabaseService);
+  public supabase = inject(SupabaseService);
 
-  request = toSignal(from(this.subapase.profile()));
+  request = toSignal(from(this.supabase.profile()));
   profile = computed(() => this.request()?.data);
 }

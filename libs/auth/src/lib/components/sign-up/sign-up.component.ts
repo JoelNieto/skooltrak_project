@@ -1,10 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { from } from 'rxjs';
+
+import { PasswordValidators } from '../../services/password.validator';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'skooltrak-sign-up',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ReactiveFormsModule],
   template: `
     <section class="bg-gray-100 font-sans dark:bg-gray-800">
       <div
@@ -21,34 +32,29 @@ import { RouterLink } from '@angular/router';
           />
           Skooltrak
         </a>
-        <div
-          class="w-full bg-white rounded-xl p-6 space-y-4 md:space-y-6 shadow-xl md:mt-0 sm:max-w-2xl dark:bg-gray-600 dark:border-gray-700"
+        <form
+          [formGroup]="form"
+          (ngSubmit)="saveChanges()"
+          class="w-full bg-white rounded-xl p-6 space-y-4 md:space-y-6 shadow-xl md:mt-0 sm:max-w-lg dark:bg-gray-600 dark:border-gray-700"
         >
           <h1
             class="text-xl font-bold leading-tight font-mono md:text-2xl dark:text-white"
           >
             Create your personal account
           </h1>
-          <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
+          <div class="grid grid-cols-1 gap-4">
             <div>
               <label
                 class="block mb-2 font-sans text-gray-700 font-medium dark:text-white"
-                for="name"
+                for="full_name"
                 >Name</label
-              >
-              <input type="text" name="name" class="input" placeholder="John" />
-            </div>
-            <div>
-              <label
-                class="block mb-2 font-sans text-gray-700 font-medium dark:text-white"
-                for="last-name"
-                >Last name</label
               >
               <input
                 type="text"
-                name="last-name"
+                name="full_name"
                 class="input"
-                placeholder="Doe"
+                formControlName="full_name"
+                placeholder="John Doe"
               />
             </div>
             <div>
@@ -61,26 +67,45 @@ import { RouterLink } from '@angular/router';
                 type="email"
                 name="email"
                 class="input"
+                formControlName="email"
                 placeholder="name@company.com"
               />
             </div>
             <div>
               <label
                 class="block mb-2 font-sans text-gray-700 font-medium dark:text-white"
-                for="role"
-                >Role</label
+                for="password"
+                >Password</label
               >
-              <select name="role" class="input" placeholder="name@company.com">
-                <option selected disabled>Choose a role</option>
-                <option>Student</option>
-                <option>Teacher</option>
-                <option>Administrator</option>
-              </select>
+              <input
+                type="password"
+                name="password"
+                autocomplete="new-password"
+                formControlName="password"
+                class="input"
+                placeholder="•••••••••"
+              />
+            </div>
+            <div>
+              <label
+                class="block mb-2 font-sans text-gray-700 font-medium dark:text-white"
+                for="confirm-password"
+                >Confirm password</label
+              >
+              <input
+                type="password"
+                name="confirm-password"
+                formControlName="confirm_password"
+                autocomplete="new-password"
+                class="input"
+                placeholder="•••••••••"
+              />
             </div>
           </div>
           <button
             type="submit"
-            class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 disabled:bg-blue-400 disabled:dark:bg-blue-500 disabled:cursor-not-allowed"
+            [disabled]="form.invalid"
+            class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 disabled:bg-blue-400 disabled:dark:bg-blue-400 disabled:cursor-not-allowed"
           >
             Create account
           </button>
@@ -90,7 +115,7 @@ import { RouterLink } from '@angular/router';
               >Sign in</a
             >
           </p>
-        </div>
+        </form>
       </div>
     </section>
   `,
@@ -102,4 +127,49 @@ import { RouterLink } from '@angular/router';
     `,
   ],
 })
-export class SignUpComponent {}
+export class SignUpComponent {
+  private supabase = inject(SupabaseService);
+  form = new FormGroup(
+    {
+      full_name: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      email: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8)],
+      }),
+      confirm_password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8)],
+      }),
+    },
+    { validators: PasswordValidators.matchValidator }
+  );
+
+  request = toSignal(from(this.supabase.profile()));
+  profile = computed(() => this.request()?.data);
+
+  constructor() {
+    effect(() => {
+      this.form.patchValue(this.profile()!);
+      this.form.get('email')?.disable();
+    });
+  }
+
+  async saveChanges() {
+    const { email, password, full_name } = this.form.getRawValue();
+    const { data, error } = await this.supabase.updateUser({
+      id: this.profile()?.id,
+      email,
+      password,
+      full_name,
+    });
+    console.log(data);
+    console.log(error);
+  }
+}

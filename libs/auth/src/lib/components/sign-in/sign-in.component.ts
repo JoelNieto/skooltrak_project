@@ -1,5 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { SupabaseService } from '../../services/supabase.service';
@@ -110,7 +116,7 @@ import { SupabaseService } from '../../services/supabase.service';
       .input {
         @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500;
         &.ng-invalid.ng-dirty {
-          @apply border-red-300 focus:ring-pink-600 focus:border-pink-600;
+          @apply border-red-400 focus:ring-pink-600 focus:border-pink-600;
         }
       }
 

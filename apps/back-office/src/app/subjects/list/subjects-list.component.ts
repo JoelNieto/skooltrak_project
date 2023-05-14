@@ -41,57 +41,61 @@ import { SubjectsStore } from '../subjects.store';
           New
         </a>
       </div>
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead
-          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-gray-200"
+      <div class="rounded-xl">
+        <table
+          class="w-full text-sm rounded-xl text-left text-gray-500 dark:text-gray-400"
         >
-          <tr class="cursor-pointer">
-            <th scope="col" class="px-6 py-3">Name</th>
-            <th scope="col" class="px-6 py-3">Short name</th>
-            <th scope="col" class="px-6 py-3">Description</th>
-            <th score="col" class="px-6 py-3">Active</th>
-            <th scope="col" class="px-6 py-3">Created</th>
-            <th scope="col" class="px-6 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="bg-white border-b dark:bg-gray-700 dark:border-gray-700"
-            *ngFor="let subject of subjects()"
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-gray-200"
           >
-            <th
-              scope="row"
-              class="px-6 py-4 font-bold flex gap-2 text-gray-900 whitespace-nowrap dark:text-white"
+            <tr class="cursor-pointer">
+              <th scope="col" class="px-6 py-3">Name</th>
+              <th scope="col" class="px-6 py-3">Short name</th>
+              <th scope="col" class="px-6 py-3">Description</th>
+              <th score="col" class="px-6 py-3">Active</th>
+              <th scope="col" class="px-6 py-3">Created</th>
+              <th scope="col" class="px-6 py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="bg-white border-b dark:bg-gray-700 dark:border-gray-700"
+              *ngFor="let subject of subjects()"
             >
-              {{ subject.name }}
-            </th>
-            <td class="px-6 py-4">{{ subject.short_name }}</td>
-            <td class="px-6 py-4">
-              {{ subject.description }}
-            </td>
-            <td class="px-6 py-4">
-              {{ subject.active }}
-            </td>
-            <td class="px-6 py-4">
-              {{ subject.created_at | date : 'medium' }}
-            </td>
-            <td class="px-6 py-4 ">
-              <div class="flex place-items-center gap-1">
-                <a routerLink="../edit" [queryParams]="{ id: subject.id }">
-                  <pencil-square-outline-icon
-                    class="h-6 w-6 text-green-700 dark:text-green-200"
-                  />
-                </a>
-                <a href="">
-                  <trash-outline-icon
-                    class="h-6 w-6 text-red-600 dark:text-red-200"
-                  />
-                </a>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <th
+                scope="row"
+                class="px-6 py-4 font-bold flex gap-2 text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ subject.name }}
+              </th>
+              <td class="px-6 py-4">{{ subject.short_name }}</td>
+              <td class="px-6 py-4">
+                {{ subject.description }}
+              </td>
+              <td class="px-6 py-4">
+                {{ subject.active }}
+              </td>
+              <td class="px-6 py-4">
+                {{ subject.created_at | date : 'medium' }}
+              </td>
+              <td class="px-6 py-4 ">
+                <div class="flex place-items-center gap-1">
+                  <a routerLink="../edit" [queryParams]="{ id: subject.id }">
+                    <pencil-square-outline-icon
+                      class="h-6 w-6 text-green-700 dark:text-green-200"
+                    />
+                  </a>
+                  <a href="">
+                    <trash-outline-icon
+                      class="h-6 w-6 text-red-600 dark:text-red-200"
+                    />
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>`,
   styles: [],
 })

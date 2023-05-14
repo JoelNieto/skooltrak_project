@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,13 +8,6 @@ import { RouterOutlet } from '@angular/router';
   template: `<router-outlet></router-outlet>`,
   styles: [],
 })
-export class AppComponent implements OnInit {
-  private http = inject(HttpClient);
+export class AppComponent {
   title = 'webapp';
-
-  ngOnInit(): void {
-    this.http
-      .get<{ message: string }>('/api/message')
-      .subscribe({ next: (item) => (this.title = item.message) });
-  }
 }

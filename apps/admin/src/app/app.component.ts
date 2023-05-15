@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'skooltrak-root',
-  template: '<router-outlet></router-outlet>',
+  selector: 'skooltrak-admin',
+  standalone: true,
+  template: '',
 })
 export class AppComponent {}

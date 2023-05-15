@@ -1,6 +1,9 @@
 import { Route } from '@angular/router';
-import { RemoteEntryComponent } from './entry.component';
 
 export const remoteRoutes: Route[] = [
-  { path: '', component: RemoteEntryComponent },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./nx-welcome.component').then((x) => x.NxWelcomeComponent),
+  },
 ];

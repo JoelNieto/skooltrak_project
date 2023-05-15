@@ -2,7 +2,9 @@
   "name": "skooltrak",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "run-bundle": "nx serve host --devRemotes=admin,student,teacher"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "16.0.0",

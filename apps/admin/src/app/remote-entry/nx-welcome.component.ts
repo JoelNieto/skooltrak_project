@@ -84,7 +84,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
       .container {
         margin-left: auto;
         margin-right: auto;
-        max-width: 768px;
         padding-bottom: 3rem;
         padding-left: 1rem;
         padding-right: 1rem;

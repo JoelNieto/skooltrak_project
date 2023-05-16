@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@skooltrak/environments';
 import { Profile } from '@skooltrak/models';
-import {
-  AuthChangeEvent,
-  createClient,
-  Session,
-  SupabaseClient,
-} from '@supabase/supabase-js';
+import { AuthChangeEvent, createClient, Session, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
@@ -21,8 +16,14 @@ export class SupabaseService {
   profile() {
     return this.client
       .from('profile')
-      .select('id,full_name,avatar_url,email, school(id, full_name)')
+      .select(
+        'id,full_name,avatar_url,email, profile_role(school(id,full_name),role(id,name))'
+      )
       .single();
+  }
+
+  access() {
+    return this.client.from('access').select('*');
   }
 
   async updateUser(profile: Profile) {

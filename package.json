@@ -7,6 +7,7 @@
   },
   "private": true,
   "dependencies": {
+    "@amithvns/ng-heroicons": "^2.0.13",
     "@angular/animations": "16.0.0",
     "@angular/cdk": "16.0.0",
     "@angular/common": "16.0.0",

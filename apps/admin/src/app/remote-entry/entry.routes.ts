@@ -8,8 +8,8 @@ export const remoteRoutes: Route[] = [
   },
   {
     path: 'students',
-    loadComponent: () =>
-      import('../students/students.component').then((x) => x.StudentsComponent),
+    loadChildren: () =>
+      import('../students/students.routes').then((x) => x.studentsRoutes),
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

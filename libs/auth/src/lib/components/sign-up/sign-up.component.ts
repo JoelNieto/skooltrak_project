@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { from } from 'rxjs';
 
 import { PasswordValidators } from '../../services/password.validator';
 import { SupabaseService } from '../../services/supabase.service';
@@ -151,8 +150,7 @@ export class SignUpComponent {
     { validators: PasswordValidators.matchValidator }
   );
 
-  request = toSignal(from(this.supabase.profile()));
-  profile = computed(() => this.request()?.data);
+  profile = toSignal(this.supabase.profile);
 
   constructor() {
     effect(() => {

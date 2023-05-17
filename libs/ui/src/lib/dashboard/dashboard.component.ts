@@ -1,11 +1,15 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { NgFor, NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { JsonPipe, NgFor, NgForOf } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgHeroiconsModule } from '@dimaslz/ng-heroicons';
 import { SupabaseService } from '@skooltrak/auth';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'skooltrak-dashboard',
@@ -16,6 +20,7 @@ import { from } from 'rxjs';
     RouterLink,
     NgHeroiconsModule,
     IconsModule,
+    JsonPipe,
     NgFor,
     NgForOf,
   ],
@@ -96,40 +101,44 @@ import { from } from 'rxjs';
               id="dropdown-user"
             >
               <div class="px-4 py-3" role="none">
-                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                <p
+                  class="text-sm text-sky-900 font-semibold dark:text-white"
+                  role="none"
+                >
                   {{ profile()?.full_name }}
                 </p>
                 <p
-                  class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                  class="text-xs font-medium text-gray-900 font-mono truncate dark:text-gray-300"
                   role="none"
                 >
                   {{ profile()?.email }}
                 </p>
               </div>
               <ul class="py-1" role="none">
-                <li>
+                <li class="separator">ROLES</li>
+                <li *ngFor="let role of roles()">
                   <a
                     href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="menu-item flex gap-2 items-center"
                     role="menuitem"
-                    >Dashboard</a
                   >
+                    <img
+                      class="w-7 h-7 rounded-full"
+                      [src]="role.school.logo_url"
+                    />
+                    <div class="flex flex-col">
+                      <span class="font-semibold text-sky-800">{{
+                        role.school.short_name
+                      }}</span>
+                      <span class="font-mono text-xs text-gray-700">{{
+                        role.role.name
+                      }}</span>
+                    </div>
+                  </a>
                 </li>
+                <li class="separator">AUTHENTICATION</li>
                 <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    >Settings</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    >Earnings</a
-                  >
+                  <a href="#" class="menu-item" role="menuitem">Profile</a>
                 </li>
                 <li>
                   <a
@@ -147,28 +156,36 @@ import { from } from 'rxjs';
           <li *ngFor="let link of links()">
             <a
               routerLinkActive="active"
-              [routerLink]="link['route']"
+              [routerLink]="link.access['route']"
               class="link"
             >
-              <icon [name]="link['icon']" class="w-6 h-6" />
-              {{ link['name'] }}
+              <icon [name]="link.access['icon']" class="w-6 h-6" />
+              {{ link.access['name'] }}
             </a>
           </li>
         </ul>
       </div>
     </aside>
-    <main class="p-8 mt-14 sm:ml-64 bg-white dark:bg-gray-800">
+    <main class="px-8 py-4 mt-4 sm:ml-64 bg-white dark:bg-gray-800">
       <ng-content select="[content]"></ng-content>
     </main>
   `,
   styles: [
     `
       .link {
-        @apply text-gray-100 dark:text-gray-100 flex items-center rounded-lg gap-3 hover:text-blue-200 p-2 cursor-pointer font-mono;
+        @apply text-gray-100 dark:text-gray-100 flex items-center rounded-lg gap-3 p-2 cursor-pointer font-mono;
       }
 
       .active {
-        @apply text-blue-500 bg-white  dark:bg-gray-700 dark:text-sky-100 font-semibold;
+        @apply text-sky-600 bg-white dark:bg-gray-700 dark:text-sky-100 font-semibold;
+      }
+
+      .menu-item {
+        @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white;
+      }
+
+      .separator {
+        @apply text-xs text-gray-400 block px-4 py-2 font-mono;
       }
 
       main {
@@ -180,9 +197,8 @@ import { from } from 'rxjs';
 })
 export class DashboardComponent {
   public supabase = inject(SupabaseService);
-
-  request = toSignal(from(this.supabase.profile()));
-  access = toSignal(from(this.supabase.access()));
-  profile = computed(() => this.request()?.data);
-  links = computed(() => this.access()?.data);
+  currentRole = this.supabase.currentRole;
+  roles = toSignal(this.supabase.roles);
+  profile = toSignal(this.supabase.profile);
+  links = computed(() => this.currentRole()?.role.role_access);
 }

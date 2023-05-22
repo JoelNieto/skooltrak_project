@@ -1,14 +1,8 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { JsonPipe, NgFor, NgForOf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { NgHeroiconsModule } from '@dimaslz/ng-heroicons';
 import { SupabaseService } from '@skooltrak/auth';
 
 @Component({
@@ -18,7 +12,6 @@ import { SupabaseService } from '@skooltrak/auth';
     RouterOutlet,
     RouterLinkActive,
     RouterLink,
-    NgHeroiconsModule,
     IconsModule,
     JsonPipe,
     NgFor,
@@ -70,7 +63,7 @@ import { SupabaseService } from '@skooltrak/auth';
     </nav>
     <aside
       id="logo-sidebar"
-      class="bg-sky-600 dark:bg-gray-700 mt-12 sm:mt-0 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
+      class="bg-sky-600 dark:bg-sky-900 mt-12 sm:mt-0 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
       <div class="flex flex-col p-3">
         <div class="flex items-center mb-4">
@@ -89,9 +82,9 @@ import { SupabaseService } from '@skooltrak/auth';
                   alt="user photo"
                 />
                 <div class="flex flex-col items-start">
-                  <span class="text-white">{{ profile()?.full_name }}</span>
+                  <span class="text-white">{{ 'profile()?.full_name' }}</span>
                   <span class="text-white font-mono text-xs truncate">{{
-                    profile()?.email
+                    ' profile()?.email'
                   }}</span>
                 </div>
               </button>
@@ -105,48 +98,23 @@ import { SupabaseService } from '@skooltrak/auth';
                   class="text-sm text-sky-900 font-semibold dark:text-white"
                   role="none"
                 >
-                  {{ profile()?.full_name }}
+                  {{ 'profile()?.full_name' }}
                 </p>
                 <p
                   class="text-xs font-medium text-gray-900 font-mono truncate dark:text-gray-300"
                   role="none"
                 >
-                  {{ profile()?.email }}
+                  {{ 'profile()?.email' }}
                 </p>
               </div>
               <ul class="py-1" role="none">
                 <li class="separator">ROLES</li>
-                <li *ngFor="let role of roles()">
-                  <a
-                    href="#"
-                    class="menu-item flex gap-2 items-center"
-                    role="menuitem"
-                  >
-                    <img
-                      class="w-7 h-7 rounded-full"
-                      [src]="role.school.logo_url"
-                    />
-                    <div class="flex flex-col">
-                      <span class="font-semibold text-sky-800">{{
-                        role.school.short_name
-                      }}</span>
-                      <span class="font-mono text-xs text-gray-700">{{
-                        role.role.name
-                      }}</span>
-                    </div>
-                  </a>
-                </li>
                 <li class="separator">AUTHENTICATION</li>
                 <li>
                   <a href="#" class="menu-item" role="menuitem">Profile</a>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    >Sign out</a
-                  >
+                  <a href="#" class="menu-item" role="menuitem">Sign out</a>
                 </li>
               </ul>
             </div>
@@ -154,20 +122,16 @@ import { SupabaseService } from '@skooltrak/auth';
         </div>
         <ul role="list" class="flex flex-col gap-1 mt-4">
           <li *ngFor="let link of links()">
-            <a
-              routerLinkActive="active"
-              [routerLink]="link.access['route']"
-              class="link"
-            >
-              <icon [name]="link.access['icon']" class="w-6 h-6" />
-              {{ link.access['name'] }}
+            <a routerLinkActive="active" [routerLink]="link.route" class="link">
+              <icon [name]="link.icon" class="w-6 h-6" />
+              {{ link.name }}
             </a>
           </li>
         </ul>
       </div>
     </aside>
-    <main class="px-8 py-4 mt-4 sm:ml-64 bg-white dark:bg-gray-800">
-      <ng-content select="[content]"></ng-content>
+    <main class="p-8 sm:ml-64 bg-white dark:bg-gray-800 min-h-screen">
+      <router-outlet />
     </main>
   `,
   styles: [
@@ -177,7 +141,7 @@ import { SupabaseService } from '@skooltrak/auth';
       }
 
       .active {
-        @apply text-sky-600 bg-white dark:bg-gray-700 dark:text-sky-100 font-semibold;
+        @apply text-sky-700 bg-gray-100 dark:bg-gray-100 dark:text-sky-600 font-semibold;
       }
 
       .menu-item {
@@ -187,10 +151,6 @@ import { SupabaseService } from '@skooltrak/auth';
       .separator {
         @apply text-xs text-gray-400 block px-4 py-2 font-mono;
       }
-
-      main {
-        min-height: calc(100vh - 3.5rem);
-      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -198,7 +158,11 @@ import { SupabaseService } from '@skooltrak/auth';
 export class DashboardComponent {
   public supabase = inject(SupabaseService);
   currentRole = this.supabase.currentRole;
-  roles = toSignal(this.supabase.roles);
-  profile = toSignal(this.supabase.profile);
-  links = computed(() => this.currentRole()?.role.role_access);
+  access = toSignal(this.supabase.links);
+  links = computed(() => this.currentRole()?.roles?.links);
+
+  constructor() {
+    effect(() => console.log(this.currentRole()));
+    effect(() => console.log(this.access()));
+  }
 }

@@ -1,11 +1,6 @@
-import { Component, effect, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { PasswordValidators } from '../../services/password.validator';
@@ -14,7 +9,7 @@ import { SupabaseService } from '../../services/supabase.service';
 @Component({
   selector: 'skooltrak-sign-up',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, NgOptimizedImage],
   template: `
     <section class="bg-gray-100 font-sans dark:bg-gray-800">
       <div
@@ -22,19 +17,22 @@ import { SupabaseService } from '../../services/supabase.service';
       >
         <a
           href="#"
-          class="flex items-center text-2xl font-semibold mb-6 text-gray-900 dark:text-white"
+          class="flex items-center text-2xl font-mono mb-6 text-gray-900 dark:text-white"
         >
           <img
             class="w-10 h-10 mr-2"
-            src="https://www.skooltrak.com/assets/img/logo.png"
+            width="40"
+            height="40"
+            loading="lazy"
+            ngSrc="assets/skooltrak-logo.svg"
             alt="logo"
           />
-          Skooltrak
+          SKOOLTRAK
         </a>
         <form
           [formGroup]="form"
           (ngSubmit)="saveChanges()"
-          class="w-full bg-white rounded-xl p-6 space-y-4 md:space-y-6 shadow-xl md:mt-0 sm:max-w-lg dark:bg-gray-600 dark:border-gray-700"
+          class="w-full bg-white rounded-xl p-6 space-y-4 md:space-y-6 md:mt-0 sm:max-w-lg dark:bg-gray-600 dark:border-gray-700"
         >
           <h1
             class="text-xl font-bold leading-tight font-mono md:text-2xl dark:text-white"
@@ -150,19 +148,17 @@ export class SignUpComponent {
     { validators: PasswordValidators.matchValidator }
   );
 
-  profile = toSignal(this.supabase.profile);
-
   constructor() {
-    effect(() => {
+    /* effect(() => {
       this.form.patchValue(this.profile()!);
       this.form.get('email')?.disable();
-    });
+    }); */
   }
 
   async saveChanges() {
     const { email, password, full_name } = this.form.getRawValue();
     const { data, error } = await this.supabase.updateUser({
-      id: this.profile()?.id,
+      id: '',
       email,
       password,
       full_name,

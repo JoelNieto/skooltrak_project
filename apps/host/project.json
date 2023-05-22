@@ -20,8 +20,12 @@
         ],
         "tsConfig": "apps/host/tsconfig.app.json",
         "assets": [
-          "apps/host/src/favicon.ico",
-          "apps/host/src/assets"
+          "apps/host/src/assets",
+          {
+            "input": "libs/environments/src/lib/images",
+            "glob": "**/*",
+            "output": "assets"
+          }
         ],
         "styles": [
           "apps/host/src/styles.scss"
@@ -58,7 +62,13 @@
           "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
-          "namedChunks": true
+          "namedChunks": true,
+          "fileReplacements": [
+            {
+              "replace": "libs/environments/src/lib/environment.ts",
+              "with": "libs/environments/src/lib/environment.dev.ts"
+            }
+          ]
         }
       },
       "defaultConfiguration": "production"

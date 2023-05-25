@@ -24,7 +24,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     <skooltrak-navbar />
     <aside
       id="logo-sidebar"
-      class="bg-sky-600 mt-12 dark:bg-sky-900 mt-12  pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
+      class="bg-white mt-12 dark:bg-gray-800 mt-12 border-r border-gray-200 dark:border-gray-700 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
       <div class="flex flex-col p-3">
         <div class="flex items-center mb-4">
@@ -43,10 +43,13 @@ import { NavbarComponent } from '../navbar/navbar.component';
                   alt="user photo"
                 />
                 <div class="flex flex-col items-start">
-                  <span class="text-white">{{ user()?.full_name }}</span>
-                  <span class="text-white font-mono text-xs truncate">{{
-                    user()?.email
+                  <span class="text-gray-700 dark:text-white">{{
+                    user()?.full_name
                   }}</span>
+                  <span
+                    class="text-gray-600 font-mono text-xs truncate dark:text-gray-300"
+                    >{{ user()?.email }}</span
+                  >
                 </div>
               </button>
             </div>
@@ -98,11 +101,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styles: [
     `
       .link {
-        @apply text-gray-100 dark:text-gray-100 flex items-center rounded-lg gap-3 p-2 cursor-pointer font-mono;
+        @apply text-gray-700 dark:text-gray-300 flex items-center rounded-lg gap-3 p-2 cursor-pointer font-mono;
       }
 
       .active {
-        @apply text-sky-700 bg-gray-100 dark:bg-gray-100 dark:text-sky-600 font-semibold;
+        @apply text-blue-700 bg-blue-100 dark:bg-gray-600 dark:text-blue-500;
       }
 
       .menu-item {

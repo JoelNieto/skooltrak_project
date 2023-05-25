@@ -34,7 +34,7 @@ import { ButtonComponent } from '@skooltrak/ui';
           </div>
         </div>
 
-        <button skooltrak-button color="red">Button</button>
+        <a skooltrak-button color="green" routerLink="../new">New</a>
       </div>
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead

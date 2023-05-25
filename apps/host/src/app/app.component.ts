@@ -1,10 +1,9 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { SupabaseService } from '@skooltrak/auth';
-import { Link } from '@skooltrak/models';
+import { Store } from '@ngrx/store';
+import { state } from '@skooltrak/auth';
+import { RoleEnum } from '@skooltrak/models';
 import { DashboardComponent } from '@skooltrak/ui';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'skooltrak-root',
@@ -14,26 +13,39 @@ import { Observable, of } from 'rxjs';
   styles: [``],
 })
 export class AppComponent implements OnInit {
+  store = inject(Store);
   router = inject(Router);
-  supabase = inject(SupabaseService);
-  user = toSignal(this.supabase.user);
-  roles = toSignal(this.supabase.roles);
-  currentRole = this.supabase.currentRole;
-  links: Observable<Link[]> = of([]);
+  currentRole = this.store.selectSignal(state.selectors.selectCurrentRole);
   title = 'host';
   constructor() {
-    effect(() => console.log(this.user()));
-    effect(() => console.log(this.currentRole()?.roles));
     effect(() => {
-      const role = this.currentRole()?.roles;
-      !!role && (this.links = this.supabase.getLinks());
+      if (!this.currentRole()) {
+        return;
+      }
+      const { role } = this.currentRole()!;
+
+      if (role?.code === RoleEnum.Administrator) {
+        this.router.resetConfig([
+          {
+            path: 'app',
+            loadComponent: () =>
+              import('@skooltrak/ui').then((x) => x.DashboardComponent),
+            children: [
+              {
+                path: '',
+                loadChildren: () =>
+                  import('admin/Module').then((m) => m.RemoteEntryModule),
+              },
+            ],
+          },
+          { path: '', redirectTo: 'app', pathMatch: 'full' },
+        ]);
+        this.router.navigate(['']);
+      }
     });
   }
+
   ngOnInit(): void {
-    this.links.subscribe({
-      next: (links) => {
-        console.log(links);
-      },
-    });
+    this.store.dispatch(state.AuthActions.initState());
   }
 }

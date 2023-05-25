@@ -13,6 +13,13 @@ export const studentsRoutes: Routes = [
             (x) => x.StudentsListComponent
           ),
       },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./form/student-form.component').then(
+            (x) => x.StudentFormComponent
+          ),
+      },
       { path: '', redirectTo: 'all', pathMatch: 'full' },
     ],
   },

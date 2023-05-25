@@ -3,8 +3,8 @@ import { School } from '../academic';
 export type Role = {
   id?: string;
   name?: string;
-  code?: string;
-  links: Link[];
+  code?: RoleEnum;
+  links?: Link[];
 };
 
 export type UserRole = {
@@ -13,18 +13,20 @@ export type UserRole = {
 };
 
 export type Link = {
+  sort: number;
   name?: string;
   icon?: string;
   route?: string;
 };
 
 export type SchoolRole = {
-  roles?: Role;
-  schools?: School;
+  id?: string;
+  role?: Role;
+  school?: Partial<School>;
 };
 
 export enum RoleEnum {
-  Administrator = 'administrator',
+  Administrator = 'admin',
   AccountingAdmin = 'accounting_admin',
   CollectionAdmin = 'collection_admin',
   AcademicAdmin = 'academic_admin',

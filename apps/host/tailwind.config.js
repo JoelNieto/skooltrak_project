@@ -11,7 +11,6 @@ module.exports = {
     join(__dirname, '../teacher/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../student/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../../libs/ui/src/**/!(*.stories|*.spec).{ts,html}'),
-    './node_modules/flowbite/**/*.js',
   ],
   theme: {
     extend: {
@@ -20,5 +19,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
 };

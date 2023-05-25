@@ -41,7 +41,8 @@
             "variables": true
           }
         ]
-      }
+      },
+      "extends": ["plugin:@ngrx/recommended"]
     },
     {
       "files": ["*.ts", "*.tsx"],

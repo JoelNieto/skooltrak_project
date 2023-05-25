@@ -2,8 +2,10 @@ import { NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { SupabaseService } from '../../services/supabase.service';
+import { AuthActions } from '../../state';
 
 @Component({
   selector: 'skooltrak-sign-in',
@@ -135,7 +137,7 @@ import { SupabaseService } from '../../services/supabase.service';
   ],
 })
 export class SignInComponent {
-  private supabase = inject(SupabaseService);
+  private store = inject(Store);
 
   form = new FormGroup({
     email: new FormControl<string>('', {
@@ -150,11 +152,6 @@ export class SignInComponent {
 
   async signIn() {
     const { email, password } = this.form.getRawValue();
-    const {
-      data: { user },
-      error,
-    } = await this.supabase.signInWithEmail(email, password);
-    if (error) console.info(error);
-    console.log(user);
+    this.store.dispatch(AuthActions.signIn({ email, password }));
   }
 }

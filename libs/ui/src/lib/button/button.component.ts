@@ -1,18 +1,24 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, HostListener, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: `[skooltrak-button]`,
   standalone: true,
   imports: [NgClass],
 
-  template: `<div [class]="styles" (click)="buttonClick.emit()">
-    <ng-content></ng-content>
-  </div>`,
+  template: `<ng-content></ng-content>`,
 })
 export class ButtonComponent implements OnInit {
   @Input({ required: true }) color!: 'blue' | 'sky' | 'red' | 'green';
   @Output() buttonClick = new EventEmitter();
+  @HostBinding('class') get classes() {
+    return this.styles;
+  }
+  @HostListener('click', ['$event.target'])
+  onClick() {
+    this.buttonClick.emit();
+  }
+
   private colorVariants = {
     blue: [
       'bg-blue-600',
@@ -51,7 +57,6 @@ export class ButtonComponent implements OnInit {
   public styles: string[] = [];
 
   ngOnInit(): void {
-    console.log(this.color);
     this.styles = [
       ...this.colorVariants[this.color],
       `text-white`,
@@ -66,6 +71,5 @@ export class ButtonComponent implements OnInit {
       `py-2.5`,
       `text-center`,
     ];
-    console.log(this.styles);
   }
 }

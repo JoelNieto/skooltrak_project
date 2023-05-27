@@ -25,6 +25,10 @@ export const selectCurrentRole = createSelector(
   selectAuthState,
   (state) => state.currentRole
 );
+export const selectCurrentSchool = createSelector(
+  selectCurrentRole,
+  (state) => state?.school
+);
 
 /* export const selectCurrentRole = createSelector(
   selectRoles, selectCurrentRoleId, (roles, current) => roles.find(x => x.role.)

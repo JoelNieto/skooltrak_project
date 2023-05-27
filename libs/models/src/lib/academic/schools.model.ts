@@ -5,7 +5,7 @@ import { Level } from './levels.model';
 export type School = EntityBase & {
   full_name?: string;
   short_name: string;
-  logo_url?: string;
+  crest_url?: string;
   website?: string;
   address?: string;
   motto?: string;
@@ -14,7 +14,7 @@ export type School = EntityBase & {
   levels: Level[];
   active: boolean;
   type: SchoolType;
-  country_id: number;
+  country_id: string;
   country: Country;
   profile?: { full_name: string };
 };

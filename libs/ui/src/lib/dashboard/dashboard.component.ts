@@ -1,5 +1,5 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { JsonPipe, NgFor, NgForOf } from '@angular/common';
+import { JsonPipe, NgFor, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -17,6 +17,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     IconsModule,
     JsonPipe,
     NgFor,
+    NgIf,
     NgForOf,
     NavbarComponent,
   ],
@@ -24,31 +25,38 @@ import { NavbarComponent } from '../navbar/navbar.component';
     <skooltrak-navbar />
     <aside
       id="logo-sidebar"
-      class="bg-white mt-12 dark:bg-gray-800 mt-12 border-r border-gray-200 dark:border-gray-700 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
+      class="bg-white mt-14 dark:bg-gray-800 mt-12 border-r border-gray-200 dark:border-gray-700 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
       <div class="flex flex-col p-3">
         <div class="flex items-center mb-4">
-          <div class="flex items-center">
-            <div class="flex gap-4">
+          <div class="flex items-center truncate">
+            <div class="flex pl-2 gap-4">
               <button
                 type="button"
-                class="flex items-center content-center gap-2 rounded-full"
+                class="flex items-center content-center gap-3 rounded-full"
                 aria-expanded="false"
                 data-dropdown-toggle="dropdown-user"
               >
                 <span class="sr-only">Open user menu</span>
                 <img
-                  class="w-8 h-8 rounded-full"
-                  src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                  alt="user photo"
+                  *ngIf="!role()?.school?.crest_url"
+                  class="w-12 h-12"
+                  src="assets/school-crest.png"
+                  alt="school crest"
+                />
+                <img
+                  *ngIf="role()?.school?.crest_url"
+                  class="w-12 h-12"
+                  [src]="role()?.school?.crest_url"
+                  alt="school crest"
                 />
                 <div class="flex flex-col items-start">
                   <span class="text-gray-700 dark:text-white">{{
-                    user()?.full_name
+                    role()?.school?.short_name
                   }}</span>
                   <span
                     class="text-gray-600 font-mono text-xs truncate dark:text-gray-300"
-                    >{{ user()?.email }}</span
+                    >{{ role()?.role?.name }}</span
                   >
                 </div>
               </button>
@@ -94,7 +102,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
         </ul>
       </div>
     </aside>
-    <main class="p-8 sm:ml-64 bg-white dark:bg-gray-800 min-h-screen">
+    <main class="p-8 mt-12 sm:ml-64 bg-white dark:bg-gray-800 min-h-screen">
       <router-outlet />
     </main>
   `,
@@ -105,7 +113,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       }
 
       .active {
-        @apply text-blue-700 bg-blue-100 dark:bg-gray-600 dark:text-blue-500;
+        @apply text-blue-700 bg-blue-200 dark:bg-gray-600 dark:text-blue-500;
       }
 
       .menu-item {
@@ -123,4 +131,5 @@ export class DashboardComponent {
   private store = inject(Store);
   links = this.store.selectSignal(state.selectors.selectLinks);
   user = this.store.selectSignal(state.selectors.selectUser);
+  role = this.store.selectSignal(state.selectors.selectCurrentRole);
 }

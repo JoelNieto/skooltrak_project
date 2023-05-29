@@ -58,11 +58,19 @@ export class SupabaseService {
     return this.client.auth.signOut();
   }
 
-  downLoadImage(path: string) {
-    return this.client.storage.from('avatars').download(path);
+  downLoadImage(path: string, bucket: 'avatars' | 'crests') {
+    return this.client.storage.from(bucket).download(path);
   }
 
-  uploadAvatar(filePath: string, file: File) {
+  uploadAvatar(file: File) {
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${Math.random()}.${fileExt}`;
     return this.client.storage.from('avatars').upload(filePath, file);
+  }
+
+  uploadCrest(file: File) {
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${Math.random()}.${fileExt}`;
+    return this.client.storage.from('crests').upload(filePath, file);
   }
 }

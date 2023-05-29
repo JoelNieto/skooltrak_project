@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { state } from '@skooltrak/auth';
 
+import { AvatarComponent } from '../avatar/avatar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
@@ -14,6 +15,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     RouterOutlet,
     RouterLinkActive,
     RouterLink,
+    AvatarComponent,
     IconsModule,
     JsonPipe,
     NgFor,
@@ -28,37 +30,37 @@ import { NavbarComponent } from '../navbar/navbar.component';
       class="bg-white mt-14 dark:bg-gray-800 mt-12 border-r border-gray-200 dark:border-gray-700 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
       <div class="flex flex-col p-3">
-        <div class="flex items-center mb-4">
+        <div class="flex items-center justify-center mb-2">
           <div class="flex items-center truncate">
-            <div class="flex pl-2 gap-4">
+            <div class="flex pl-2">
               <button
                 type="button"
-                class="flex items-center content-center gap-3 rounded-full"
+                class="flex flex-col justify-center items-center content-center gap-1 rounded-lg"
                 aria-expanded="false"
                 data-dropdown-toggle="dropdown-user"
               >
                 <span class="sr-only">Open user menu</span>
                 <img
                   *ngIf="!role()?.school?.crest_url"
-                  class="w-12 h-12"
-                  src="assets/school-crest.png"
+                  class="h-12"
+                  src="https://ibepanama.org/wp-content/uploads/2021/07/Recurso-4-2.png"
                   alt="school crest"
                 />
-                <img
+                <skooltrak-avatar
                   *ngIf="role()?.school?.crest_url"
-                  class="w-12 h-12"
-                  [src]="role()?.school?.crest_url"
+                  class="h-12"
+                  [avatarUrl]="role()?.school?.crest_url!"
+                  bucket="crests"
                   alt="school crest"
                 />
-                <div class="flex flex-col items-start">
-                  <span class="text-gray-700 dark:text-white">{{
-                    role()?.school?.short_name
-                  }}</span>
-                  <span
-                    class="text-gray-600 font-mono text-xs truncate dark:text-gray-300"
-                    >{{ role()?.role?.name }}</span
-                  >
-                </div>
+                <span
+                  class="text-blue-700 font-semibold font-mono dark:text-white"
+                  >{{ role()?.school?.short_name }}</span
+                >
+                <span
+                  class="text-gray-600 font-mono text-xs truncate dark:text-gray-300"
+                  >{{ role()?.role?.name }}</span
+                >
               </button>
             </div>
             <div

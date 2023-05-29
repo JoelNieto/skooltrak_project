@@ -3,7 +3,7 @@ import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store'
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Country, School } from '@skooltrak/models';
-import { exhaustMap, from, of } from 'rxjs';
+import { exhaustMap, from, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   school?: Partial<School>;
@@ -22,6 +22,20 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
   private readonly setCountries = this.updater(
     (state, countries: Country[]) => ({ ...state, countries, loading: false })
   );
+
+  private setSchool = this.updater((state, school: Partial<School>) => ({
+    ...state,
+    school,
+  }));
+  private setSchoolCrest = this.updater((state, crest_url: string) => ({
+    ...state,
+    school: { ...state.school, crest_url },
+  }));
+
+  private readonly setLoading = this.updater((state, loading: boolean) => ({
+    ...state,
+    loading,
+  }));
 
   readonly fetchCountries = this.effect(() => {
     return from(
@@ -43,6 +57,56 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
       )
     );
   });
+
+  readonly uploadCrest = this.effect((request$: Observable<File>) => {
+    return request$.pipe(
+      tap(() => this.setLoading(true)),
+      switchMap((request) =>
+        from(this.supabase.uploadCrest(request)).pipe(
+          exhaustMap(({ data, error }) => {
+            console.log(data);
+            console.log(error);
+            if (error) throw new Error(error.message);
+            return of(data.path);
+          })
+        )
+      ),
+      tapResponse(
+        (crest_path) => {
+          this.setSchoolCrest(crest_path);
+          this.updateSchool({ ...this.school(), crest_url: crest_path });
+        },
+        (error) => console.error(error)
+      )
+    );
+  });
+
+  readonly updateSchool = this.effect(
+    (request$: Observable<Partial<School>>) => {
+      return request$.pipe(
+        tap(() => this.setLoading(true)),
+        switchMap((request) => {
+          const update = { ...request, updated_at: new Date() };
+          return from(
+            this.supabase.client
+              .from('schools')
+              .update(update)
+              .eq('id', request.id)
+          ).pipe(
+            exhaustMap(({ data, error }) => {
+              console.log(error);
+              if (error) throw new Error(error?.message);
+              return of(update);
+            })
+          );
+        }),
+        tapResponse(
+          (school) => this.setSchool(school),
+          (error) => console.error(error)
+        )
+      );
+    }
+  );
 
   ngrxOnStoreInit = () =>
     this.setState({

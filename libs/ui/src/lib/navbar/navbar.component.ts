@@ -2,7 +2,7 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectUser } from 'libs/auth/src/lib/state/selectors';
+import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors';
 
 @Component({
   selector: 'skooltrak-navbar',
@@ -53,15 +53,23 @@ import { selectUser } from 'libs/auth/src/lib/state/selectors';
             <div>
               <button
                 type="button"
-                class="flex text-sm rounded-full focus:ring-4 focus:ring-blue-600 dark:focus:ring-blue-600"
+                class="flex items-center p-1 justify-center text-sm rounded gap-2 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600"
                 [cdkMenuTriggerFor]="menu"
               >
                 <span class="sr-only">Open user menu</span>
                 <img
-                  class="w-10 h-10  border-none dark:bg-gray-800"
+                  class="w-7 h-7 border-none dark:bg-gray-800"
                   src="assets/bot-avatar.png"
                   alt="user photo"
                 />
+                <div class="flex flex-col items-start">
+                  <p class="text-xs text-gray-800 font-semibold">
+                    {{ user()?.full_name }}
+                  </p>
+                  <p class="text-xs text-gray-400 font-mono">
+                    {{ role()?.role?.name }}
+                  </p>
+                </div>
               </button>
             </div>
             <ng-template #menu>
@@ -130,4 +138,5 @@ import { selectUser } from 'libs/auth/src/lib/state/selectors';
 export class NavbarComponent {
   store = inject(Store);
   user = this.store.selectSignal(selectUser);
+  role = this.store.selectSignal(selectCurrentRole);
 }

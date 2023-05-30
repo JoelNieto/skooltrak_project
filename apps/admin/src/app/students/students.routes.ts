@@ -14,6 +14,13 @@ export const studentsRoutes: Routes = [
           ),
       },
       {
+        path: 'admission',
+        loadComponent: () =>
+          import('./admission/admission.component').then(
+            (x) => x.AdmissionComponent
+          ),
+      },
+      {
         path: 'new',
         loadComponent: () =>
           import('./form/student-form.component').then(

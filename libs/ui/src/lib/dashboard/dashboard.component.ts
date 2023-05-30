@@ -54,7 +54,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
                   alt="school crest"
                 />
                 <span
-                  class="text-blue-700 font-semibold font-mono dark:text-white"
+                  class="text-sky-700 font-semibold font-mono dark:text-white"
                   >{{ role()?.school?.short_name }}</span
                 >
                 <span
@@ -115,7 +115,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       }
 
       .active {
-        @apply text-blue-700 bg-blue-200 dark:bg-gray-600 dark:text-blue-500;
+        @apply text-sky-700 bg-sky-200 dark:bg-gray-600 dark:text-sky-500;
       }
 
       .menu-item {

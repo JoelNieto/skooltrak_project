@@ -19,7 +19,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
             data-drawer-toggle="logo-sidebar"
             aria-controls="logo-sidebar"
             type="button"
-            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           >
             <span class="sr-only">Open sidebar</span>
             <svg
@@ -53,7 +53,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
             <div>
               <button
                 type="button"
-                class="flex items-center p-1 justify-center text-sm rounded gap-2 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600"
+                class="flex items-center p-1 justify-center text-sm rounded gap-2 focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-600"
                 [cdkMenuTriggerFor]="menu"
               >
                 <span class="sr-only">Open user menu</span>
@@ -63,7 +63,9 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                   alt="user photo"
                 />
                 <div class="flex flex-col items-start">
-                  <p class="text-xs text-gray-800 font-semibold">
+                  <p
+                    class="text-xs text-gray-800 dark:text-white font-semibold"
+                  >
                     {{ user()?.full_name }}
                   </p>
                   <p class="text-xs text-gray-400 font-mono">
@@ -80,7 +82,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
               >
                 <div class="px-4 py-3" role="none">
                   <p
-                    class="text-sm text-blue-700 font-bold dark:text-white"
+                    class="text-sm text-sky-700 font-bold dark:text-white"
                     role="none"
                   >
                     {{ user()?.full_name }}

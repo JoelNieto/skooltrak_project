@@ -5,5 +5,4 @@ export type Subject = EntityBase & {
   description?: string;
   short_name?: string;
   code?: string;
-  active: boolean;
 };

@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Country, School } from '@skooltrak/models';
@@ -64,8 +68,6 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
       switchMap((request) =>
         from(this.supabase.uploadCrest(request)).pipe(
           exhaustMap(({ data, error }) => {
-            console.log(data);
-            console.log(error);
             if (error) throw new Error(error.message);
             return of(data.path);
           })
@@ -94,7 +96,6 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
               .eq('id', request.id)
           ).pipe(
             exhaustMap(({ data, error }) => {
-              console.log(error);
               if (error) throw new Error(error?.message);
               return of(update);
             })

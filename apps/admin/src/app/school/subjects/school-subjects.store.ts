@@ -1,19 +1,19 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Subject } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import { exhaustMap, from, of, tap } from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   subjects: Subject[];
   count: number;
   pages: number;
+  pageSize: number;
+  start: number;
+  end: number;
   loading: boolean;
 };
 
@@ -29,39 +29,107 @@ export class SchoolSubjectsStore
 
   readonly subjects = this.selectSignal((state) => state.subjects);
   readonly count = this.selectSignal((state) => state.count);
-  readonly pages = this.selectSignal((state) => state.pages);
+  readonly loading = this.selectSignal((state) => state.loading);
+  readonly pageSize = this.selectSignal((state) => state.pageSize);
+  readonly start$ = this.select((state) => state.start);
+  readonly end$ = this.select((state) => state.end);
 
   private setSubjects = this.updater((state, subjects: Subject[]) => ({
     ...state,
     subjects,
   }));
+
   private setCount = this.updater((state, count: number) => ({
     ...state,
     count,
     pages: this.util.getPages(count, 10),
   }));
 
-  readonly fetchSubjects = this.effect(() => {
-    return from(
-      this.supabase.client
-        .from('school_subjects')
-        .select('id,name, short_name, code, description', { count: 'exact' })
-        .eq('school_id', this.school()?.id)
-    ).pipe(
-      exhaustMap(({ data, error, count }) => {
-        if (error) throw new Error(error.message);
-        return of({ subjects: data, count });
-      }),
-      tap(({ count }) => this.setCount(count!)),
-      tapResponse(
-        ({ subjects }) => this.setSubjects(subjects as Subject[]),
-        (error) => {
-          console.error(error);
-          return of([]);
-        }
-      )
-    );
-  });
-  ngrxOnStoreInit = () =>
-    this.setState({ subjects: [], loading: true, pages: 0, count: 0 });
+  setRange = this.updater((state, start: number) => ({
+    ...state,
+    start: start,
+    end: start + (state.pageSize - 1),
+  }));
+
+  readonly fetchSubjectsData$ = this.select(
+    {
+      start: this.start$,
+      end: this.end$,
+      pageSize: toObservable(this.pageSize),
+    },
+    { debounce: true }
+  );
+
+  private readonly fetchSubjects = this.effect(
+    (data$: Observable<{ start: number; end: number; pageSize: number }>) => {
+      return data$.pipe(
+        tap(() => this.patchState({ loading: true })),
+        filter(({ end }) => end > 0),
+        switchMap(({ start, end }) => {
+          return from(
+            this.supabase.client
+              .from('school_subjects')
+              .select('id,name, short_name, code, description, created_at', {
+                count: 'exact',
+              })
+              .order('name', { ascending: true })
+              .range(start, end)
+              .eq('school_id', this.school()?.id)
+          ).pipe(
+            exhaustMap(({ data, error, count }) => {
+              if (error) throw new Error(error.message);
+              return of({ subjects: data, count });
+            }),
+            tap(({ count }) => this.setCount(count!)),
+            tapResponse(
+              ({ subjects }) => this.setSubjects(subjects as Subject[]),
+              (error) => {
+                console.error(error);
+                return of([]);
+              },
+              () => this.patchState({ loading: false })
+            )
+          );
+        })
+      );
+    }
+  );
+
+  public readonly saveSubject = this.effect(
+    (request$: Observable<Partial<Subject>>) => {
+      return request$.pipe(
+        tap(() => this.patchState({ loading: true })),
+        switchMap((request) => {
+          return from(
+            this.supabase.client
+              .from('school_subjects')
+              .upsert([{ ...request, school_id: this.school()?.id }])
+          ).pipe(
+            exhaustMap(({ error }) => {
+              if (error) throw new Error(error.message);
+              return of(EMPTY);
+            })
+          );
+        }),
+        tapResponse(
+          () => this.fetchSubjects(this.fetchSubjectsData$),
+          (error) => console.log(error),
+          () => this.patchState({ loading: false })
+        )
+      );
+    }
+  );
+
+  ngrxOnStoreInit = () => {
+    this.setState({
+      subjects: [],
+      loading: true,
+      pages: 0,
+      count: 0,
+      pageSize: 5,
+      start: 0,
+      end: 4,
+    });
+    this.fetchSubjects(this.fetchSubjectsData$);
+  };
 }

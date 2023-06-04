@@ -1,5 +1,13 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, HostBinding, HostListener, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: `[skooltrak-button]`,
@@ -68,7 +76,7 @@ export class ButtonComponent implements OnInit {
       `rounded-lg`,
       `text-sm`,
       `px-5`,
-      `py-2.5`,
+      `py-2`,
       `text-center`,
     ];
   }

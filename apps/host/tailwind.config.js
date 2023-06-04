@@ -16,7 +16,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Barlow', 'Helvetica Neue', 'sans-serif'],
       },
     },
   },

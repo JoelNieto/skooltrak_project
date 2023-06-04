@@ -4,18 +4,21 @@ import { Component, inject } from '@angular/core';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
 import { ButtonComponent } from '../button/button.component';
+import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'skooltrak-image-cropper',
   standalone: true,
-  imports: [ImageCropperModule, ButtonComponent, IconsModule],
-  template: `<div class="rounded-lg bg-white p-5 w-full">
+  imports: [ImageCropperModule, ButtonComponent, IconsModule, CardComponent],
+  template: `<skooltrak-card>
       <div class="flex items-start justify-between">
-        <h3 class="font-mono text-xl text-gray-700 font-semibold mb-4">
+        <h3
+          class="font-mono text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+        >
           Image cropper
         </h3>
         <button (click)="dialogRef.close()">
-          <icon name="x-mark" color="text-gray-700" />
+          <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
         </button>
       </div>
       <button skooltrak-button color="green" (click)="fileInput.click()">
@@ -54,7 +57,7 @@ import { ButtonComponent } from '../button/button.component';
           </button>
         </div>
       </div>
-    </div>
+    </skooltrak-card>
     <input
       hidden
       type="file"

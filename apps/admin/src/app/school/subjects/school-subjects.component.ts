@@ -1,15 +1,30 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { NgFor } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, inject, ViewChild } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
-import { ButtonComponent, UtilService } from '@skooltrak/ui';
+import { Subject } from '@skooltrak/models';
+import { ButtonComponent, PaginatorComponent, UtilService } from '@skooltrak/ui';
 
+import { SubjectsFormComponent } from './form/subjects-forms.component';
 import { SchoolSubjectsStore } from './school-subjects.store';
 
 @Component({
   selector: 'skooltrak-school-subjects',
   standalone: true,
-  imports: [IconsModule, NgFor, ButtonComponent],
+  imports: [
+    IconsModule,
+    NgFor,
+    NgIf,
+    ButtonComponent,
+    PaginatorComponent,
+    DialogModule,
+    NgClass,
+    SubjectsFormComponent,
+    DatePipe,
+    IconsModule,
+  ],
+  providers: [provideComponentStore(SchoolSubjectsStore), UtilService],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
       <div>
@@ -26,13 +41,13 @@ import { SchoolSubjectsStore } from './school-subjects.store';
           <input
             type="text"
             id="table-search"
-            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
             placeholder="Search for items"
           />
         </div>
       </div>
 
-      <a skooltrak-button color="sky" routerLink="../new">New</a>
+      <button skooltrak-button color="sky" (click)="newSubject()">New</button>
     </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead
@@ -49,7 +64,8 @@ import { SchoolSubjectsStore } from './school-subjects.store';
       <tbody>
         <tr
           *ngFor="let subject of store.subjects()"
-          class="bg-white border-b border-gray-200 dark:bg-gray-700 dark:border-gray-700"
+          [class.hidden]="store.loading()"
+          class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
         >
           <th
             scope="row"
@@ -59,107 +75,72 @@ import { SchoolSubjectsStore } from './school-subjects.store';
           </th>
           <td class="px-6 py-4">{{ subject.short_name }}</td>
           <td class="px-6 py-4">{{ subject.code }}</td>
-          <td class="px-6 py-4">{{ subject.created_at }}</td>
-          <td class="px-6 py-4"></td>
+          <td class="px-6 py-4">{{ subject.created_at | date : 'medium' }}</td>
+          <td class="px-6 ">
+            <button type="button" (click)="editSubject(subject)">
+              <icon name="pencil-square" class="h-6 w-6 text-green-600" />
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
-    <nav
-      class="flex items-center justify-between pt-4"
-      aria-label="Table navigation"
-    >
-      <span class="text-sm font-normal text-gray-500 dark:text-gray-400"
-        >Showing
-        <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of
-        <span class="font-semibold text-gray-900 dark:text-white">{{
-          store.count()
-        }}</span></span
-      >
-      <ul class="inline-flex items-center -space-x-px">
-        <li>
-          <a
-            href="#"
-            class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >
-            <span class="sr-only">Previous</span>
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >1</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >2</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            aria-current="page"
-            class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-            >3</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >...</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >100</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >
-            <span class="sr-only">Next</span>
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </a>
-        </li>
+    <div class="animate-pulse mt-2" *ngIf="store.loading()">
+      <h3 class="h-4 bg-gray-200 rounded-md dark:bg-gray-700 w-10/12"></h3>
+
+      <ul class="mt-5 space-y-3">
+        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
+        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
+        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
+        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
       </ul>
-    </nav>
+    </div>
+
+    <skooltrak-paginator
+      [count]="store.count()"
+      [pageSize]="store.pageSize"
+      (paginate)="getCurrentPage($event)"
+    />
   </div>`,
-  styles: [],
-  providers: [provideComponentStore(SchoolSubjectsStore), UtilService],
 })
 export class SchoolSubjectsComponent {
+  @ViewChild(PaginatorComponent) paginator!: PaginatorComponent;
   store = inject(SchoolSubjectsStore);
+  dialog = inject(Dialog);
+  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+    const { start } = pagination;
+    this.store.setRange(start);
+  }
+
+  newSubject() {
+    const dialogRef = this.dialog.open<Partial<Subject>>(
+      SubjectsFormComponent,
+      {
+        minWidth: '36rem',
+        disableClose: true,
+      }
+    );
+
+    dialogRef.closed.subscribe({
+      next: (request) => {
+        !!request && this.store.saveSubject(request);
+      },
+    });
+  }
+
+  editSubject(subject: Subject) {
+    console.log(subject);
+    const dialogRef = this.dialog.open<Partial<Subject>>(
+      SubjectsFormComponent,
+      {
+        minWidth: '36rem',
+        disableClose: true,
+        data: subject,
+      }
+    );
+    dialogRef.closed.subscribe({
+      next: (request) => {
+        !!request && this.store.saveSubject({ ...request, id: subject.id });
+      },
+    });
+  }
 }

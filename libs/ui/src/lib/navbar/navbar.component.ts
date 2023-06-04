@@ -1,16 +1,18 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors';
+import {
+  selectCurrentRole,
+  selectUser,
+} from 'libs/auth/src/lib/state/selectors';
 
 @Component({
   selector: 'skooltrak-navbar',
   standalone: true,
-  imports: [CommonModule, CdkMenuModule],
-  template: `<nav
-    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-  >
+  imports: [CommonModule, CdkMenuModule, RouterLink],
+  template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
@@ -58,13 +60,13 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
               >
                 <span class="sr-only">Open user menu</span>
                 <img
-                  class="w-7 h-7 border-none dark:bg-gray-800"
+                  class="w-7 h-7 border-none"
                   src="assets/bot-avatar.png"
                   alt="user photo"
                 />
                 <div class="flex flex-col items-start">
                   <p
-                    class="text-xs text-gray-800 dark:text-white font-semibold"
+                    class="text-xs text-gray-800 dark:text-white font-sans font-semibold"
                   >
                     {{ user()?.full_name }}
                   </p>
@@ -88,7 +90,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                     {{ user()?.full_name }}
                   </p>
                   <p
-                    class="text-sm text-gray-500 truncate dark:text-gray-300"
+                    class="text-sm text-gray-500 truncate font-sans dark:text-gray-300"
                     role="none"
                   >
                     {{ user()?.email }}
@@ -97,10 +99,10 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                 <ul class="py-1" role="none">
                   <li>
                     <a
-                      href="#"
+                      routerLink="profile"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       role="menuitem"
-                      >Dashboard</a
+                      >Profile</a
                     >
                   </li>
                   <li>

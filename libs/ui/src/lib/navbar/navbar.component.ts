@@ -1,16 +1,18 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors';
+import {
+  selectCurrentRole,
+  selectUser,
+} from 'libs/auth/src/lib/state/selectors';
 
 @Component({
   selector: 'skooltrak-navbar',
   standalone: true,
-  imports: [CommonModule, CdkMenuModule],
-  template: `<nav
-    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-  >
+  imports: [CommonModule, CdkMenuModule, RouterLink],
+  template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
@@ -19,7 +21,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
             data-drawer-toggle="logo-sidebar"
             aria-controls="logo-sidebar"
             type="button"
-            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           >
             <span class="sr-only">Open sidebar</span>
             <svg
@@ -53,17 +55,19 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
             <div>
               <button
                 type="button"
-                class="flex items-center p-1 justify-center text-sm rounded gap-2 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600"
+                class="flex items-center p-1 justify-center text-sm rounded gap-2 focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-600"
                 [cdkMenuTriggerFor]="menu"
               >
                 <span class="sr-only">Open user menu</span>
                 <img
-                  class="w-7 h-7 border-none dark:bg-gray-800"
+                  class="w-7 h-7 border-none"
                   src="assets/bot-avatar.png"
                   alt="user photo"
                 />
                 <div class="flex flex-col items-start">
-                  <p class="text-xs text-gray-800 font-semibold">
+                  <p
+                    class="text-xs text-gray-800 dark:text-white font-sans font-semibold"
+                  >
                     {{ user()?.full_name }}
                   </p>
                   <p class="text-xs text-gray-400 font-mono">
@@ -80,13 +84,13 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
               >
                 <div class="px-4 py-3" role="none">
                   <p
-                    class="text-sm text-blue-700 font-bold dark:text-white"
+                    class="text-sm text-sky-700 font-bold dark:text-white"
                     role="none"
                   >
                     {{ user()?.full_name }}
                   </p>
                   <p
-                    class="text-sm text-gray-500 truncate dark:text-gray-300"
+                    class="text-sm text-gray-500 truncate font-sans dark:text-gray-300"
                     role="none"
                   >
                     {{ user()?.email }}
@@ -95,10 +99,10 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                 <ul class="py-1" role="none">
                   <li>
                     <a
-                      href="#"
+                      routerLink="profile"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       role="menuitem"
-                      >Dashboard</a
+                      >Profile</a
                     >
                   </li>
                   <li>

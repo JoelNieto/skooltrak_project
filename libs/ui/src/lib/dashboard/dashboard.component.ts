@@ -27,7 +27,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     <skooltrak-navbar />
     <aside
       id="logo-sidebar"
-      class="bg-white mt-14 dark:bg-gray-800 mt-12 border-r border-gray-200 dark:border-gray-700 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
+      class="bg-white mt-14 dark:bg-gray-700 mt-12 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
       <div class="flex flex-col p-3">
         <div class="flex items-center justify-center mb-2">
@@ -54,7 +54,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
                   alt="school crest"
                 />
                 <span
-                  class="text-blue-700 font-semibold font-mono dark:text-white"
+                  class="text-sky-700 font-semibold font-mono dark:text-white"
                   >{{ role()?.school?.short_name }}</span
                 >
                 <span
@@ -104,7 +104,9 @@ import { NavbarComponent } from '../navbar/navbar.component';
         </ul>
       </div>
     </aside>
-    <main class="p-8 mt-12 sm:ml-64 bg-white dark:bg-gray-800 min-h-screen">
+    <main
+      class="p-8 sm:ml-64 bg-gray-50 dark:bg-gray-800 font-sans relative top-16"
+    >
       <router-outlet />
     </main>
   `,
@@ -115,7 +117,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       }
 
       .active {
-        @apply text-blue-700 bg-blue-200 dark:bg-gray-600 dark:text-blue-500;
+        @apply text-sky-700 bg-sky-200 dark:bg-gray-600 dark:text-sky-500;
       }
 
       .menu-item {
@@ -124,6 +126,10 @@ import { NavbarComponent } from '../navbar/navbar.component';
 
       .separator {
         @apply text-xs text-gray-400 block px-4 py-2 font-mono;
+      }
+
+      main {
+        min-height: calc(100vh - 4rem);
       }
     `,
   ],

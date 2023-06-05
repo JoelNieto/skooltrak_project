@@ -1,12 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
-import { Country, School } from '@skooltrak/models';
+import { Country, School, Table } from '@skooltrak/models';
 import { exhaustMap, from, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -44,7 +40,7 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
   readonly fetchCountries = this.effect(() => {
     return from(
       this.supabase.client
-        .from('countries')
+        .from(Table.Countries)
         .select('*')
         .order('name', { ascending: true })
     ).pipe(
@@ -91,7 +87,7 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
           const update = { ...request, updated_at: new Date() };
           return from(
             this.supabase.client
-              .from('schools')
+              .from(Table.Schools)
               .update(update)
               .eq('id', request.id)
           ).pipe(

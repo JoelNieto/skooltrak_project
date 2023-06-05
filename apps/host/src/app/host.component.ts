@@ -5,7 +5,7 @@ import { DashboardComponent } from '@skooltrak/ui';
 @Component({
   selector: 'skooltrak-host',
   imports: [DashboardComponent, RouterOutlet],
-  template: ` <router-outlet /> `,
+  template: `<router-outlet />`,
   standalone: true,
 })
 export class HostComponent {}

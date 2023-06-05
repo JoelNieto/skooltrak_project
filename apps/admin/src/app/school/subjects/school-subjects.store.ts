@@ -3,7 +3,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
-import { Subject } from '@skooltrak/models';
+import { Subject, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
 import { EMPTY, exhaustMap, filter, from, Observable, of, switchMap, tap } from 'rxjs';
 
@@ -68,7 +68,7 @@ export class SchoolSubjectsStore
         switchMap(({ start, end }) => {
           return from(
             this.supabase.client
-              .from('school_subjects')
+              .from(Table.Subjects)
               .select('id,name, short_name, code, description, created_at', {
                 count: 'exact',
               })
@@ -102,7 +102,7 @@ export class SchoolSubjectsStore
         switchMap((request) => {
           return from(
             this.supabase.client
-              .from('school_subjects')
+              .from(Table.Subjects)
               .upsert([{ ...request, school_id: this.school()?.id }])
           ).pipe(
             exhaustMap(({ error }) => {

@@ -24,6 +24,8 @@
     "@ngrx/effects": "^16.0.0",
     "@ngrx/store": "^16.0.0",
     "@ngrx/store-devtools": "^16.0.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "@nx/angular": "16.2.1",
     "@supabase/supabase-js": "^2.20.0",
     "flowbite": "^1.6.5",

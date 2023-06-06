@@ -12,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Barlow', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Inter', 'Helvetica Neue', 'sans-serif'],
+        title: ['Poppins', 'Helvetica Neue', 'sans-serif'],
       },
     },
   },

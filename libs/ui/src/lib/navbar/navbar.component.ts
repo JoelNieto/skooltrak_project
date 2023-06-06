@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   selectCurrentRole,
   selectUser,
@@ -11,7 +12,7 @@ import {
 @Component({
   selector: 'skooltrak-navbar',
   standalone: true,
-  imports: [CommonModule, CdkMenuModule, RouterLink],
+  imports: [CommonModule, CdkMenuModule, RouterLink, TranslateModule],
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -45,8 +46,8 @@ import {
               alt="Skooltrak Logo"
             />
             <span
-              class="self-center text-gray-700 text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
-              >Skooltrak</span
+              class="self-center text-gray-700 text-xl font-semibold font-title sm:text-2xl whitespace-nowrap dark:text-white"
+              >{{ 'App title' | translate }}</span
             >
           </a>
         </div>
@@ -70,7 +71,7 @@ import {
                   >
                     {{ user()?.full_name }}
                   </p>
-                  <p class="text-xs text-gray-400 font-mono">
+                  <p class="text-xs text-gray-400 font-title">
                     {{ role()?.role?.name }}
                   </p>
                 </div>

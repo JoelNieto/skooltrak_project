@@ -1,11 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Subject, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import { EMPTY, exhaustMap, filter, from, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   subjects: Subject[];
@@ -69,9 +82,12 @@ export class SchoolSubjectsStore
           return from(
             this.supabase.client
               .from(Table.Subjects)
-              .select('id,name, short_name, code, description, created_at', {
-                count: 'exact',
-              })
+              .select(
+                'id,name, short_name, code, description, created_at, user:users(full_name)',
+                {
+                  count: 'exact',
+                }
+              )
               .order('name', { ascending: true })
               .range(start, end)
               .eq('school_id', this.school()?.id)

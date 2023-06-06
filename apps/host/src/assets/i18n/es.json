@@ -1,0 +1,35 @@
+{
+  "App title": "Skooltrak",
+  "Home": "Inicio",
+  "Collection": "Cobros",
+  "Messages": "Mensajes",
+  "Students": "Estudiantes",
+  "School": "Escuela",
+  "Polls": "Encuestas",
+  "Classes": "Clases",
+  "Grades": "Calificaciones",
+  "Teachers": "Docentes",
+  "Groups": "Grupos",
+  "Name": "Nombre",
+  "Short name": "Nombre corto",
+  "Code": "Codigo",
+  "Created": "Creado",
+  "Created by": "Creado por",
+  "New": "Nuevo",
+  "Subjects": {
+    "Title": "Asignaturas",
+    "Details": "Detalles de asignatura"
+  },
+  "Settings": "Ajustes",
+  "Actions": "Acciones",
+  "Description": "Descripcion",
+  "Save changes": "Guardar cambios",
+  "Confirmation": {
+    "Cancel": "Cancelar",
+    "Confirmar": "Si, confirmar",
+    "Delete": {
+      "Title": "Desea borrar esto?",
+      "Text": "Este cambio no podra ser reversado"
+    }
+  }
+}

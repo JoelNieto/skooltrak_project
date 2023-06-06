@@ -3,6 +3,7 @@ import { JsonPipe, NgFor, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { state } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
@@ -22,6 +23,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     NgIf,
     NgForOf,
     NavbarComponent,
+    TranslateModule,
   ],
   template: `
     <skooltrak-navbar />
@@ -54,11 +56,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
                   alt="school crest"
                 />
                 <span
-                  class="text-sky-700 font-semibold font-mono dark:text-white"
+                  class="text-sky-700 font-semibold font-sans dark:text-white"
                   >{{ role()?.school?.short_name }}</span
                 >
                 <span
-                  class="text-gray-600 font-mono text-xs truncate dark:text-gray-300"
+                  class="text-gray-600 font-title text-xs truncate dark:text-gray-300"
                   >{{ role()?.role?.name }}</span
                 >
               </button>
@@ -96,9 +98,13 @@ import { NavbarComponent } from '../navbar/navbar.component';
         </div>
         <ul role="list" class="flex flex-col gap-1 mt-4">
           <li *ngFor="let link of links()">
-            <a routerLinkActive="active" [routerLink]="link.route" class="link">
+            <a
+              routerLinkActive="active"
+              [routerLink]="link.route"
+              class="link font-sans"
+            >
               <icon [name]="link.icon" class="w-6 h-6" />
-              {{ link.name }}
+              {{ link.name | translate }}
             </a>
           </li>
         </ul>
@@ -113,7 +119,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styles: [
     `
       .link {
-        @apply text-gray-700 dark:text-gray-300 flex items-center rounded-lg gap-3 p-2 cursor-pointer font-mono;
+        @apply text-gray-700 dark:text-gray-300 flex items-center rounded-full gap-3 p-2 px-4 cursor-pointer;
       }
 
       .active {

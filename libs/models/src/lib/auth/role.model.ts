@@ -14,7 +14,7 @@ export type UserRole = {
 
 export type Link = {
   sort: number;
-  name?: string;
+  name: string;
   icon?: string;
   route?: string;
 };

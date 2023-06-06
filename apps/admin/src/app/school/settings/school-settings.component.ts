@@ -62,7 +62,7 @@ import { SchoolStore } from '../schools.store';
         <input type="text" class="input" formControlName="address" />
       </div>
       <div>
-        <label for="motto" class="label">Motto</label>
+        <label for="motto" class="label font-sans">Motto</label>
         <input type="text" class="input" formControlName="motto" />
       </div>
       <div>

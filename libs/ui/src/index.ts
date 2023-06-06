@@ -7,3 +7,4 @@ export * from './lib/avatar/avatar.component';
 export * from './lib/paginator/paginator.component';
 export * from './lib/services/util.service';
 export * from './lib/profile/profile.component';
+export * from './lib/confirmation/confirmation.service';

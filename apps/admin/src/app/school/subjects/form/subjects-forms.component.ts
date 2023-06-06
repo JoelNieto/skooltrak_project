@@ -1,20 +1,32 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
 import { ButtonComponent, CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'skooltrak-subjects-form',
   standalone: true,
-  imports: [CardComponent, IconsModule, ButtonComponent, ReactiveFormsModule],
+  imports: [
+    CardComponent,
+    IconsModule,
+    ButtonComponent,
+    ReactiveFormsModule,
+    TranslateModule,
+  ],
   template: `<skooltrak-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-mono text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+        class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
       >
-        Subject details
+        {{ 'Subjects.Details' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
@@ -26,19 +38,19 @@ import { ButtonComponent, CardComponent } from '@skooltrak/ui';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="name">Name</label>
+        <label for="name">{{ 'Name' | translate }}</label>
         <input type="text" formControlName="name" />
       </div>
       <div>
-        <label for="name">Short name</label>
+        <label for="name">{{ 'Short name' | translate }}</label>
         <input type="text" formControlName="short_name" />
       </div>
       <div>
-        <label for="name">Code</label>
+        <label for="name">{{ 'Code' | translate }}</label>
         <input type="text" formControlName="code" />
       </div>
       <div>
-        <label for="name">Description</label>
+        <label for="name">{{ 'Description' | translate }}</label>
         <textarea rows="3" formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">
@@ -48,7 +60,7 @@ import { ButtonComponent, CardComponent } from '@skooltrak/ui';
           type="submit"
           [disabled]="form.invalid"
         >
-          Save changes
+          {{ 'Save changes' | translate }}
         </button>
       </div>
     </form>

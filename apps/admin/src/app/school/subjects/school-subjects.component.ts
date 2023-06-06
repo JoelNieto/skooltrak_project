@@ -3,8 +3,14 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, inject, ViewChild } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonComponent, PaginatorComponent, UtilService } from '@skooltrak/ui';
+import {
+  ButtonComponent,
+  ConfirmationService,
+  PaginatorComponent,
+  UtilService,
+} from '@skooltrak/ui';
 
 import { SubjectsFormComponent } from './form/subjects-forms.component';
 import { SchoolSubjectsStore } from './school-subjects.store';
@@ -23,8 +29,13 @@ import { SchoolSubjectsStore } from './school-subjects.store';
     SubjectsFormComponent,
     DatePipe,
     IconsModule,
+    TranslateModule,
   ],
-  providers: [provideComponentStore(SchoolSubjectsStore), UtilService],
+  providers: [
+    provideComponentStore(SchoolSubjectsStore),
+    UtilService,
+    ConfirmationService,
+  ],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
       <div>
@@ -47,18 +58,21 @@ import { SchoolSubjectsStore } from './school-subjects.store';
         </div>
       </div>
 
-      <button skooltrak-button color="sky" (click)="newSubject()">New</button>
+      <button skooltrak-button color="sky" (click)="newSubject()">
+        {{ 'New' | translate }}
+      </button>
     </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead
         class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr class="cursor-pointer">
-          <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">Short name</th>
-          <th scope="col" class="px-6 py-3">Code</th>
-          <th score="col" class="px-6 py-3">Created</th>
-          <th scope="col" class="px-6 py-3">Actions</th>
+          <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Short name' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Code' | translate }}</th>
+          <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
+          <th score="col" class="px-6 py-3">{{ 'Created by' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -76,9 +90,13 @@ import { SchoolSubjectsStore } from './school-subjects.store';
           <td class="px-6 py-4">{{ subject.short_name }}</td>
           <td class="px-6 py-4">{{ subject.code }}</td>
           <td class="px-6 py-4">{{ subject.created_at | date : 'medium' }}</td>
-          <td class="px-6 ">
+          <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
+          <td class="px-6 py-4 flex justify-center gap-2 content-center">
             <button type="button" (click)="editSubject(subject)">
               <icon name="pencil-square" class="h-6 w-6 text-green-600" />
+            </button>
+            <button type="button" (click)="deleteSubject()">
+              <icon name="trash" class="h-6 w-6 text-red-600" />
             </button>
           </td>
         </tr>
@@ -106,6 +124,7 @@ export class SchoolSubjectsComponent {
   @ViewChild(PaginatorComponent) paginator!: PaginatorComponent;
   store = inject(SchoolSubjectsStore);
   dialog = inject(Dialog);
+  confirmation = inject(ConfirmationService);
   getCurrentPage(pagination: { currentPage: number; start: number }): void {
     const { start } = pagination;
     this.store.setRange(start);
@@ -142,5 +161,9 @@ export class SchoolSubjectsComponent {
         !!request && this.store.saveSubject({ ...request, id: subject.id });
       },
     });
+  }
+
+  deleteSubject() {
+    this.confirmation.openDialog('delete').subscribe();
   }
 }

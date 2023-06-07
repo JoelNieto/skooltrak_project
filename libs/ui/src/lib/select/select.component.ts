@@ -152,7 +152,6 @@ export class SelectComponent implements ControlValueAccessor {
   constructor() {
     effect(() => {
       this.onChange(this.currentValue());
-      this.onTouch(this.currentValue());
       const value = (this.innerContent = this.itemList().find(
         (x) => x[this.valueId] === this.currentValue()
       ));
@@ -199,6 +198,7 @@ export class SelectComponent implements ControlValueAccessor {
         ? this.currentValue.set(undefined)
         : this.currentValue.set(val);
       this.onChange(this.value);
+      this.onTouch();
       this.hide();
     }
     this.cdr.markForCheck();

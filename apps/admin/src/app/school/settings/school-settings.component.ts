@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   AvatarComponent,
   ButtonComponent,
@@ -28,6 +29,7 @@ import { SchoolStore } from '../schools.store';
     NgFor,
     DialogModule,
     SelectComponent,
+    TranslateModule,
   ],
   template: ` <div class="flex flex-col items-center justify-center space-y-4">
       <skooltrak-avatar
@@ -72,7 +74,14 @@ import { SchoolStore } from '../schools.store';
         <input type="email" class="input" formControlName="contact_email" />
       </div>
       <div class="col-span-4 flex justify-end">
-        <button type="submit" skooltrak-button color="sky">Save changes</button>
+        <button
+          type="submit"
+          skooltrak-button
+          color="sky"
+          [disabled]="this.form.invalid || this.form.untouched"
+        >
+          {{ 'Save changes' | translate }}
+        </button>
       </div>
     </form>`,
   styles: [

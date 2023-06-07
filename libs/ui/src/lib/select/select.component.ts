@@ -135,6 +135,7 @@ export class SelectComponent implements ControlValueAccessor {
   private cdr = inject(ChangeDetectorRef);
 
   innerContent = this.placeholder;
+  isDisabled = false;
 
   @HostListener('window:resize')
   public onWinResize(): void {
@@ -151,7 +152,6 @@ export class SelectComponent implements ControlValueAccessor {
   constructor() {
     effect(() => {
       this.onChange(this.currentValue());
-      this.onTouch(this.currentValue());
       const value = (this.innerContent = this.itemList().find(
         (x) => x[this.valueId] === this.currentValue()
       ));
@@ -183,7 +183,9 @@ export class SelectComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {}
+  setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
 
   onFilterChange(value: string) {
     this.searchText.set(value);
@@ -196,12 +198,14 @@ export class SelectComponent implements ControlValueAccessor {
         ? this.currentValue.set(undefined)
         : this.currentValue.set(val);
       this.onChange(this.value);
+      this.onTouch();
       this.hide();
     }
     this.cdr.markForCheck();
   };
 
   public showOptions(): void {
+    if (this.isDisabled) return;
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.container);
     this.syncWidth();

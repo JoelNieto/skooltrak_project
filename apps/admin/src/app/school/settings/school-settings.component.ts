@@ -143,7 +143,6 @@ export class SchoolSettingsComponent {
   }
 
   saveChanges() {
-    const value = this.form.getRawValue();
-    console.log(value);
+    this.store.updateSchool(this.form.getRawValue());
   }
 }

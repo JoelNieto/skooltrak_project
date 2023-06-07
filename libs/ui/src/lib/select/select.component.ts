@@ -135,6 +135,7 @@ export class SelectComponent implements ControlValueAccessor {
   private cdr = inject(ChangeDetectorRef);
 
   innerContent = this.placeholder;
+  isDisabled = false;
 
   @HostListener('window:resize')
   public onWinResize(): void {
@@ -183,7 +184,9 @@ export class SelectComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {}
+  setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
 
   onFilterChange(value: string) {
     this.searchText.set(value);
@@ -202,6 +205,7 @@ export class SelectComponent implements ControlValueAccessor {
   };
 
   public showOptions(): void {
+    if (this.isDisabled) return;
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.container);
     this.syncWidth();

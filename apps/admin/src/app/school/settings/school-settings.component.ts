@@ -11,6 +11,7 @@ import {
   AvatarComponent,
   ButtonComponent,
   ImageCropperComponent,
+  SelectComponent,
 } from '@skooltrak/ui';
 
 import { SchoolStore } from '../schools.store';
@@ -26,6 +27,7 @@ import { SchoolStore } from '../schools.store';
     ButtonComponent,
     NgFor,
     DialogModule,
+    SelectComponent,
   ],
   template: ` <div class="flex flex-col items-center justify-center space-y-4">
       <skooltrak-avatar
@@ -51,11 +53,11 @@ import { SchoolStore } from '../schools.store';
       </div>
       <div>
         <label for="country" class="label">Country</label>
-        <select class="input" formControlName="country_id">
-          <option *ngFor="let country of countries()" [value]="country.id">
-            {{ country.name }}
-          </option>
-        </select>
+        <skooltrak-select
+          [items]="countries()"
+          label="name"
+          formControlName="country_id"
+        />
       </div>
       <div>
         <label for="address" class="label">Address</label>
@@ -141,7 +143,6 @@ export class SchoolSettingsComponent {
   }
 
   saveChanges() {
-    const value = this.form.getRawValue();
-    this.store.updateSchool(value);
+    this.store.updateSchool(this.form.getRawValue());
   }
 }

@@ -55,6 +55,10 @@ import { UtilService } from '../services/util.service';
         (click)="showOptions()"
         role="listbox"
         class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        [ngClass]="{
+          'ring-1 ring-sky-600 border-sky-600 dark:ring-sky-500 dark:border-sky-500':
+            isOpen()
+        }"
         [innerHTML]="innerContent"
       ></div>
       <ng-template cdk-portal>
@@ -162,7 +166,7 @@ export class SelectComponent implements ControlValueAccessor {
 
   itemList = signal<any[]>([]);
   searchText = signal('');
-  isOpen = false;
+  isOpen = signal(false);
   currentValue = signal<any | any[]>(null);
 
   filteredItems = computed(
@@ -210,7 +214,7 @@ export class SelectComponent implements ControlValueAccessor {
     this.overlayRef.attach(this.container);
     this.syncWidth();
     this.overlayRef.backdropClick().subscribe(() => this.hide());
-    this.isOpen = true;
+    this.isOpen.set(true);
   }
 
   private getOverlayConfig = (): OverlayConfig =>
@@ -251,7 +255,7 @@ export class SelectComponent implements ControlValueAccessor {
 
   private hide(): void {
     this.overlayRef.detach();
-    this.isOpen = false;
+    this.isOpen.set(false);
     this.searchText.set('');
   }
 }

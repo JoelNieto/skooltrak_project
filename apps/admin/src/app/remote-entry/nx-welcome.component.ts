@@ -1,8 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { SelectComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'skooltrak-nx-welcome',
   standalone: true,
+  imports: [SelectComponent],
   template: `
     <!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *

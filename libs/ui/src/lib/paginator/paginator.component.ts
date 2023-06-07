@@ -147,7 +147,7 @@ export class PaginatorComponent {
 
   currentRange = computed(() => this.currentPage());
 
-  pages = computed(() => range(this.startPage(), this.endPage()));
+  pages = computed(() => range(this.startPage(), this.endPage())); //TODO - Fix three points page
 
   setPage = (page: number) => this.currentPage.set(page);
 

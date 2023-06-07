@@ -1,10 +1,17 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { SelectComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'skooltrak-student-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, SelectComponent],
   template: `<form
     [formGroup]="form"
     class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-4"
@@ -24,6 +31,13 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
     <div>
       <label for="mother_name">Mother name</label>
       <input type="text" formControlName="mother_name" />
+    </div>
+    <div>
+      <label for="mother_name">Mother name</label>
+      <skooltrak-select
+        [items]="[{ name: 'Panama' }, { name: 'Italia' }]"
+        label="name"
+      />
     </div>
   </form>`,
   styles: [

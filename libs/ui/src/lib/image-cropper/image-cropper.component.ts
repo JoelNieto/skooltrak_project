@@ -1,5 +1,6 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DialogRef } from '@angular/cdk/dialog';
+import { NgStyle } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
@@ -9,7 +10,13 @@ import { CardComponent } from '../card/card.component';
 @Component({
   selector: 'skooltrak-image-cropper',
   standalone: true,
-  imports: [ImageCropperModule, ButtonComponent, IconsModule, CardComponent],
+  imports: [
+    ImageCropperModule,
+    ButtonComponent,
+    IconsModule,
+    CardComponent,
+    NgStyle,
+  ],
   template: `<skooltrak-card>
       <div class="flex items-start justify-between">
         <h3
@@ -28,15 +35,16 @@ import { CardComponent } from '../card/card.component';
         <image-cropper
           [imageChangedEvent]="imgChangeEvt"
           [maintainAspectRatio]="false"
+          [containWithinAspectRatio]="true"
           [aspectRatio]="4 / 3"
-          [resizeToHeight]="512"
+          [resizeToHeight]="256"
           format="png"
           (imageCropped)="cropImg($event)"
           (imageLoaded)="imgLoad()"
           (cropperReady)="initCropper()"
           (loadImageFailed)="imgFailed()"
         />
-        <div class="flex my-4">
+        <div class="flex my-4 ">
           <div>
             <span class="font-mono text-gray-600 font-semibold"
               >Image preview</span

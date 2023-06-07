@@ -50,7 +50,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
                 />
                 <skooltrak-avatar
                   *ngIf="role()?.school?.crest_url"
-                  class="h-12"
+                  class="min-h-12 max-h-36"
                   [avatarUrl]="role()?.school?.crest_url!"
                   bucket="crests"
                   alt="school crest"
@@ -101,7 +101,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
             <a
               routerLinkActive="active"
               [routerLink]="link.route"
-              class="link font-sans"
+              class="link font-title"
             >
               <icon [name]="link.icon" class="w-6 h-6" />
               {{ link.name | translate }}
@@ -111,7 +111,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       </div>
     </aside>
     <main
-      class="p-8 sm:ml-64 bg-gray-50 dark:bg-gray-800 font-sans relative top-16"
+      class="p-8 sm:ml-64 bg-gray-100 dark:bg-gray-800 font-sans relative top-16"
     >
       <router-outlet />
     </main>
@@ -119,7 +119,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styles: [
     `
       .link {
-        @apply text-gray-700 dark:text-gray-300 flex items-center rounded-full gap-3 p-2 px-4 cursor-pointer;
+        @apply text-gray-700 text-sm dark:text-gray-300 flex items-center rounded-full gap-3 p-1.5 px-3 cursor-pointer;
       }
 
       .active {
@@ -142,8 +142,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  private store = inject(Store);
-  links = this.store.selectSignal(state.selectors.selectLinks);
-  user = this.store.selectSignal(state.selectors.selectUser);
-  role = this.store.selectSignal(state.selectors.selectCurrentRole);
+  links = inject(Store).selectSignal(state.selectors.selectLinks);
+  user = inject(Store).selectSignal(state.selectors.selectUser);
+  role = inject(Store).selectSignal(state.selectors.selectCurrentRole);
 }

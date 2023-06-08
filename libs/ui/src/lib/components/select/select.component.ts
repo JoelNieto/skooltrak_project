@@ -1,10 +1,5 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import {
-  Overlay,
-  OverlayConfig,
-  OverlayModule,
-  OverlayRef,
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -22,13 +17,10 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { UtilService } from '../services/util.service';
+import { PropertyPipe } from '../../pipes';
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'skooltrak-select',
@@ -41,6 +33,7 @@ import { UtilService } from '../services/util.service';
     IconsModule,
     FormsModule,
     NgClass,
+    PropertyPipe,
   ],
   providers: [
     {
@@ -65,7 +58,7 @@ import { UtilService } from '../services/util.service';
         [innerHTML]="innerContent"
       ></div>
       <ng-template cdk-portal>
-        <div class="options-container">
+        <div id="options-container" class="w-full">
           <div class="relative">
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
@@ -104,11 +97,17 @@ import { UtilService } from '../services/util.service';
                 (click)="toggleValue(item[valueId])"
               >
                 <div
-                  class="block px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="flex justify-between px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                   role="menuitem"
                   [ngClass]="{ active: currentValue() === item[valueId] }"
                 >
-                  {{ item[label] }}
+                  <div>{{ item[label] }}</div>
+                  <div
+                    class="text-xs text-gray-500 dark:text-gray-200"
+                    *ngIf="secondaryLabel"
+                  >
+                    {{ item | property : secondaryLabel }}
+                  </div>
                 </div>
               </li>
             </ul>
@@ -133,6 +132,7 @@ export class SelectComponent
     this.itemList.set(items ?? []);
   }
   @Input({ required: true }) label!: string;
+  @Input({ required: false }) secondaryLabel!: string;
   @Input({}) valueId: string = 'id';
   @Input() search: boolean = true;
   @Input() multiple = false;
@@ -163,7 +163,14 @@ export class SelectComponent
         (x) => x[this.valueId] === this.currentValue()
       ));
 
-      this.innerContent = value ? value[this.label] : this.placeholder;
+      this.innerContent = value
+        ? this.secondaryLabel
+          ? `${value[this.label]} - ${this.util.getProperty(
+              value,
+              this.secondaryLabel
+            )}`
+          : value[this.label]
+        : this.placeholder;
     });
   }
   ngAfterContentChecked(): void {

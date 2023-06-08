@@ -8,6 +8,8 @@ import {
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
+  AfterContentChecked,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -54,11 +56,12 @@ import { UtilService } from '../services/util.service';
         #select
         (click)="showOptions()"
         role="listbox"
-        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        class="bg-gray-50 border border-gray-300 text-gray-400 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
         [ngClass]="{
           'ring-1 ring-sky-600 border-sky-600 dark:ring-sky-500 dark:border-sky-500':
             isOpen()
         }"
+        [class.text-gray-700]="currentValue()"
         [innerHTML]="innerContent"
       ></div>
       <ng-template cdk-portal>
@@ -121,10 +124,13 @@ import { UtilService } from '../services/util.service';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectComponent implements ControlValueAccessor {
-  @Input({ required: true }) set items(items: any[]) {
-    this.itemList.set(items);
+export class SelectComponent
+  implements ControlValueAccessor, AfterContentChecked
+{
+  @Input({ required: true }) set items(items: any[] | undefined) {
+    this.itemList.set(items ?? []);
   }
   @Input({ required: true }) label!: string;
   @Input({}) valueId: string = 'id';
@@ -138,8 +144,8 @@ export class SelectComponent implements ControlValueAccessor {
   private util = inject(UtilService);
   private cdr = inject(ChangeDetectorRef);
 
-  innerContent = this.placeholder;
-  isDisabled = false;
+  innerContent: string;
+  isDisabled!: boolean;
 
   @HostListener('window:resize')
   public onWinResize(): void {
@@ -149,11 +155,8 @@ export class SelectComponent implements ControlValueAccessor {
   onChange = (value: any | any[]): void => {};
   onTouch: any = () => {};
 
-  get value(): any | any[] {
-    return this.currentValue();
-  }
-
   constructor() {
+    this.innerContent = this.placeholder;
     effect(() => {
       this.onChange(this.currentValue());
       const value = (this.innerContent = this.itemList().find(
@@ -162,6 +165,9 @@ export class SelectComponent implements ControlValueAccessor {
 
       this.innerContent = value ? value[this.label] : this.placeholder;
     });
+  }
+  ngAfterContentChecked(): void {
+    this.cdr.detectChanges();
   }
 
   itemList = signal<any[]>([]);
@@ -177,7 +183,7 @@ export class SelectComponent implements ControlValueAccessor {
   writeValue(val: any): void {
     if (val) {
       this.currentValue.set(val);
-      this.onChange(this.value);
+      this.onChange(val);
     }
   }
 
@@ -201,11 +207,9 @@ export class SelectComponent implements ControlValueAccessor {
       this.currentValue() === val
         ? this.currentValue.set(undefined)
         : this.currentValue.set(val);
-      this.onChange(this.value);
       this.onTouch();
       this.hide();
     }
-    this.cdr.markForCheck();
   };
 
   public showOptions(): void {

@@ -31,5 +31,13 @@
       "Title": "Desea borrar esto?",
       "Text": "Este cambio no podra ser reversado"
     }
+  },
+  "Degrees": {
+    "Title": "Certificados",
+    "Details": "Detalles del certificado"
+  },
+  "Plans": {
+    "Title": "Planes de estudio",
+    "Details": "Detalles del Plan de estudio"
   }
 }

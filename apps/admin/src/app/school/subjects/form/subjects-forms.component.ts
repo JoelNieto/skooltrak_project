@@ -42,15 +42,15 @@ import { ButtonComponent, CardComponent } from '@skooltrak/ui';
         <input type="text" formControlName="name" />
       </div>
       <div>
-        <label for="name">{{ 'Short name' | translate }}</label>
+        <label for="short_name">{{ 'Short name' | translate }}</label>
         <input type="text" formControlName="short_name" />
       </div>
       <div>
-        <label for="name">{{ 'Code' | translate }}</label>
+        <label for="code">{{ 'Code' | translate }}</label>
         <input type="text" formControlName="code" />
       </div>
       <div>
-        <label for="name">{{ 'Description' | translate }}</label>
+        <label for="description">{{ 'Description' | translate }}</label>
         <textarea rows="3" formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">

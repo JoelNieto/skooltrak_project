@@ -1,10 +1,10 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subject } from '@skooltrak/models';
+import { StudyPlan } from '@skooltrak/models';
 import {
   ButtonComponent,
   ConfirmationService,
@@ -12,29 +12,26 @@ import {
   UtilService,
 } from '@skooltrak/ui';
 
-import { SubjectsFormComponent } from './form/subjects-forms.component';
-import { SchoolSubjectsStore } from './school-subjects.store';
+import { StudyPlansFormComponent } from './form/study-plans-form.component';
+import { SchoolStudyPlansStore } from './study-plans.store';
 
 @Component({
-  selector: 'skooltrak-school-subjects',
+  selector: 'skooltrak-study-plans',
   standalone: true,
   imports: [
     IconsModule,
+    TranslateModule,
+    PaginatorComponent,
     NgFor,
     NgIf,
-    ButtonComponent,
-    PaginatorComponent,
-    DialogModule,
-    NgClass,
-    SubjectsFormComponent,
     DatePipe,
-    IconsModule,
-    TranslateModule,
+    DialogModule,
+    ButtonComponent,
   ],
   providers: [
-    provideComponentStore(SchoolSubjectsStore),
-    UtilService,
+    provideComponentStore(SchoolStudyPlansStore),
     ConfirmationService,
+    UtilService,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
@@ -58,7 +55,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
         </div>
       </div>
 
-      <button skooltrak-button color="sky" (click)="newSubject()">
+      <button skooltrak-button color="sky" (click)="newStudyPlan()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -68,10 +65,9 @@ import { SchoolSubjectsStore } from './school-subjects.store';
       >
         <tr class="cursor-pointer">
           <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'Short name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'Code' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Level' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'StudyPlan' | translate }}</th>
           <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-          <th score="col" class="px-6 py-3">{{ 'Created by' | translate }}</th>
           <th scope="col" class="px-6 py-3 text-center">
             {{ 'Actions' | translate }}
           </th>
@@ -79,7 +75,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
       </thead>
       <tbody>
         <tr
-          *ngFor="let subject of store.subjects()"
+          *ngFor="let plan of store.plans()"
           [class.hidden]="store.loading()"
           class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
         >
@@ -87,17 +83,16 @@ import { SchoolSubjectsStore } from './school-subjects.store';
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ subject.name }}
+            {{ plan.name }}
           </th>
-          <td class="px-6 py-4">{{ subject.short_name }}</td>
-          <td class="px-6 py-4">{{ subject.code }}</td>
-          <td class="px-6 py-4">{{ subject.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
+          <td class="px-6 py-4">{{ plan.level?.name }}</td>
+          <td class="px-6 py-4">{{ plan.degree?.name }}</td>
+          <td class="px-6 py-4">{{ plan.created_at | date : 'medium' }}</td>
           <td class="px-6 py-4 flex justify-center gap-2 content-center">
-            <button type="button" (click)="editSubject(subject)">
+            <button type="button" (click)="editStudyPlan(plan)">
               <icon name="pencil-square" class="h-6 w-6 text-green-600" />
             </button>
-            <button type="button" (click)="deleteSubject()">
+            <button type="button">
               <icon name="trash" class="h-6 w-6 text-red-600" />
             </button>
           </td>
@@ -122,19 +117,19 @@ import { SchoolSubjectsStore } from './school-subjects.store';
     />
   </div>`,
 })
-export class SchoolSubjectsComponent {
-  @ViewChild(PaginatorComponent) paginator!: PaginatorComponent;
-  store = inject(SchoolSubjectsStore);
+export class StudyPlansComponent {
+  store = inject(SchoolStudyPlansStore);
   dialog = inject(Dialog);
   confirmation = inject(ConfirmationService);
+
   getCurrentPage(pagination: { currentPage: number; start: number }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
 
-  newSubject() {
-    const dialogRef = this.dialog.open<Partial<Subject>>(
-      SubjectsFormComponent,
+  newStudyPlan() {
+    const dialogRef = this.dialog.open<Partial<StudyPlan>>(
+      StudyPlansFormComponent,
       {
         minWidth: '36rem',
         disableClose: true,
@@ -143,28 +138,24 @@ export class SchoolSubjectsComponent {
 
     dialogRef.closed.subscribe({
       next: (request) => {
-        !!request && this.store.saveSubject(request);
+        !!request && this.store.saveStudyPlan(request);
       },
     });
   }
 
-  editSubject(subject: Subject) {
-    const dialogRef = this.dialog.open<Partial<Subject>>(
-      SubjectsFormComponent,
+  editStudyPlan(degree: StudyPlan) {
+    const dialogRef = this.dialog.open<Partial<StudyPlan>>(
+      StudyPlansFormComponent,
       {
         minWidth: '36rem',
         disableClose: true,
-        data: subject,
+        data: degree,
       }
     );
     dialogRef.closed.subscribe({
       next: (request) => {
-        !!request && this.store.saveSubject({ ...request, id: subject.id });
+        !!request && this.store.saveStudyPlan({ ...request, id: degree.id });
       },
     });
-  }
-
-  deleteSubject() {
-    this.confirmation.openDialog('delete').subscribe();
   }
 }

@@ -34,12 +34,19 @@ import { SchoolStore } from './schools.store';
             }}</a>
           </li>
           <li class="mr-2">
+            <a routerLink="degrees" routerLinkActive="active" class="link">{{
+              'Degrees.Title' | translate
+            }}</a>
+          </li>
+          <li class="mr-2">
             <a routerLink="subjects" routerLinkActive="active" class="link">{{
               'Subjects.Title' | translate
             }}</a>
           </li>
           <li class="mr-2">
-            <a href="#" class="link">Settings</a>
+            <a routerLink="plans" routerLinkActive="active" class="link">{{
+              'Plans.Title' | translate
+            }}</a>
           </li>
         </ul>
       </div>

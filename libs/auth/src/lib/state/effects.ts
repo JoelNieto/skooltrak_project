@@ -102,7 +102,10 @@ export const setRole$ = createEffect(
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
-            return sortBy(data.map((x) => x.link && x.link) as Link[], 'sort');
+            return sortBy(
+              data.map((x) => x.link && x.link) as unknown as Link[],
+              'sort'
+            );
           })
         )
       ),

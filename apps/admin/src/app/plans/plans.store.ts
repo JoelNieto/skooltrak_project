@@ -30,7 +30,7 @@ export class PlansStore extends ComponentStore<State> implements OnStoreInit {
       .pipe(
         exhaustMap(({ data, error }) => {
           if (error) throw new Error(error.message);
-          return of(data as Partial<StudyPlan>[]);
+          return of(data as unknown as Partial<StudyPlan>[]);
         })
       )
       .pipe(

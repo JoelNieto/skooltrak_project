@@ -119,7 +119,7 @@ import { UtilService } from '../../services/util.service';
   styles: [
     `
       .active {
-        @apply text-blue-800 bg-blue-200 dark:bg-blue-700 font-medium;
+        @apply text-blue-800 bg-blue-100 dark:bg-blue-700 font-medium;
       }
     `,
   ],

@@ -111,7 +111,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       </div>
     </aside>
     <main
-      class="p-8 sm:ml-64 bg-gray-100 dark:bg-gray-800 font-sans relative top-16"
+      class="p-8 sm:ml-64 bg-gray-50 dark:bg-gray-800 font-sans relative top-16"
     >
       <router-outlet />
     </main>

@@ -1,24 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Degree, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import {
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   degrees: Degree[];
@@ -95,7 +82,7 @@ export class SchoolDegreesStore
             }),
             tap(({ count }) => this.setCount(count!)),
             tapResponse(
-              ({ degrees }) => this.setDegrees(degrees as Degree[]),
+              ({ degrees }) => this.setDegrees(degrees as unknown as Degree[]),
               (error) => {
                 console.error(error);
                 return of([]);

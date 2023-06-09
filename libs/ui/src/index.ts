@@ -9,4 +9,6 @@ export * from './lib/services/util.service';
 export * from './lib/components/profile/profile.component';
 export * from './lib/components/confirmation/confirmation.service';
 export * from './lib/components/select/select.component';
+export * from './lib/components/tabs/tabs.component';
+export * from './lib/components/tabs-item/tabs-item.component';
 export * from './lib/pipes/';

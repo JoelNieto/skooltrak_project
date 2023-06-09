@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent } from '@skooltrak/ui';
+import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { SchoolStore } from './schools.store';
 
@@ -15,6 +15,8 @@ import { SchoolStore } from './schools.store';
     RouterLinkActive,
     CardComponent,
     TranslateModule,
+    TabsComponent,
+    TabsItemComponent,
   ],
   providers: [provideComponentStore(SchoolStore)],
   template: `
@@ -24,47 +26,23 @@ import { SchoolStore } from './schools.store';
       >
         {{ 'School' | translate }}
       </h2>
-      <div
-        class="text-sm font-medium text-center text-gray-500 border-b font-title border-gray-200 dark:text-gray-400 mb-2 dark:border-gray-700"
-      >
-        <ul class="flex flex-wrap -mb-px">
-          <li class="mr-2">
-            <a routerLink="settings" routerLinkActive="active" class="link">{{
-              'Settings' | translate
-            }}</a>
-          </li>
-          <li class="mr-2">
-            <a routerLink="degrees" routerLinkActive="active" class="link">{{
-              'Degrees.Title' | translate
-            }}</a>
-          </li>
-          <li class="mr-2">
-            <a routerLink="subjects" routerLinkActive="active" class="link">{{
-              'Subjects.Title' | translate
-            }}</a>
-          </li>
-          <li class="mr-2">
-            <a routerLink="plans" routerLinkActive="active" class="link">{{
-              'Plans.Title' | translate
-            }}</a>
-          </li>
-        </ul>
+      <div skooltrak-tabs>
+        <skooltrak-tabs-item link="settings">
+          {{ 'Settings' | translate }}
+        </skooltrak-tabs-item>
+        <skooltrak-tabs-item link="degrees">
+          {{ 'Degrees.Title' | translate }}
+        </skooltrak-tabs-item>
+        <skooltrak-tabs-item link="subjects">
+          {{ 'Subjects.Title' | translate }}
+        </skooltrak-tabs-item>
+        <skooltrak-tabs-item link="plans">
+          {{ 'Plans.Title' | translate }}
+        </skooltrak-tabs-item>
       </div>
       <router-outlet />
     </skooltrak-card>
   `,
-  styles: [
-    `
-      .link {
-        @apply inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 dark:hover:text-gray-300;
-      }
-      .active {
-        @apply text-sky-600 border-sky-600 dark:text-sky-500 dark:border-sky-500;
-      }
-      .disabled {
-        @apply text-gray-400 cursor-not-allowed dark:text-gray-500;
-      }
-    `,
-  ],
+  styles: [],
 })
 export class SchoolComponent {}

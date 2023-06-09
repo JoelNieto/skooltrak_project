@@ -12,6 +12,11 @@ export const remoteRoutes: Route[] = [
       import('../students/students.routes').then((x) => x.studentsRoutes),
   },
   {
+    path: 'study-plans',
+    loadChildren: () =>
+      import('../plans/plans.routes').then((x) => x.plansRoutes),
+  },
+  {
     path: 'school',
     loadChildren: () =>
       import('../school/school.routes').then((x) => x.schoolRoutes),

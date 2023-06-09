@@ -6,7 +6,7 @@ import {
 } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
-import { Degree } from '@skooltrak/models';
+import { Degree, Table } from '@skooltrak/models';
 import { exhaustMap, from, of } from 'rxjs';
 
 type State = {
@@ -26,19 +26,19 @@ export class PlansFormStore
   readonly fetchDegrees = this.effect(() => {
     return from(
       this.supabase.client
-        .from('school_degrees')
+        .from(Table.Degrees)
         .select('id, name, level_id')
         .eq('school_id', this.school()?.id)
     )
       .pipe(
         exhaustMap(({ data, error }) => {
           if (error) throw new Error(error.message);
-          return of(data);
+          return of(data as Degree[]);
         })
       )
       .pipe(
         tapResponse(
-          (degrees) => this.patchState({ degrees: degrees as Degree[] }),
+          (degrees) => this.patchState({ degrees }),
           (error) => console.error(error)
         )
       );

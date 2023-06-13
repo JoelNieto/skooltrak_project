@@ -24,7 +24,7 @@ import { PlanCourseStore } from './plan-courses.store';
     DatePipe,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
-    <div class="flex justify-between mb-4 py-2 px-1">
+    <div class="flex justify-between mb-4 py-3 px-1">
       <div>
         <label for="table-search" class="sr-only">Search</label>
         <div class="relative">
@@ -72,13 +72,13 @@ import { PlanCourseStore } from './plan-courses.store';
         >
           <th
             scope="row"
-            class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ course.subject?.name }}
           </th>
-          <td class="px-6 py-2">{{ course.weekly_hours }}</td>
-          <td class="px-6 py-2">{{ course.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-2 flex justify-center gap-2 content-center">
+          <td class="px-6 py-3">{{ course.weekly_hours }}</td>
+          <td class="px-6 py-3">{{ course.created_at | date : 'medium' }}</td>
+          <td class="px-6 py-3 flex justify-center gap-2 content-center">
             <button type="button" (click)="editCourse(course)">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>

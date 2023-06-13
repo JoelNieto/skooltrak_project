@@ -1,15 +1,11 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  CardComponent,
-  SelectComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { CardComponent, SelectComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { PlansStore } from './plans.store';
 
@@ -35,12 +31,14 @@ import { PlansStore } from './plans.store';
       >
         {{ 'Plans.Title' | translate }}
       </h2>
-      <skooltrak-select
-        [items]="store.plans()"
-        label="name"
-        secondaryLabel="degree.name"
-        [formControl]="planControl"
-      />
+      <div class="w-80">
+        <skooltrak-select
+          [items]="store.plans()"
+          label="name"
+          secondaryLabel="degree.name"
+          [formControl]="planControl"
+        />
+      </div>
     </div>
     <ng-container *ngIf="store.selectedId$ | async">
       <div skooltrak-tabs>
@@ -58,12 +56,15 @@ import { PlansStore } from './plans.store';
 export class PlansComponent implements OnInit {
   store = inject(PlansStore);
   planControl = new FormControl<string | undefined>(undefined);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.planControl.valueChanges.subscribe({
-      next: (selectedId) => {
-        !!selectedId && this.store.patchState({ selectedId });
-      },
-    });
+    this.planControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (selectedId) => {
+          !!selectedId && this.store.patchState({ selectedId });
+        },
+      });
   }
 }

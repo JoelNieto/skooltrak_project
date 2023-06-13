@@ -118,12 +118,18 @@ import { UtilService } from '../../services/util.service';
   `,
   styles: [
     `
+      :host {
+        @apply ring-1 rounded-lg focus:ring-sky-600 focus:border-sky-600 focus-visible:ring-sky-600 focus-visible:border-sky-600 dark:focus:ring-sky-500 dark:focus:border-sky-500 dark:focus-visible:ring-sky-500 dark:focus-visible:border-sky-500;
+      }
       .active {
         @apply text-blue-800 bg-blue-100 dark:bg-blue-700 font-medium;
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.tabIndex]': 'disabled === true ? null : "0"',
+  },
 })
 export class SelectComponent
   implements ControlValueAccessor, AfterContentChecked

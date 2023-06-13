@@ -2,6 +2,7 @@ import { IconsModule } from '@amithvns/ng-heroicons';
 import { DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
 import { ButtonComponent } from '../button/button.component';
@@ -36,7 +37,7 @@ import { CardComponent } from '../card/card.component';
           [imageChangedEvent]="imgChangeEvt"
           [maintainAspectRatio]="false"
           [containWithinAspectRatio]="true"
-          [aspectRatio]="4 / 3"
+          [aspectRatio]="4 / 4"
           [resizeToHeight]="256"
           format="png"
           (imageCropped)="cropImg($event)"
@@ -50,7 +51,11 @@ import { CardComponent } from '../card/card.component';
               >Image preview</span
             >
             <br />
-            <img [src]="cropImgPreview" [style.max-height]="'75px'" />
+            <img
+              [src]="cropImgPreview"
+              class="border border-gray-400"
+              [style.max-height]="'75px'"
+            />
           </div>
         </div>
         <div class="flex gap-2 mt-2">
@@ -84,11 +89,12 @@ import { CardComponent } from '../card/card.component';
 })
 export class ImageCropperComponent {
   public dialogRef = inject(
-    DialogRef<{ imageFile: File | undefined; cropImgPreview: string }>
+    DialogRef<{ imageFile: File | undefined; cropImgPreview: string | SafeUrl }>
   );
+  private sanitizer = inject(DomSanitizer);
   imgChangeEvt: any = '';
 
-  cropImgPreview: string = '';
+  cropImgPreview: string | SafeUrl = '';
 
   imageFile: File | undefined;
 
@@ -97,26 +103,11 @@ export class ImageCropperComponent {
   }
 
   cropImg(e: ImageCroppedEvent) {
-    this.cropImgPreview = e.base64!;
-    if (e.base64) {
-      const blob = this.dataURIToBlob(e.base64);
-      this.imageFile = new File([blob], 'avatar.png', { type: 'image/png' });
-    }
-  }
-
-  dataURIToBlob(dataURI: string) {
-    const splitDataURI = dataURI.split(',');
-    const byteString =
-      splitDataURI[0].indexOf('base64') >= 0
-        ? atob(splitDataURI[1])
-        : decodeURI(splitDataURI[1]);
-    const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
-
-    const ia = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++)
-      ia[i] = byteString.charCodeAt(i);
-
-    return new Blob([ia], { type: mimeString });
+    const { objectUrl, blob } = e;
+    !!objectUrl &&
+      (this.cropImgPreview = this.sanitizer.bypassSecurityTrustUrl(objectUrl));
+    !!blob &&
+      (this.imageFile = new File([blob], 'avatar.png', { type: 'image/png' }));
   }
 
   imgLoad() {

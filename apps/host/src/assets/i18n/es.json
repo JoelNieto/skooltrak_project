@@ -7,6 +7,7 @@
   "School": "Escuela",
   "Polls": "Encuestas",
   "Classes": "Clases",
+  "Courses": "Cursos",
   "Grades": "Calificaciones",
   "Teachers": "Docentes",
   "Groups": "Grupos",
@@ -18,6 +19,7 @@
   "New": "Nuevo",
   "Subjects": {
     "Title": "Asignaturas",
+    "Label": "Asignatura",
     "Details": "Detalles de asignatura"
   },
   "Settings": "Ajustes",
@@ -35,6 +37,10 @@
   "Degrees": {
     "Title": "Certificados",
     "Details": "Detalles del certificado"
+  },
+  "Course": {
+    "Title": "Course",
+    "Details": "Detalles del curso"
   },
   "Plans": {
     "Title": "Planes de estudio",

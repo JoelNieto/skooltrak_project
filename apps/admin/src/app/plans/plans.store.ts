@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Table } from '@skooltrak/models';
@@ -19,8 +23,9 @@ export class PlansStore extends ComponentStore<State> implements OnStoreInit {
   school = this.store.selectSignal(state.selectors.selectCurrentSchool);
 
   plans = this.selectSignal((state) => state.plans);
+  selectedId$ = this.select((state) => state.selectedId);
 
-  fetchCourses$ = this.effect(() => {
+  fetchPlans$ = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.StudyPlans)

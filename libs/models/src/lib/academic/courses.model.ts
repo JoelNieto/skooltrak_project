@@ -3,10 +3,11 @@ import { StudyPlan } from './study-plans.model';
 import { Subject } from './subjects.model';
 
 export type Course = EntityBase & {
-  subject: Subject;
+  subject_id: string;
+  subject?: Subject;
   description?: string;
-  parent_subject?: Subject;
+  plan_id: string;
   plan: StudyPlan;
-  active: boolean;
+  school_id: string;
   weekly_hours: number;
 };

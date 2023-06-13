@@ -119,11 +119,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styles: [
     `
       .link {
-        @apply text-gray-700 text-sm dark:text-gray-300 flex items-center rounded-full gap-3 p-1.5 px-3 cursor-pointer;
+        @apply text-gray-700 text-sm dark:text-gray-300 hover:bg-gray-100 flex items-center rounded-full gap-3 p-1 px-3 cursor-pointer;
       }
 
       .active {
-        @apply text-sky-700 bg-sky-200 dark:bg-gray-600 dark:text-sky-500;
+        @apply text-sky-700 bg-sky-200 hover:bg-sky-200 dark:bg-gray-600 dark:text-sky-500;
       }
 
       .menu-item {

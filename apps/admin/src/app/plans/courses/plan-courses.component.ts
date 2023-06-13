@@ -1,37 +1,27 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, JsonPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonComponent,
-  ConfirmationService,
-  PaginatorComponent,
-  UtilService,
-} from '@skooltrak/ui';
+import { Course } from '@skooltrak/models';
+import { ButtonComponent } from '@skooltrak/ui';
 
-import { StudyPlansFormComponent } from './form/study-plans-form.component';
-import { SchoolStudyPlansStore } from './study-plans.store';
+import { PlanCoursesFormComponent } from './form/plans-courses-form.component';
+import { PlanCourseStore } from './plan-courses.store';
 
 @Component({
-  selector: 'skooltrak-study-plans',
+  selector: 'skooltrak-plan-courses',
   standalone: true,
   imports: [
     IconsModule,
     TranslateModule,
-    PaginatorComponent,
+    ButtonComponent,
+    DialogModule,
+    JsonPipe,
     NgFor,
     NgIf,
     DatePipe,
-    DialogModule,
-    ButtonComponent,
-  ],
-  providers: [
-    provideComponentStore(SchoolStudyPlansStore),
-    ConfirmationService,
-    UtilService,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
@@ -55,7 +45,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
         </div>
       </div>
 
-      <button skooltrak-button color="green" (click)="newStudyPlan()">
+      <button skooltrak-button color="green" (click)="newCourse()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -64,9 +54,10 @@ import { SchoolStudyPlansStore } from './study-plans.store';
         class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr class="cursor-pointer">
-          <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'Level' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'StudyPlan' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Subject' | translate }}</th>
+          <th scope="col" class="px-6 py-3">
+            {{ 'Weekly hours' | translate }}
+          </th>
           <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
           <th scope="col" class="px-6 py-3 text-center">
             {{ 'Actions' | translate }}
@@ -75,7 +66,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
       </thead>
       <tbody>
         <tr
-          *ngFor="let plan of store.plans()"
+          *ngFor="let course of store.courses()"
           [class.hidden]="store.loading()"
           class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
         >
@@ -83,13 +74,12 @@ import { SchoolStudyPlansStore } from './study-plans.store';
             scope="row"
             class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ plan.name }}
+            {{ course.subject?.name }}
           </th>
-          <td class="px-6 py-2">{{ plan.level?.name }}</td>
-          <td class="px-6 py-2">{{ plan.degree?.name }}</td>
-          <td class="px-6 py-2">{{ plan.created_at | date : 'medium' }}</td>
+          <td class="px-6 py-2">{{ course.weekly_hours }}</td>
+          <td class="px-6 py-2">{{ course.created_at | date : 'medium' }}</td>
           <td class="px-6 py-2 flex justify-center gap-2 content-center">
-            <button type="button" (click)="editStudyPlan(plan)">
+            <button type="button" (click)="editCourse(course)">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>
             <button type="button">
@@ -99,9 +89,8 @@ import { SchoolStudyPlansStore } from './study-plans.store';
         </tr>
       </tbody>
     </table>
-    <div class="animate-pulse mt-2" *ngIf="store.loading()">
+    <div class="animate-pulse mt-4" *ngIf="store.loading()">
       <h3 class="h-4 bg-gray-200 rounded-md dark:bg-gray-700 w-10/12"></h3>
-
       <ul class="mt-5 space-y-3">
         <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
         <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
@@ -109,27 +98,17 @@ import { SchoolStudyPlansStore } from './study-plans.store';
         <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
       </ul>
     </div>
-
-    <skooltrak-paginator
-      [count]="store.count()"
-      [pageSize]="store.pageSize"
-      (paginate)="getCurrentPage($event)"
-    />
   </div>`,
+  providers: [provideComponentStore(PlanCourseStore)],
 })
-export class StudyPlansComponent {
-  store = inject(SchoolStudyPlansStore);
+export class PlanCoursesComponent {
+  public store = inject(PlanCourseStore);
+  courses = this.store.courses;
   dialog = inject(Dialog);
-  confirmation = inject(ConfirmationService);
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
-    const { start } = pagination;
-    this.store.setRange(start);
-  }
-
-  newStudyPlan() {
-    const dialogRef = this.dialog.open<Partial<StudyPlan>>(
-      StudyPlansFormComponent,
+  newCourse() {
+    const dialogRef = this.dialog.open<Partial<Course>>(
+      PlanCoursesFormComponent,
       {
         minWidth: '36rem',
         disableClose: true,
@@ -138,23 +117,24 @@ export class StudyPlansComponent {
 
     dialogRef.closed.subscribe({
       next: (request) => {
-        !!request && this.store.saveStudyPlan(request);
+        !!request && this.store.saveCourse$(request);
       },
     });
   }
 
-  editStudyPlan(degree: StudyPlan) {
-    const dialogRef = this.dialog.open<Partial<StudyPlan>>(
-      StudyPlansFormComponent,
+  editCourse(course: Course) {
+    const dialogRef = this.dialog.open<Partial<Course>>(
+      PlanCoursesFormComponent,
       {
         minWidth: '36rem',
         disableClose: true,
-        data: degree,
+        data: course,
       }
     );
+
     dialogRef.closed.subscribe({
       next: (request) => {
-        !!request && this.store.saveStudyPlan({ ...request, id: degree.id });
+        !!request && this.store.saveCourse$({ ...request, id: course.id });
       },
     });
   }

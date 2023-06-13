@@ -27,22 +27,21 @@ import { SchoolStore } from './schools.store';
         {{ 'School' | translate }}
       </h2>
       <div skooltrak-tabs>
-        <skooltrak-tabs-item link="settings">
+        <skooltrak-tabs-item route="settings">
           {{ 'Settings' | translate }}
         </skooltrak-tabs-item>
-        <skooltrak-tabs-item link="degrees">
+        <skooltrak-tabs-item route="degrees">
           {{ 'Degrees.Title' | translate }}
         </skooltrak-tabs-item>
-        <skooltrak-tabs-item link="subjects">
+        <skooltrak-tabs-item route="subjects">
           {{ 'Subjects.Title' | translate }}
         </skooltrak-tabs-item>
-        <skooltrak-tabs-item link="plans">
+        <skooltrak-tabs-item route="plans">
           {{ 'Plans.Title' | translate }}
         </skooltrak-tabs-item>
       </div>
       <router-outlet />
     </skooltrak-card>
   `,
-  styles: [],
 })
 export class SchoolComponent {}

@@ -58,7 +58,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
         </div>
       </div>
 
-      <button skooltrak-button color="sky" (click)="newSubject()">
+      <button skooltrak-button color="green" (click)="newSubject()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -85,20 +85,20 @@ import { SchoolSubjectsStore } from './school-subjects.store';
         >
           <th
             scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ subject.name }}
           </th>
-          <td class="px-6 py-4">{{ subject.short_name }}</td>
-          <td class="px-6 py-4">{{ subject.code }}</td>
-          <td class="px-6 py-4">{{ subject.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
-          <td class="px-6 py-4 flex justify-center gap-2 content-center">
+          <td class="px-6 py-2">{{ subject.short_name }}</td>
+          <td class="px-6 py-2">{{ subject.code }}</td>
+          <td class="px-6 py-2">{{ subject.created_at | date : 'medium' }}</td>
+          <td class="px-6 py-2">{{ subject.user?.full_name }}</td>
+          <td class="px-6 py-2 flex justify-center gap-2 content-center">
             <button type="button" (click)="editSubject(subject)">
-              <icon name="pencil-square" class="h-6 w-6 text-green-600" />
+              <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>
             <button type="button" (click)="deleteSubject()">
-              <icon name="trash" class="h-6 w-6 text-red-600" />
+              <icon name="trash" class="h-6 w-6 text-red-400" />
             </button>
           </td>
         </tr>

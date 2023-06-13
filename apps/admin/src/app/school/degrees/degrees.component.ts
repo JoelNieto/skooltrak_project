@@ -55,7 +55,7 @@ import { DegreesFormComponent } from './form/degrees-form.component';
         </div>
       </div>
 
-      <button skooltrak-button color="sky" (click)="newDegree()">
+      <button skooltrak-button color="green" (click)="newDegree()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -80,15 +80,15 @@ import { DegreesFormComponent } from './form/degrees-form.component';
         >
           <th
             scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ degree.name }}
           </th>
-          <td class="px-6 py-4">{{ degree.level?.name }}</td>
-          <td class="px-6 py-4">{{ degree.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-4 flex justify-center gap-2 content-center">
+          <td class="px-6 py-2">{{ degree.level?.name }}</td>
+          <td class="px-6 py-2">{{ degree.created_at | date : 'medium' }}</td>
+          <td class="px-6 py-2 flex justify-center gap-2 content-center">
             <button type="button" (click)="editDegree(degree)">
-              <icon name="pencil-square" class="h-6 w-6 text-green-600" />
+              <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>
             <button type="button">
               <icon name="trash" class="h-6 w-6 text-red-600" />

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "run-serve-host": "nx serve host --devRemotes=admin,student,teacher"
+    "run-serve-host": "nx serve host --devRemotes=admin,student,teacher,onboarding"
   },
   "private": true,
   "dependencies": {

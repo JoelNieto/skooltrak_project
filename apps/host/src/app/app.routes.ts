@@ -11,6 +11,11 @@ export const appRoutes: Route[] = [
       import('@skooltrak/ui').then((x) => x.DashboardComponent),
     children: [
       {
+        path: 'onboarding',
+        loadChildren: () =>
+          import('onboarding/Module').then((m) => m.RemoteEntryModule),
+      },
+      {
         path: 'teacher',
         loadChildren: () =>
           import('teacher/Module').then((m) => m.RemoteEntryModule),

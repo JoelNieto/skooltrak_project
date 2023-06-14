@@ -24,7 +24,7 @@ export const coursesRoutes: Routes = [
             path: 'schedule',
             loadComponent: () =>
               import('./schedule/courses-schedule.component').then(
-                (x) => x.CoursesSchedule
+                (x) => x.CoursesScheduleComponent
               ),
           },
           { path: '', redirectTo: 'schedule', pathMatch: 'full' },

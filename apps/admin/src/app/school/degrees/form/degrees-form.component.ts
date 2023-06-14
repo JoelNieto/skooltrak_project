@@ -1,13 +1,8 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { SupabaseService } from '@skooltrak/auth';
 import { Degree, Level } from '@skooltrak/models';
@@ -15,7 +10,7 @@ import { ButtonComponent, CardComponent, SelectComponent } from '@skooltrak/ui';
 import { from, map } from 'rxjs';
 
 @Component({
-  selector: 'skooltrak-degrees-form',
+  selector: 'sk-admin-degrees-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -81,7 +76,7 @@ import { from, map } from 'rxjs';
     </form>
   </skooltrak-card>`,
 })
-export class DegreesFormComponent {
+export class DegreesFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<Degree>>);
   private data: Degree | undefined = inject(DIALOG_DATA);
   private supabase = inject(SupabaseService);
@@ -102,7 +97,7 @@ export class DegreesFormComponent {
     )
   );
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     !!this.data && this.form.patchValue(this.data);
   }
 

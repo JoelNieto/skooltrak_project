@@ -10,7 +10,7 @@ import { CardComponent, SelectComponent, TabsComponent, TabsItemComponent } from
 import { PlansStore } from './plans.store';
 
 @Component({
-  selector: 'skooltrak-plans',
+  selector: 'sk-admin-plans',
   standalone: true,
   imports: [
     CardComponent,

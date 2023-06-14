@@ -1,12 +1,7 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
@@ -15,7 +10,6 @@ import { ButtonComponent, CardComponent, SelectComponent } from '@skooltrak/ui';
 import { PlansCoursesFormStore } from './plans-courses-form.store';
 
 @Component({
-  selector: 'skooltrak-plan-course-form',
   standalone: true,
   imports: [
     CardComponent,

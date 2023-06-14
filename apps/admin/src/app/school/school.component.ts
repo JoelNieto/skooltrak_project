@@ -7,7 +7,7 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 import { SchoolStore } from './schools.store';
 
 @Component({
-  selector: 'skooltrak-school',
+  selector: 'sk-admin-school',
   standalone: true,
   imports: [
     RouterOutlet,

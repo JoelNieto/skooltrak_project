@@ -6,7 +6,7 @@ import { UtilService } from '@skooltrak/ui';
 import { CoursesStore } from './courses.store';
 
 @Component({
-  selector: 'skooltrak-courses',
+  selector: 'sk-admin-courses',
   standalone: true,
   imports: [RouterOutlet],
   providers: [provideComponentStore(CoursesStore), UtilService],

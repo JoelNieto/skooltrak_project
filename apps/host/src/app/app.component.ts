@@ -7,23 +7,22 @@ import { RoleEnum } from '@skooltrak/models';
 import { DashboardComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-root',
+  selector: 'sk-root',
   standalone: true,
   imports: [RouterOutlet, RouterLink, DashboardComponent, TranslateModule],
-  template: ` <router-outlet /> `,
-  styles: [``],
+  template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {
-  store = inject(Store);
+  store$ = inject(Store);
   router = inject(Router);
   translate = inject(TranslateService);
-  currentRole = this.store.selectSignal(state.selectors.selectCurrentRole);
+  currentRole = this.store$.selectSignal(state.selectors.selectCurrentRole);
   constructor() {
     effect(() => {
       if (!this.currentRole()) {
         return;
       }
-      const { role } = this.currentRole()!;
+      const { role } = this.currentRole() || {};
 
       if (role?.code === RoleEnum.Administrator) {
         this.router.resetConfig([
@@ -48,6 +47,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.translate.setDefaultLang('es');
-    this.store.dispatch(state.AuthActions.initState());
+    this.store$.dispatch(state.AuthActions.initState());
   }
 }

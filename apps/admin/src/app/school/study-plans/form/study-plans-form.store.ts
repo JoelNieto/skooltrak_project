@@ -1,9 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Degree, Table } from '@skooltrak/models';
@@ -18,8 +14,8 @@ export class PlansFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  store = inject(Store);
-  school = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  store$ = inject(Store);
+  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
   supabase = inject(SupabaseService);
   readonly degrees = this.selectSignal((state) => state.degrees);
 

@@ -1,24 +1,14 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, effect, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  AvatarComponent,
-  ButtonComponent,
-  ImageCropperComponent,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { AvatarComponent, ButtonComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
 
 import { SchoolStore } from '../schools.store';
 
 @Component({
-  selector: 'skooltrak-school-settings',
+  selector: 'sk-admin-school-settings',
   standalone: true,
   imports: [
     ImageCropperComponent,
@@ -131,7 +121,8 @@ export class SchoolSettingsComponent {
 
   constructor() {
     effect(() => {
-      this.school()! && this.form.patchValue(this.school()!);
+      const school = this.school();
+      !!school && this.form.patchValue(school);
     });
   }
 
@@ -145,7 +136,7 @@ export class SchoolSettingsComponent {
         if (!result) return;
         const { imageFile, cropImgPreview } = result;
         this.currentCrest = cropImgPreview;
-        this.store.uploadCrest(imageFile!);
+        !!imageFile && this.store.uploadCrest(imageFile);
         this.cdRef.detectChanges();
       },
     });

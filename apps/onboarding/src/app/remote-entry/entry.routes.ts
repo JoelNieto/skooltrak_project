@@ -2,9 +2,14 @@ import { Routes } from '@angular/router';
 
 export const remoteRoutes: Routes = [
   {
-    path: 'home',
+    path: 'sign-in',
     loadComponent: () =>
-      import('./welcome.component').then((x) => x.NxWelcomeComponent),
+      import('../sign-in/sign-in.component').then((x) => x.SignInComponent),
   },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'sign-up',
+    loadComponent: () =>
+      import('../sign-up/sign-up.component').then((x) => x.SignUpComponent),
+  },
+  { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
 ];

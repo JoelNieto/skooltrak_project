@@ -1,15 +1,9 @@
 import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SelectComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-student-form',
+  selector: 'sk-admin-student-form',
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, SelectComponent],
   template: `<form

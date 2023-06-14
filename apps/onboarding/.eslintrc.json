@@ -4,6 +4,9 @@
   "overrides": [
     {
       "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["apps/host.tsconfig.*?.json"]
+      },
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
@@ -17,7 +20,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "skooltrak",
+            "prefix": "sk",
             "style": "kebab-case"
           }
         ]

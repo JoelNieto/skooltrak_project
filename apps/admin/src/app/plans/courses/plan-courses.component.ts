@@ -11,7 +11,7 @@ import { PlanCoursesFormComponent } from './form/plans-courses-form.component';
 import { PlanCourseStore } from './plan-courses.store';
 
 @Component({
-  selector: 'skooltrak-plan-courses',
+  selector: 'sk-admin-plan-courses',
   standalone: true,
   imports: [
     IconsModule,
@@ -72,13 +72,13 @@ import { PlanCourseStore } from './plan-courses.store';
         >
           <th
             scope="row"
-            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ course.subject?.name }}
           </th>
-          <td class="px-6 py-3">{{ course.weekly_hours }}</td>
-          <td class="px-6 py-3">{{ course.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-3 flex justify-center gap-2 content-center">
+          <td class="px-6 py-4">{{ course.weekly_hours }}</td>
+          <td class="px-6 py-4">{{ course.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4 flex justify-center gap-2 content-center">
             <button type="button" (click)="editCourse(course)">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>
@@ -117,7 +117,7 @@ export class PlanCoursesComponent {
 
     dialogRef.closed.subscribe({
       next: (request) => {
-        !!request && this.store.saveCourse$(request);
+        !!request && this.store.saveCourse(request);
       },
     });
   }
@@ -134,7 +134,7 @@ export class PlanCoursesComponent {
 
     dialogRef.closed.subscribe({
       next: (request) => {
-        !!request && this.store.saveCourse$({ ...request, id: course.id });
+        !!request && this.store.saveCourse({ ...request, id: course.id });
       },
     });
   }

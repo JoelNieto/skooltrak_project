@@ -14,8 +14,8 @@ export class PlansCoursesFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  store = inject(Store);
-  school = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  store$ = inject(Store);
+  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
   supabase = inject(SupabaseService);
   readonly subjects = this.selectSignal((state) => state.subjects);
 

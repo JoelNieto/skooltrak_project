@@ -53,10 +53,11 @@ export class CourseDetailsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ id }) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: ({ id }) => {
         this.store.patchState({ selectedId: id });
-      });
+      },
+      error: (error) => console.error(error),
+    });
   }
 }

@@ -6,7 +6,7 @@ import { CardComponent } from '@skooltrak/ui';
 import { TeacherStore } from './teachers.store';
 
 @Component({
-  selector: 'skooltrak-teachers',
+  selector: 'sk-admin-teachers',
   standalone: true,
   imports: [CardComponent, RouterLink, RouterLinkActive, RouterOutlet],
   providers: [provideComponentStore(TeacherStore)],

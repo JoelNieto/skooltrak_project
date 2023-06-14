@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
   standalone: true,
   template: ``,
 })
-export class CoursesSchedule {}
+export class CoursesScheduleComponent {}

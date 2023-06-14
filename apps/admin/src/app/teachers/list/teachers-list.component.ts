@@ -6,7 +6,7 @@ import { ButtonComponent } from '@skooltrak/ui';
 import { TeacherStore } from '../teachers.store';
 
 @Component({
-  selector: 'skooltrak-teachers-list',
+  selector: 'sk-admin-teachers-list',
   standalone: true,
   imports: [ButtonComponent, IconsModule, RouterLink],
   template: `<div class="relative overflow-x-auto mt-1">

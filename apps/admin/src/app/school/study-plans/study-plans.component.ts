@@ -5,18 +5,13 @@ import { Component, inject } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonComponent,
-  ConfirmationService,
-  PaginatorComponent,
-  UtilService,
-} from '@skooltrak/ui';
+import { ButtonComponent, ConfirmationService, PaginatorComponent, UtilService } from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './form/study-plans-form.component';
 import { SchoolStudyPlansStore } from './study-plans.store';
 
 @Component({
-  selector: 'skooltrak-study-plans',
+  selector: 'sk-admin-study-plans',
   standalone: true,
   imports: [
     IconsModule,
@@ -34,7 +29,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
     UtilService,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
-    <div class="flex justify-between mb-4 py-2 px-1">
+    <div class="flex justify-between mb-4 py-4 px-1">
       <div>
         <label for="table-search" class="sr-only">Search</label>
         <div class="relative">
@@ -81,14 +76,14 @@ import { SchoolStudyPlansStore } from './study-plans.store';
         >
           <th
             scope="row"
-            class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ plan.name }}
           </th>
-          <td class="px-6 py-2">{{ plan.level?.name }}</td>
-          <td class="px-6 py-2">{{ plan.degree?.name }}</td>
-          <td class="px-6 py-2">{{ plan.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-2 flex justify-center gap-2 content-center">
+          <td class="px-6 py-4">{{ plan.level?.name }}</td>
+          <td class="px-6 py-4">{{ plan.degree?.name }}</td>
+          <td class="px-6 py-4">{{ plan.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4 flex justify-center gap-2 content-center">
             <button type="button" (click)="editStudyPlan(plan)">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>

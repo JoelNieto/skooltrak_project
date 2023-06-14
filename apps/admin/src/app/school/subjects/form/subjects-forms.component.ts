@@ -1,18 +1,13 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
 import { ButtonComponent, CardComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-subjects-form',
+  selector: 'sk-admin-subjects-form',
   standalone: true,
   imports: [
     CardComponent,

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'skooltrak-nx-welcome',
+  selector: 'sk-admin-nx-welcome',
   standalone: true,
   template: `
     <!--

@@ -1,3 +1,4 @@
+/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -20,8 +21,8 @@ type State = {
 
 @Injectable()
 export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
-  store = inject(Store);
-  school = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  store$ = inject(Store);
+  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
   supabase = inject(SupabaseService);
   util = inject(UtilService);
 
@@ -38,22 +39,28 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
       : null
   );
 
-  private setCourses = this.updater((state, courses: Course[]) => ({
-    ...state,
-    courses,
-  }));
+  private setCourses = this.updater(
+    (state, courses: Course[]): State => ({
+      ...state,
+      courses,
+    })
+  );
 
-  private setCount = this.updater((state, count: number) => ({
-    ...state,
-    count,
-    pages: this.util.getPages(count, 10),
-  }));
+  private setCount = this.updater(
+    (state, count: number): State => ({
+      ...state,
+      count,
+      pages: this.util.getPages(count, 10),
+    })
+  );
 
-  setRange = this.updater((state, start: number) => ({
-    ...state,
-    start: start,
-    end: start + (state.pageSize - 1),
-  }));
+  setRange = this.updater(
+    (state, start: number): State => ({
+      ...state,
+      start: start,
+      end: start + (state.pageSize - 1),
+    })
+  );
 
   readonly fetchCoursesData$ = this.select(
     {
@@ -86,7 +93,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
               if (error) throw new Error(error.message);
               return of({ courses: data, count });
             }),
-            tap(({ count }) => this.setCount(count!)),
+            tap(({ count }) => !!count && this.setCount(count)),
             tapResponse(
               ({ courses }) => this.setCourses(courses as unknown as Course[]),
               (error) => {

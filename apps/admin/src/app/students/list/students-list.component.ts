@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-admin-students-list',
+  selector: 'sk-admin-students-list',
   standalone: true,
   imports: [IconsModule, RouterLink, ButtonComponent],
   template: ` <div class="relative overflow-x-auto mt-1">

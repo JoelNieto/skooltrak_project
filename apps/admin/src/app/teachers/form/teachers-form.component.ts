@@ -6,7 +6,7 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { TeachersFormStore } from './teachers-form.store';
 
 @Component({
-  selector: 'skooltrak-teachers-form',
+  selector: 'sk-admin-teachers-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgFor],
   providers: [provideComponentStore(TeachersFormStore)],

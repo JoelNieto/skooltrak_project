@@ -8,7 +8,7 @@ import { CardComponent, PaginatorComponent } from '@skooltrak/ui';
 import { CoursesStore } from '../courses.store';
 
 @Component({
-  selector: 'skooltrak-courses-list',
+  selector: 'sk-admin-courses-list',
   standalone: true,
   imports: [
     IconsModule,

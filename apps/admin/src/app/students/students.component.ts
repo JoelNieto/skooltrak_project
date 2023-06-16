@@ -3,7 +3,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CardComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-admin-students',
+  selector: 'sk-admin-students',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CardComponent],
   template: `

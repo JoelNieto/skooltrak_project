@@ -13,29 +13,39 @@ type State = {
 
 @Injectable()
 export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
-  store = inject(Store);
-  currentSchool = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  store$ = inject(Store);
+  currentSchool = this.store$.selectSignal(state.selectors.selectCurrentSchool);
   supabase = inject(SupabaseService);
 
   readonly countries = this.selectSignal((state) => state.countries);
   readonly school = this.selectSignal((state) => state.school);
   private readonly setCountries = this.updater(
-    (state, countries: Country[]) => ({ ...state, countries, loading: false })
+    (state, countries: Country[]): State => ({
+      ...state,
+      countries,
+      loading: false,
+    })
   );
 
-  private setSchool = this.updater((state, school: Partial<School>) => ({
-    ...state,
-    school,
-  }));
-  private setSchoolCrest = this.updater((state, crest_url: string) => ({
-    ...state,
-    school: { ...state.school, crest_url },
-  }));
+  private setSchool = this.updater(
+    (state, school: Partial<School>): State => ({
+      ...state,
+      school,
+    })
+  );
+  private setSchoolCrest = this.updater(
+    (state, crest_url: string): State => ({
+      ...state,
+      school: { ...state.school, crest_url },
+    })
+  );
 
-  private readonly setLoading = this.updater((state, loading: boolean) => ({
-    ...state,
-    loading,
-  }));
+  private readonly setLoading = this.updater(
+    (state, loading: boolean): State => ({
+      ...state,
+      loading,
+    })
+  );
 
   readonly fetchCountries = this.effect(() => {
     return from(
@@ -91,7 +101,7 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
               .update(update)
               .eq('id', request.id)
           ).pipe(
-            exhaustMap(({ data, error }) => {
+            exhaustMap(({ error }) => {
               if (error) throw new Error(error?.message);
               return of(update);
             })

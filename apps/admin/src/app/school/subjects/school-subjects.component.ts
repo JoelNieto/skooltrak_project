@@ -5,18 +5,13 @@ import { Component, inject, ViewChild } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import {
-  ButtonComponent,
-  ConfirmationService,
-  PaginatorComponent,
-  UtilService,
-} from '@skooltrak/ui';
+import { ButtonComponent, ConfirmationService, PaginatorComponent, UtilService } from '@skooltrak/ui';
 
 import { SubjectsFormComponent } from './form/subjects-forms.component';
 import { SchoolSubjectsStore } from './school-subjects.store';
 
 @Component({
-  selector: 'skooltrak-school-subjects',
+  selector: 'sk-admin-school-subjects',
   standalone: true,
   imports: [
     IconsModule,
@@ -37,7 +32,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
     ConfirmationService,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
-    <div class="flex justify-between mb-4 py-2 px-1">
+    <div class="flex justify-between mb-4 py-4 px-1">
       <div>
         <label for="table-search" class="sr-only">Search</label>
         <div class="relative">
@@ -85,15 +80,15 @@ import { SchoolSubjectsStore } from './school-subjects.store';
         >
           <th
             scope="row"
-            class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ subject.name }}
           </th>
-          <td class="px-6 py-2">{{ subject.short_name }}</td>
-          <td class="px-6 py-2">{{ subject.code }}</td>
-          <td class="px-6 py-2">{{ subject.created_at | date : 'medium' }}</td>
-          <td class="px-6 py-2">{{ subject.user?.full_name }}</td>
-          <td class="px-6 py-2 flex justify-center gap-2 content-center">
+          <td class="px-6 py-4">{{ subject.short_name }}</td>
+          <td class="px-6 py-4">{{ subject.code }}</td>
+          <td class="px-6 py-4">{{ subject.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
+          <td class="px-6 py-4 flex justify-center gap-2 content-center">
             <button type="button" (click)="editSubject(subject)">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>

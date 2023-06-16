@@ -3,7 +3,8 @@ import { Route } from '@angular/router';
 export const appRoutes: Route[] = [
   {
     path: '',
-    loadChildren: () => import('@skooltrak/auth').then((x) => x.authRoutes),
+    loadChildren: () =>
+      import('onboarding/Module').then((m) => m.RemoteEntryModule),
   },
   {
     path: 'app',

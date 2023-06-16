@@ -11,7 +11,7 @@ import { filter } from 'rxjs';
 import { PlansFormStore } from './study-plans-form.store';
 
 @Component({
-  selector: 'skooltrak-plans-form',
+  selector: 'sk-admin-plans-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -125,11 +125,8 @@ export class StudyPlansFormComponent implements OnInit {
       ?.valueChanges.pipe(filter((val) => !!val))
       .subscribe({
         next: (id) => {
-          this.form
-            .get('level_id')
-            ?.setValue(
-              this.store.degrees().find((x) => x.id === id)?.level_id!
-            );
+          const value = this.store.degrees().find((x) => x.id === id);
+          !!value && this.form.get('level_id')?.setValue(value.level_id);
         },
       });
     !!this.data && this.form.patchValue(this.data);

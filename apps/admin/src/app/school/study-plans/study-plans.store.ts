@@ -1,3 +1,4 @@
+/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -34,22 +35,28 @@ export class SchoolStudyPlansStore
   readonly start$ = this.select((state) => state.start);
   readonly end$ = this.select((state) => state.end);
 
-  private setStudyPlans = this.updater((state, plans: StudyPlan[]) => ({
-    ...state,
-    plans,
-  }));
+  private setStudyPlans = this.updater(
+    (state, plans: StudyPlan[]): State => ({
+      ...state,
+      plans,
+    })
+  );
 
-  private setCount = this.updater((state, count: number) => ({
-    ...state,
-    count,
-    pages: this.util.getPages(count, 10),
-  }));
+  private setCount = this.updater(
+    (state, count: number): State => ({
+      ...state,
+      count,
+      pages: this.util.getPages(count, 10),
+    })
+  );
 
-  setRange = this.updater((state, start: number) => ({
-    ...state,
-    start: start,
-    end: start + (state.pageSize - 1),
-  }));
+  setRange = this.updater(
+    (state, start: number): State => ({
+      ...state,
+      start: start,
+      end: start + (state.pageSize - 1),
+    })
+  );
 
   readonly fetchStudyPlansData$ = this.select(
     {
@@ -83,7 +90,7 @@ export class SchoolStudyPlansStore
               if (error) throw new Error(error.message);
               return of({ plans: data, count });
             }),
-            tap(({ count }) => this.setCount(count!)),
+            tap(({ count }) => !!count && this.setCount(count)),
             tapResponse(
               ({ plans }) =>
                 this.setStudyPlans(plans as unknown as StudyPlan[]),

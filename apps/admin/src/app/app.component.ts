@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'skooltrak-admin-root',
+  selector: 'sk-admin-root',
   standalone: true,
   template: '',
 })

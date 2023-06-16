@@ -50,6 +50,11 @@
       "rules": {}
     },
     {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@ngrx/recommended"],
+      "rules": {}
+    },
+    {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
       "rules": {}

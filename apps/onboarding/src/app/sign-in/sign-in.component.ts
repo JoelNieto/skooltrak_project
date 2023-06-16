@@ -3,15 +3,12 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-
-import { SupabaseService } from '../../services/supabase.service';
-import { AuthActions } from '../../state';
+import { state } from '@skooltrak/auth';
 
 @Component({
   selector: 'skooltrak-sign-in',
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule, FormsModule, NgOptimizedImage],
-  providers: [SupabaseService],
   template: `<div class="w-min-screen h-screen flex">
     <section
       class="bg-gray-100 dark:bg-gray-800 flex-none w-full md:w-1/2 lg:w-1/3 font-sans"
@@ -152,6 +149,6 @@ export class SignInComponent {
 
   async signIn() {
     const { email, password } = this.form.getRawValue();
-    this.store.dispatch(AuthActions.signIn({ email, password }));
+    this.store.dispatch(state.AuthActions.signIn({ email, password }));
   }
 }

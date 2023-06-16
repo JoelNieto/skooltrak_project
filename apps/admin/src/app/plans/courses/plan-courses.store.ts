@@ -1,25 +1,10 @@
+/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Course, Table } from '@skooltrak/models';
-import { error } from 'console';
-import {
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap, withLatestFrom } from 'rxjs';
 
 import { PlansStore } from '../plans.store';
 
@@ -46,7 +31,7 @@ export class PlanCourseStore
   readonly courses = this.selectSignal((state) => state.courses);
   readonly loading = this.selectSignal((state) => state.loading);
 
-  readonly fetchCourses$ = this.effect(
+  readonly fetchCourses = this.effect(
     (data$: Observable<{ planId: string | undefined }>) => {
       return data$.pipe(
         map(({ planId }) => planId),
@@ -81,34 +66,32 @@ export class PlanCourseStore
     }
   );
 
-  readonly saveCourse$ = this.effect(
-    (request$: Observable<Partial<Course>>) => {
-      return request$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        withLatestFrom(this.planStore.selectedId$),
-        switchMap(([request, plan_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.Courses)
-              .upsert([{ ...request, school_id: this.school()?.id, plan_id }])
-          ).pipe(
-            exhaustMap(({ error }) => {
-              if (error) throw new Error(error.message);
-              return of(EMPTY);
-            })
-          );
-        }),
-        tapResponse(
-          () => this.fetchCourses$(this.fetchData$),
-          (error) => console.error(error),
-          () => this.patchState({ loading: false })
-        )
-      );
-    }
-  );
+  readonly saveCourse = this.effect((request$: Observable<Partial<Course>>) => {
+    return request$.pipe(
+      tap(() => this.patchState({ loading: true })),
+      withLatestFrom(this.planStore.selectedId$),
+      switchMap(([request, plan_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.Courses)
+            .upsert([{ ...request, school_id: this.school()?.id, plan_id }])
+        ).pipe(
+          exhaustMap(({ error }) => {
+            if (error) throw new Error(error.message);
+            return of(EMPTY);
+          })
+        );
+      }),
+      tapResponse(
+        () => this.fetchCourses(this.fetchData$),
+        (error) => console.error(error),
+        () => this.patchState({ loading: false })
+      )
+    );
+  });
 
   ngrxOnStoreInit = () => {
     this.setState({ loading: false, courses: [] });
-    this.fetchCourses$(this.fetchData$);
+    this.fetchCourses(this.fetchData$);
   };
 }

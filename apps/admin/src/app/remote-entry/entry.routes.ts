@@ -1,6 +1,6 @@
-import { Route } from '@angular/router';
+import { Routes } from '@angular/router';
 
-export const remoteRoutes: Route[] = [
+export const remoteRoutes: Routes = [
   {
     path: 'home',
     loadComponent: () =>

@@ -1,3 +1,4 @@
+/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -27,11 +28,13 @@ export class TeacherStore extends ComponentStore<State> implements OnStoreInit {
   readonly start$ = this.select((state) => state.start);
   readonly end$ = this.select((state) => state.end);
 
-  setRange = this.updater((state, start: number) => ({
-    ...state,
-    start: start,
-    end: start + (state.pageSize - 1),
-  }));
+  setRange = this.updater(
+    (state, start: number): State => ({
+      ...state,
+      start: start,
+      end: start + (state.pageSize - 1),
+    })
+  );
 
   readonly queryData$ = this.select(
     {
@@ -63,7 +66,7 @@ export class TeacherStore extends ComponentStore<State> implements OnStoreInit {
               if (error) throw new Error(error.message);
               return of({ teachers: data, count });
             }),
-            tap(({ count }) => this.patchState({ count: count! })),
+            tap(({ count }) => !!count && this.patchState({ count: count })),
             tapResponse(
               ({ teachers }) =>
                 this.patchState({ teachers: teachers as Teacher[] }),

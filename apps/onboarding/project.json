@@ -24,6 +24,7 @@
           "apps/onboarding/src/assets"
         ],
         "styles": [
+          "node_modules/flowbite/dist/flowbite.min.css",
           "apps/onboarding/src/styles.scss"
         ],
         "scripts": [],

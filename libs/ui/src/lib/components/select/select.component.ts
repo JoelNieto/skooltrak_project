@@ -49,7 +49,7 @@ import { UtilService } from '../../services/util.service';
         #select
         (click)="showOptions()"
         role="listbox"
-        class="bg-gray-50 border border-gray-300 text-gray-400 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        class="bg-gray-50 border border-gray-300 text-gray-700 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
         [ngClass]="{
           'ring-1 ring-sky-600 border-sky-600 dark:ring-sky-500 dark:border-sky-500':
             isOpen()
@@ -119,7 +119,7 @@ import { UtilService } from '../../services/util.service';
   styles: [
     `
       :host {
-        @apply ring-1 rounded-lg focus:ring-sky-600 focus:border-sky-600 focus-visible:ring-sky-600 focus-visible:border-sky-600 dark:focus:ring-sky-500 dark:focus:border-sky-500 dark:focus-visible:ring-sky-500 dark:focus-visible:border-sky-500;
+        @apply rounded-lg focus:ring-sky-600 focus:border-sky-600 focus-visible:ring-sky-600 focus-visible:border-sky-600 dark:focus:ring-sky-500 dark:focus:border-sky-500 dark:focus-visible:ring-sky-500 dark:focus-visible:border-sky-500;
       }
       .active {
         @apply text-blue-800 bg-blue-100 dark:bg-blue-700 font-medium;

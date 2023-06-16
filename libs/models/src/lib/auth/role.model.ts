@@ -34,3 +34,10 @@ export enum RoleEnum {
   Parent = 'parent',
   Student = 'student',
 }
+
+export enum RoleTypeEnum {
+  Administrator = 'admin',
+  Teacher = 'teacher',
+  Parent = 'parent',
+  Student = 'student',
+}

@@ -10,7 +10,7 @@ import { TeacherStore } from './teachers.store';
   standalone: true,
   imports: [CardComponent, RouterLink, RouterLinkActive, RouterOutlet],
   providers: [provideComponentStore(TeacherStore)],
-  template: `<skooltrak-card
+  template: `<sk-card
     ><h2
       header
       class=" sticky top-0 pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
@@ -18,7 +18,7 @@ import { TeacherStore } from './teachers.store';
       Teachers
     </h2>
     <router-outlet />
-  </skooltrak-card> `,
+  </sk-card> `,
   styles: [
     `
       .link {

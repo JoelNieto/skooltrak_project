@@ -1,29 +1,19 @@
-import { NgClass } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Directive, HostBinding, Input, OnInit } from '@angular/core';
 
-@Component({
-  selector: `[skooltrak-button]`,
+@Directive({
+  selector: `[skButton]`,
   standalone: true,
-  imports: [NgClass],
-  template: `<ng-content></ng-content>`,
-  inputs: [{ name: 'color', required: true }],
 })
-export class ButtonComponent implements OnInit {
-  color!: 'blue' | 'sky' | 'red' | 'green' | 'purple';
-  @Output() buttonClick = new EventEmitter();
+export class ButtonDirective implements OnInit {
+  @Input({ required: true }) color!:
+    | 'blue'
+    | 'sky'
+    | 'red'
+    | 'green'
+    | 'purple';
+
   @HostBinding('class') get classes() {
     return this.styles;
-  }
-  @HostListener('click', ['$event.target'])
-  onClick() {
-    this.buttonClick.emit();
   }
 
   private colorVariants = {

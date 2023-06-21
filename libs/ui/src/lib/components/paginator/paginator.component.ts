@@ -12,7 +12,7 @@ import {
 import { range } from 'lodash';
 
 @Component({
-  selector: 'skooltrak-paginator',
+  selector: 'sk-paginator',
   standalone: true,
   imports: [NgFor, NgClass],
   template: `<nav

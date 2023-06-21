@@ -1,12 +1,12 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ButtonComponent } from '@skooltrak/ui';
+import { ButtonDirective } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-admin-students-list',
   standalone: true,
-  imports: [IconsModule, RouterLink, ButtonComponent],
+  imports: [IconsModule, RouterLink, ButtonDirective],
   template: ` <div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
       <div>
@@ -29,7 +29,7 @@ import { ButtonComponent } from '@skooltrak/ui';
         </div>
       </div>
 
-      <a skooltrak-button color="sky" routerLink="../new">New</a>
+      <a skButton color="sky" routerLink="../new">New</a>
     </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead

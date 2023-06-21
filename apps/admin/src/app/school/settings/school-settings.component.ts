@@ -1,9 +1,19 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, effect, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { AvatarComponent, ButtonComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
+import {
+  AvatarComponent,
+  ButtonDirective,
+  ImageCropperComponent,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { SchoolStore } from '../schools.store';
 
@@ -15,14 +25,14 @@ import { SchoolStore } from '../schools.store';
     NgIf,
     AvatarComponent,
     ReactiveFormsModule,
-    ButtonComponent,
+    ButtonDirective,
     NgFor,
     DialogModule,
     SelectComponent,
     TranslateModule,
   ],
   template: ` <div class="flex flex-col items-center justify-center space-y-4">
-      <skooltrak-avatar
+      <sk-avatar
         *ngIf="school()?.crest_url"
         [avatarUrl]="school()?.crest_url!"
         (click)="uploadCrest()"
@@ -45,7 +55,7 @@ import { SchoolStore } from '../schools.store';
       </div>
       <div>
         <label for="country" class="label">Country</label>
-        <skooltrak-select
+        <sk-select
           [items]="countries()"
           label="name"
           formControlName="country_id"
@@ -66,7 +76,7 @@ import { SchoolStore } from '../schools.store';
       <div class="col-span-4 flex justify-end">
         <button
           type="submit"
-          skooltrak-button
+          skButton
           color="sky"
           [disabled]="this.form.invalid || this.form.untouched"
         >

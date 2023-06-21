@@ -1,11 +1,16 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { ButtonComponent, CardComponent, SelectComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './study-plans-form.store';
@@ -19,7 +24,7 @@ import { PlansFormStore } from './study-plans-form.store';
     TranslateModule,
     IconsModule,
     SelectComponent,
-    ButtonComponent,
+    ButtonDirective,
   ],
   providers: [provideComponentStore(PlansFormStore)],
   styles: [
@@ -37,7 +42,7 @@ import { PlansFormStore } from './study-plans-form.store';
       }
     `,
   ],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
         class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
@@ -59,7 +64,7 @@ import { PlansFormStore } from './study-plans-form.store';
       </div>
       <div>
         <label for="degree_id">{{ 'Degree' | translate }}</label>
-        <skooltrak-select
+        <sk-select
           [items]="store.degrees()"
           label="name"
           formControlName="degree_id"
@@ -85,17 +90,12 @@ import { PlansFormStore } from './study-plans-form.store';
         </select>
       </div>
       <div class="flex justify-end">
-        <button
-          skooltrak-button
-          color="sky"
-          type="submit"
-          [disabled]="form.invalid"
-        >
+        <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'Save changes' | translate }}
         </button>
       </div>
     </form>
-  </skooltrak-card>`,
+  </sk-card>`,
 })
 export class StudyPlansFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<StudyPlan>>);

@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonComponent, CardComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 import { SignUpStore } from './sign-up.store';
 
@@ -16,7 +16,7 @@ import { SignUpStore } from './sign-up.store';
     RouterLink,
     ReactiveFormsModule,
     NgOptimizedImage,
-    ButtonComponent,
+    ButtonDirective,
     IconsModule,
     RouterOutlet,
     CardComponent,
@@ -49,7 +49,7 @@ import { SignUpStore } from './sign-up.store';
           <div
             class="flex items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
           >
-            <skooltrak-card>
+            <sk-card>
               <a
                 header
                 href="#"
@@ -69,7 +69,7 @@ import { SignUpStore } from './sign-up.store';
                 >
               </a>
               <router-outlet />
-            </skooltrak-card>
+            </sk-card>
           </div>
         </div>
       </div>

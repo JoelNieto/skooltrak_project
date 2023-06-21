@@ -1,11 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { PasswordValidators, SupabaseService } from '@skooltrak/auth';
-import { ButtonComponent } from '@skooltrak/ui';
+import { ButtonDirective } from '@skooltrak/ui';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonDirective],
   styles: [
     `
       input {
@@ -70,7 +75,7 @@ import { ButtonComponent } from '@skooltrak/ui';
       </div>
     </div>
     <button
-      skooltrak-button
+      skButton
       type="submit"
       [disabled]="form.invalid"
       color="blue"

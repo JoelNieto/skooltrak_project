@@ -5,7 +5,12 @@ import { Component, inject } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { ButtonComponent, ConfirmationService, PaginatorComponent, UtilService } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  PaginatorComponent,
+  UtilService,
+} from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './form/study-plans-form.component';
 import { SchoolStudyPlansStore } from './study-plans.store';
@@ -21,7 +26,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
     NgIf,
     DatePipe,
     DialogModule,
-    ButtonComponent,
+    ButtonDirective,
   ],
   providers: [
     provideComponentStore(SchoolStudyPlansStore),
@@ -50,7 +55,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
         </div>
       </div>
 
-      <button skooltrak-button color="green" (click)="newStudyPlan()">
+      <button skButton color="green" (click)="newStudyPlan()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -105,7 +110,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
       </ul>
     </div>
 
-    <skooltrak-paginator
+    <sk-paginator
       [count]="store.count()"
       [pageSize]="store.pageSize"
       (paginate)="getCurrentPage($event)"

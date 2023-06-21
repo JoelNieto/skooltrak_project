@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonComponent } from '@skooltrak/ui';
+import { ButtonDirective } from '@skooltrak/ui';
 
 import { PlanCoursesFormComponent } from './form/plans-courses-form.component';
 import { PlanCourseStore } from './plan-courses.store';
@@ -17,7 +17,7 @@ import { PlanCourseStore } from './plan-courses.store';
   imports: [
     IconsModule,
     TranslateModule,
-    ButtonComponent,
+    ButtonDirective,
     DialogModule,
     JsonPipe,
     NgFor,
@@ -47,7 +47,7 @@ import { PlanCourseStore } from './plan-courses.store';
         </div>
       </div>
 
-      <button skooltrak-button color="green" (click)="newCourse()">
+      <button skButton color="green" (click)="newCourse()">
         {{ 'New' | translate }}
       </button>
     </div>

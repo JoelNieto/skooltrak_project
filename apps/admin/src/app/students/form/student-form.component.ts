@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { SelectComponent } from '@skooltrak/ui';
 
 @Component({
@@ -28,7 +34,7 @@ import { SelectComponent } from '@skooltrak/ui';
     </div>
     <div>
       <label for="mother_name">Mother name</label>
-      <skooltrak-select
+      <sk-select
         [items]="[{ name: 'Panama' }, { name: 'Italia' }]"
         label="name"
       />

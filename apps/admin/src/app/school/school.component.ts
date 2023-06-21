@@ -20,28 +20,28 @@ import { SchoolStore } from './schools.store';
   ],
   providers: [provideComponentStore(SchoolStore)],
   template: `
-    <skooltrak-card>
+    <sk-card>
       <h2
         class="sticky pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
       >
         {{ 'School' | translate }}
       </h2>
       <div skooltrak-tabs>
-        <skooltrak-tabs-item route="settings">
+        <sk-tabs-item link="settings">
           {{ 'Settings' | translate }}
-        </skooltrak-tabs-item>
-        <skooltrak-tabs-item route="degrees">
+        </sk-tabs-item>
+        <sk-tabs-item link="degrees">
           {{ 'Degrees.Title' | translate }}
-        </skooltrak-tabs-item>
-        <skooltrak-tabs-item route="subjects">
+        </sk-tabs-item>
+        <sk-tabs-item link="subjects">
           {{ 'Subjects.Title' | translate }}
-        </skooltrak-tabs-item>
-        <skooltrak-tabs-item route="plans">
+        </sk-tabs-item>
+        <sk-tabs-item link="plans">
           {{ 'Plans.Title' | translate }}
-        </skooltrak-tabs-item>
+        </sk-tabs-item>
       </div>
       <router-outlet />
-    </skooltrak-card>
+    </sk-card>
   `,
 })
 export class SchoolComponent {}

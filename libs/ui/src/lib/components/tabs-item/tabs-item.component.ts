@@ -1,9 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  selector: 'skooltrak-tabs-item',
+  selector: 'sk-tabs-item',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgClass],
   styles: [
@@ -28,8 +28,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       <ng-content />
     </a>
   </li>`,
-  inputs: [{ name: 'link', required: true, alias: 'route' }],
 })
 export class TabsItemComponent {
-  link!: string;
+  @Input({ required: true }) link!: string;
 }

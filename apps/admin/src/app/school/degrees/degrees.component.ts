@@ -5,7 +5,12 @@ import { Component, inject } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import { ButtonComponent, ConfirmationService, PaginatorComponent, UtilService } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  PaginatorComponent,
+  UtilService,
+} from '@skooltrak/ui';
 
 import { SchoolDegreesStore } from './degrees.store';
 import { DegreesFormComponent } from './form/degrees-form.component';
@@ -20,7 +25,7 @@ import { DegreesFormComponent } from './form/degrees-form.component';
     PaginatorComponent,
     NgFor,
     NgIf,
-    ButtonComponent,
+    ButtonDirective,
     DialogModule,
   ],
   providers: [
@@ -50,7 +55,7 @@ import { DegreesFormComponent } from './form/degrees-form.component';
         </div>
       </div>
 
-      <button skooltrak-button color="green" (click)="newDegree()">
+      <button skButton color="green" (click)="newDegree()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -103,7 +108,7 @@ import { DegreesFormComponent } from './form/degrees-form.component';
       </ul>
     </div>
 
-    <skooltrak-paginator
+    <sk-paginator
       [count]="store.count()"
       [pageSize]="store.pageSize"
       (paginate)="getCurrentPage($event)"

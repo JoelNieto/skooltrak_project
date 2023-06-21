@@ -1,9 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleTypeEnum } from '@skooltrak/models';
-import { ButtonComponent, SelectComponent } from '@skooltrak/ui';
+import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
 import { SignUpStore } from '../sign-up/sign-up.store';
 
@@ -12,7 +17,7 @@ import { SignUpStore } from '../sign-up/sign-up.store';
   standalone: true,
   imports: [
     SelectComponent,
-    ButtonComponent,
+    ButtonDirective,
     RouterLink,
     TranslateModule,
     ReactiveFormsModule,
@@ -43,7 +48,7 @@ import { SignUpStore } from '../sign-up/sign-up.store';
     <form class="flex flex-col gap-4" [formGroup]="form">
       <div>
         <label for="school">School</label>
-        <skooltrak-select
+        <sk-select
           [items]="store.schools()"
           label="full_name"
           itm
@@ -65,7 +70,7 @@ import { SignUpStore } from '../sign-up/sign-up.store';
         </select>
       </div>
 
-      <button skooltrak-button type="submit" color="sky" class="w-full">
+      <button skButton type="submit" color="sky" class="w-full">
         Create account
       </button>
 

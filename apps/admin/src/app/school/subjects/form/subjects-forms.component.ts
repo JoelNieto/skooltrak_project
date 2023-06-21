@@ -1,10 +1,15 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonComponent, CardComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-admin-subjects-form',
@@ -12,11 +17,11 @@ import { ButtonComponent, CardComponent } from '@skooltrak/ui';
   imports: [
     CardComponent,
     IconsModule,
-    ButtonComponent,
+    ButtonDirective,
     ReactiveFormsModule,
     TranslateModule,
   ],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
         class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
@@ -49,17 +54,12 @@ import { ButtonComponent, CardComponent } from '@skooltrak/ui';
         <textarea rows="3" formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">
-        <button
-          skooltrak-button
-          color="sky"
-          type="submit"
-          [disabled]="form.invalid"
-        >
+        <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'Save changes' | translate }}
         </button>
       </div>
     </form>
-  </skooltrak-card>`,
+  </sk-card>`,
   styles: [
     `
       input,

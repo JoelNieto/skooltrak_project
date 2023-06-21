@@ -11,24 +11,24 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { state } from '@skooltrak/auth';
 
-import { ButtonComponent } from '../button/button.component';
+import { ButtonDirective } from '../button/button.component';
 import { CardComponent } from '../card/card.component';
 import { ProfileFormStore } from './profile.store';
 
 @Component({
-  selector: 'skooltrak-profile',
+  selector: 'sk-profile',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CardComponent,
     NgFor,
     TranslateModule,
-    ButtonComponent,
+    ButtonDirective,
   ],
   providers: [provideComponentStore(ProfileFormStore)],
   template: `
     <div class="px-12 pt-4">
-      <skooltrak-card>
+      <sk-card>
         <h2
           header
           class=" sticky top-0 pb-3 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
@@ -86,7 +86,7 @@ import { ProfileFormStore } from './profile.store';
           <div class="col-span-4 flex justify-end mt-2">
             <button
               type="submit"
-              skooltrak-button
+              skButton
               color="sky"
               [disabled]="this.form.invalid || this.form.untouched"
             >
@@ -94,7 +94,7 @@ import { ProfileFormStore } from './profile.store';
             </button>
           </div>
         </form>
-      </skooltrak-card>
+      </sk-card>
     </div>
   `,
   styles: [
@@ -117,9 +117,9 @@ import { ProfileFormStore } from './profile.store';
   ],
 })
 export class ProfileComponent implements OnInit {
-  private state = inject(Store);
+  private state$ = inject(Store);
   public store = inject(ProfileFormStore);
-  user = this.state.selectSignal(state.selectors.selectUser);
+  user = this.state$.selectSignal(state.selectors.selectUser);
 
   form = new FormGroup({
     email: new FormControl<string>('', {
@@ -155,14 +155,17 @@ export class ProfileComponent implements OnInit {
   });
 
   constructor() {
-    effect(() => this.form.patchValue(this.user()!));
+    effect(() => {
+      const user = this.user();
+      !!user && this.form.patchValue(user);
+    });
   }
   ngOnInit(): void {
     this.form.get('email')?.disable();
   }
 
   saveChanges() {
-    this.state.dispatch(
+    this.state$.dispatch(
       state.AuthActions.updateProfile({
         request: { ...this.form.getRawValue(), id: this.user()?.id },
       })

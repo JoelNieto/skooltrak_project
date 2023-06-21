@@ -3,7 +3,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Teacher } from '@skooltrak/models';
-import { ButtonComponent } from '@skooltrak/ui';
+import { ButtonDirective } from '@skooltrak/ui';
 
 import { TeachersFormComponent } from '../form/teachers-form.component';
 import { TeacherStore } from '../teachers.store';
@@ -11,7 +11,7 @@ import { TeacherStore } from '../teachers.store';
 @Component({
   selector: 'sk-admin-teachers-list',
   standalone: true,
-  imports: [ButtonComponent, IconsModule, RouterLink, DialogModule],
+  imports: [ButtonDirective, IconsModule, RouterLink, DialogModule],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
       <div>
@@ -34,7 +34,7 @@ import { TeacherStore } from '../teachers.store';
         </div>
       </div>
 
-      <button skooltrak-button color="sky" (click)="newTeacher()">New</button>
+      <button skButton color="sky" (click)="newTeacher()">New</button>
     </div>
   </div> `,
 })

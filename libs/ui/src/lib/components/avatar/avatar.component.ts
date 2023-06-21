@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/auth';
 
 @Component({
-  selector: 'skooltrak-avatar',
+  selector: 'sk-avatar',
   standalone: true,
   imports: [],
   template: `<img [src]="_avatarUrl" class="h-full" />`,

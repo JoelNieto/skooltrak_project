@@ -5,7 +5,12 @@ import { Component, inject, ViewChild } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonComponent, ConfirmationService, PaginatorComponent, UtilService } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  PaginatorComponent,
+  UtilService,
+} from '@skooltrak/ui';
 
 import { SubjectsFormComponent } from './form/subjects-forms.component';
 import { SchoolSubjectsStore } from './school-subjects.store';
@@ -17,7 +22,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
     IconsModule,
     NgFor,
     NgIf,
-    ButtonComponent,
+    ButtonDirective,
     PaginatorComponent,
     DialogModule,
     NgClass,
@@ -53,7 +58,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
         </div>
       </div>
 
-      <button skooltrak-button color="green" (click)="newSubject()">
+      <button skButton color="green" (click)="newSubject()">
         {{ 'New' | translate }}
       </button>
     </div>
@@ -110,7 +115,7 @@ import { SchoolSubjectsStore } from './school-subjects.store';
       </ul>
     </div>
 
-    <skooltrak-paginator
+    <sk-paginator
       [count]="store.count()"
       [pageSize]="store.pageSize"
       (paginate)="getCurrentPage($event)"

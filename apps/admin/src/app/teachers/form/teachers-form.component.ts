@@ -2,7 +2,12 @@ import { IconsModule } from '@amithvns/ng-heroicons';
 import { DialogRef } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Teacher } from '@skooltrak/models';
@@ -21,7 +26,7 @@ import { TeachersFormStore } from './teachers-form.store';
     IconsModule,
   ],
   providers: [provideComponentStore(TeachersFormStore)],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
         class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
@@ -64,7 +69,7 @@ import { TeachersFormStore } from './teachers-form.store';
           </option>
         </select>
       </div>
-    </form></skooltrak-card
+    </form></sk-card
   > `,
   styles: [
     `

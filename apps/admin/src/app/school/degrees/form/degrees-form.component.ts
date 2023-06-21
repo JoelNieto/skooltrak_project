@@ -2,11 +2,16 @@ import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { SupabaseService } from '@skooltrak/auth';
 import { Degree, Level } from '@skooltrak/models';
-import { ButtonComponent, CardComponent, SelectComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
 import { from, map } from 'rxjs';
 
 @Component({
@@ -17,7 +22,7 @@ import { from, map } from 'rxjs';
     CardComponent,
     TranslateModule,
     IconsModule,
-    ButtonComponent,
+    ButtonDirective,
     SelectComponent,
   ],
   styles: [
@@ -35,7 +40,7 @@ import { from, map } from 'rxjs';
       }
     `,
   ],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
         class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
@@ -57,24 +62,15 @@ import { from, map } from 'rxjs';
       </div>
       <div>
         <label for="level_id">{{ 'Level' | translate }}</label>
-        <skooltrak-select
-          [items]="levels()"
-          label="name"
-          formControlName="level_id"
-        />
+        <sk-select [items]="levels()" label="name" formControlName="level_id" />
       </div>
       <div class="flex justify-end">
-        <button
-          skooltrak-button
-          color="sky"
-          type="submit"
-          [disabled]="form.invalid"
-        >
+        <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'Save changes' | translate }}
         </button>
       </div>
     </form>
-  </skooltrak-card>`,
+  </sk-card>`,
 })
 export class DegreesFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<Degree>>);

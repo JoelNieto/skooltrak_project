@@ -11,7 +11,7 @@ export type State = {
   roles: SchoolRole[];
   currentRole: SchoolRole | undefined;
   links: Link[];
-  error: any | undefined;
+  error: unknown | undefined;
 };
 
 export const initialState: State = {
@@ -28,28 +28,46 @@ export const authFeature = createFeature({
   name: 'auth',
   reducer: createReducer(
     initialState,
-    on(actions.initState, (state) => ({
-      ...state,
-    })),
-    on(actions.setSession, (state, { session }) => ({ ...state, session })),
-    on(actions.sessionFailed, (state, { error }) => ({
-      ...state,
-      error,
-      loading: false,
-    })),
-    on(actions.setUser, (state, { user }) => ({ ...state, user })),
-    on(actions.setRoles, (state, { roles }) => ({
-      ...state,
-      roles,
-    })),
-    on(actions.setRole, (state, { role }) => ({
-      ...state,
-      currentRole: role,
-    })),
-    on(actions.setLinks, (state, { links }) => ({
-      ...state,
-      links,
-      loading: false,
-    }))
+    on(
+      actions.initState,
+      (state): State => ({
+        ...state,
+      })
+    ),
+    on(
+      actions.setSession,
+      (state, { session }): State => ({ ...state, session })
+    ),
+    on(
+      actions.sessionFailed,
+      (state, { error }): State => ({
+        ...state,
+        error,
+        loading: false,
+      })
+    ),
+    on(actions.setUser, (state, { user }): State => ({ ...state, user })),
+    on(
+      actions.setRoles,
+      (state, { roles }): State => ({
+        ...state,
+        roles,
+      })
+    ),
+    on(
+      actions.setRole,
+      (state, { role }): State => ({
+        ...state,
+        currentRole: role,
+      })
+    ),
+    on(
+      actions.setLinks,
+      (state, { links }): State => ({
+        ...state,
+        links,
+        loading: false,
+      })
+    )
   ),
 });

@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class PropertyPipe implements PipeTransform {
-  transform(value: any, args: string): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform(value: any, args: string): unknown {
     args.split('.').forEach((element) => {
       value = value[element];
     });

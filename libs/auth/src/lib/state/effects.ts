@@ -17,7 +17,7 @@ import {
 import { SupabaseService } from '../services/supabase.service';
 import { AuthActions } from './actions';
 
-export const initState$ = createEffect(
+export const initState = createEffect(
   () => {
     return inject(Actions).pipe(
       ofType(AuthActions.initState),
@@ -27,12 +27,12 @@ export const initState$ = createEffect(
   { functional: true }
 );
 
-export const getSession$ = createEffect(
+export const getSession = createEffect(
   (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions$.pipe(
       ofType(AuthActions.getSession),
       exhaustMap(() =>
-        supabase.session.pipe(
+        supabase.session$.pipe(
           map((session) => AuthActions.setSession({ session }))
         )
       )
@@ -41,7 +41,7 @@ export const getSession$ = createEffect(
   { functional: true }
 );
 
-export const setSession$ = createEffect(
+export const setSession = createEffect(
   (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions$.pipe(
       ofType(AuthActions.setSession),
@@ -100,7 +100,7 @@ export const updateUser = createEffect(
   { functional: true }
 );
 
-export const setUser$ = createEffect(
+export const setUser = createEffect(
   (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions$.pipe(
       ofType(AuthActions.setUser),
@@ -123,7 +123,7 @@ export const setUser$ = createEffect(
   { functional: true }
 );
 
-export const setRoles$ = createEffect(
+export const setRoles = createEffect(
   () => {
     return inject(Actions).pipe(
       ofType(AuthActions.setRoles),
@@ -133,7 +133,7 @@ export const setRoles$ = createEffect(
   { functional: true }
 );
 
-export const setRole$ = createEffect(
+export const setRole = createEffect(
   (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions$.pipe(
       ofType(AuthActions.setRole),
@@ -159,7 +159,7 @@ export const setRole$ = createEffect(
   { functional: true }
 );
 
-export const signIn$ = createEffect(
+export const signIn = createEffect(
   (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions$.pipe(
       ofType(AuthActions.signIn),

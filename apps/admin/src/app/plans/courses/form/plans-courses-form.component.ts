@@ -1,11 +1,16 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonComponent, CardComponent, SelectComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
 
 import { PlansCoursesFormStore } from './plans-courses-form.store';
 
@@ -17,7 +22,7 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
     IconsModule,
     ReactiveFormsModule,
     SelectComponent,
-    ButtonComponent,
+    ButtonDirective,
   ],
   providers: [provideComponentStore(PlansCoursesFormStore)],
   styles: [
@@ -36,7 +41,7 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
       }
     `,
   ],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
         class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
@@ -56,7 +61,7 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
         <label class="label" for="subject_id">{{
           'Subjects.Label' | translate
         }}</label>
-        <skooltrak-select
+        <sk-select
           label="name"
           [items]="store.subjects()"
           formControlName="subject_id"
@@ -75,12 +80,12 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
         <textarea formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">
-        <button skooltrak-button color="sky" type="submit">
+        <button skButton color="sky" type="submit">
           {{ 'Save changes' | translate }}
         </button>
       </div>
     </form>
-  </skooltrak-card>`,
+  </sk-card>`,
 })
 export class PlanCoursesFormComponent implements AfterViewInit {
   public store = inject(PlansCoursesFormStore);

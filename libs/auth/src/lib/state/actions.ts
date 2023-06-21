@@ -14,7 +14,7 @@ export const AuthActions = createActionGroup({
     signIn: props<{ email: string; password: string }>(),
     setRoles: props<{ roles: SchoolRole[] }>(),
     signInSuccess: props<{ user: User }>(),
-    signInFailure: props<{ error: any }>(),
+    signInFailure: props<{ error: string | unknown }>(),
     setRole: props<{ role: SchoolRole | undefined }>(),
     setLinks: props<{ links: Link[] }>(),
   },

@@ -5,20 +5,20 @@ import { Component, inject, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
-import { ButtonComponent } from '../button/button.component';
+import { ButtonDirective } from '../button/button.component';
 import { CardComponent } from '../card/card.component';
 
 @Component({
-  selector: 'skooltrak-image-cropper',
+  selector: 'sk-image-cropper',
   standalone: true,
   imports: [
     ImageCropperModule,
-    ButtonComponent,
+    ButtonDirective,
     IconsModule,
     CardComponent,
     NgStyle,
   ],
-  template: `<skooltrak-card>
+  template: `<sk-card>
       <div class="flex items-start justify-between">
         <h3
           class="font-mono text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
@@ -29,7 +29,7 @@ import { CardComponent } from '../card/card.component';
           <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
         </button>
       </div>
-      <button skooltrak-button color="green" (click)="fileInput.click()">
+      <button skButton color="green" (click)="fileInput.click()">
         Choose picture
       </button>
       <div class="flex flex-col mt-2 space-4">
@@ -60,7 +60,7 @@ import { CardComponent } from '../card/card.component';
         </div>
         <div class="flex gap-2 mt-2">
           <button
-            skooltrak-button
+            skButton
             color="blue"
             class="w-full"
             [disabled]="!imageFile"
@@ -70,7 +70,7 @@ import { CardComponent } from '../card/card.component';
           </button>
         </div>
       </div>
-    </skooltrak-card>
+    </sk-card>
     <input
       hidden
       type="file"
@@ -101,7 +101,7 @@ export class ImageCropperComponent implements OnInit {
     inject(DIALOG_DATA);
 
   private sanitizer = inject(DomSanitizer);
-  imgChangeEvt: any = '';
+  imgChangeEvt: unknown = '';
 
   cropImgPreview: string | SafeUrl = '';
 
@@ -111,7 +111,7 @@ export class ImageCropperComponent implements OnInit {
     !!this.data && (this.options = this.data);
   }
 
-  onFileChange(event: any) {
+  onFileChange(event: unknown) {
     this.imgChangeEvt = event;
   }
 

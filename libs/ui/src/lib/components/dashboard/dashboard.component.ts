@@ -10,7 +10,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
-  selector: 'skooltrak-dashboard',
+  selector: 'sk-dashboard',
   standalone: true,
   imports: [
     RouterOutlet,
@@ -26,7 +26,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     TranslateModule,
   ],
   template: `
-    <skooltrak-navbar />
+    <sk-navbar />
     <aside
       id="logo-sidebar"
       class="bg-white mt-14 dark:bg-gray-800 mt-12 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
@@ -48,7 +48,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
                   src="https://ibepanama.org/wp-content/uploads/2021/07/Recurso-4-2.png"
                   alt="school crest"
                 />
-                <skooltrak-avatar
+                <sk-avatar
                   *ngIf="role()?.school?.crest_url"
                   class="min-h-12 max-h-36"
                   [avatarUrl]="role()?.school?.crest_url!"

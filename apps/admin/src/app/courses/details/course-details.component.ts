@@ -18,7 +18,7 @@ import { CoursesStore } from '../courses.store';
     RouterOutlet,
     IconsModule,
   ],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div header>
       <a
         routerLink="../all"
@@ -39,13 +39,13 @@ import { CoursesStore } from '../courses.store';
     </div>
 
     <div class="mt-2" skooltrak-tabs>
-      <skooltrak-tabs-item route="schedule">
+      <sk-tabs-item link="schedule">
         <icon name="calendar-days" />
-        {{ 'Schedule' | translate }}</skooltrak-tabs-item
+        {{ 'Schedule' | translate }}</sk-tabs-item
       >
     </div>
     <router-outlet></router-outlet>
-  </skooltrak-card>`,
+  </sk-card>`,
 })
 export class CourseDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);

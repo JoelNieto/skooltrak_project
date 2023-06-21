@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayConfig,
+  OverlayModule,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -17,13 +24,17 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 import { PropertyPipe } from '../../pipes';
 import { UtilService } from '../../services/util.service';
 
 @Component({
-  selector: 'skooltrak-select',
+  selector: 'sk-select',
   standalone: true,
   imports: [
     OverlayModule,
@@ -127,6 +138,7 @@ import { UtilService } from '../../services/util.service';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '[attr.tabIndex]': 'disabled === true ? null : "0"',
   },
@@ -139,10 +151,10 @@ export class SelectComponent
   }
   @Input({ required: true }) label!: string;
   @Input({ required: false }) secondaryLabel!: string;
-  @Input({}) valueId: string = 'id';
-  @Input() search: boolean = true;
+  @Input({}) valueId = 'id';
+  @Input() search = true;
   @Input() multiple = false;
-  @Input() placeholder: string = 'Select value';
+  @Input() placeholder = 'Select value';
   private overlayRef!: OverlayRef;
   @ViewChild(CdkPortal) public container!: CdkPortal;
   @ViewChild('select') public select!: ElementRef;
@@ -158,6 +170,7 @@ export class SelectComponent
     this.syncWidth();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onChange = (value: any | any[]): void => {};
   onTouch: any = () => {};
 
@@ -230,7 +243,10 @@ export class SelectComponent
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.container);
     this.syncWidth();
-    this.overlayRef.backdropClick().subscribe(() => this.hide());
+    this.overlayRef.backdropClick().subscribe({
+      next: () => this.hide(),
+      error: (error) => console.error(error),
+    });
     this.isOpen.set(true);
   }
 

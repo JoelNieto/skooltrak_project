@@ -7,7 +7,7 @@ import { CardComponent } from '@skooltrak/ui';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CardComponent],
   template: `
-    <skooltrak-card>
+    <sk-card>
       <h2
         class=" sticky top-0 pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
       >
@@ -39,7 +39,7 @@ import { CardComponent } from '@skooltrak/ui';
         </ul>
       </div>
       <router-outlet />
-    </skooltrak-card>
+    </sk-card>
   `,
   styles: [
     `

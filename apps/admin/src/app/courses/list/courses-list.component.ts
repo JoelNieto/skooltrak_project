@@ -21,7 +21,7 @@ import { CoursesStore } from '../courses.store';
     RouterLink,
   ],
   template: `
-    <skooltrak-card>
+    <sk-card>
       <div header>
         <h2
           class="leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
@@ -103,13 +103,13 @@ import { CoursesStore } from '../courses.store';
             <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
           </ul>
         </div>
-        <skooltrak-paginator
+        <sk-paginator
           [count]="store.count()"
           [pageSize]="store.pageSize"
           (paginate)="getCurrentPage($event)"
         />
       </div>
-    </skooltrak-card>
+    </sk-card>
   `,
 })
 export class CoursesListComponent {

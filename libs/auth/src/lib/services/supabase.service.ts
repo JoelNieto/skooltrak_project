@@ -22,7 +22,7 @@ export class SupabaseService {
     );
   }
 
-  get session() {
+  get session$() {
     return from(this.client.auth.getSession()).pipe(
       map(({ data }) => data.session)
     );

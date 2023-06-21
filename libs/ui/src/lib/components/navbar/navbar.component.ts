@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { state } from '@skooltrak/auth';
 
 @Component({
-  selector: 'skooltrak-navbar',
+  selector: 'sk-navbar',
   standalone: true,
   imports: [CommonModule, CdkMenuModule, RouterLink, TranslateModule],
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
@@ -139,7 +139,7 @@ import { state } from '@skooltrak/auth';
   ],
 })
 export class NavbarComponent {
-  store = inject(Store);
-  user = this.store.selectSignal(state.selectors.selectUser);
-  role = this.store.selectSignal(state.selectors.selectCurrentRole);
+  store$ = inject(Store);
+  user = this.store$.selectSignal(state.selectors.selectUser);
+  role = this.store$.selectSignal(state.selectors.selectCurrentRole);
 }

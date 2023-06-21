@@ -9,7 +9,7 @@ export class ConfirmationService {
 
   openDialog = (
     type: 'delete' | 'info' | 'warning' = 'delete',
-    description: string = 'Item'
+    description = 'Item'
   ) =>
     this.dialog.open(ConfirmationComponent, {
       width: '24rem',

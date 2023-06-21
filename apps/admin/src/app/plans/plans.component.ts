@@ -5,7 +5,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, SelectComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import {
+  CardComponent,
+  SelectComponent,
+  TabsComponent,
+  TabsItemComponent,
+} from '@skooltrak/ui';
 
 import { PlansStore } from './plans.store';
 
@@ -24,7 +29,7 @@ import { PlansStore } from './plans.store';
     AsyncPipe,
   ],
   providers: [provideComponentStore(PlansStore)],
-  template: `<skooltrak-card>
+  template: `<sk-card>
     <div header>
       <h2
         class="sticky pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
@@ -32,7 +37,7 @@ import { PlansStore } from './plans.store';
         {{ 'Plans.Title' | translate }}
       </h2>
       <div class="w-80">
-        <skooltrak-select
+        <sk-select
           [items]="store.plans()"
           label="name"
           secondaryLabel="degree.name"
@@ -42,16 +47,14 @@ import { PlansStore } from './plans.store';
     </div>
     <ng-container *ngIf="store.selectedId$ | async">
       <div skooltrak-tabs>
-        <skooltrak-tabs-item route="courses">{{
-          'Courses' | translate
-        }}</skooltrak-tabs-item>
-        <skooltrak-tabs-item route="students">{{
+        <sk-tabs-item link="courses">{{ 'Courses' | translate }}</sk-tabs-item>
+        <sk-tabs-item link="students">{{
           'Students' | translate
-        }}</skooltrak-tabs-item>
+        }}</sk-tabs-item>
       </div>
       <router-outlet />
     </ng-container>
-  </skooltrak-card>`,
+  </sk-card>`,
 })
 export class PlansComponent implements OnInit {
   store = inject(PlansStore);

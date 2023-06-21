@@ -6,11 +6,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent } from '../card/card.component';
 
 @Component({
-  selector: 'skooltrak-confirmation',
+  selector: 'sk-confirmation',
   standalone: true,
   imports: [CardComponent, TranslateModule, IconsModule, DialogModule],
   template: `
-    <skooltrak-card>
+    <sk-card>
       <div class="flex justify-center mb-3">
         <div class="rounded-full bg-red-200 p-2">
           <icon name="exclamation-circle" class="h-10 w-10 text-red-600" />
@@ -35,7 +35,7 @@ import { CardComponent } from '../card/card.component';
           {{ 'Confirm' | translate }}
         </button>
       </div>
-    </skooltrak-card>
+    </sk-card>
   `,
   styles: [],
 })

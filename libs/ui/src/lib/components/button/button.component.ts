@@ -1,20 +1,22 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, HostBinding, HostListener, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: `[skooltrak-button]`,
   standalone: true,
   imports: [NgClass],
-
   template: `<ng-content></ng-content>`,
+  inputs: [{ name: 'color', required: true }],
 })
 export class ButtonComponent implements OnInit {
-  @Input({ required: true }) color!:
-    | 'blue'
-    | 'sky'
-    | 'red'
-    | 'green'
-    | 'purple';
+  color!: 'blue' | 'sky' | 'red' | 'green' | 'purple';
   @Output() buttonClick = new EventEmitter();
   @HostBinding('class') get classes() {
     return this.styles;

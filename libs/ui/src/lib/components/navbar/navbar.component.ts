@@ -4,7 +4,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors';
+import { state } from '@skooltrak/auth';
 
 @Component({
   selector: 'skooltrak-navbar',
@@ -66,7 +66,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                   <p
                     class="text-xs text-gray-800 dark:text-white font-sans font-semibold"
                   >
-                    {{ user()?.full_name }}
+                    {{ user()?.first_name }} {{ user()?.father_name }}
                   </p>
                   <p class="text-xs text-gray-400 font-title">
                     {{ role()?.role?.name }}
@@ -99,7 +99,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                     <a
                       routerLink="profile"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      role="menuitem"
+                      cdkMenuItem
                       >Profile</a
                     >
                   </li>
@@ -107,7 +107,7 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                     <a
                       href="#"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      role="menuitem"
+                      cdkMenuItem
                       >Settings</a
                     >
                   </li>
@@ -115,17 +115,12 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
                     <a
                       href="#"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      role="menuitem"
+                      cdkMenuItem
                       >Earnings</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      role="menuitem"
-                      >Sign out</a
-                    >
+                    <a href="#" class="menu-item" cdkMenuItem>Sign out</a>
                   </li>
                 </ul>
               </div>
@@ -135,10 +130,16 @@ import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors
       </div>
     </div>
   </nav>`,
-  styles: [],
+  styles: [
+    `
+      .menu-item {
+        @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white;
+      }
+    `,
+  ],
 })
 export class NavbarComponent {
   store = inject(Store);
-  user = this.store.selectSignal(selectUser);
-  role = this.store.selectSignal(selectCurrentRole);
+  user = this.store.selectSignal(state.selectors.selectUser);
+  role = this.store.selectSignal(state.selectors.selectCurrentRole);
 }

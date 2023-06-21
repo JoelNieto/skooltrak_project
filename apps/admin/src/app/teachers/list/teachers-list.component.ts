@@ -1,14 +1,17 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Teacher } from '@skooltrak/models';
 import { ButtonComponent } from '@skooltrak/ui';
 
+import { TeachersFormComponent } from '../form/teachers-form.component';
 import { TeacherStore } from '../teachers.store';
 
 @Component({
   selector: 'sk-admin-teachers-list',
   standalone: true,
-  imports: [ButtonComponent, IconsModule, RouterLink],
+  imports: [ButtonComponent, IconsModule, RouterLink, DialogModule],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-2 px-1">
       <div>
@@ -31,11 +34,27 @@ import { TeacherStore } from '../teachers.store';
         </div>
       </div>
 
-      <a skooltrak-button color="sky" routerLink="../new">New</a>
+      <button skooltrak-button color="sky" (click)="newTeacher()">New</button>
     </div>
   </div> `,
 })
 export class TeachersListComponent {
   store = inject(TeacherStore);
-  plan = this.store.count;
+  dialog = inject(Dialog);
+
+  newTeacher() {
+    const dialogRef = this.dialog.open<Partial<Teacher>>(
+      TeachersFormComponent,
+      {
+        minWidth: '75%',
+        disableClose: true,
+      }
+    );
+
+    dialogRef.closed.subscribe({
+      next: (request) => {
+        console.log(request);
+      },
+    });
+  }
 }

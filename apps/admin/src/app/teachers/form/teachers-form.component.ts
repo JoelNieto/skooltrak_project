@@ -1,48 +1,71 @@
+import { IconsModule } from '@amithvns/ng-heroicons';
+import { DialogRef } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
+import { TranslateModule } from '@ngx-translate/core';
+import { Teacher } from '@skooltrak/models';
+import { CardComponent } from '@skooltrak/ui';
 
 import { TeachersFormStore } from './teachers-form.store';
 
 @Component({
   selector: 'sk-admin-teachers-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor],
+  imports: [
+    ReactiveFormsModule,
+    NgFor,
+    CardComponent,
+    TranslateModule,
+    IconsModule,
+  ],
   providers: [provideComponentStore(TeachersFormStore)],
-  template: ` <form
-    [formGroup]="form"
-    class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-4 mt-2"
-  >
-    <div>
-      <label for="first_name">First name</label>
-      <input type="text" formControlName="first_name" />
+  template: `<skooltrak-card>
+    <div class="flex items-start justify-between" header>
+      <h3
+        class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+      >
+        {{ 'Teacher.Details' | translate }}
+      </h3>
+      <button (click)="dialogRef.close()">
+        <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
+      </button>
     </div>
-    <div>
-      <label for="middle_name">Middle name</label>
-      <input type="text" formControlName="middle_name" />
-    </div>
-    <div>
-      <label for="father_name">Father name</label>
-      <input type="text" formControlName="father_name" />
-    </div>
-    <div>
-      <label for="mother_name">Mother name</label>
-      <input type="text" formControlName="mother_name" />
-    </div>
-    <div>
-      <label for="birth_date">Birth date</label>
-      <input type="date" formControlName="birth_date" />
-    </div>
-    <div>
-      <label for="gender">Gender</label>
-      <select formControlName="gender">
-        <option *ngFor="let gender of store.genders()" [value]="gender.id">
-          {{ gender.name }}
-        </option>
-      </select>
-    </div>
-  </form>`,
+    <form
+      [formGroup]="form"
+      class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-4 mt-2"
+    >
+      <div>
+        <label for="first_name">First name</label>
+        <input type="text" formControlName="first_name" />
+      </div>
+      <div>
+        <label for="middle_name">Middle name</label>
+        <input type="text" formControlName="middle_name" />
+      </div>
+      <div>
+        <label for="father_name">Father name</label>
+        <input type="text" formControlName="father_name" />
+      </div>
+      <div>
+        <label for="mother_name">Mother name</label>
+        <input type="text" formControlName="mother_name" />
+      </div>
+      <div>
+        <label for="birth_date">Birth date</label>
+        <input type="date" formControlName="birth_date" />
+      </div>
+      <div>
+        <label for="gender">Gender</label>
+        <select formControlName="gender">
+          <option *ngFor="let gender of store.genders()" [value]="gender.id">
+            {{ gender.name }}
+          </option>
+        </select>
+      </div>
+    </form></skooltrak-card
+  > `,
   styles: [
     `
       input,
@@ -80,4 +103,5 @@ export class TeachersFormComponent {
       nonNullable: true,
     }),
   });
+  dialogRef = inject(DialogRef<Partial<Teacher>>);
 }

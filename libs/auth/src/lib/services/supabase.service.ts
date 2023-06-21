@@ -1,7 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '@skooltrak/environments';
 import { SchoolRole, User } from '@skooltrak/models';
-import { AuthChangeEvent, createClient, Session, SupabaseClient } from '@supabase/supabase-js';
+import {
+  AuthChangeEvent,
+  createClient,
+  Session,
+  SupabaseClient,
+} from '@supabase/supabase-js';
 import { from, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

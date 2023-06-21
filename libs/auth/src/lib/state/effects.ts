@@ -1,8 +1,18 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Link, SchoolRole } from '@skooltrak/models';
+import { Link, SchoolRole, Table, User } from '@skooltrak/models';
 import { sortBy } from 'lodash';
-import { catchError, exhaustMap, filter, from, map, of } from 'rxjs';
+import {
+  catchError,
+  exhaustMap,
+  from,
+  iif,
+  map,
+  mergeMap,
+  of,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../services/supabase.service';
 import { AuthActions } from './actions';
@@ -23,7 +33,6 @@ export const getSession$ = createEffect(
       ofType(AuthActions.getSession),
       exhaustMap(() =>
         supabase.session.pipe(
-          filter((session) => !!session),
           map((session) => AuthActions.setSession({ session }))
         )
       )
@@ -36,17 +45,52 @@ export const setSession$ = createEffect(
   (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions$.pipe(
       ofType(AuthActions.setSession),
-      exhaustMap(({ session }) =>
+      mergeMap(({ session }) =>
+        iif(
+          () => !!session,
+          of(session),
+          throwError(() => new Error('test'))
+        )
+      ),
+      tap((session) => console.log(session)),
+      exhaustMap((session) =>
         from(
           supabase.client
-            .from('users')
-            .select('id, email, full_name, avatar_url, updated_at')
+            .from(Table.Users)
+            .select(
+              'id, email, full_name, avatar_url, updated_at, first_name, middle_name, father_name, mother_name, birth_date, gender'
+            )
             .eq('id', session?.user.id)
             .single()
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data;
+          })
+        )
+      ),
+      map((user) => AuthActions.setUser({ user })),
+      catchError((error) => of(AuthActions.sessionFailed(error)))
+    );
+  },
+  { functional: true }
+);
+
+export const updateUser = createEffect(
+  (actions$ = inject(Actions), supabase = inject(SupabaseService)) => {
+    return actions$.pipe(
+      ofType(AuthActions.updateProfile),
+      exhaustMap(({ request }) =>
+        from(
+          supabase.client
+            .from(Table.Users)
+            .update([request])
+            .eq('id', request.id)
+            .select('*')
+        ).pipe(
+          map(({ data, error }) => {
+            if (error) throw new Error(error.message);
+            return data as unknown as User;
           })
         )
       ),

@@ -17,9 +17,14 @@ export class AppComponent implements OnInit {
   router = inject(Router);
   translate = inject(TranslateService);
   currentRole = this.store$.selectSignal(state.selectors.selectCurrentRole);
+  loading = this.store$.selectSignal(state.selectors.selectLoading);
   constructor() {
     effect(() => {
+      if (this.loading()) {
+        return;
+      }
       if (!this.currentRole()) {
+        this.router.initialNavigation();
         return;
       }
       const { role } = this.currentRole() || {};
@@ -40,7 +45,7 @@ export class AppComponent implements OnInit {
           },
           { path: '', redirectTo: 'app', pathMatch: 'full' },
         ]);
-        this.router.navigate(['']);
+        this.router.initialNavigation();
       }
     });
   }

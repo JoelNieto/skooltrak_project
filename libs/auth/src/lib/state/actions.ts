@@ -7,6 +7,8 @@ export const AuthActions = createActionGroup({
   events: {
     initState: emptyProps(),
     getSession: emptyProps(),
+    updateProfile: props<{ request: Partial<User> }>(),
+    sessionFailed: props<{ error: string }>(),
     setSession: props<{ session: Session | null }>(),
     setUser: props<{ user: User }>(),
     signIn: props<{ email: string; password: string }>(),

@@ -29,7 +29,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     <skooltrak-navbar />
     <aside
       id="logo-sidebar"
-      class="bg-white mt-14 dark:bg-gray-700 mt-12 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
+      class="bg-white mt-14 dark:bg-gray-800 mt-12 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
       <div class="flex flex-col p-3">
         <div class="flex items-center justify-center mb-2">
@@ -111,7 +111,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       </div>
     </aside>
     <main
-      class="p-8 sm:ml-64 bg-gray-50 dark:bg-gray-800 font-sans relative top-16"
+      class="p-8 sm:ml-64 bg-gray-50 dark:bg-gray-900 font-sans relative top-16"
     >
       <router-outlet />
     </main>

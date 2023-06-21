@@ -1,7 +1,7 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
@@ -35,9 +35,9 @@ import { CardComponent } from '../card/card.component';
       <div class="flex flex-col mt-2 space-4">
         <image-cropper
           [imageChangedEvent]="imgChangeEvt"
-          [maintainAspectRatio]="false"
+          [maintainAspectRatio]="options.fixedRatio"
           [containWithinAspectRatio]="true"
-          [aspectRatio]="4 / 4"
+          [aspectRatio]="options.ratio"
           [resizeToHeight]="256"
           format="png"
           (imageCropped)="cropImg($event)"
@@ -87,16 +87,29 @@ import { CardComponent } from '../card/card.component';
     `,
   ],
 })
-export class ImageCropperComponent {
+export class ImageCropperComponent implements OnInit {
+  options: { fixedRatio: boolean; ratio: number } = {
+    fixedRatio: false,
+    ratio: 4 / 4,
+  };
+
   public dialogRef = inject(
     DialogRef<{ imageFile: File | undefined; cropImgPreview: string | SafeUrl }>
   );
+
+  private data: { fixedRatio: boolean; ratio: number } | undefined =
+    inject(DIALOG_DATA);
+
   private sanitizer = inject(DomSanitizer);
   imgChangeEvt: any = '';
 
   cropImgPreview: string | SafeUrl = '';
 
   imageFile: File | undefined;
+
+  ngOnInit(): void {
+    !!this.data && (this.options = this.data);
+  }
 
   onFileChange(event: any) {
     this.imgChangeEvt = event;

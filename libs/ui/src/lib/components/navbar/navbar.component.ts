@@ -4,16 +4,13 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  selectCurrentRole,
-  selectUser,
-} from 'libs/auth/src/lib/state/selectors';
+import { selectCurrentRole, selectUser } from 'libs/auth/src/lib/state/selectors';
 
 @Component({
   selector: 'skooltrak-navbar',
   standalone: true,
   imports: [CommonModule, CdkMenuModule, RouterLink, TranslateModule],
-  template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-700">
+  template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">

@@ -15,7 +15,7 @@ export type State = {
 };
 
 export const initialState: State = {
-  loading: false,
+  loading: true,
   roles: [],
   user: undefined,
   session: null,
@@ -30,9 +30,13 @@ export const authFeature = createFeature({
     initialState,
     on(actions.initState, (state) => ({
       ...state,
-      loading: true,
     })),
     on(actions.setSession, (state, { session }) => ({ ...state, session })),
+    on(actions.sessionFailed, (state, { error }) => ({
+      ...state,
+      error,
+      loading: false,
+    })),
     on(actions.setUser, (state, { user }) => ({ ...state, user })),
     on(actions.setRoles, (state, { roles }) => ({
       ...state,

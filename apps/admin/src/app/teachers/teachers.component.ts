@@ -13,19 +13,10 @@ import { TeacherStore } from './teachers.store';
   template: `<skooltrak-card
     ><h2
       header
-      class=" sticky top-0 pb-3 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-mono font-bold"
+      class=" sticky top-0 pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
     >
       Teachers
     </h2>
-    <div
-      class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 mb-2 dark:border-gray-700"
-    >
-      <ul class="flex flex-wrap -mb-px">
-        <li class="mr-2">
-          <a routerLink="all" routerLinkActive="active" class="link">All</a>
-        </li>
-      </ul>
-    </div>
     <router-outlet />
   </skooltrak-card> `,
   styles: [

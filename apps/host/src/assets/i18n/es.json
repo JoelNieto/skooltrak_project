@@ -45,5 +45,8 @@
   "Plans": {
     "Title": "Planes de estudio",
     "Details": "Detalles del Plan de estudio"
+  },
+  "Teacher": {
+    "Details": "Datos del docente"
   }
 }

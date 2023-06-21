@@ -1,12 +1,26 @@
 /* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
 import { Course, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import { EMPTY, exhaustMap, filter, from, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   courses: Course[];
@@ -89,9 +103,9 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
               .range(start, end)
               .eq('school_id', this.school()?.id)
           ).pipe(
-            exhaustMap(({ data, error, count }) => {
+            map(({ data, error, count }) => {
               if (error) throw new Error(error.message);
-              return of({ courses: data, count });
+              return { courses: data, count };
             }),
             tap(({ count }) => !!count && this.setCount(count)),
             tapResponse(

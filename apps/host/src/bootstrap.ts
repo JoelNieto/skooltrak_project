@@ -3,10 +3,7 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { importProvidersFrom, isDevMode } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  provideRouter,
-  withEnabledBlockingInitialNavigation,
-} from '@angular/router';
+import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -35,7 +32,7 @@ bootstrapApplication(AppComponent, {
         },
       })
     ),
-    provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
+    provideRouter(appRoutes, withDisabledInitialNavigation()),
     provideStore({ auth: state.authFeature.reducer }),
     provideEffects(state.effects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), trace: true }),

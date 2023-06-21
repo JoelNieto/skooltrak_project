@@ -2,6 +2,7 @@ import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, JsonPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
@@ -22,6 +23,7 @@ import { PlanCourseStore } from './plan-courses.store';
     NgFor,
     NgIf,
     DatePipe,
+    RouterLink,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-3 px-1">
@@ -79,6 +81,12 @@ import { PlanCourseStore } from './plan-courses.store';
           <td class="px-6 py-4">{{ course.weekly_hours }}</td>
           <td class="px-6 py-4">{{ course.created_at | date : 'short' }}</td>
           <td class="px-6 py-4 flex justify-center gap-2 content-center">
+            <a
+              routerLink="/app/courses/details"
+              [queryParams]="{ id: course.id }"
+            >
+              <icon name="eye" class="h-6 w-6 text-sky-500" />
+            </a>
             <button type="button" (click)="editCourse(course)">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
             </button>

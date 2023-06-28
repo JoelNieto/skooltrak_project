@@ -6,10 +6,18 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { state } from '@skooltrak/auth';
 
+import { AvatarComponent } from '../avatar/avatar.component';
+
 @Component({
   selector: 'sk-navbar',
   standalone: true,
-  imports: [CommonModule, CdkMenuModule, RouterLink, TranslateModule],
+  imports: [
+    CommonModule,
+    CdkMenuModule,
+    RouterLink,
+    TranslateModule,
+    AvatarComponent,
+  ],
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -53,15 +61,16 @@ import { state } from '@skooltrak/auth';
             <div>
               <button
                 type="button"
-                class="flex items-center p-1 justify-center text-sm rounded gap-2 focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-600"
+                class="flex items-center p-1 justify-center text-sm rounded gap-2"
                 [cdkMenuTriggerFor]="menu"
               >
                 <span class="sr-only">Open user menu</span>
-                <img
-                  class="w-7 h-7 border-none"
-                  src="assets/bot-avatar.png"
-                  alt="user photo"
+                <sk-avatar
+                  [avatarUrl]="user()?.avatar_url ?? 'default_avatar.jpg'"
+                  [rounded]="true"
+                  class="w-10"
                 />
+
                 <div class="flex flex-col items-start">
                   <p
                     class="text-xs text-gray-800 dark:text-white font-sans font-semibold"

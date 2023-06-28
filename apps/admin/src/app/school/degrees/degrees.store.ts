@@ -120,7 +120,7 @@ export class SchoolDegreesStore
         }),
         tapResponse(
           () => this.fetchDegrees(this.fetchDegreesData$),
-          (error) => console.log(error),
+          (error) => console.error(error),
           () => this.patchState({ loading: false })
         )
       );

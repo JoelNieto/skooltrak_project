@@ -10,6 +10,7 @@ export const AuthActions = createActionGroup({
     updateProfile: props<{ request: Partial<User> }>(),
     sessionFailed: props<{ error: string }>(),
     setSession: props<{ session: Session | null }>(),
+    updateUser: props<{ user: User }>(),
     setUser: props<{ user: User }>(),
     signIn: props<{ email: string; password: string }>(),
     setRoles: props<{ roles: SchoolRole[] }>(),

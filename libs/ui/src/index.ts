@@ -12,3 +12,4 @@ export * from './lib/components/select/select.component';
 export * from './lib/components/tabs/tabs.component';
 export * from './lib/components/tabs-item/tabs-item.component';
 export * from './lib/pipes/';
+export * from './lib/services/title.resolver';

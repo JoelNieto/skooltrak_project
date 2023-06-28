@@ -4,7 +4,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { state, SupabaseService } from '@skooltrak/auth';
-import { Teacher } from '@skooltrak/models';
+import { Table, Teacher } from '@skooltrak/models';
 import { concatMap, exhaustMap, filter, from, of, tap } from 'rxjs';
 
 type State = {
@@ -22,6 +22,7 @@ export class TeacherStore extends ComponentStore<State> implements OnStoreInit {
   school = this.store.selectSignal(state.selectors.selectCurrentSchool);
   supabase = inject(SupabaseService);
 
+  readonly teachers = this.selectSignal((state) => state.teachers);
   readonly count = this.selectSignal((state) => state.count);
   readonly loading = this.selectSignal((state) => state.loading);
   readonly pageSize = this.selectSignal((state) => state.pageSize);
@@ -53,9 +54,9 @@ export class TeacherStore extends ComponentStore<State> implements OnStoreInit {
         concatMap(({ start, end }) => {
           return from(
             this.supabase.client
-              .from('teachers')
+              .from(Table.Teachers)
               .select(
-                'id, first_name, middle_name, father_name, mother_name, subjects, created_at, updated_at',
+                'id,email, school_id, avatar_url, first_name, middle_name, father_name, mother_name, created_at',
                 { count: 'exact' }
               )
               .order('first_name', { ascending: true })

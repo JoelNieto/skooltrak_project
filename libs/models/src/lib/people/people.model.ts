@@ -5,5 +5,6 @@ export type Person = {
   mother_name?: string;
   birth_date: Date;
   gender: number;
+  avatar_url: string;
   document_id: string;
 };

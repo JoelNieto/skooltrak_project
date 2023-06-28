@@ -1,10 +1,5 @@
 import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PasswordValidators, SupabaseService } from '@skooltrak/auth';
 import { ButtonDirective } from '@skooltrak/ui';
 
@@ -123,7 +118,7 @@ export class PersonalDataComponent {
       password,
       full_name,
     });
-    console.log(data);
-    console.log(error);
+    console.info(data);
+    console.error(error);
   }
 }

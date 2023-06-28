@@ -124,7 +124,7 @@ export class SchoolSubjectsStore
         }),
         tapResponse(
           () => this.fetchSubjects(this.fetchSubjectsData$),
-          (error) => console.log(error),
+          (error) => console.error(error),
           () => this.patchState({ loading: false })
         )
       );

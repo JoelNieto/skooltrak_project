@@ -1,9 +1,8 @@
+import { User } from '../auth';
 import { EntityBase } from '../entity';
-import { Person } from './people.model';
 
 export type Teacher = EntityBase &
-  Person & {
+  Partial<User> & {
     school_id: string;
-    subjects: string[];
-    user_id: string;
+    subjects?: string[];
   };

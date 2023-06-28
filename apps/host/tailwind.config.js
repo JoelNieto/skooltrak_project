@@ -8,7 +8,7 @@ module.exports = {
   content: [
     join(__dirname, 'src/**/!(*.stories|*.spec).{ts,html}'),
     ...createGlobPatternsForDependencies(__dirname),
-    join(__dirname, '../admin/src/**/!(*.stories|*.spec).{ts,html}'),
+    join(__dirname, '../../apps/admin/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../teacher/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../student/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../onboarding/src/**/!(*.stories|*.spec).{ts,html}'),

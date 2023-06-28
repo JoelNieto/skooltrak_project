@@ -124,7 +124,7 @@ export class SchoolStudyPlansStore
         }),
         tapResponse(
           () => this.fetchStudyPlans(this.fetchStudyPlansData$),
-          (error) => console.log(error),
+          (error) => console.error(error),
           () => this.patchState({ loading: false })
         )
       );

@@ -5,6 +5,6 @@ export type User = Partial<Person> & {
   full_name: string;
   email: string;
   updated_at?: Date;
-  avatar_url?: string;
+  avatar_url: string;
   password?: string;
 };

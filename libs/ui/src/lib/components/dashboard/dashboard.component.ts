@@ -31,7 +31,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       id="logo-sidebar"
       class="bg-white mt-14 dark:bg-gray-800 mt-12 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
     >
-      <div class="flex flex-col p-3">
+      <div class="flex flex-col py-3 px-8">
         <div class="flex items-center justify-center mb-2">
           <div class="flex items-center truncate">
             <div class="flex pl-2">

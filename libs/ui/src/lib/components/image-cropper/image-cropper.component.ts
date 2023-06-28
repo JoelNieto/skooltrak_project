@@ -3,6 +3,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
 import { ButtonDirective } from '../button/button.component';
@@ -88,7 +89,7 @@ import { CardComponent } from '../card/card.component';
   ],
 })
 export class ImageCropperComponent implements OnInit {
-  options: { fixedRatio: boolean; ratio: number } = {
+  options: ImageCropperOptions = {
     fixedRatio: false,
     ratio: 4 / 4,
   };
@@ -97,8 +98,7 @@ export class ImageCropperComponent implements OnInit {
     DialogRef<{ imageFile: File | undefined; cropImgPreview: string | SafeUrl }>
   );
 
-  private data: { fixedRatio: boolean; ratio: number } | undefined =
-    inject(DIALOG_DATA);
+  private data: ImageCropperOptions | undefined = inject(DIALOG_DATA);
 
   private sanitizer = inject(DomSanitizer);
   imgChangeEvt: unknown = '';

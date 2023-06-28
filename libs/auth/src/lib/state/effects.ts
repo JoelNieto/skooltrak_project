@@ -2,17 +2,7 @@ import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Link, SchoolRole, Table, User } from '@skooltrak/models';
 import { sortBy } from 'lodash';
-import {
-  catchError,
-  exhaustMap,
-  from,
-  iif,
-  map,
-  mergeMap,
-  of,
-  tap,
-  throwError,
-} from 'rxjs';
+import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
 
 import { SupabaseService } from '../services/supabase.service';
 import { AuthActions } from './actions';
@@ -52,7 +42,6 @@ export const setSession = createEffect(
           throwError(() => new Error('test'))
         )
       ),
-      tap((session) => console.log(session)),
       exhaustMap((session) =>
         from(
           supabase.client
@@ -94,7 +83,7 @@ export const updateUser = createEffect(
           })
         )
       ),
-      map((user) => AuthActions.setUser({ user }))
+      map((user) => AuthActions.updateUser({ user })) // TODO - handling error
     );
   },
   { functional: true }

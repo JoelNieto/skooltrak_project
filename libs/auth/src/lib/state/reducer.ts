@@ -46,6 +46,7 @@ export const authFeature = createFeature({
         loading: false,
       })
     ),
+    on(actions.updateUser, (state, { user }): State => ({ ...state, user })),
     on(actions.setUser, (state, { user }): State => ({ ...state, user })),
     on(
       actions.setRoles,

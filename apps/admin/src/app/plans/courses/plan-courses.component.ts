@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonDirective } from '@skooltrak/ui';
+import { AvatarComponent, ButtonDirective, UserChipComponent } from '@skooltrak/ui';
 
 import { PlanCoursesFormComponent } from './form/plans-courses-form.component';
 import { PlanCourseStore } from './plan-courses.store';
@@ -24,6 +24,8 @@ import { PlanCourseStore } from './plan-courses.store';
     NgIf,
     DatePipe,
     RouterLink,
+    AvatarComponent,
+    UserChipComponent,
   ],
   template: `<div class="relative overflow-x-auto mt-1">
     <div class="flex justify-between mb-4 py-3 px-1">
@@ -53,10 +55,11 @@ import { PlanCourseStore } from './plan-courses.store';
     </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead
-        class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+        class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-gray-300 font-title"
       >
         <tr class="cursor-pointer">
           <th scope="col" class="px-6 py-3">{{ 'Subject' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Teachers' | translate }}</th>
           <th scope="col" class="px-6 py-3">
             {{ 'Weekly hours' | translate }}
           </th>
@@ -70,17 +73,23 @@ import { PlanCourseStore } from './plan-courses.store';
         <tr
           *ngFor="let course of store.courses()"
           [class.hidden]="store.loading()"
-          class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+          class="bg-white border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600"
         >
           <th
             scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="px-6 py-2.5 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
             {{ course.subject?.name }}
           </th>
-          <td class="px-6 py-4">{{ course.weekly_hours }}</td>
-          <td class="px-6 py-4">{{ course.created_at | date : 'short' }}</td>
-          <td class="px-6 py-4 flex justify-center gap-2 content-center">
+          <td class="px-6 py-2.5 flex">
+            <sk-user-chip
+              *ngFor="let teacher of course.teachers"
+              [user]="teacher"
+            />
+          </td>
+          <td class="px-6 py-2.5">{{ course.weekly_hours }}</td>
+          <td class="px-6 py-2.5">{{ course.created_at | date : 'short' }}</td>
+          <td class="px-6 py-2.5 flex justify-center gap-2 content-center">
             <a
               routerLink="/app/courses/details"
               [queryParams]="{ id: course.id }"
@@ -119,6 +128,7 @@ export class PlanCoursesComponent {
       PlanCoursesFormComponent,
       {
         minWidth: '36rem',
+        maxWidth: '55%',
         disableClose: true,
       }
     );

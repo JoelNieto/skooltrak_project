@@ -81,7 +81,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
             this.supabase.client
               .from(Table.Courses)
               .select(
-                'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
+                'id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
                 {
                   count: 'exact',
                 }

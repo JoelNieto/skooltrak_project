@@ -11,7 +11,7 @@ import {
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Teacher } from '@skooltrak/models';
-import { CardComponent } from '@skooltrak/ui';
+import { CardComponent, UsersSelectorComponent } from '@skooltrak/ui';
 
 import { TeachersFormStore } from './teachers-form.store';
 
@@ -24,6 +24,7 @@ import { TeachersFormStore } from './teachers-form.store';
     CardComponent,
     TranslateModule,
     IconsModule,
+    UsersSelectorComponent,
   ],
   providers: [provideComponentStore(TeachersFormStore)],
   template: `<sk-card>
@@ -39,38 +40,17 @@ import { TeachersFormStore } from './teachers-form.store';
     </div>
     <form
       [formGroup]="form"
-      class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-4 mt-2"
+      class="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 gap-4 mt-2"
     >
       <div>
         <label for="first_name">First name</label>
-        <input type="text" formControlName="first_name" />
+        <sk-users-selector />
       </div>
       <div>
         <label for="middle_name">Middle name</label>
         <input type="text" formControlName="middle_name" />
-      </div>
-      <div>
-        <label for="father_name">Father name</label>
-        <input type="text" formControlName="father_name" />
-      </div>
-      <div>
-        <label for="mother_name">Mother name</label>
-        <input type="text" formControlName="mother_name" />
-      </div>
-      <div>
-        <label for="birth_date">Birth date</label>
-        <input type="date" formControlName="birth_date" />
-      </div>
-      <div>
-        <label for="gender">Gender</label>
-        <select formControlName="gender">
-          <option *ngFor="let gender of store.genders()" [value]="gender.id">
-            {{ gender.name }}
-          </option>
-        </select>
-      </div>
-    </form></sk-card
-  > `,
+      </div></form
+  ></sk-card> `,
   styles: [
     `
       input,

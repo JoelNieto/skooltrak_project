@@ -10,7 +10,12 @@ import {
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  SelectComponent,
+  UsersSelectorComponent,
+} from '@skooltrak/ui';
 
 import { PlansCoursesFormStore } from './plans-courses-form.store';
 
@@ -23,6 +28,7 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
     ReactiveFormsModule,
     SelectComponent,
     ButtonDirective,
+    UsersSelectorComponent,
   ],
   providers: [provideComponentStore(PlansCoursesFormStore)],
   styles: [
@@ -66,6 +72,12 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
           [items]="store.subjects()"
           formControlName="subject_id"
         />
+      </div>
+      <div>
+        <label class="label" for="weekly_hours">{{
+          'Teachers' | translate
+        }}</label>
+        <sk-users-selector />
       </div>
       <div>
         <label class="label" for="weekly_hours">{{

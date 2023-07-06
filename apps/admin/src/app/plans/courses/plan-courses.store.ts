@@ -42,7 +42,7 @@ export class PlanCourseStore
             this.supabase.client
               .from(Table.Courses)
               .select(
-                'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name), plan_id, description, weekly_hours, created_at'
+                'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name), teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), plan_id, description, weekly_hours, created_at'
               )
               .eq('school_id', this.school()?.id)
               .eq('plan_id', planId)

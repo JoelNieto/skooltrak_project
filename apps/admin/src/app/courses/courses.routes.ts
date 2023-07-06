@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { CourseDetailsComponent } from './details/course-details.component';
+
 export const coursesRoutes: Routes = [
   {
     path: '',
@@ -15,10 +17,8 @@ export const coursesRoutes: Routes = [
       },
       {
         path: 'details',
-        loadComponent: () =>
-          import('./details/course-details.component').then(
-            (x) => x.CourseDetailsComponent
-          ),
+        component: CourseDetailsComponent,
+
         children: [
           {
             path: 'schedule',

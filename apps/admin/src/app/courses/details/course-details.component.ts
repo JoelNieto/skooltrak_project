@@ -1,7 +1,6 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
@@ -48,16 +47,11 @@ import { CoursesStore } from '../courses.store';
   </sk-card>`,
 })
 export class CourseDetailsComponent implements OnInit {
-  private route = inject(ActivatedRoute);
+  @Input() id?: string;
+
   public store = inject(CoursesStore);
-  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: ({ id }) => {
-        this.store.patchState({ selectedId: id });
-      },
-      error: (error) => console.error(error),
-    });
+    this.store.patchState({ selectedId: this.id });
   }
 }

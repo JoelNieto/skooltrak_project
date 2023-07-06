@@ -81,7 +81,9 @@ import { TeacherStore } from '../teachers.store';
             {{ teacher.first_name }} {{ teacher.father_name }}
           </th>
           <td class="px-6 py-2.5">{{ teacher.email }}</td>
-          <td class="px-6 py-2.5">{{ teacher.created_at }}</td>
+          <td class="px-6 py-2.5">
+            {{ teacher.created_at | date : 'medium' }}
+          </td>
           <td class="px-6 py-2.5 flex justify-center gap-2 content-center">
             <button type="button">
               <icon name="pencil-square" class="h-6 w-6 text-green-500" />
@@ -113,7 +115,7 @@ export class TeachersListComponent {
     const dialogRef = this.dialog.open<Partial<Teacher>>(
       TeachersFormComponent,
       {
-        minWidth: '75%',
+        minWidth: '45%',
         disableClose: true,
       }
     );

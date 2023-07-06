@@ -1,14 +1,5 @@
 import { NgClass, NgFor } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  EventEmitter,
-  Input,
-  Output,
-  Signal,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, EventEmitter, Input, Output, Signal, signal } from '@angular/core';
 import { range } from 'lodash';
 
 @Component({
@@ -152,11 +143,13 @@ export class PaginatorComponent {
   setPage = (page: number) => this.currentPage.set(page);
 
   constructor() {
-    effect(() =>
-      this.paginate.emit({
-        currentPage: this.currentPage(),
-        start: this.startIndex(),
-      })
+    effect(
+      () =>
+        this.paginate.emit({
+          currentPage: this.currentPage(),
+          start: this.startIndex(),
+        }),
+      { allowSignalWrites: true }
     );
   }
 }

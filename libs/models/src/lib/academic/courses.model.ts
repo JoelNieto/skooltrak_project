@@ -1,3 +1,4 @@
+import { User } from '../auth';
 import { EntityBase } from '../entity';
 import { StudyPlan } from './study-plans.model';
 import { Subject } from './subjects.model';
@@ -10,4 +11,5 @@ export type Course = EntityBase & {
   plan: StudyPlan;
   school_id: string;
   weekly_hours: number;
+  teachers?: Partial<User>[];
 };

@@ -11,6 +11,7 @@ import {
   TabsComponent,
   TabsItemComponent,
 } from '@skooltrak/ui';
+import { asapScheduler } from 'rxjs';
 
 import { PlansStore } from './plans.store';
 
@@ -66,7 +67,8 @@ export class PlansComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (selectedId) => {
-          !!selectedId && this.store.patchState({ selectedId });
+          !!selectedId &&
+            asapScheduler.schedule(() => this.store.patchState({ selectedId }));
         },
       });
   }

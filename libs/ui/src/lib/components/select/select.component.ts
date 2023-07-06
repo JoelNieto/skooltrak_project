@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IconsModule } from '@amithvns/ng-heroicons';
 import {
   Overlay,
@@ -30,9 +28,11 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 
-import { PropertyPipe } from '../../pipes';
+import { PropertyPipe } from '../../services/pipes';
 import { UtilService } from '../../services/util.service';
 
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 @Component({
   selector: 'sk-select',
   standalone: true,

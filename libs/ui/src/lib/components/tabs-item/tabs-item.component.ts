@@ -23,6 +23,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     <a
       routerLink="{{ link }}"
       routerLinkActive="active"
+      queryParamsHandling="preserve"
       class="link flex gap-2 items-center"
     >
       <ng-content />

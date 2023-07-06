@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/auth';
 
@@ -12,12 +18,19 @@ import { SupabaseService } from '@skooltrak/auth';
     class="h-full"
     [class.rounded-full]="rounded"
   />`,
-  styles: [],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
   @Input() bucket: 'avatars' | 'crests' = 'avatars';
   @Input() rounded!: boolean;
-  @Input()
+  @Input({ required: true })
   set avatarUrl(url: string | null) {
     if (url) {
       this.downloadImage(url);
@@ -26,6 +39,7 @@ export class AvatarComponent {
   _avatarUrl: SafeResourceUrl | undefined;
   private supabase = inject(SupabaseService);
   private dom = inject(DomSanitizer);
+  private cd = inject(ChangeDetectorRef);
 
   async downloadImage(path: string) {
     try {
@@ -35,6 +49,7 @@ export class AvatarComponent {
         this._avatarUrl = this.dom.bypassSecurityTrustUrl(
           URL.createObjectURL(data)
         );
+        this.cd.detectChanges();
       }
     } catch (error) {
       if (error instanceof Error) {

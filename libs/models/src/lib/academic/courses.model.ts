@@ -11,5 +11,5 @@ export type Course = EntityBase & {
   plan: StudyPlan;
   school_id: string;
   weekly_hours: number;
-  teachers?: Partial<User>[];
+  teachers: Partial<User>[];
 };

@@ -13,6 +13,5 @@ export * from './lib/components/tabs/tabs.component';
 export * from './lib/components/tabs-item/tabs-item.component';
 export * from './lib/services/pipes';
 export * from './lib/services/title.resolver';
-export * from './lib/components/users-search/users-search.component';
 export * from './lib/components/users-selector/users-selector.component';
 export * from './lib/components/user-chip/user-chip.component';

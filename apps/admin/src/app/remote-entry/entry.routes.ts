@@ -39,10 +39,17 @@ export const remoteRoutes: Routes = [
       import('../teachers/teachers.routes').then((x) => x.teacherRoutes),
   },
   {
+    path: 'groups',
+    title: 'Groups',
+    loadChildren: () =>
+      import('../groups/groups.routes').then((x) => x.groupsRoutes),
+  },
+  {
     path: 'profile',
     title: 'Profile',
     loadComponent: () =>
       import('@skooltrak/ui').then((x) => x.ProfileComponent),
   },
+
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

@@ -1,6 +1,6 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -36,21 +36,21 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
       input,
       select,
       textarea {
-        @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500;
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
         &.ng-invalid.ng-dirty {
-          @apply text-red-800 border-red-400 bg-red-100 focus:ring-red-600 focus:border-red-600;
+          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
         }
       }
 
       label {
-        @apply block mb-2 text-sm font-sans text-gray-600 font-medium dark:text-white;
+        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
       }
     `,
   ],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'Course.Details' | translate }}
       </h3>
@@ -75,12 +75,6 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
       </div>
       <div>
         <label class="label" for="weekly_hours">{{
-          'Teachers' | translate
-        }}</label>
-        <sk-users-selector />
-      </div>
-      <div>
-        <label class="label" for="weekly_hours">{{
           'Weekly hours' | translate
         }}</label>
         <input formControlName="weekly_hours" type="number" />
@@ -99,7 +93,7 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
     </form>
   </sk-card>`,
 })
-export class PlanCoursesFormComponent implements AfterViewInit {
+export class PlanCoursesFormComponent implements OnInit {
   public store = inject(PlansCoursesFormStore);
   public dialogRef = inject(DialogRef<Partial<Course>>);
   private data: Course | undefined = inject(DIALOG_DATA);
@@ -115,7 +109,8 @@ export class PlanCoursesFormComponent implements AfterViewInit {
     description: new FormControl<string>('', { nonNullable: true }),
   });
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    console.info(this.data);
     !!this.data && this.form.patchValue(this.data);
   }
 

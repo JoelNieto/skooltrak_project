@@ -60,29 +60,30 @@ import { UtilService } from '../../services/util.service';
         #select
         (click)="showOptions()"
         role="listbox"
-        class="bg-gray-50 border border-gray-300 text-gray-700 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400 sm:text-sm"
         [ngClass]="{
-          'ring-1 ring-sky-600 border-sky-600 dark:ring-sky-500 dark:border-sky-500':
+          'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
             isOpen()
         }"
         [class.text-gray-700]="currentValue()"
+        [class.dark:text-white]="currentValue()"
         [innerHTML]="innerContent"
       ></div>
       <ng-template cdk-portal>
         <div id="options-container" class="w-full">
           <div class="relative">
             <div
-              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
               <icon
                 name="magnifying-glass"
-                class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                class="h-5 w-5 text-gray-500 dark:text-gray-400"
               />
             </div>
             <input
               type="text"
               id="table-search"
-              class="block p-2.5 pl-10 text-sm text-gray-900 border-0 focus:ring-0 rounded-tl-lg rounded-tr-lg w-full bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
+              class="block w-full rounded-tl-lg rounded-tr-lg border-0 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:ring-0 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="Search for items"
               autocomplete="new-password"
               [ngModel]="searchText()"
@@ -90,17 +91,17 @@ import { UtilService } from '../../services/util.service';
             />
           </div>
           <div
-            class="p-4 flex items-center bg-white  dark:bg-gray-700"
+            class="flex items-center bg-white p-4  dark:bg-gray-700"
             *ngIf="!filteredItems().length"
           >
             <p
-              class="text-gray-700 dark:text-gray-100 font-semibold font-title "
+              class="font-title font-semibold text-gray-700 dark:text-gray-100 "
             >
               Items not found!
             </p>
           </div>
           <div
-            class="bg-white w-full max-h-64 dark:bg-gray-700 dark:divide-gray-600 overflow-y-scroll"
+            class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
           >
             <ul class="py-1" role="none">
               <li
@@ -108,7 +109,7 @@ import { UtilService } from '../../services/util.service';
                 (click)="toggleValue(item[valueId])"
               >
                 <div
-                  class="flex justify-between px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="flex cursor-pointer justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                   role="menuitem"
                   [ngClass]="{ active: currentValue() === item[valueId] }"
                 >
@@ -130,10 +131,10 @@ import { UtilService } from '../../services/util.service';
   styles: [
     `
       :host {
-        @apply rounded-lg focus:ring-sky-600 focus:border-sky-600 focus-visible:ring-sky-600 focus-visible:border-sky-600 dark:focus:ring-sky-500 dark:focus:border-sky-500 dark:focus-visible:ring-sky-500 dark:focus-visible:border-sky-500;
+        @apply rounded-lg focus:border-sky-600 focus:ring-sky-600 focus-visible:border-sky-600 focus-visible:ring-sky-600 dark:focus:border-sky-500 dark:focus:ring-sky-500 dark:focus-visible:border-sky-500 dark:focus-visible:ring-sky-500;
       }
       .active {
-        @apply text-blue-800 bg-blue-100 dark:bg-blue-700 font-medium;
+        @apply bg-blue-100 font-medium text-blue-800 dark:bg-blue-700;
       }
     `,
   ],

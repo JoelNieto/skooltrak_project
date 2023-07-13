@@ -8,4 +8,5 @@ export enum Table {
   Courses = 'courses',
   Genders = 'genders',
   Teachers = 'school_teachers',
+  Groups = 'school_groups',
 }

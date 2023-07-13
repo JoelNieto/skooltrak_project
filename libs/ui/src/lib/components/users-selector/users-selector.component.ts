@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
@@ -14,8 +15,13 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
+import { User } from '@skooltrak/models';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { UserChipComponent } from '../user-chip/user-chip.component';
@@ -51,30 +57,41 @@ import { UsersSelectorStore } from './users-selector.store';
       #select
       (click)="showOptions()"
       role="listbox"
-      class="bg-gray-50 border border-gray-300 text-gray-700 sm:text-sm rounded-lg w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white flex flex-wrap gap-2 overflow-y-auto max-h-20"
+      class="flex max-h-20 w-full flex-wrap gap-2 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
       [ngClass]="{
-        'ring-1 ring-sky-600 border-sky-600 dark:ring-sky-500 dark:border-sky-500':
+        'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
           isOpen()
       }"
       [class.text-gray-700]="currentValue()"
     >
-      <sk-user-chip *ngFor="let user of store.users()" [user]="user" />
+      <sk-user-chip
+        *ngFor="let user of currentValue()"
+        [user]="user"
+        [removable]="true"
+        (remove)="toggleValue(user)"
+      />
+      <div
+        *ngIf="!currentValue().length"
+        class="te p-1 text-gray-700 dark:text-gray-400"
+      >
+        Pick some users
+      </div>
     </div>
     <ng-template cdk-portal>
       <div id="options-container" class="w-full">
         <div class="relative">
           <div
-            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           >
             <icon
               name="magnifying-glass"
-              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              class="h-5 w-5 text-gray-500 dark:text-gray-400"
             />
           </div>
           <input
             type="text"
             id="table-search"
-            class="block p-2.5 pl-10 text-sm text-gray-900 border-0 focus:ring-0 rounded-tl-lg rounded-tr-lg w-full bg-gray-50 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white"
+            class="block w-full rounded-tl-lg rounded-tr-lg border-0 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:ring-0 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
             placeholder="Search for users"
             autocomplete="nope"
             name="search"
@@ -84,17 +101,21 @@ import { UsersSelectorStore } from './users-selector.store';
           />
         </div>
         <div
-          class="bg-white w-full max-h-64 dark:bg-gray-700 dark:divide-gray-600 overflow-y-scroll"
+          class="flex items-center bg-white p-4  dark:bg-gray-700"
+          *ngIf="!store.users().length"
+        >
+          <p class="font-title font-semibold text-gray-700 dark:text-gray-100 ">
+            Users not found!
+          </p>
+        </div>
+        <div
+          class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
         >
           <ul class="py-1" role="none">
-            <li
-              *ngFor="let user of store.users()"
-              (click)="toggleValue(user.id!)"
-            >
+            <li *ngFor="let user of store.users()" (click)="toggleValue(user)">
               <div
-                class="flex px-4 py-2 gap-3 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                class="flex cursor-pointer gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                 role="menuitem"
-                [ngClass]="{ active: currentValue() === user.id }"
               >
                 <div class="basis-1/10 block">
                   <sk-avatar
@@ -105,11 +126,11 @@ import { UsersSelectorStore } from './users-selector.store';
                 </div>
                 <div class="flex flex-col">
                   <span
-                    class="text-gray-700 dark:text-gray-100 text-sm font-title"
+                    class="font-title text-sm text-gray-700 dark:text-gray-100"
                     >{{ user.first_name }} {{ user.father_name }}</span
                   >
                   <span
-                    class="text-xs text-gray-400 dark:text-gray-300 font-mono"
+                    class="font-mono text-xs text-gray-400 dark:text-gray-300"
                     >{{ user.email }}</span
                   >
                 </div>
@@ -122,7 +143,7 @@ import { UsersSelectorStore } from './users-selector.store';
   </div>`,
 })
 export class UsersSelectorComponent implements ControlValueAccessor {
-  currentValue = signal<string | string[] | null | undefined>(null);
+  currentValue = signal<Partial<User>[]>([]);
   public overlay = inject(Overlay);
   public store = inject(UsersSelectorStore);
   private overlayRef!: OverlayRef;
@@ -138,7 +159,8 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     this.syncWidth();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onChange = (value: any | any[]): void => {};
   onTouch: any = () => {};
 
   constructor() {
@@ -146,6 +168,8 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     effect(() => this.store.patchState({ queryText: this.searchText() }), {
       allowSignalWrites: true,
     });
+
+    effect(() => this.onChange(this.currentValue()));
   }
 
   onFilterChange = (value: string) => {
@@ -155,16 +179,23 @@ export class UsersSelectorComponent implements ControlValueAccessor {
   searchText = signal('');
   isOpen = signal(false);
   isDisabled!: boolean;
-  writeValue(obj: string | string[] | null | undefined): void {
-    this.currentValue.set(obj);
+
+  writeValue(obj: Partial<User>[] | undefined): void {
+    !!obj && this.currentValue.set(obj);
   }
-  registerOnChange(fn: any): void {
+
+  registerOnChange = (fn: any) => {
+    this.onChange = fn;
     !!isDevMode && console.info(fn, 'on change');
-  }
-  registerOnTouched(fn: any): void {
+  };
+
+  registerOnTouched = (fn: unknown) => {
     !!isDevMode && console.info(fn, 'on touch');
-  }
-  setDisabledState? = (isDisabled: boolean) => (this.isDisabled = isDisabled);
+  };
+
+  setDisabledState? = (isDisabled: boolean) => {
+    this.isDisabled = isDisabled;
+  };
 
   private syncWidth = () => {
     if (!this.overlayRef) {
@@ -175,12 +206,13 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     this.overlayRef.updateSize({ width: refRectWidth });
   };
 
-  toggleValue = (val: string) => {
-    this.currentValue() === val
-      ? this.currentValue.set(undefined)
-      : this.currentValue.set(val);
+  toggleValue = (val: Partial<User>) => {
+    this.currentValue().find((x) => x.id === val.id)
+      ? this.currentValue.update((value) =>
+          value.filter((x) => x.id !== val.id)
+        )
+      : this.currentValue.update((value) => [...value, val]);
     this.onTouch();
-    this.hide();
   };
 
   private hide = () => {

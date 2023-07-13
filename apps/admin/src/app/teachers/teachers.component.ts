@@ -20,24 +20,11 @@ import { TeacherStore } from './teachers.store';
   template: `<sk-card
     ><h2
       header
-      class=" sticky top-0 pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
+      class=" font-title sticky top-0 flex pb-2 text-2xl font-bold leading-tight tracking-tight text-gray-700 dark:text-white"
     >
       {{ 'Teachers' | translate }}
     </h2>
     <router-outlet />
-  </sk-card> `,
-  styles: [
-    `
-      .link {
-        @apply inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 dark:hover:text-gray-300;
-      }
-      .active {
-        @apply text-sky-600 border-sky-600 dark:text-sky-500 dark:border-sky-500;
-      }
-      .disabled {
-        @apply text-gray-400 cursor-not-allowed dark:text-gray-500;
-      }
-    `,
-  ],
+  </sk-card>`,
 })
 export class TeachersComponent {}

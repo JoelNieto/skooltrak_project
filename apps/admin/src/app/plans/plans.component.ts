@@ -33,7 +33,7 @@ import { PlansStore } from './plans.store';
   template: `<sk-card>
     <div header>
       <h2
-        class="sticky pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
+        class="font-title sticky flex pb-2 text-2xl font-bold leading-tight tracking-tight text-gray-700 dark:text-white"
       >
         {{ 'Plans.Title' | translate }}
       </h2>

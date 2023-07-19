@@ -29,25 +29,19 @@ import { NavbarComponent } from '../navbar/navbar.component';
     <sk-navbar />
     <aside
       id="logo-sidebar"
-      class="bg-white mt-14 dark:bg-gray-800 mt-12 pt-4 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 flex flex-col"
+      class="fixed left-0 top-0 z-40 mt-12 mt-14 flex h-screen w-64 -translate-x-full flex-col bg-white pt-4 transition-transform dark:bg-gray-800 sm:translate-x-0"
     >
-      <div class="flex flex-col py-3 px-8">
-        <div class="flex items-center justify-center mb-2">
+      <div class="flex flex-col px-8 py-3">
+        <div class="mb-2 flex items-center justify-center">
           <div class="flex items-center truncate">
             <div class="flex pl-2">
               <button
                 type="button"
-                class="flex flex-col justify-center items-center content-center gap-1 rounded-lg"
+                class="flex flex-col content-center items-center justify-center gap-1 rounded-lg"
                 aria-expanded="false"
                 data-dropdown-toggle="dropdown-user"
               >
                 <span class="sr-only">Open user menu</span>
-                <img
-                  *ngIf="!role()?.school?.crest_url"
-                  class="h-12"
-                  src="https://ibepanama.org/wp-content/uploads/2021/07/Recurso-4-2.png"
-                  alt="school crest"
-                />
                 <sk-avatar
                   *ngIf="role()?.school?.crest_url"
                   class="min-h-12 max-h-36"
@@ -56,28 +50,28 @@ import { NavbarComponent } from '../navbar/navbar.component';
                   alt="school crest"
                 />
                 <span
-                  class="text-sky-700 font-semibold font-sans dark:text-white"
+                  class="font-sans font-semibold text-sky-700 dark:text-white"
                   >{{ role()?.school?.short_name }}</span
                 >
                 <span
-                  class="text-gray-600 font-title text-xs truncate dark:text-gray-300"
+                  class="font-title truncate text-xs text-gray-600 dark:text-gray-300"
                   >{{ role()?.role?.name }}</span
                 >
               </button>
             </div>
             <div
-              class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 left-5 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+              class="left-5 z-50 my-4 hidden list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
               id="dropdown-user"
             >
               <div class="px-4 py-3" role="none">
                 <p
-                  class="text-sm text-sky-900 font-semibold dark:text-white"
+                  class="text-sm font-semibold text-sky-900 dark:text-white"
                   role="none"
                 >
                   {{ 'profile()?.full_name' }}
                 </p>
                 <p
-                  class="text-xs font-medium text-gray-900 font-mono truncate dark:text-gray-300"
+                  class="truncate font-mono text-xs font-medium text-gray-900 dark:text-gray-300"
                   role="none"
                 >
                   {{ 'profile()?.email' }}
@@ -96,14 +90,14 @@ import { NavbarComponent } from '../navbar/navbar.component';
             </div>
           </div>
         </div>
-        <ul role="list" class="flex flex-col gap-1 mt-4">
+        <ul role="list" class="mt-4 flex flex-col gap-1">
           <li *ngFor="let link of links()">
             <a
               routerLinkActive="active"
               [routerLink]="link.route"
-              class="link font-title"
+              class="link font-sans"
             >
-              <icon [name]="link.icon" class="w-6 h-6" />
+              <icon [name]="link.icon" class="h-6 w-6" />
               {{ link.name | translate }}
             </a>
           </li>
@@ -111,7 +105,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       </div>
     </aside>
     <main
-      class="p-8 sm:ml-64 bg-gray-50 dark:bg-gray-900 font-sans relative top-16"
+      class="relative top-16 bg-gray-50 p-8 font-sans dark:bg-gray-900 sm:ml-64"
     >
       <router-outlet />
     </main>
@@ -119,11 +113,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styles: [
     `
       .link {
-        @apply text-gray-700 text-sm dark:text-gray-300 hover:bg-gray-100 flex items-center rounded-full dark:hover:bg-gray-800 dark:hover:text-white gap-3 p-1 px-3 cursor-pointer;
+        @apply flex cursor-pointer items-center gap-3 rounded-full p-1 px-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white;
       }
 
       .active {
-        @apply text-sky-700 bg-sky-200 hover:bg-sky-200 dark:bg-gray-600 dark:hover:bg-gray-600 dark:text-sky-500 dark:hover:text-sky-500;
+        @apply bg-sky-200 text-sky-700 hover:bg-sky-200 dark:bg-gray-600 dark:text-sky-500 dark:hover:bg-gray-600 dark:hover:text-sky-500;
       }
 
       .menu-item {
@@ -131,7 +125,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       }
 
       .separator {
-        @apply text-xs text-gray-400 block px-4 py-2 font-mono;
+        @apply block px-4 py-2 font-mono text-xs text-gray-400;
       }
 
       main {

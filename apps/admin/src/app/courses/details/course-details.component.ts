@@ -4,12 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
-import {
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-  UsersSelectorComponent,
-} from '@skooltrak/ui';
+import { CardComponent, TabsComponent, TabsItemComponent, UsersSelectorComponent } from '@skooltrak/ui';
 import { pairwise, startWith } from 'rxjs';
 
 import { CoursesStore } from '../courses.store';
@@ -31,7 +26,7 @@ import { CoursesStore } from '../courses.store';
     <div header>
       <a
         routerLink="../all"
-        class="font-title mb-2 flex text-sm leading-tight tracking-tight text-gray-300 dark:text-white"
+        class="mb-2 flex font-sans text-sm leading-tight tracking-tight text-gray-300 dark:text-white"
       >
         < Back
       </a>
@@ -44,14 +39,16 @@ import { CoursesStore } from '../courses.store';
           </h2>
 
           <h4
-            class="font-title flex text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-white"
+            class="flex font-sans text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-white"
           >
             {{ store.selected()?.plan?.name }}
           </h4>
         </div>
 
         <div class="w-80">
-          <h5 class="mb-2 text-gray-600 dark:text-gray-200">
+          <h5
+            class="mb-1 block font-sans text-sm font-medium text-gray-600 dark:text-white"
+          >
             {{ 'Teachers' | translate }}
           </h5>
           <sk-users-selector [formControl]="teacherControl" />
@@ -89,8 +86,8 @@ export class CourseDetailsComponent implements OnInit {
     this.store.patchState({ selectedId: this.id });
     this.teacherControl.valueChanges.pipe(startWith([]), pairwise()).subscribe({
       next: ([prev, value]) => {
-        console.info('next', value);
         console.info('prev', prev);
+        console.info('next', value);
       },
     });
   }

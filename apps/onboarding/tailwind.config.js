@@ -17,8 +17,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Helvetica Neue', 'sans-serif'],
-        title: ['Poppins', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Space Grotesk', 'Helvetica Neue', 'sans-serif'],
+        title: ['Unbounded', 'Helvetica Neue', 'sans-serif'],
       },
     },
   },

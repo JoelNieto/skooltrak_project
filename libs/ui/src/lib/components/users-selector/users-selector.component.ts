@@ -15,11 +15,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { User } from '@skooltrak/models';
 
@@ -72,7 +68,7 @@ import { UsersSelectorStore } from './users-selector.store';
       />
       <div
         *ngIf="!currentValue().length"
-        class="te p-1 text-gray-700 dark:text-gray-400"
+        class="p-1 text-gray-700 dark:text-gray-400"
       >
         Pick some users
       </div>
@@ -126,7 +122,7 @@ import { UsersSelectorStore } from './users-selector.store';
                 </div>
                 <div class="flex flex-col">
                   <span
-                    class="font-title text-sm text-gray-700 dark:text-gray-100"
+                    class="font-sans text-sm text-gray-700 dark:text-gray-100"
                     >{{ user.first_name }} {{ user.father_name }}</span
                   >
                   <span

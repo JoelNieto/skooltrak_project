@@ -7,11 +7,11 @@ import { Component } from '@angular/core';
   styles: [
     `
       :host {
-        @apply text-sm font-medium text-center text-gray-500 border-b font-title border-gray-200 dark:text-gray-400 mb-2 dark:border-gray-700;
+        @apply mb-2 border-b border-gray-200 text-center font-sans text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400;
       }
     `,
   ],
-  template: `<ul class="flex flex-wrap -mb-px">
+  template: `<ul class="-mb-px flex flex-wrap">
     <ng-content></ng-content>
   </ul>`,
 })

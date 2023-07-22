@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Link, SchoolRole, Table, User } from '@skooltrak/models';
 import { sortBy } from 'lodash';
-import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
+import { catchError, exhaustMap, from, iif, map, mergeMap, of, tap, throwError } from 'rxjs';
 
 import { SupabaseService } from '../services/supabase.service';
 import { AuthActions } from './actions';
@@ -23,6 +23,7 @@ export const getSession = createEffect(
       ofType(AuthActions.getSession),
       exhaustMap(() =>
         supabase.session$.pipe(
+          tap((session) => console.info(session)),
           map((session) => AuthActions.setSession({ session }))
         )
       )

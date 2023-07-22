@@ -22,7 +22,7 @@ import { SchoolStore } from './schools.store';
   template: `
     <sk-card>
       <h2
-        class="sticky pb-2 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
+        class="font-title sticky flex pb-2 text-2xl font-bold leading-tight tracking-tight text-gray-700 dark:text-white"
       >
         {{ 'School' | translate }}
       </h2>
@@ -38,6 +38,9 @@ import { SchoolStore } from './schools.store';
         </sk-tabs-item>
         <sk-tabs-item link="plans">
           {{ 'Plans.Title' | translate }}
+        </sk-tabs-item>
+        <sk-tabs-item link="administrators">
+          {{ 'Administrators.Title' | translate }}
         </sk-tabs-item>
       </div>
       <router-outlet />

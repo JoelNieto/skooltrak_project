@@ -32,6 +32,13 @@ export const schoolRoutes: Routes = [
             (x) => x.StudyPlansComponent
           ),
       },
+      {
+        path: 'administrators',
+        loadComponent: () =>
+          import('./administrators/administrators.component').then(
+            (x) => x.AdministratorsComponent
+          ),
+      },
       { path: '', redirectTo: 'settings', pathMatch: 'full' },
     ],
   },

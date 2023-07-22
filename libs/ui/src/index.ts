@@ -15,3 +15,4 @@ export * from './lib/services/pipes';
 export * from './lib/services/title.resolver';
 export * from './lib/components/users-selector/users-selector.component';
 export * from './lib/components/user-chip/user-chip.component';
+export * from './lib/components/calendar/calendar.component';

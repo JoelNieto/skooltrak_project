@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '@skooltrak/environments';
-import { SchoolRole, User } from '@skooltrak/models';
+import { SchoolRole, SignUpCredentials, User } from '@skooltrak/models';
 import { AuthChangeEvent, createClient, Session, SupabaseClient } from '@supabase/supabase-js';
 import { from, map } from 'rxjs';
 
@@ -41,6 +41,15 @@ export class SupabaseService {
     callback: (event: AuthChangeEvent, session: Session | null) => void
   ) {
     return this.client.auth.onAuthStateChange(callback);
+  }
+
+  signUp(request: SignUpCredentials) {
+    const { email, password, first_name, father_name } = request;
+    return this.client.auth.signUp({
+      email,
+      password,
+      options: { data: { first_name, father_name } },
+    });
   }
 
   inviteUser(email: string) {

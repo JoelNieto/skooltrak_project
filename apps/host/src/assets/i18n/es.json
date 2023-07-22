@@ -60,5 +60,8 @@
   },
   "Teacher": {
     "Details": "Datos del docente"
+  },
+  "Administrators": {
+    "Title": "Administradores"
   }
 }

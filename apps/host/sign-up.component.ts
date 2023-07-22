@@ -33,7 +33,7 @@ import { SignUpStore } from './sign-up.store';
     >
       <a
         href="#"
-        class="font-title mb-6 flex items-center text-2xl text-gray-900 dark:text-gray-100"
+        class="font-title mb-6 flex items-center text-2xl text-gray-900 dark:text-white"
       >
         <img
           class="mr-2 h-12 w-12"
@@ -45,7 +45,7 @@ import { SignUpStore } from './sign-up.store';
         />
         SKOOLTRAK
       </a>
-      <sk-card class="w-full md:w-3/5 xl:w-1/3">
+      <sk-card class="w-full md:w-3/5">
         <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
           Sign up
         </h1>

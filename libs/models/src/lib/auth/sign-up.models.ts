@@ -1,5 +1,6 @@
 export type SignUpCredentials = {
   email: string;
-  full_name: string;
+  first_name: string;
+  father_name: string;
   password: string;
 };

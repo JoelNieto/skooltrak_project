@@ -9,4 +9,5 @@ export enum Table {
   Genders = 'genders',
   Teachers = 'school_teachers',
   Groups = 'school_groups',
+  AssignmentTypes = 'assignment_types',
 }

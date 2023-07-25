@@ -5,3 +5,4 @@ export * from './study-plans.model';
 export * from './courses.model';
 export * from './subjects.model';
 export * from './groups.model';
+export * from './assignments.model';

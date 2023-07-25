@@ -63,5 +63,9 @@
   },
   "Administrators": {
     "Title": "Administradores"
+  },
+  "Assignments": {
+    "Details": "Datos de la asignación",
+    "New": "Nueva asignación"
   }
 }

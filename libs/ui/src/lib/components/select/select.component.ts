@@ -1,10 +1,5 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import {
-  Overlay,
-  OverlayConfig,
-  OverlayModule,
-  OverlayRef,
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -22,11 +17,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { PropertyPipe } from '../../services/pipes';
 import { UtilService } from '../../services/util.service';
@@ -113,7 +104,7 @@ import { UtilService } from '../../services/util.service';
                   role="menuitem"
                   [ngClass]="{ active: currentValue() === item[valueId] }"
                 >
-                  <div>{{ item[label] }}</div>
+                  <div>{{ item | property : label }}</div>
                   <div
                     class="text-xs text-gray-500 dark:text-gray-200"
                     *ngIf="secondaryLabel"
@@ -185,10 +176,10 @@ export class SelectComponent
 
       this.innerContent = value
         ? this.secondaryLabel
-          ? `${value[this.label]} - ${this.util.getProperty(
+          ? `${this.util.getProperty(
               value,
-              this.secondaryLabel
-            )}`
+              this.label
+            )} - ${this.util.getProperty(value, this.secondaryLabel)}`
           : value[this.label]
         : this.placeholder;
     });

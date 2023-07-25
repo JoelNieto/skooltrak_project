@@ -2,7 +2,7 @@ import { IconsModule } from '@amithvns/ng-heroicons';
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,7 +45,7 @@ import { SignUpStore } from './sign-up.store';
         />
         SKOOLTRAK
       </a>
-      <sk-card class="w-full md:w-3/5 xl:w-1/3">
+      <sk-card class="w-full md:w-2/5 xl:w-1/3">
         <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
           Sign up
         </h1>
@@ -136,6 +136,7 @@ import { SignUpStore } from './sign-up.store';
 export class SignUpComponent {
   supabase = inject(SupabaseService);
   store$ = inject(Store);
+  router = inject(Router);
   form = new FormGroup({
     first_name: new FormControl('', {
       nonNullable: true,
@@ -158,10 +159,7 @@ export class SignUpComponent {
   async onSubmit() {
     const { father_name, first_name, email, password } =
       this.form.getRawValue();
-    const {
-      data: { session },
-      error,
-    } = await this.supabase.signUp({
+    const { data, error } = await this.supabase.signUp({
       email,
       password,
       first_name,
@@ -173,6 +171,8 @@ export class SignUpComponent {
       return;
     }
 
-    this.store$.dispatch(AuthActions.setSession({ session }));
+    console.info(data);
+
+    this.store$.dispatch(AuthActions.setSession({ session: data?.session }));
   }
 }

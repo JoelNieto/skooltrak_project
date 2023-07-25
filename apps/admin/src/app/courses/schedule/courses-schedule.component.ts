@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { CalendarComponent } from '@skooltrak/ui';
 
 @Component({
   standalone: true,
-  template: ``,
+  imports: [CalendarComponent],
+  template: `<sk-calendar />`,
 })
 export class CoursesScheduleComponent {}

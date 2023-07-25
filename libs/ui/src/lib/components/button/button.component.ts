@@ -20,7 +20,7 @@ export class ButtonDirective implements OnInit {
     blue: [
       'bg-blue-500',
       'hover:bg-blue-700',
-      'focus:ring-blue-500',
+      'focus:ring-blue-400',
       'dark:bg-blue-500',
       'dark:hover:bg-blue-700',
       'dark:focus:ring-blue-800',
@@ -28,7 +28,7 @@ export class ButtonDirective implements OnInit {
     sky: [
       'bg-sky-500',
       'hover:bg-sky-700',
-      'focus:ring-sky-500',
+      'focus:ring-sky-400',
       'dark:bg-sky-500',
       'dark:hover:bg-sky-700',
       'dark:focus:ring-sky-800',
@@ -36,7 +36,7 @@ export class ButtonDirective implements OnInit {
     red: [
       'bg-red-500',
       'hover:bg-red-700',
-      'focus:ring-red-500',
+      'focus:ring-red-400',
       'dark:bg-red-500',
       'dark:hover:bg-red-700',
       'dark:focus:ring-red-800',
@@ -44,7 +44,7 @@ export class ButtonDirective implements OnInit {
     green: [
       'bg-green-500',
       'hover:bg-green-700',
-      'focus:ring-green-500',
+      'focus:ring-green-400',
       'dark:bg-green-500',
       'dark:hover:bg-green-700',
       'dark:focus:ring-green-800',
@@ -52,7 +52,7 @@ export class ButtonDirective implements OnInit {
     purple: [
       'bg-purple-500',
       'hover:bg-purple-700',
-      'focus:ring-purple-500',
+      'focus:ring-purple-400',
       'dark:bg-purple-500',
       'dark:hover:bg-purple-700',
       'dark:focus:ring-purple-800',

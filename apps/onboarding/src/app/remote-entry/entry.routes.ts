@@ -11,5 +11,12 @@ export const remoteRoutes: Routes = [
     loadComponent: () =>
       import('../sign-up/sign-up.component').then((x) => x.SignUpComponent),
   },
+  {
+    path: 'sign-up-confirmation',
+    loadComponent: () =>
+      import('../signup-confirmation/signup-confirmation.component').then(
+        (x) => x.SignUpConfirmationComponent
+      ),
+  },
   { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
 ];

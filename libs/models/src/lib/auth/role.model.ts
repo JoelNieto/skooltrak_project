@@ -1,4 +1,5 @@
 import { School } from '../academic';
+import { User } from './profile.model';
 
 export type Role = {
   id?: string;
@@ -7,9 +8,10 @@ export type Role = {
   links?: Link[];
 };
 
-export type UserRole = {
-  role: Role;
-  school: School;
+export type UserRole = Partial<User> & {
+  school_id: string;
+  school_name: string;
+  role: RoleTypeEnum;
 };
 
 export type Link = {

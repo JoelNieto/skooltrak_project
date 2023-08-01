@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
               {
                 path: '',
                 loadChildren: () =>
-                  import('admin/Module').then((m) => m.RemoteEntryModule),
+                  import('admin/Routes').then((m) => m.remoteRoutes),
               },
             ],
           },

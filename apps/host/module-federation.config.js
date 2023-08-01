@@ -1,4 +1,4 @@
 module.exports = {
   name: 'host',
-  remotes: ['admin', 'student', 'teacher', 'onboarding'],
+  remotes: ['admin', 'onboarding', 'web-app'],
 };

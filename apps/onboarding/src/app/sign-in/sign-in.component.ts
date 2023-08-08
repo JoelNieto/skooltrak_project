@@ -2,8 +2,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { state } from '@skooltrak/auth';
+import { authState } from '@skooltrak/auth';
 import { ButtonDirective } from '@skooltrak/ui';
 
 @Component({
@@ -143,7 +142,7 @@ import { ButtonDirective } from '@skooltrak/ui';
   ],
 })
 export class SignInComponent {
-  private store$ = inject(Store);
+  private auth = inject(authState.AuthStateFacade);
 
   form = new FormGroup({
     email: new FormControl<string>('', {
@@ -158,6 +157,6 @@ export class SignInComponent {
 
   async signIn() {
     const { email, password } = this.form.getRawValue();
-    this.store$.dispatch(state.AuthActions.signIn({ email, password }));
+    this.auth.signIn(email, password);
   }
 }

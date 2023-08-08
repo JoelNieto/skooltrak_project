@@ -1,8 +1,7 @@
 /* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Course, Table } from '@skooltrak/models';
 import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap, withLatestFrom } from 'rxjs';
 
@@ -19,11 +18,9 @@ export class PlanCourseStore
   implements OnStoreInit
 {
   supabase = inject(SupabaseService);
-  store = inject(Store);
+  auth = inject(authState.AuthStateFacade);
   planStore = inject(PlansStore);
-  readonly school = this.store.selectSignal(
-    state.selectors.selectCurrentSchool
-  );
+
   readonly fetchData$ = this.select(
     { planId: this.planStore.selectedId$ },
     { debounce: true }
@@ -44,7 +41,7 @@ export class PlanCourseStore
               .select(
                 'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name), teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), plan_id, description, weekly_hours, created_at'
               )
-              .eq('school_id', this.school()?.id)
+              .eq('school_id', this.auth.currentSchoolId())
               .eq('plan_id', planId)
           ).pipe(
             map(({ error, data }) => {
@@ -74,7 +71,9 @@ export class PlanCourseStore
         return from(
           this.supabase.client
             .from(Table.Courses)
-            .upsert([{ ...request, school_id: this.school()?.id, plan_id }])
+            .upsert([
+              { ...request, school_id: this.auth.currentSchoolId(), plan_id },
+            ])
         ).pipe(
           exhaustMap(({ error }) => {
             if (error) throw new Error(error.message);

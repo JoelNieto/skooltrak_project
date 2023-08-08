@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Table } from '@skooltrak/models';
 import { exhaustMap, from, of } from 'rxjs';
 
@@ -15,8 +14,7 @@ type State = {
 @Injectable()
 export class PlansStore extends ComponentStore<State> implements OnStoreInit {
   private supabase = inject(SupabaseService);
-  store$ = inject(Store);
-  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
 
   plans = this.selectSignal((state) => state.plans);
   selectedId$ = this.select((state) => state.selectedId);
@@ -26,7 +24,7 @@ export class PlansStore extends ComponentStore<State> implements OnStoreInit {
       this.supabase.client
         .from(Table.StudyPlans)
         .select('id, name, year, degree:school_degrees(name)')
-        .eq('school_id', this.school()?.id)
+        .eq('school_id', this.auth.currentSchoolId())
     )
       .pipe(
         exhaustMap(({ data, error }) => {

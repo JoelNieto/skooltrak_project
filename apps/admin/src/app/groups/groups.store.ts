@@ -1,26 +1,11 @@
 /* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import {
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   groups: ClassGroup[];
@@ -35,8 +20,7 @@ type State = {
 
 @Injectable()
 export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
-  store$ = inject(Store);
-  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
   supabase = inject(SupabaseService);
   util = inject(UtilService);
 
@@ -101,7 +85,7 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
                 }
               )
               .range(start, end)
-              .eq('school_id', this.school()?.id)
+              .eq('school_id', this.auth.currentSchoolId())
           ).pipe(
             map(({ data, error, count }) => {
               if (error) throw new Error(error.message);
@@ -130,7 +114,7 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
           return from(
             this.supabase.client
               .from(Table.Groups)
-              .upsert([{ ...request, school_id: this.school()?.id }])
+              .upsert([{ ...request, school_id: this.auth.currentSchoolId() }])
           ).pipe(
             exhaustMap(({ error }) => {
               if (error) throw new Error(error.message);

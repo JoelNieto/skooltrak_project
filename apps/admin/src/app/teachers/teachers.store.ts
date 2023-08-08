@@ -1,13 +1,8 @@
 /* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Table, Teacher } from '@skooltrak/models';
 import { concatMap, filter, from, map, of, tap } from 'rxjs';
 
@@ -22,8 +17,7 @@ type State = {
 
 @Injectable()
 export class TeacherStore extends ComponentStore<State> implements OnStoreInit {
-  store = inject(Store);
-  school = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
   supabase = inject(SupabaseService);
 
   readonly teachers = this.selectSignal((state) => state.teachers);
@@ -65,7 +59,7 @@ export class TeacherStore extends ComponentStore<State> implements OnStoreInit {
               )
               .order('first_name', { ascending: true })
               .range(start, end)
-              .eq('school_id', this.school()?.id)
+              .eq('school_id', this.auth.currentSchoolId())
           ).pipe(
             map(({ data, error, count }) => {
               if (error) throw new Error(error.message);

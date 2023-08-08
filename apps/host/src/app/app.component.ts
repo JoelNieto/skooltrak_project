@@ -2,8 +2,8 @@ import { Component, effect, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { state } from '@skooltrak/auth';
-import { RoleEnum } from '@skooltrak/models';
+import { authState } from '@skooltrak/auth';
+import { RoleTypeEnum } from '@skooltrak/models';
 import { DashboardComponent } from '@skooltrak/ui';
 
 @Component({
@@ -14,22 +14,23 @@ import { DashboardComponent } from '@skooltrak/ui';
 })
 export class AppComponent implements OnInit {
   store$ = inject(Store);
+  auth = inject(authState.AuthStateFacade);
   router = inject(Router);
   translate = inject(TranslateService);
-  currentRole = this.store$.selectSignal(state.selectors.selectCurrentRole);
-  loading = this.store$.selectSignal(state.selectors.selectLoading);
+  currentRole = this.auth.currentRole;
+  user = this.auth.user;
+  loading = this.auth.loading;
   constructor() {
     effect(() => {
       if (this.loading()) {
         return;
       }
-      if (!this.currentRole()) {
+      if (!this.user()) {
         this.router.initialNavigation();
         return;
       }
-      const { role } = this.currentRole() || {};
 
-      if (role?.code === RoleEnum.Administrator) {
+      if (this.currentRole()?.role === RoleTypeEnum.Administrator) {
         this.router.resetConfig([
           {
             path: 'app',
@@ -52,6 +53,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.translate.setDefaultLang('es');
-    this.store$.dispatch(state.AuthActions.initState());
+    this.auth.init();
   }
 }

@@ -1,10 +1,10 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { JsonPipe, NgFor, NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { state } from '@skooltrak/auth';
+import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
@@ -42,20 +42,14 @@ import { NavbarComponent } from '../navbar/navbar.component';
                 data-dropdown-toggle="dropdown-user"
               >
                 <span class="sr-only">Open user menu</span>
-                <sk-avatar
-                  *ngIf="role()?.school?.crest_url"
-                  class="min-h-12 max-h-36"
-                  [avatarUrl]="role()?.school?.crest_url!"
-                  bucket="crests"
-                  alt="school crest"
-                />
+
                 <span
                   class="font-sans font-semibold text-sky-700 dark:text-white"
-                  >{{ role()?.school?.short_name }}</span
+                  >{{ 'role()?.school?.short_name' }}</span
                 >
                 <span
                   class="font-title truncate text-xs text-gray-600 dark:text-gray-300"
-                  >{{ role()?.role?.name }}</span
+                  >{{ role()?.role }}</span
                 >
               </button>
             </div>
@@ -91,7 +85,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
           </div>
         </div>
         <ul role="list" class="mt-4 flex flex-col gap-1">
-          <li *ngFor="let link of links()">
+          <!-- <li *ngFor="let link of links()">
             <a
               routerLinkActive="active"
               [routerLink]="link.route"
@@ -100,7 +94,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
               <icon [name]="link.icon" class="h-6 w-6" />
               {{ link.name | translate }}
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </aside>
@@ -136,7 +130,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  links = inject(Store).selectSignal(state.selectors.selectLinks);
-  user = inject(Store).selectSignal(state.selectors.selectUser);
-  role = inject(Store).selectSignal(state.selectors.selectCurrentRole);
+  private auth = inject(authState.AuthStateFacade);
+  links = signal([]);
+  user = inject(Store).selectSignal(this.auth.user);
+  role = inject(Store).selectSignal(this.auth.currentRole);
 }

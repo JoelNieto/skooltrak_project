@@ -9,7 +9,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "skooltrak",
+            "prefix": "sk",
             "style": "camelCase"
           }
         ],
@@ -17,7 +17,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "skooltrak",
+            "prefix": "sk",
             "style": "kebab-case"
           }
         ]

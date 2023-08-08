@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Table } from '@skooltrak/models';
+import { Table, User } from '@skooltrak/models';
 import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
 
-import { SupabaseService } from '../services/supabase.service';
+import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
 
 // Init Auth State
@@ -49,7 +49,7 @@ export const setSession = createEffect(
           supabase.client
             .from(Table.Users)
             .select(
-              'id, email, first_name, middle_name, father_name, mother_name, avatar_url, created_at, birth_date, gender'
+              'id, email, first_name, middle_name, father_name, mother_name, avatar_url, updated_at, birth_date, gender'
             )
             .eq('id', session?.user.id)
             .single()
@@ -104,6 +104,30 @@ export const signIn = createEffect(
           catchError((error) => of(AuthActions.signInFailure({ error })))
         )
       )
+    );
+  },
+  { functional: true }
+);
+
+export const updateProfile = createEffect(
+  (actions = inject(Actions), supabase = inject(SupabaseService)) => {
+    return actions.pipe(
+      ofType(AuthActions.updateProfile),
+      exhaustMap(({ request }) =>
+        from(
+          supabase.client
+            .from(Table.Users)
+            .update([request])
+            .eq('id', request.id)
+            .select('*')
+        ).pipe(
+          map(({ data, error }) => {
+            if (error) throw new Error(error.message);
+            return data as unknown as User;
+          })
+        )
+      ),
+      map((user) => AuthActions.setUser({ user }))
     );
   },
   { functional: true }

@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { User, UserRole } from '@skooltrak/models';
+import { School, User, UserRole } from '@skooltrak/models';
 import { Session } from '@supabase/supabase-js';
 
 import { AuthActions as actions } from './actions';
@@ -10,6 +10,7 @@ export type State = {
   session: Session | null;
   roles: UserRole[];
   currentRole: UserRole | undefined;
+  school: Partial<School> | undefined;
   error: unknown | undefined;
 };
 
@@ -18,6 +19,7 @@ export const initialState: State = {
   roles: [],
   user: undefined,
   session: null,
+  school: undefined,
   currentRole: undefined,
   error: undefined,
 };

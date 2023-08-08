@@ -50,15 +50,11 @@ import { AssignmentFormStore } from './assignment-form.store';
       </button>
     </div>
     <form action="" class="grid grid-cols-4 gap-4">
-      <div>
+      <div class="col-span-2">
         <label for="title">{{ 'Title' | translate }}</label>
         <input type="text" name="title" id="" />
       </div>
-      <div>
-        <label for="type">{{ 'Type' | translate }}</label>
-        <sk-select [items]="store.types()" label="name" />
-      </div>
-      <div>
+      <div class="col-span-2">
         <label for="course">{{ 'Courses' | translate }}</label>
         <sk-select
           [items]="store.courses()"
@@ -67,8 +63,17 @@ import { AssignmentFormStore } from './assignment-form.store';
         />
       </div>
       <div>
-        <label for="title">{{ 'Title' | translate }}</label>
-        <input type="text" name="title" id="" />
+        <label for="type">{{ 'Type' | translate }}</label>
+        <sk-select [items]="store.types()" label="name" />
+      </div>
+
+      <div>
+        <label for="start_date">{{ 'Start date' | translate }}</label>
+        <input type="datetime-local" name="start_date" id="start_date" />
+      </div>
+      <div>
+        <label for="end_date">{{ 'End date' | translate }}</label>
+        <input type="datetime-local" name="end_date" id="end_date" />
       </div>
     </form>
   </sk-card>`,

@@ -42,7 +42,7 @@ const colors: Record<string, EventColor> = {
   template: ` <button
       skButton
       color="green"
-      class="fixed bottom-12 right-12"
+      class="fixed bottom-12 right-12 z-50"
       (click)="newAssignment()"
     >
       {{ 'Assignments.New' | translate }}
@@ -59,7 +59,7 @@ const colors: Record<string, EventColor> = {
           color="green"
           class="rounded-e-none"
         >
-          {{ 'Previous' | translate }}
+          {{ 'Calendar.Previous' | translate }}
         </button>
         <button
           type="button"
@@ -69,7 +69,7 @@ const colors: Record<string, EventColor> = {
           color="sky"
           class="rounded-none"
         >
-          {{ 'Today' | translate }}
+          {{ 'Calendar.Today' | translate }}
         </button>
         <button
           type="button"
@@ -81,11 +81,13 @@ const colors: Record<string, EventColor> = {
           color="green"
           class="disabled rounded-s-none"
         >
-          {{ 'Next' | translate }}
+          {{ 'Calendar.Next' | translate }}
         </button>
       </div>
       <div class="flex-1">
-        <h3 class="font-title text-xl font-semibold text-gray-700">
+        <h3
+          class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
+        >
           {{
             viewDate
               | calendarDate
@@ -105,7 +107,7 @@ const colors: Record<string, EventColor> = {
           class="rounded-e-none"
           (click)="setView(CalendarView.Month)"
         >
-          {{ 'Month' | translate }}
+          {{ 'Calendar.Month' | translate }}
         </button>
         <button
           type="button"
@@ -115,7 +117,7 @@ const colors: Record<string, EventColor> = {
           [disabled]="view === CalendarView.Week"
           (click)="setView(CalendarView.Week)"
         >
-          {{ 'Week' | translate }}
+          {{ 'Calendar.Week' | translate }}
         </button>
         <button
           type="button"
@@ -125,7 +127,7 @@ const colors: Record<string, EventColor> = {
           [disabled]="view === CalendarView.Day"
           (click)="setView(CalendarView.Day)"
         >
-          {{ 'Day' | translate }}
+          {{ 'Calendar.Day' | translate }}
         </button>
       </div>
     </div>
@@ -138,7 +140,6 @@ const colors: Record<string, EventColor> = {
         (dayClicked)="dayClicked($event.day)"
         [activeDayIsOpen]="activeDayIsOpen"
         [weekStartsOn]="weekStartOn"
-        [excludeDays]="excludeDays"
         [weekendDays]="weekendDays"
       />
       <mwl-calendar-week-view
@@ -146,13 +147,16 @@ const colors: Record<string, EventColor> = {
         [viewDate]="viewDate"
         [events]="events"
         [locale]="locale"
+        [dayStartHour]="7"
+        [dayEndHour]="17"
         [weekStartsOn]="weekStartOn"
-        [excludeDays]="excludeDays"
         [weekendDays]="weekendDays"
       />
       <mwl-calendar-day-view
         *ngIf="view === CalendarView.Day"
         [viewDate]="viewDate"
+        [dayStartHour]="7"
+        [dayEndHour]="17"
         [events]="events"
         [locale]="locale"
       />
@@ -166,7 +170,7 @@ export class CalendarComponent {
   viewDate: Date = new Date();
   weekStartOn = DAYS_OF_WEEK.MONDAY;
   weekendDays = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
-  excludeDays: number[] = [0, 6];
+  excludeDays: number[] = [0, 8];
   locale = 'es-PA';
   events: CalendarEvent[] = [
     {

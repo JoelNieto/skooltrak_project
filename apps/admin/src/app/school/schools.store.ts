@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Country, School, Table } from '@skooltrak/models';
 import { exhaustMap, from, Observable, of, switchMap, tap } from 'rxjs';
 
@@ -13,8 +12,7 @@ type State = {
 
 @Injectable()
 export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
-  store$ = inject(Store);
-  currentSchool = this.store$.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
   supabase = inject(SupabaseService);
 
   readonly countries = this.selectSignal((state) => state.countries);
@@ -117,7 +115,7 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
 
   ngrxOnStoreInit = () =>
     this.setState({
-      school: this.currentSchool(),
+      school: undefined,
       loading: true,
       countries: [],
     });

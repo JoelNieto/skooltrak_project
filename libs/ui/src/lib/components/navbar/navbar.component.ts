@@ -1,10 +1,10 @@
+import { IconsModule } from '@amithvns/ng-heroicons';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { state } from '@skooltrak/auth';
+import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 
@@ -15,23 +15,22 @@ import { AvatarComponent } from '../avatar/avatar.component';
     CommonModule,
     CdkMenuModule,
     RouterLink,
+    RouterLinkActive,
     TranslateModule,
     AvatarComponent,
+    IconsModule,
   ],
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
           <button
-            data-drawer-target="logo-sidebar"
-            data-drawer-toggle="logo-sidebar"
-            aria-controls="logo-sidebar"
             type="button"
-            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
           >
             <span class="sr-only">Open sidebar</span>
             <svg
-              class="w-6 h-6"
+              class="h-6 w-6"
               aria-hidden="true"
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -44,60 +43,86 @@ import { AvatarComponent } from '../avatar/avatar.component';
               ></path>
             </svg>
           </button>
-          <a href="https://flowbite.com" class="flex ml-2 md:mr-24">
+          <a routerLink="home" class="ml-2 flex md:mr-24">
             <img
               src="assets/skooltrak-logo.svg"
-              class="h-8 mr-3"
+              class="mr-2 h-7"
               alt="Skooltrak Logo"
             />
             <span
-              class="self-center text-gray-700 text-xl font-semibold font-title sm:text-2xl whitespace-nowrap dark:text-white"
+              class="font-title self-center whitespace-nowrap text-xl font-semibold text-gray-700 dark:text-white"
               >{{ 'App title' | translate }}</span
             >
           </a>
         </div>
+        <div class="hidden w-full md:block md:w-auto">
+          <ul
+            class="mt-4 flex flex-col rounded-xl border border-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:items-center md:space-x-4 md:border-0 md:p-0"
+          >
+            <li>
+              <a routerLink="home" class="link" routerLinkActive="active"
+                ><icon name="home" />Home</a
+              >
+            </li>
+            <li>
+              <a routerLink="courses" class="link" routerLinkActive="active"
+                ><icon name="bookmark-square" />Courses</a
+              >
+            </li>
+            <li>
+              <a routerLink="grades" class="link" routerLinkActive="active"
+                ><icon name="clipboard-document" />Grades</a
+              >
+            </li>
+            <li>
+              <a href="#" class="link"
+                ><icon name="calendar-days" />Schedules</a
+              >
+            </li>
+          </ul>
+        </div>
         <div class="flex items-center">
-          <div class="flex items-center ml-3">
+          <div class="ml-3 flex items-center">
             <div>
               <button
                 type="button"
-                class="flex items-center p-1 justify-center text-sm rounded gap-2"
+                class="flex items-center justify-center gap-2 rounded p-1 text-sm"
                 [cdkMenuTriggerFor]="menu"
               >
                 <span class="sr-only">Open user menu</span>
                 <sk-avatar
                   [avatarUrl]="user()?.avatar_url ?? 'default_avatar.jpg'"
                   [rounded]="true"
-                  class="w-10"
+                  class="w-8"
                 />
 
                 <div class="flex flex-col items-start">
                   <p
-                    class="text-xs text-gray-800 dark:text-white font-sans font-semibold"
+                    class="font-sans text-sm font-semibold text-gray-800 dark:text-white"
                   >
                     {{ user()?.first_name }} {{ user()?.father_name }}
                   </p>
-                  <p class="text-xs text-gray-400 font-title">
-                    {{ role()?.role?.name }}
+                  <p class="font-title text-xs text-gray-400">
+                    {{ role()?.role }}
                   </p>
                 </div>
               </button>
             </div>
             <ng-template #menu>
               <div
-                class="my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+                class="my-4 list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
                 id="dropdown-user"
                 cdkMenu
               >
                 <div class="px-4 py-3" role="none">
                   <p
-                    class="text-sm text-sky-700 font-bold dark:text-white"
+                    class="text-sm font-bold text-sky-700 dark:text-white"
                     role="none"
                   >
-                    {{ user()?.full_name }}
+                    {{ user()?.first_name }} {{ user()?.father_name }}
                   </p>
                   <p
-                    class="text-sm text-gray-500 truncate font-sans dark:text-gray-300"
+                    class="truncate font-sans text-sm text-gray-500 dark:text-gray-300"
                     role="none"
                   >
                     {{ user()?.email }}
@@ -144,11 +169,17 @@ import { AvatarComponent } from '../avatar/avatar.component';
       .menu-item {
         @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white;
       }
+      .link {
+        @apply flex gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:border-0 md:hover:bg-transparent md:hover:text-sky-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500;
+        &.active {
+          @apply flex gap-2 rounded-lg bg-sky-200 px-4 py-2  font-semibold text-sky-700;
+        }
+      }
     `,
   ],
 })
 export class NavbarComponent {
-  store$ = inject(Store);
-  user = this.store$.selectSignal(state.selectors.selectUser);
-  role = this.store$.selectSignal(state.selectors.selectCurrentRole);
+  private auth = inject(authState.AuthStateFacade);
+  user = this.auth.user;
+  role = this.auth.currentRole;
 }

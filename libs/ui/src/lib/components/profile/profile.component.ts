@@ -1,11 +1,10 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { state } from '@skooltrak/auth';
+import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ButtonDirective } from '../button/button.component';
@@ -20,6 +19,7 @@ import { ProfileFormStore } from './profile.store';
     ReactiveFormsModule,
     CardComponent,
     NgFor,
+    NgIf,
     TranslateModule,
     ButtonDirective,
     AvatarComponent,
@@ -31,12 +31,13 @@ import { ProfileFormStore } from './profile.store';
       <sk-card>
         <h2
           header
-          class=" sticky top-0 pb-3 leading-tight tracking-tight flex text-gray-700 dark:text-white text-2xl font-title font-bold"
+          class=" font-title sticky top-0 flex pb-3 text-2xl font-bold leading-tight tracking-tight text-gray-700 dark:text-white"
         >
           {{ 'Profile' | translate }}
         </h2>
-        <div class="flex  justify-center mb-4">
+        <div class="mb-4  flex justify-center">
           <sk-avatar
+            *ngIf="this.user()"
             [avatarUrl]="this.user()!.avatar_url!"
             bucket="avatars"
             [rounded]="true"
@@ -46,7 +47,7 @@ import { ProfileFormStore } from './profile.store';
         </div>
 
         <form [formGroup]="form" (ngSubmit)="saveChanges()">
-          <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <div>
               <label for="first_name">{{ 'First name' | translate }}</label>
               <input type="text" formControlName="first_name" />
@@ -105,25 +106,25 @@ import { ProfileFormStore } from './profile.store';
     `
       input,
       select {
-        @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500;
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
         &.ng-invalid.ng-dirty {
-          @apply text-red-800 border-red-400 bg-red-100 focus:ring-red-600 focus:border-red-600;
+          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
         }
         &[disabled] {
-          @apply text-gray-400 cursor-not-allowed dark:text-gray-500;
+          @apply cursor-not-allowed text-gray-400 dark:text-gray-500;
         }
       }
 
       label {
-        @apply block mb-2 text-sm font-sans text-gray-600 font-medium dark:text-white;
+        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
       }
     `,
   ],
 })
 export class ProfileComponent implements OnInit {
-  private state$ = inject(Store);
+  private auth = inject(authState.AuthStateFacade);
   public store = inject(ProfileFormStore);
-  user = this.state$.selectSignal(state.selectors.selectUser);
+  user = this.auth.user;
   private dialog = inject(Dialog);
   currentAvatar = this.user()?.avatar_url;
 
@@ -188,10 +189,10 @@ export class ProfileComponent implements OnInit {
   }
 
   saveChanges() {
-    this.state$.dispatch(
+    /* this.state$.dispatch(
       state.AuthActions.updateProfile({
         request: { ...this.form.getRawValue(), id: this.user()?.id },
       })
-    );
+    ) */
   }
 }

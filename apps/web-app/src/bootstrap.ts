@@ -1,13 +1,18 @@
 import { importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
-import { RemoteEntryComponent } from './app/remote-entry/entry.component';
+import { provideRouter, withComponentInputBinding, withDisabledInitialNavigation, withRouterConfig } from '@angular/router';
+
+import { AppComponent } from './app/app.component';
 import { appRoutes } from './app/app.routes';
 
-bootstrapApplication(RemoteEntryComponent, {
+bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
-      RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' })
+    importProvidersFrom(),
+    provideRouter(
+      appRoutes,
+      withDisabledInitialNavigation(),
+      withComponentInputBinding(),
+      withRouterConfig({ onSameUrlNavigation: 'reload' })
     ),
   ],
 });

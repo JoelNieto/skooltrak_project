@@ -15,6 +15,8 @@ export type Assignment = EntityBase & {
   plan_id: string;
   plan?: StudyPlan;
   title: string;
+  start_date: Date;
+  end_date: Date;
   description: string;
   upload_file: boolean;
   user_id?: string;

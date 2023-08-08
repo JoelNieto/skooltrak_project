@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Subject, Table } from '@skooltrak/models';
 import { exhaustMap, from, of } from 'rxjs';
 
@@ -14,8 +13,8 @@ export class PlansCoursesFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  store$ = inject(Store);
-  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
+
   supabase = inject(SupabaseService);
   readonly subjects = this.selectSignal((state) => state.subjects);
 
@@ -26,7 +25,7 @@ export class PlansCoursesFormStore
         .select(
           'id,name, short_name, code, description, created_at, user:users(full_name)'
         )
-        .eq('school_id', this.school()?.id)
+        .eq('school_id', this.auth.currentSchoolId())
     )
       .pipe(
         exhaustMap(({ data, error }) => {

@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Gender, Table } from '@skooltrak/models';
 import { exhaustMap, from, Observable, of, switchMap, tap } from 'rxjs';
 
@@ -16,8 +15,8 @@ export class ProfileFormStore
   implements OnStoreInit
 {
   supabase = inject(SupabaseService);
-  private store$ = inject(Store);
-  private user = this.store$.selectSignal(state.selectors.selectUser);
+  private auth = inject(authState.AuthStateFacade);
+
   readonly genders = this.selectSignal((state) => state.genders);
 
   readonly fetchGenders = this.effect(() => {
@@ -50,11 +49,7 @@ export class ProfileFormStore
       ),
       tapResponse(
         (avatar_url) =>
-          this.store$.dispatch(
-            state.AuthActions.updateProfile({
-              request: { ...this.user(), avatar_url },
-            })
-          ),
+          this.auth.updateProfile({ ...this.auth.user(), avatar_url }),
         (error) => console.error(error),
         () => this.patchState({ loading: false })
       )

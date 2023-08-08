@@ -10,9 +10,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
   standalone: true,
   imports: [AvatarComponent, IconsModule, NgIf],
   template: `<div
-    class="flex gap-1 rounded-full bg-cyan-500 p-1 pr-2 font-sans text-white dark:bg-cyan-400 dark:text-cyan-800"
+    class="flex items-center gap-2 rounded-full font-sans font-semibold text-gray-700 dark:bg-cyan-400 dark:text-gray-200"
   >
-    <sk-avatar [avatarUrl]="user.avatar_url!" class="h-5" [rounded]="true" />
+    <sk-avatar [avatarUrl]="user.avatar_url!" class="h-7" [rounded]="true" />
     {{ user.first_name }}
     {{ user.father_name }}
     <button *ngIf="removable" (click)="remove.emit(user)">

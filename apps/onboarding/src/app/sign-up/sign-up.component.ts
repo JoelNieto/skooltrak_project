@@ -8,7 +8,6 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { SupabaseService } from '@skooltrak/auth';
 import { ButtonDirective, CardComponent } from '@skooltrak/ui';
-import { AuthActions } from 'libs/auth/src/lib/state';
 
 import { SignUpStore } from './sign-up.store';
 
@@ -172,7 +171,5 @@ export class SignUpComponent {
     }
 
     console.info(data);
-
-    this.store$.dispatch(AuthActions.setSession({ session: data?.session }));
   }
 }

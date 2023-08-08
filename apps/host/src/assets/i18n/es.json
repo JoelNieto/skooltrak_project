@@ -67,5 +67,18 @@
   "Assignments": {
     "Details": "Datos de la asignación",
     "New": "Nueva asignación"
-  }
+  },
+  "Welcome": "Bienvenido, {{ name }} 👋",
+  "Calendar": {
+    "Previous": "Anterior",
+    "Today": "Hoy",
+    "Next": "Siguiente",
+    "Month": "Mes",
+    "Week": "Semana",
+    "Day": "Día"
+  },
+  "Go back": "Volver",
+  "News": "Novedades",
+  "Schedule": "Agenda",
+  "Files": "Archivos"
 }

@@ -2,8 +2,7 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Course, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
 import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -21,8 +20,8 @@ type State = {
 
 @Injectable()
 export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
-  store$ = inject(Store);
-  school = this.store$.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
+  school = this.auth.currentSchoolId;
   supabase = inject(SupabaseService);
   util = inject(UtilService);
 
@@ -87,7 +86,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
                 }
               )
               .range(start, end)
-              .eq('school_id', this.school()?.id)
+              .eq('school_id', this.school())
           ).pipe(
             map(({ data, error, count }) => {
               if (error) throw new Error(error.message);
@@ -116,7 +115,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
           return from(
             this.supabase.client
               .from(Table.Courses)
-              .upsert([{ ...request, school_id: this.school()?.id }])
+              .upsert([{ ...request, school_id: this.school() }])
           ).pipe(
             exhaustMap(({ error }) => {
               if (error) throw new Error(error.message);

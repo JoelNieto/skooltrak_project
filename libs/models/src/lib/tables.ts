@@ -11,4 +11,5 @@ export enum Table {
   Groups = 'school_groups',
   AssignmentTypes = 'assignment_types',
   UserProfiles = 'user_profiles',
+  Assignments = 'assignments',
 }

@@ -15,6 +15,7 @@ import { authState } from '@skooltrak/auth';
 import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { QuillModule } from 'ngx-quill';
 
 import { appRoutes } from './app.routes';
 
@@ -37,6 +38,7 @@ export const AppConfig: ApplicationConfig = {
     provideEffects(authState.effects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), trace: true }),
     importProvidersFrom(
+      QuillModule.forRoot(),
       BrowserModule,
       BrowserAnimationsModule,
       IconsModule.withIcons({ ...ICONS_OUTLINE }),

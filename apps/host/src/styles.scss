@@ -4,6 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 @import '@angular/cdk/overlay-prebuilt.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -13,4 +15,8 @@ body {
 }
 body {
   margin: 0;
+}
+
+.ql-container {
+  font-family: 'Space Grotesk', 'Helvetica Neue', 'sans-serif';
 }

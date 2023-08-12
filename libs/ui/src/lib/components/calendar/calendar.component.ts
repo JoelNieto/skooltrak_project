@@ -6,7 +6,7 @@ import { Assignment } from '@skooltrak/models';
 import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK, EventColor } from 'calendar-utils';
-import { addDays, isSameDay, isSameMonth, startOfDay, subDays } from 'date-fns';
+import { isSameDay, isSameMonth, subDays } from 'date-fns';
 
 import { AssignmentFormComponent } from '../assignment-form/assignment-form.component';
 import { ButtonDirective } from '../button/button.component';
@@ -174,11 +174,10 @@ export class CalendarComponent {
   locale = 'es-PA';
   events: CalendarEvent[] = [
     {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
+      start: subDays(new Date(), 1),
       title: 'A 3 day event',
       color: { ...colors['red'] },
-      allDay: true,
+      allDay: false,
       resizable: {
         beforeStart: true,
         afterEnd: true,
@@ -211,8 +210,7 @@ export class CalendarComponent {
     const dialogRef = this.dialog.open<Partial<Assignment>>(
       AssignmentFormComponent,
       {
-        minWidth: '55%',
-        maxWidth: '55rem',
+        minWidth: '90%',
         disableClose: true,
       }
     );

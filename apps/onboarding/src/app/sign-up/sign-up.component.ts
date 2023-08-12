@@ -1,7 +1,12 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
@@ -44,7 +49,7 @@ import { SignUpStore } from './sign-up.store';
         />
         SKOOLTRAK
       </a>
-      <sk-card class="w-full md:w-2/5 xl:w-1/3">
+      <sk-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/2">
         <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
           Sign up
         </h1>
@@ -54,7 +59,7 @@ import { SignUpStore } from './sign-up.store';
         <form
           [formGroup]="form"
           (ngSubmit)="onSubmit()"
-          class="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2"
+          class="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2"
         >
           <div>
             <label for="first_name">First name</label>

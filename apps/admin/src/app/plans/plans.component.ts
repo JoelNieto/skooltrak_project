@@ -5,12 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  CardComponent,
-  SelectComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { CardComponent, SelectComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 import { asapScheduler } from 'rxjs';
 
 import { PlansStore } from './plans.store';

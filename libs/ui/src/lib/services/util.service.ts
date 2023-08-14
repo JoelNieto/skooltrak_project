@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
+import { addDays, format, setHours, setMinutes } from 'date-fns';
 
 @Injectable()
 export class UtilService {
@@ -71,4 +72,7 @@ export class UtilService {
     }
     return array;
   }
+
+  formateDate = (date: Date) =>
+    format(setHours(setMinutes(addDays(date, 1), 0), 7), "yyyy-MM-dd'T'HH:mm");
 }

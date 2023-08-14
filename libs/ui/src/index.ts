@@ -16,5 +16,4 @@ export * from './lib/services/title.resolver';
 export * from './lib/components/users-selector/users-selector.component';
 export * from './lib/components/user-chip/user-chip.component';
 export * from './lib/components/calendar/calendar.component';
-export * from './lib/components/assignment-form/assignment-form.component';
 export * from './lib/components/input/input.directive';

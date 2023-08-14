@@ -1,15 +1,16 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, Input, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { Assignment } from '@skooltrak/models';
 import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK, EventColor } from 'calendar-utils';
 import { isSameDay, isSameMonth, subDays } from 'date-fns';
 
-import { AssignmentFormComponent } from '../assignment-form/assignment-form.component';
 import { ButtonDirective } from '../button/button.component';
+import { CalendarStore } from './calendar.store';
 
 const colors: Record<string, EventColor> = {
   red: {
@@ -33,20 +34,23 @@ const colors: Record<string, EventColor> = {
     DialogModule,
     TranslateModule,
     ButtonDirective,
+    RouterLink,
     NgIf,
   ],
   providers: [
     { provide: DateAdapter, useFactory: adapterFactory },
     CalendarDateFormatter,
+    provideComponentStore(CalendarStore),
   ],
-  template: ` <button
+  template: ` <a
       skButton
       color="green"
       class="fixed bottom-12 right-12 z-50"
-      (click)="newAssignment()"
+      routerLink="/app/courses/assignments"
+      [queryParams]="{ course_id: query_value }"
     >
       {{ 'Assignments.New' | translate }}
-    </button>
+    </a>
     <div class="mt-4 flex w-full items-center justify-around text-center">
       <div class=" flex-1 rounded-md" role="group">
         <button
@@ -162,8 +166,13 @@ const colors: Record<string, EventColor> = {
       />
     </div>`,
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
+  @Input() query_value?: string;
+  @Input() query_item: 'course_id' | 'group_id' = 'course_id';
   dialog = inject(Dialog);
+  store = inject(CalendarStore);
+  router = inject(Router);
+  assignments = this.store.assignments;
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
 
@@ -188,6 +197,18 @@ export class CalendarComponent {
 
   activeDayIsOpen = true;
 
+  constructor() {
+    effect(() => console.info(this.assignments()));
+  }
+
+  ngOnInit(): void {
+    this.store.patchState({
+      query_item: 'course_id',
+      query_value: '4a5e402a-3fe2-4630-b2b5-5c33466df146',
+    });
+    console.info(this.query_value);
+  }
+
   setView(view: CalendarView) {
     this.view = view;
   }
@@ -204,21 +225,5 @@ export class CalendarComponent {
       }
       this.viewDate = date;
     }
-  }
-
-  newAssignment() {
-    const dialogRef = this.dialog.open<Partial<Assignment>>(
-      AssignmentFormComponent,
-      {
-        minWidth: '90%',
-        disableClose: true,
-      }
-    );
-
-    dialogRef.closed.subscribe({
-      next: (request) => {
-        console.info(request);
-      },
-    });
   }
 }

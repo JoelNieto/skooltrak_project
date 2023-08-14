@@ -54,7 +54,8 @@ import { UtilService } from '../../services/util.service';
         class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400 sm:text-sm"
         [ngClass]="{
           'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
-            isOpen()
+            isOpen(),
+          'opacity-75': isDisabled
         }"
         [class.text-gray-700]="currentValue()"
         [class.dark:text-white]="currentValue()"

@@ -15,7 +15,7 @@ import { NavbarComponent } from '@skooltrak/ui';
   ],
   template: `<sk-navbar />
     <main
-      class="relative top-16 flex flex-col items-center bg-gray-50 p-8 font-sans dark:bg-gray-900"
+      class="relative top-14 flex flex-col items-center bg-gray-50 p-8 font-sans dark:bg-gray-900"
     >
       <div class="w-full max-w-7xl">
         <router-outlet />

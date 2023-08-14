@@ -14,6 +14,13 @@ export const coursesRoutes: Routes = [
           ),
       },
       {
+        path: 'assignments',
+        loadComponent: () =>
+          import('./assignments/form/assignment-form.component').then(
+            (x) => x.AssignmentFormComponent
+          ),
+      },
+      {
         path: 'details',
         loadComponent: () =>
           import('./details/course-details.component').then(
@@ -34,6 +41,7 @@ export const coursesRoutes: Routes = [
                 (x) => x.CourseScheduleComponent
               ),
           },
+
           {
             path: 'files',
             loadComponent: () =>

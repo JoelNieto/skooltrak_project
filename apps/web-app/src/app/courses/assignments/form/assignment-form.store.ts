@@ -19,6 +19,7 @@ export class AssignmentFormStore
 {
   supabase = inject(SupabaseService);
   readonly types = this.selectSignal((state) => state.types);
+  readonly groups = this.selectSignal((state) => state.groups);
   readonly courses = this.selectSignal((state) => state.courses);
   readonly course$ = this.select((state) =>
     state.courses.find((x) => x.id === state.course_id)

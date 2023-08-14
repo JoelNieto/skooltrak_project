@@ -99,7 +99,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
       </div>
     </aside>
     <main
-      class="relative top-16 bg-gray-50 p-8 font-sans dark:bg-gray-900 sm:ml-64"
+      class="relative top-14 bg-gray-50 p-8 font-sans dark:bg-gray-900 sm:ml-64"
     >
       <router-outlet />
     </main>

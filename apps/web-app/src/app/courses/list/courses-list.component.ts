@@ -96,7 +96,10 @@ import { CoursesStore } from '../courses.store';
               {{ course.created_at | date : 'medium' }}
             </td>
             <td class="flex content-center justify-center gap-2 px-6 py-3.5">
-              <a routerLink="../details" [queryParams]="{ id: course.id }">
+              <a
+                routerLink="../details"
+                [queryParams]="{ course_id: course.id }"
+              >
                 <icon name="eye" class="h-6 w-6 text-sky-500" />
               </a>
             </td>

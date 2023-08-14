@@ -83,20 +83,20 @@ import { CoursesStore } from '../courses.store';
   </div>`,
 })
 export class CourseDetailsComponent implements OnInit {
-  @Input() id?: string;
+  @Input() course_id?: string;
   store = inject(CoursesStore);
   router = inject(Router);
   route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    this.id!! && this.store.patchState({ selectedId: this.id });
+    this.course_id!! && this.store.patchState({ selectedId: this.course_id });
   }
 
-  setSelectedId = (id: string) => {
-    this.store.patchState({ selectedId: id });
+  setSelectedId = (course_id: string) => {
+    this.store.patchState({ selectedId: course_id });
     this.router.navigate(['../details'], {
       relativeTo: this.route,
-      queryParams: { id },
+      queryParams: { course_id },
     });
   };
 }

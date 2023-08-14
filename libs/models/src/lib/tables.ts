@@ -12,4 +12,6 @@ export enum Table {
   AssignmentTypes = 'assignment_types',
   UserProfiles = 'user_profiles',
   Assignments = 'assignments',
+  AssignmentsView = 'active_assignments',
+  GroupAssignments = 'group_assignments',
 }

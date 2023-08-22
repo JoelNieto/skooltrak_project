@@ -1,84 +1,84 @@
 {
-  "App title": "Skooltrak",
-  "Home": "Inicio",
-  "Collection": "Cobros",
-  "Messages": "Mensajes",
-  "Students": "Estudiantes",
-  "School": "Escuela",
-  "Polls": "Encuestas",
-  "Classes": "Clases",
-  "Courses": "Cursos",
-  "Grades": "Calificaciones",
-  "Teachers": "Docentes",
-  "Groups": "Grupos",
-  "Name": "Nombre",
-  "Short name": "Nombre corto",
-  "Code": "Codigo",
-  "Created": "Creado",
-  "Created by": "Creado por",
-  "New": "Nuevo",
-  "Profile": "Perfil",
-  "First name": "Nombre",
-  "Middle name": "Segundo nombre",
-  "Father name": "Apellido paterno",
-  "Mother name": "Apellido materno",
-  "Full name": "Nombre completo",
-  "Gender": "Genero",
-  "Document ID": "Nro. Documento",
-  "Birth date": "Fecha de nacimiento",
-  "Female": "Femenino",
-  "Male": "Masculino",
-  "Other": "Otro",
-  "Subjects": {
-    "Title": "Asignaturas",
-    "Label": "Asignatura",
-    "Details": "Detalles de asignatura"
-  },
-  "Settings": "Ajustes",
   "Actions": "Acciones",
-  "Description": "Descripcion",
-  "Save changes": "Guardar cambios",
-  "Confirmation": {
-    "Cancel": "Cancelar",
-    "Confirmar": "Si, confirmar",
-    "Delete": {
-      "Title": "Desea borrar esto?",
-      "Text": "Este cambio no podra ser reversado"
-    }
-  },
-  "Degrees": {
-    "Title": "Certificados",
-    "Details": "Detalles del certificado"
-  },
-  "Course": {
-    "Title": "Curso",
-    "Details": "Detalles del curso"
-  },
-  "Plans": {
-    "Title": "Planes de estudio",
-    "Details": "Detalles del Plan de estudio"
-  },
-  "Teacher": {
-    "Details": "Datos del docente"
-  },
   "Administrators": {
     "Title": "Administradores"
   },
+  "App title": "Skooltrak",
   "Assignments": {
     "Details": "Datos de la asignación",
     "New": "Nueva asignación"
   },
-  "Welcome": "Bienvenido, {{ name }} 👋",
+  "Birth date": "Fecha de nacimiento",
   "Calendar": {
+    "Day": "Día",
+    "Month": "Mes",
+    "Next": "Siguiente",
     "Previous": "Anterior",
     "Today": "Hoy",
-    "Next": "Siguiente",
-    "Month": "Mes",
-    "Week": "Semana",
-    "Day": "Día"
+    "Week": "Semana"
   },
+  "Classes": "Clases",
+  "Code": "Codigo",
+  "Collection": "Cobros",
+  "Confirmation": {
+    "Cancel": "Cancelar",
+    "Confirmar": "Si, confirmar",
+    "Delete": {
+      "Text": "Este cambio no podra ser reversado",
+      "Title": "Desea borrar esto?"
+    }
+  },
+  "Course": {
+    "Details": "Detalles del curso",
+    "Title": "Curso"
+  },
+  "Courses": "Cursos",
+  "Created": "Creado",
+  "Created by": "Creado por",
+  "Degrees": {
+    "Details": "Detalles del certificado",
+    "Title": "Certificados"
+  },
+  "Description": "Descripcion",
+  "Document ID": "Nro. Documento",
+  "Father name": "Apellido paterno",
+  "Female": "Femenino",
+  "Files": "Archivos",
+  "First name": "Nombre",
+  "Full name": "Nombre completo",
+  "Gender": "Genero",
   "Go back": "Volver",
+  "Grades": "Calificaciones",
+  "Groups": "Grupos",
+  "Home": "Inicio",
+  "Male": "Masculino",
+  "Messages": "Mensajes",
+  "Middle name": "Segundo nombre",
+  "Mother name": "Apellido materno",
+  "Name": "Nombre",
+  "New": "Nuevo",
   "News": "Novedades",
+  "Other": "Otro",
+  "Plans": {
+    "Details": "Detalles del Plan de estudio",
+    "Title": "Planes de estudio"
+  },
+  "Polls": "Encuestas",
+  "Profile": "Perfil",
+  "Save changes": "Guardar cambios",
   "Schedule": "Agenda",
-  "Files": "Archivos"
+  "School": "Escuela",
+  "Settings": "Ajustes",
+  "Short name": "Nombre corto",
+  "Students": "Estudiantes",
+  "Subjects": {
+    "Details": "Detalles de asignatura",
+    "Label": "Asignatura",
+    "Title": "Asignaturas"
+  },
+  "Teacher": {
+    "Details": "Datos del docente"
+  },
+  "Teachers": "Docentes",
+  "Welcome": "Bienvenido, {{ name }} 👋"
 }

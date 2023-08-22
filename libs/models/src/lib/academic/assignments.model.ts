@@ -1,3 +1,4 @@
+import { User } from '../auth';
 import { EntityBase } from '../entity';
 import { Course } from './courses.model';
 
@@ -9,16 +10,16 @@ export type AssignmentType = {
 };
 
 export type Assignment = EntityBase & {
-  school_id: string;
   type_id: string;
   type?: AssignmentType;
   course_id: string;
-  course?: Course;
+  course?: Partial<Course>;
   title: string;
-  start_at: Date;
+  dates?: [{ group: { id: string; name: string }; start_at: Date }];
   description: string;
-  upload_file: boolean;
+  upload_file?: boolean;
   user_id?: string;
+  user?: Partial<User>;
   created_at?: Date;
   updated_at?: Date;
 };
@@ -40,4 +41,10 @@ export type AssignmentView = {
   user_name: string;
   user_avatar: string;
   start_at: string;
+};
+
+export type GroupAssignment = {
+  assignment_id: string;
+  group_id: string;
+  start_at: Date;
 };

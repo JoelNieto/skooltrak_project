@@ -4,10 +4,11 @@ import { Component, effect, inject, Input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AssignmentView } from '@skooltrak/models';
 import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK, EventColor } from 'calendar-utils';
-import { isSameDay, isSameMonth, subDays } from 'date-fns';
+import { endOfDay, endOfMonth, endOfWeek, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
 
 import { ButtonDirective } from '../button/button.component';
 import { CalendarStore } from './calendar.store';
@@ -59,6 +60,7 @@ const colors: Record<string, EventColor> = {
           [excludeDays]="excludeDays"
           [view]="view"
           [(viewDate)]="viewDate"
+          (viewDateChange)="fetchEvents()"
           skButton
           color="green"
           class="rounded-e-none"
@@ -72,6 +74,7 @@ const colors: Record<string, EventColor> = {
           [(viewDate)]="viewDate"
           color="sky"
           class="rounded-none"
+          (viewDateChange)="fetchEvents()"
         >
           {{ 'Calendar.Today' | translate }}
         </button>
@@ -82,6 +85,7 @@ const colors: Record<string, EventColor> = {
           [excludeDays]="excludeDays"
           [view]="view"
           [(viewDate)]="viewDate"
+          (viewDateChange)="fetchEvents()"
           color="green"
           class="disabled rounded-s-none"
         >
@@ -139,30 +143,33 @@ const colors: Record<string, EventColor> = {
       <mwl-calendar-month-view
         *ngIf="view === CalendarView.Month"
         [viewDate]="viewDate"
-        [events]="events"
+        [events]="this.store.assignments()"
         [locale]="locale"
         (dayClicked)="dayClicked($event.day)"
         [activeDayIsOpen]="activeDayIsOpen"
         [weekStartsOn]="weekStartOn"
         [weekendDays]="weekendDays"
+        (eventClicked)="eventClicked($event.event)"
       />
       <mwl-calendar-week-view
         *ngIf="view === CalendarView.Week"
         [viewDate]="viewDate"
-        [events]="events"
+        [events]="this.store.assignments()"
         [locale]="locale"
         [dayStartHour]="7"
         [dayEndHour]="17"
         [weekStartsOn]="weekStartOn"
         [weekendDays]="weekendDays"
+        (eventClicked)="eventClicked($event.event)"
       />
       <mwl-calendar-day-view
         *ngIf="view === CalendarView.Day"
         [viewDate]="viewDate"
         [dayStartHour]="7"
         [dayEndHour]="17"
-        [events]="events"
+        [events]="this.store.assignments()"
         [locale]="locale"
+        (eventClicked)="eventClicked($event.event)"
       />
     </div>`,
 })
@@ -181,19 +188,7 @@ export class CalendarComponent implements OnInit {
   weekendDays = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
   excludeDays: number[] = [0, 8];
   locale = 'es-PA';
-  events: CalendarEvent[] = [
-    {
-      start: subDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: { ...colors['red'] },
-      allDay: false,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-  ];
+  events: CalendarEvent[] = this.store.assignments();
 
   activeDayIsOpen = true;
 
@@ -203,14 +198,34 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.patchState({
-      query_item: 'course_id',
-      query_value: '4a5e402a-3fe2-4630-b2b5-5c33466df146',
+      query_item: this.query_item,
+      query_value: this.query_value,
     });
-    console.info(this.query_value);
+  }
+
+  fetchEvents(): void {
+    this.closeOpenMonthViewDay();
+    const getStart = {
+      month: startOfMonth,
+      week: startOfWeek,
+      day: startOfDay,
+    }[this.view];
+
+    const getEnd = {
+      month: endOfMonth,
+      week: endOfWeek,
+      day: endOfDay,
+    }[this.view];
+
+    this.store.patchState({
+      start_date: getStart(this.viewDate),
+      end_date: getEnd(this.viewDate),
+    });
   }
 
   setView(view: CalendarView) {
     this.view = view;
+    this.fetchEvents();
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -225,5 +240,14 @@ export class CalendarComponent implements OnInit {
       }
       this.viewDate = date;
     }
+  }
+
+  closeOpenMonthViewDay() {
+    this.activeDayIsOpen = false;
+  }
+
+  eventClicked(event: CalendarEvent<{ assignment: AssignmentView }>): void {
+    this.router.navigate(['app', 'courses', 'assignments', event.id]);
+    console.info(event);
   }
 }

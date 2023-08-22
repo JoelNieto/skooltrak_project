@@ -89,7 +89,7 @@ export class CourseDetailsComponent implements OnInit {
   route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    this.course_id!! && this.store.patchState({ selectedId: this.course_id });
+    !!this.course_id && this.store.patchState({ selectedId: this.course_id });
   }
 
   setSelectedId = (course_id: string) => {

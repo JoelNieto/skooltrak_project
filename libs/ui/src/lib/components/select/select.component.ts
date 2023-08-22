@@ -1,5 +1,10 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
-import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayConfig,
+  OverlayModule,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -17,7 +22,11 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 import { PropertyPipe } from '../../services/pipes';
 import { UtilService } from '../../services/util.service';
@@ -55,7 +64,7 @@ import { UtilService } from '../../services/util.service';
         [ngClass]="{
           'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
             isOpen(),
-          'opacity-75': isDisabled
+          'cursor-not-allowed opacity-75': isDisabled
         }"
         [class.text-gray-700]="currentValue()"
         [class.dark:text-white]="currentValue()"

@@ -15,9 +15,9 @@ export const coursesRoutes: Routes = [
       },
       {
         path: 'assignments',
-        loadComponent: () =>
-          import('./assignments/form/assignment-form.component').then(
-            (x) => x.AssignmentFormComponent
+        loadChildren: () =>
+          import('./assignments/assignments.routes').then(
+            (x) => x.assignmentsRoutes
           ),
       },
       {

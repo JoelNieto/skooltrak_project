@@ -3,7 +3,8 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
-import { AssignmentView, Table } from '@skooltrak/models';
+import { Table } from '@skooltrak/models';
+import { CalendarEvent } from 'calendar-utils';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
 
@@ -14,7 +15,7 @@ type State = {
   query_item: QueryItem | undefined;
   query_value: string | undefined;
   loading: boolean;
-  assignments: Partial<AssignmentView>[];
+  assignments: CalendarEvent[];
 };
 
 @Injectable()
@@ -59,12 +60,17 @@ export class CalendarStore
                 'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id'
               )
               .eq(query_item!, query_value)
-              .gte('start_at', format(start_date, 'yyyy-MM-dd'))
-              .lte('start_at', format(end_date, 'yyyy-MM-dd'))
+              .gte('start_at', format(start_date, 'yyyy-MM-dd HH:mm:ss'))
+              .lte('start_at', format(end_date, 'yyyy-MM-dd HH:mm:ss'))
           ).pipe(
             map(({ data, error }) => {
               if (error) throw new Error(error.message);
-              return data;
+              return data.map((assignment) => ({
+                id: assignment.id,
+                title: `${assignment.subject_name} (${assignment.group_name}): ${assignment.title}`,
+                start: new Date(assignment.start_at),
+                meta: { assignment },
+              }));
             }),
             tapResponse(
               (assignments) => this.patchState({ assignments }),

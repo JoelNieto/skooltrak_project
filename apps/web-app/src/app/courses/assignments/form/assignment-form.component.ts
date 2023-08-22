@@ -14,6 +14,7 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  UntypedFormArray,
   Validators,
 } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -73,7 +74,11 @@ import { AssignmentFormStore } from './assignment-form.store';
   ],
   providers: [provideComponentStore(AssignmentFormStore)],
   template: `
-    <form class="flex gap-4" [formGroup]="assignmentForm">
+    <form
+      class="flex gap-4"
+      [formGroup]="assignmentForm"
+      (ngSubmit)="saveAssignment()"
+    >
       <sk-card class="flex-1">
         <div class="flex items-start justify-between" header>
           <h3
@@ -115,7 +120,12 @@ import { AssignmentFormStore } from './assignment-form.store';
           </div>
         </div>
         <div footer class="flex justify-end pt-6">
-          <button skButton color="sky" type="submit">
+          <button
+            skButton
+            color="sky"
+            type="submit"
+            [disabled]="assignmentForm.invalid"
+          >
             {{ 'Save changes' | translate }}
           </button>
         </div>
@@ -127,12 +137,16 @@ import { AssignmentFormStore } from './assignment-form.store';
           >
             {{ 'Groups' | translate }}
           </h2>
-          <div class="mt-4 flex flex-col gap-4">
-            <div *ngFor="let group of store.groups()">
-              <label [for]="group.id">{{ group.name }}</label>
-              <input type="datetime-local" [name]="group.id" />
+        </div>
+        <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
+          <ng-container
+            *ngFor="let group of formGroups.controls; let i = index"
+          >
+            <div [formGroupName]="i">
+              <label [for]="i">{{ store.groups()[i].name }}</label>
+              <input type="datetime-local" formControlName="start_at" />
             </div>
-          </div>
+          </ng-container>
         </div>
       </sk-card>
     </form>
@@ -157,12 +171,8 @@ export class AssignmentFormComponent implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    start_date: new FormControl<string>(this.util.formateDate(new Date()), {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
     description: new FormControl<string>('', { nonNullable: true }),
-    groups: new FormArray<any>([]),
+    groups: new UntypedFormArray([]),
   });
 
   modules = {
@@ -188,7 +198,16 @@ export class AssignmentFormComponent implements OnInit {
       .get('course_id')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({ next: (course_id) => this.store.patchState({ course_id }) });
+
+    this.assignmentForm
+      .get('groups')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ next: (value) => this.store.patchState({ dates: value }) });
     !!this.course_id && this.setCourse();
+  }
+
+  get formGroups() {
+    return this.assignmentForm.get('groups') as FormArray;
   }
 
   setCourse() {
@@ -202,8 +221,16 @@ export class AssignmentFormComponent implements OnInit {
       control.push(
         new FormGroup({
           group_id: new FormControl(group.id),
+          start_at: new FormControl<string | undefined>(undefined, {
+            nonNullable: true,
+          }),
         })
       );
     });
+  }
+
+  saveAssignment() {
+    const value = this.assignmentForm.getRawValue();
+    this.store.saveAssignment(value);
   }
 }

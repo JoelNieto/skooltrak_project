@@ -32,4 +32,11 @@ export const assignmentsRoutes: Routes = [
       { path: '', redirectTo: 'instructions', pathMatch: 'full' },
     ],
   },
+  {
+    path: ':id/edit',
+    loadComponent: () =>
+      import('./form/assignment-form.component').then(
+        (x) => x.AssignmentFormComponent
+      ),
+  },
 ];

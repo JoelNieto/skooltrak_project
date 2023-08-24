@@ -95,9 +95,7 @@ import { UtilService } from '../../services/util.service';
             class="flex items-center bg-white p-4  dark:bg-gray-700"
             *ngIf="!filteredItems().length"
           >
-            <p
-              class="font-title font-semibold text-gray-700 dark:text-gray-100 "
-            >
+            <p class="font-sans text-gray-700 dark:text-gray-100 ">
               Items not found!
             </p>
           </div>

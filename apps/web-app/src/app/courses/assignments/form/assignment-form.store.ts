@@ -1,11 +1,34 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
-import { Assignment, AssignmentType, ClassGroup, Course, GroupAssignment, Table } from '@skooltrak/models';
+import {
+  Assignment,
+  AssignmentType,
+  ClassGroup,
+  Course,
+  GroupAssignment,
+  Table,
+} from '@skooltrak/models';
 import { pick } from 'lodash';
-import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
+  id: string | undefined;
+  assignment: Assignment | undefined;
   types: AssignmentType[];
   courses: Course[];
   course_id: string | undefined;
@@ -21,6 +44,8 @@ export class AssignmentFormStore
 {
   supabase = inject(SupabaseService);
   readonly types = this.selectSignal((state) => state.types);
+  readonly assignment_id$ = this.select((state) => state.id);
+  readonly selected = this.selectSignal((state) => state.assignment);
   readonly groups = this.selectSignal((state) => state.groups);
   readonly dates = this.selectSignal((state) => state.dates);
   readonly courses = this.selectSignal((state) => state.courses);
@@ -157,8 +182,39 @@ export class AssignmentFormStore
     }
   );
 
+  readonly fetchAssignment = this.effect(
+    (id$: Observable<string | undefined>) => {
+      return id$.pipe(
+        tap(() => this.patchState({ loading: true })),
+        filter((id) => !!id),
+        switchMap((id) => {
+          return from(
+            this.supabase.client
+              .from(Table.Assignments)
+              .select(
+                'id,title,course_id,type_id,description,created_at,user_id'
+              )
+              .eq('id', id)
+              .single()
+          ).pipe(
+            map(({ error, data }) => {
+              if (error) throw new Error(error.message);
+              return data as Assignment;
+            }),
+            tapResponse(
+              (assignment) => this.patchState({ assignment }),
+              (error) => console.error(error),
+              () => this.patchState({ loading: false })
+            )
+          );
+        })
+      );
+    }
+  );
   ngrxOnStoreInit = () => {
     this.setState({
+      id: undefined,
+      assignment: undefined,
       types: [],
       courses: [],
       loading: false,
@@ -167,5 +223,6 @@ export class AssignmentFormStore
       dates: [],
     });
     this.fetchGroups(this.course$);
+    this.fetchAssignment(this.assignment_id$);
   };
 }

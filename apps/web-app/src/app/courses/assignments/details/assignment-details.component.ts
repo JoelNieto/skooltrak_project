@@ -49,7 +49,9 @@ import { AssignmentDetailsStore } from './assignment-details.store';
               {{ assignment()?.type?.name }}
             </p>
           </div>
-          <button skButton color="green">{{ 'Edit' | translate }}</button>
+          <a skButton color="green" routerLink="edit">{{
+            'Edit' | translate
+          }}</a>
         </div>
         <div>
           <div skooltrak-tabs>

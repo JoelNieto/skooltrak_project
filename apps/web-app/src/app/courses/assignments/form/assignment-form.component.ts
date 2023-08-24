@@ -26,7 +26,6 @@ import {
   SelectComponent,
   TabsComponent,
   TabsItemComponent,
-  UtilService,
 } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 
@@ -94,6 +93,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           </div>
           <div>
             <label for="course">{{ 'Course.Title' | translate }}</label>
+            <input type="text" name="title" formControlName="course_id" />
             <sk-select
               [items]="store.courses()"
               label="subject.name"
@@ -138,6 +138,7 @@ import { AssignmentFormStore } from './assignment-form.store';
             {{ 'Groups' | translate }}
           </h2>
         </div>
+        {{ store.selected()?.title }}
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
           <ng-container
             *ngFor="let group of formGroups.controls; let i = index"
@@ -154,8 +155,8 @@ import { AssignmentFormStore } from './assignment-form.store';
 })
 export class AssignmentFormComponent implements OnInit {
   @Input({ required: true }) course_id!: string;
+  @Input({ required: false }) id?: string;
   private destroyRef = inject(DestroyRef);
-  private util = inject(UtilService);
   public store = inject(AssignmentFormStore);
 
   assignmentForm = new FormGroup({
@@ -191,6 +192,13 @@ export class AssignmentFormComponent implements OnInit {
       const groups = this.store.groups();
       !!groups && this.setGroups(groups);
     });
+    effect(() => {
+      const assignment = this.store.selected();
+      if (assignment) {
+        this.assignmentForm.patchValue(assignment);
+        console.info(this.assignmentForm.getRawValue());
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -204,6 +212,7 @@ export class AssignmentFormComponent implements OnInit {
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({ next: (value) => this.store.patchState({ dates: value }) });
     !!this.course_id && this.setCourse();
+    !!this.id && this.store.patchState({ id: this.id });
   }
 
   get formGroups() {

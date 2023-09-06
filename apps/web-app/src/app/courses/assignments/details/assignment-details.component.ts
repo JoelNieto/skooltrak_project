@@ -40,7 +40,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
             <a
               class="font-title text-gray-500 dark:text-gray-100"
               routerLink="/app/courses/details/"
-              [queryParams]="{ course_id: assignment()!.course_id }"
+              [queryParams]="{ course_id: assignment()?.course_id }"
             >
               {{ assignment()?.course?.subject?.name }} /
               {{ assignment()?.course?.plan?.name }}
@@ -60,6 +60,9 @@ import { AssignmentDetailsStore } from './assignment-details.store';
             }}</sk-tabs-item>
             <sk-tabs-item link="students-work">{{
               'Students work' | translate
+            }}</sk-tabs-item>
+            <sk-tabs-item link="grades">{{
+              'Grades' | translate
             }}</sk-tabs-item>
           </div>
           <router-outlet />

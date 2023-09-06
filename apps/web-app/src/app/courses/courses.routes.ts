@@ -35,6 +35,13 @@ export const coursesRoutes: Routes = [
               ),
           },
           {
+            path: 'grades',
+            loadComponent: () =>
+              import('./grades/course-grades.component').then(
+                (x) => x.CourseGradesComponent
+              ),
+          },
+          {
             path: 'schedule',
             loadComponent: () =>
               import('./schedule/course-schedule.component').then(

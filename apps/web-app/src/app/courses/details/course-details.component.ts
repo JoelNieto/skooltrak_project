@@ -1,7 +1,12 @@
 import { IconsModule } from '@amithvns/ng-heroicons';
 import { NgClass, NgFor } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
@@ -30,13 +35,13 @@ import { CoursesStore } from '../courses.store';
           {{ 'Courses' | translate }}
         </h2>
       </div>
-      <ul class="mt-4 flex flex-col gap-1">
-        <li *ngFor="let course of store.courses()">
+      <ul class="mt-4 flex flex-col gap-1 ">
+        <li *ngFor="let course of courses()">
           <a
             class="block cursor-pointer rounded-lg px-2 py-1.5 text-gray-600 dark:text-gray-200"
             [ngClass]="{
               'bg-sky-100 font-semibold text-sky-800 dark:text-sky-900':
-                course.id === store.selectedId()
+                course.id === selected()?.id
             }"
             (click)="setSelectedId(course.id!)"
             >{{ course.subject?.name }} - {{ course.plan.year }}°</a
@@ -49,20 +54,25 @@ import { CoursesStore } from '../courses.store';
         </li>
       </ul>
     </sk-card>
-    <div class="flex flex-1 flex-col gap-4">
+    <div class="flex w-3/5 flex-auto flex-col gap-4">
       <sk-card>
         <div header>
           <div class="justify-between md:flex">
             <div>
               <h2
-                class="font-title mb-1 flex text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
+                class="font-title mb-1 text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
               >
-                {{ store.selected()?.subject?.name }}
+                {{ selected()?.subject?.name }}
               </h2>
               <h4
                 class="flex font-sans text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-gray-300"
               >
-                {{ store.selected()?.plan?.name }}
+                {{ selected()?.plan?.name }}
+              </h4>
+            </div>
+            <div>
+              <h4 class="font-sans text-lg text-gray-600 dark:text-gray-200">
+                {{ selected()?.period?.name }}
               </h4>
             </div>
           </div>
@@ -74,7 +84,9 @@ import { CoursesStore } from '../courses.store';
           <sk-tabs-item link="schedule">{{
             'Schedule' | translate
           }}</sk-tabs-item>
-          <sk-tabs-item link="files">{{ 'Files' | translate }}</sk-tabs-item>
+          <sk-tabs-item link="grades">{{
+            'Grades.Title' | translate
+          }}</sk-tabs-item>
           <sk-tabs-item link="files">{{ 'File' | translate }}</sk-tabs-item>
         </div>
         <router-outlet />
@@ -84,7 +96,9 @@ import { CoursesStore } from '../courses.store';
 })
 export class CourseDetailsComponent implements OnInit {
   @Input() course_id?: string;
-  store = inject(CoursesStore);
+  private store = inject(CoursesStore);
+  selected = this.store.selected;
+  courses = this.store.courses;
   router = inject(Router);
   route = inject(ActivatedRoute);
 

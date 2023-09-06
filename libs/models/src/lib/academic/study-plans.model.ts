@@ -1,6 +1,4 @@
-import { EntityBase } from '../entity';
-import { Degree } from './degrees.model';
-import { Level } from './levels.model';
+import { Degree, EntityBase, Level } from '@skooltrak/models';
 
 export type StudyPlan = EntityBase & {
   name: string;

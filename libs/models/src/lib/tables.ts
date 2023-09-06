@@ -14,4 +14,6 @@ export enum Table {
   Assignments = 'assignments',
   AssignmentsView = 'active_assignments',
   GroupAssignments = 'group_assignments',
+  Grades = 'grades',
+  GradeBuckets = 'grade_buckets',
 }

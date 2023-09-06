@@ -3,7 +3,13 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, PaginatorComponent, TabsComponent, TabsItemComponent, UserChipComponent } from '@skooltrak/ui';
+import {
+  CardComponent,
+  PaginatorComponent,
+  TabsComponent,
+  TabsItemComponent,
+  UserChipComponent,
+} from '@skooltrak/ui';
 
 import { CoursesStore } from '../courses.store';
 

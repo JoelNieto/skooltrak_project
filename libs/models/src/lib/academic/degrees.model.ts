@@ -1,5 +1,4 @@
-import { EntityBase } from '../entity';
-import { Level } from './levels.model';
+import { EntityBase, Level } from '@skooltrak/models';
 
 export type Degree = EntityBase & {
   school_id?: string;

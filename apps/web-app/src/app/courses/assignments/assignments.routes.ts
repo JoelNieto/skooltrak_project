@@ -29,6 +29,13 @@ export const assignmentsRoutes: Routes = [
             (x) => x.AssignmentStudentsWorkComponent
           ),
       },
+      {
+        path: 'grades',
+        loadComponent: () =>
+          import('./grades/assignment-grades.component').then(
+            (x) => x.AssignmentGradesComponent
+          ),
+      },
       { path: '', redirectTo: 'instructions', pathMatch: 'full' },
     ],
   },

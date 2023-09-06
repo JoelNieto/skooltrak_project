@@ -48,7 +48,10 @@
   "Full name": "Nombre completo",
   "Gender": "Genero",
   "Go back": "Volver",
-  "Grades": "Calificaciones",
+  "Grades": {
+    "Title": "Calificaciones",
+    "Details": "Datos de la calificacion"
+  },
   "Groups": "Grupos",
   "Home": "Inicio",
   "Male": "Masculino",

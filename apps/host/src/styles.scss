@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,5 +18,5 @@ body {
 }
 
 .ql-container {
-  font-family: 'Space Grotesk', 'Helvetica Neue', 'sans-serif';
+  font-family: 'Inter', 'Helvetica Neue', 'sans-serif';
 }

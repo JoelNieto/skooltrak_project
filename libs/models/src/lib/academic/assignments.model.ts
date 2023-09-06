@@ -1,6 +1,4 @@
-import { User } from '../auth';
-import { EntityBase } from '../entity';
-import { Course } from './courses.model';
+import { Course, EntityBase, User } from '@skooltrak/models';
 
 export type AssignmentType = {
   id: string;

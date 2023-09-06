@@ -28,6 +28,7 @@ import {
   TabsItemComponent,
 } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
+import { asapScheduler } from 'rxjs';
 
 import { AssignmentFormStore } from './assignment-form.store';
 
@@ -93,7 +94,6 @@ import { AssignmentFormStore } from './assignment-form.store';
           </div>
           <div>
             <label for="course">{{ 'Course.Title' | translate }}</label>
-            <input type="text" name="title" formControlName="course_id" />
             <sk-select
               [items]="store.courses()"
               label="subject.name"
@@ -196,7 +196,6 @@ export class AssignmentFormComponent implements OnInit {
       const assignment = this.store.selected();
       if (assignment) {
         this.assignmentForm.patchValue(assignment);
-        console.info(this.assignmentForm.getRawValue());
       }
     });
   }
@@ -205,14 +204,21 @@ export class AssignmentFormComponent implements OnInit {
     this.assignmentForm
       .get('course_id')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({ next: (course_id) => this.store.patchState({ course_id }) });
+      .subscribe({
+        next: (course_id) =>
+          asapScheduler.schedule(() => this.store.patchState({ course_id })),
+      });
 
     this.assignmentForm
       .get('groups')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({ next: (value) => this.store.patchState({ dates: value }) });
+      .subscribe({
+        next: (value) =>
+          asapScheduler.schedule(() => this.store.patchState({ dates: value })),
+      });
     !!this.course_id && this.setCourse();
-    !!this.id && this.store.patchState({ id: this.id });
+    !!this.id &&
+      asapScheduler.schedule(() => this.store.patchState({ id: this.id }));
   }
 
   get formGroups() {

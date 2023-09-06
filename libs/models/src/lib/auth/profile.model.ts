@@ -1,4 +1,4 @@
-import { Person } from '../people/people.model';
+import { Person } from '@skooltrak/models';
 
 export type User = Partial<Person> & {
   id?: string;

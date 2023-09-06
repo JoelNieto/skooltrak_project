@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'sk-card',
   standalone: true,
   template: `
-    <div class="rounded-xl bg-white p-6 dark:bg-gray-800">
+    <div class="w-100 rounded-xl bg-white p-6 dark:bg-gray-800">
       <ng-content select="[header]" class="mb-3"></ng-content>
       <ng-content></ng-content>
       <ng-content select="[footer]"></ng-content>

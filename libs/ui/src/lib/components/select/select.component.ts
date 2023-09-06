@@ -9,7 +9,6 @@ import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   AfterContentChecked,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -27,6 +26,8 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { asapScheduler } from 'rxjs';
 
 import { PropertyPipe } from '../../services/pipes';
 import { UtilService } from '../../services/util.service';
@@ -137,7 +138,6 @@ import { UtilService } from '../../services/util.service';
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '[attr.tabIndex]': 'disabled === true ? null : "0"',
@@ -161,6 +161,7 @@ export class SelectComponent
   public overlay = inject(Overlay);
   private util = inject(UtilService);
   private cdr = inject(ChangeDetectorRef);
+  private translate = inject(TranslateService);
 
   innerContent: string;
   isDisabled!: boolean;
@@ -175,23 +176,27 @@ export class SelectComponent
   onTouch: any = () => {};
 
   constructor() {
-    this.innerContent = this.placeholder;
-    effect(() => {
-      this.onChange(this.currentValue());
-      const value = (this.innerContent = this.itemList().find(
-        (x) => x[this.valueId] === this.currentValue()
-      ));
+    this.innerContent = this.translate.instant(this.placeholder);
+    effect(
+      () => {
+        this.onChange(this.currentValue());
+        const value = (this.innerContent = this.itemList().find(
+          (x) => x[this.valueId] === this.currentValue()
+        ));
 
-      this.innerContent = value
-        ? this.secondaryLabel
-          ? `${this.util.getProperty(
-              value,
-              this.label
-            )} - ${this.util.getProperty(value, this.secondaryLabel)}`
-          : value[this.label]
-        : this.placeholder;
-    });
+        this.innerContent = value
+          ? this.secondaryLabel
+            ? `${this.util.getProperty(
+                value,
+                this.label
+              )} - ${this.util.getProperty(value, this.secondaryLabel)}`
+            : value[this.label]
+          : this.placeholder;
+      },
+      { allowSignalWrites: true }
+    );
   }
+
   ngAfterContentChecked(): void {
     this.cdr.detectChanges();
   }
@@ -199,16 +204,17 @@ export class SelectComponent
   itemList = signal<any[]>([]);
   searchText = signal('');
   isOpen = signal(false);
-  currentValue = signal<any | any[]>(null);
+  currentValue = signal<string | string[] | undefined>(undefined);
 
   filteredItems = computed(
     () =>
       this.util.searchFilter(this.itemList(), [this.label], this.searchText()) //TODO - Add preselected option to search
   );
 
-  writeValue(val: any): void {
+  writeValue(val: string): void {
     if (val) {
-      this.currentValue.set(val);
+      asapScheduler.schedule(() => this.currentValue.set(val));
+
       this.onChange(val);
     }
   }

@@ -1,5 +1,4 @@
-import { School } from '../academic';
-import { User } from './profile.model';
+import { School, User } from '@skooltrak/models';
 
 export type Role = {
   id?: string;

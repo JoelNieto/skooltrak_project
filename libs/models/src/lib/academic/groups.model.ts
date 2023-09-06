@@ -1,8 +1,4 @@
-import { User } from '../auth';
-import { EntityBase } from '../entity';
-import { Degree } from './degrees.model';
-import { School } from './schools.model';
-import { StudyPlan } from './study-plans.model';
+import { Degree, EntityBase, School, StudyPlan, User } from '@skooltrak/models';
 
 export type ClassGroup = EntityBase & {
   school_id: string;

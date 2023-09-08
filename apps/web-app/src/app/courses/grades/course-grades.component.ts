@@ -1,7 +1,8 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroPencil } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
@@ -17,7 +18,7 @@ import { CourseGradesStore } from './course-grades.store';
   imports: [
     TranslateModule,
     NgFor,
-    IconsModule,
+    NgIconComponent,
     SelectComponent,
     ButtonDirective,
     DialogModule,
@@ -33,7 +34,10 @@ import { CourseGradesStore } from './course-grades.store';
       }
     `,
   ],
-  providers: [provideComponentStore(CourseGradesStore)],
+  providers: [
+    provideComponentStore(CourseGradesStore),
+    provideIcons({ heroPencil }),
+  ],
   template: `
     <div class="mb-4 mt-2 flex justify-between">
       <div class="w-64">
@@ -65,9 +69,10 @@ import { CourseGradesStore } from './course-grades.store';
                   Tarea de Ciencias {{ grade }}
                 </div>
                 <button>
-                  <icon
-                    name="pencil"
-                    class="h-4 text-transparent hover:text-green-600"
+                  <ng-icon
+                    name="heroPencil"
+                    size="16"
+                    class="text-transparent hover:text-green-600"
                   />
                 </button>
               </div>
@@ -91,9 +96,10 @@ import { CourseGradesStore } from './course-grades.store';
             >
               4.0
               <button>
-                <icon
-                  name="pencil"
-                  class="h-4 text-transparent hover:text-green-600"
+                <ng-icon
+                  name="heroPencil"
+                  size="16"
+                  class="text-transparent hover:text-green-600"
                 />
               </button>
             </td>

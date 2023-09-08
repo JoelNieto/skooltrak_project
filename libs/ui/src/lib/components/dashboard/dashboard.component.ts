@@ -1,6 +1,10 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { JsonPipe, NgFor, NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,7 +21,6 @@ import { NavbarComponent } from '../navbar/navbar.component';
     RouterLinkActive,
     RouterLink,
     AvatarComponent,
-    IconsModule,
     JsonPipe,
     NgFor,
     NgIf,

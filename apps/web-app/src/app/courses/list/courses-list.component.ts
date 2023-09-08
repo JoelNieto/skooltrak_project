@@ -1,7 +1,8 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CardComponent,
@@ -21,7 +22,7 @@ import { CoursesStore } from '../courses.store';
     TranslateModule,
     TabsComponent,
     TabsItemComponent,
-    IconsModule,
+    NgIconComponent,
     UserChipComponent,
     RouterLink,
     PaginatorComponent,
@@ -29,6 +30,7 @@ import { CoursesStore } from '../courses.store';
     DatePipe,
     NgIf,
   ],
+  providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: ` <sk-card>
     <div header>
       <h2
@@ -45,9 +47,9 @@ import { CoursesStore } from '../courses.store';
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
-              <icon
-                name="magnifying-glass"
-                class="h-5 w-5 text-gray-500 dark:text-gray-400"
+              <ng-icon
+                name="heroMagnifyingGlass"
+                class="text-gray-500 dark:text-gray-400"
               />
             </div>
             <input
@@ -106,7 +108,7 @@ import { CoursesStore } from '../courses.store';
                 routerLink="../details"
                 [queryParams]="{ course_id: course.id }"
               >
-                <icon name="eye" class="h-6 w-6 text-sky-500" />
+                <ng-icon name="heroEye" size="24" class="text-sky-500" />
               </a>
             </td>
           </tr>

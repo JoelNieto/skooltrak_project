@@ -1,4 +1,3 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { NgClass, NgFor } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import {
@@ -7,6 +6,8 @@ import {
   RouterLink,
   RouterOutlet,
 } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroArrowLeftCircle } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
@@ -24,8 +25,9 @@ import { CoursesStore } from '../courses.store';
     TabsComponent,
     TabsItemComponent,
     RouterOutlet,
-    IconsModule,
+    NgIconComponent,
   ],
+  providers: [provideIcons({ heroArrowLeftCircle })],
   template: `<div class="flex gap-4">
     <sk-card class="w-64 flex-none">
       <div header>
@@ -49,7 +51,8 @@ import { CoursesStore } from '../courses.store';
         </li>
         <li>
           <a class="mt-4 flex gap-2 font-bold text-sky-700" routerLink="../"
-            ><icon name="arrow-left-circle" /> {{ 'Go back' | translate }}</a
+            ><ng-icon name="heroArrowLeftCircle" size="24" />
+            {{ 'Go back' | translate }}</a
           >
         </li>
       </ul>

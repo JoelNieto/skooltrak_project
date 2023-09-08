@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
@@ -15,7 +14,13 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { User } from '@skooltrak/models';
 
@@ -28,15 +33,16 @@ import { UsersSelectorStore } from './users-selector.store';
   selector: 'sk-users-selector',
   imports: [
     NgClass,
-    IconsModule,
     FormsModule,
     NgFor,
     NgIf,
     PortalModule,
     AvatarComponent,
     UserChipComponent,
+    NgIconComponent,
   ],
   providers: [
+    provideIcons({ heroMagnifyingGlass }),
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => UsersSelectorComponent),
@@ -79,9 +85,9 @@ import { UsersSelectorStore } from './users-selector.store';
           <div
             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           >
-            <icon
-              name="magnifying-glass"
-              class="h-5 w-5 text-gray-500 dark:text-gray-400"
+            <ng-icon
+              name="heroMagnifyingGlass"
+              class="text-gray-500 dark:text-gray-400"
             />
           </div>
           <input

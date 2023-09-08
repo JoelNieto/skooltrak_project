@@ -1,8 +1,9 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroXMark } from '@ng-icons/heroicons/outline';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
@@ -15,25 +16,26 @@ import { CardComponent } from '../card/card.component';
   imports: [
     ImageCropperModule,
     ButtonDirective,
-    IconsModule,
+    NgIconComponent,
     CardComponent,
     NgStyle,
   ],
+  providers: [provideIcons({ heroXMark })],
   template: `<sk-card>
       <div class="flex items-start justify-between">
         <h3
-          class="font-mono text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+          class="mb-4 font-mono text-xl font-semibold text-gray-700 dark:text-gray-100"
         >
           Image cropper
         </h3>
         <button (click)="dialogRef.close()">
-          <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
+          <ng-icon name="heroXMark" class="text-gray-700 dark:text-gray-100" />
         </button>
       </div>
       <button skButton color="green" (click)="fileInput.click()">
         Choose picture
       </button>
-      <div class="flex flex-col mt-2 space-4">
+      <div class="space-4 mt-2 flex flex-col">
         <image-cropper
           [imageChangedEvent]="imgChangeEvt"
           [maintainAspectRatio]="options.fixedRatio"
@@ -46,9 +48,9 @@ import { CardComponent } from '../card/card.component';
           (cropperReady)="initCropper()"
           (loadImageFailed)="imgFailed()"
         />
-        <div class="flex my-4 ">
+        <div class="my-4 flex ">
           <div>
-            <span class="font-mono text-gray-600 font-semibold"
+            <span class="font-mono font-semibold text-gray-600"
               >Image preview</span
             >
             <br />
@@ -59,7 +61,7 @@ import { CardComponent } from '../card/card.component';
             />
           </div>
         </div>
-        <div class="flex gap-2 mt-2">
+        <div class="mt-2 flex gap-2">
           <button
             skButton
             color="blue"

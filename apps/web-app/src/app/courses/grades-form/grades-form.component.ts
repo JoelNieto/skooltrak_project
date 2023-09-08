@@ -1,8 +1,14 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Grade } from '@skooltrak/models';
@@ -16,10 +22,10 @@ import { GradesFormStore } from './grades-form.store';
     CardComponent,
     TranslateModule,
     NgFor,
-    IconsModule,
     ButtonDirective,
     SelectComponent,
     ReactiveFormsModule,
+    NgIconComponent,
   ],
   styles: [
     `
@@ -35,7 +41,10 @@ import { GradesFormStore } from './grades-form.store';
       }
     `,
   ],
-  providers: [provideComponentStore(GradesFormStore)],
+  providers: [
+    provideComponentStore(GradesFormStore),
+    provideIcons({ heroXMark }),
+  ],
   template: `<form [formGroup]="gradeForm" (ngSubmit)="saveGrade()">
     <sk-card>
       <div class="flex items-start justify-between" header>
@@ -45,7 +54,11 @@ import { GradesFormStore } from './grades-form.store';
           {{ 'Grades.Details' | translate }}
         </h3>
         <button (click)="dialogRef.close()">
-          <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
+          <ng-icon
+            name="heroXMark"
+            size="24"
+            class="text-gray-700 dark:text-gray-100"
+          />
         </button>
       </div>
       <div>

@@ -1,4 +1,3 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { DialogRef } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
@@ -8,6 +7,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Teacher } from '@skooltrak/models';
@@ -23,24 +24,27 @@ import { TeachersFormStore } from './teachers-form.store';
     NgFor,
     CardComponent,
     TranslateModule,
-    IconsModule,
+    NgIconComponent,
     UsersSelectorComponent,
   ],
-  providers: [provideComponentStore(TeachersFormStore)],
+  providers: [
+    provideComponentStore(TeachersFormStore),
+    provideIcons({ heroXMark }),
+  ],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-title text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'Teacher.Details' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
-        <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
+        <ng-icon name="heroXMark" class="text-gray-700 dark:text-gray-100" />
       </button>
     </div>
     <form
       [formGroup]="form"
-      class="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 gap-4 mt-2"
+      class="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2"
     >
       <div>
         <label for="first_name">First name</label>
@@ -55,14 +59,14 @@ import { TeachersFormStore } from './teachers-form.store';
     `
       input,
       select {
-        @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500;
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
         &.ng-invalid.ng-dirty {
-          @apply text-red-800 border-red-400 bg-red-100 focus:ring-red-600 focus:border-red-600;
+          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
         }
       }
 
       label {
-        @apply block mb-2 text-sm font-sans text-gray-600 font-medium dark:text-white;
+        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
       }
     `,
   ],

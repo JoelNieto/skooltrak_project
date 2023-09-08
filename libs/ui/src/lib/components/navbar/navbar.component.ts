@@ -1,8 +1,14 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import {
+  heroBookmarkSquare,
+  heroCalendarDays,
+  heroClipboardDocument,
+  heroHome,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
@@ -18,7 +24,15 @@ import { AvatarComponent } from '../avatar/avatar.component';
     RouterLinkActive,
     TranslateModule,
     AvatarComponent,
-    IconsModule,
+    NgIconComponent,
+  ],
+  providers: [
+    provideIcons({
+      heroHome,
+      heroBookmarkSquare,
+      heroClipboardDocument,
+      heroCalendarDays,
+    }),
   ],
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
@@ -61,22 +75,22 @@ import { AvatarComponent } from '../avatar/avatar.component';
           >
             <li>
               <a routerLink="home" class="link" routerLinkActive="active"
-                ><icon name="home" />Home</a
+                ><ng-icon name="heroHome" size="24" />Home</a
               >
             </li>
             <li>
               <a routerLink="courses" class="link" routerLinkActive="active"
-                ><icon name="bookmark-square" />Courses</a
+                ><ng-icon name="heroBookmarkSquare" size="24" />Courses</a
               >
             </li>
             <li>
               <a routerLink="grades" class="link" routerLinkActive="active"
-                ><icon name="clipboard-document" />Grades</a
+                ><ng-icon name="heroClipboardDocument" size="24" />Grades</a
               >
             </li>
             <li>
               <a href="#" class="link"
-                ><icon name="calendar-days" />Schedules</a
+                ><ng-icon name="heroCalendarDays" size="24" />Schedules</a
               >
             </li>
           </ul>

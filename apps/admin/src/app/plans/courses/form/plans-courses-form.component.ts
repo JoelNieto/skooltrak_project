@@ -1,4 +1,3 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
 import {
@@ -7,6 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
@@ -24,13 +25,16 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
   imports: [
     CardComponent,
     TranslateModule,
-    IconsModule,
+    NgIconComponent,
     ReactiveFormsModule,
     SelectComponent,
     ButtonDirective,
     UsersSelectorComponent,
   ],
-  providers: [provideComponentStore(PlansCoursesFormStore)],
+  providers: [
+    provideComponentStore(PlansCoursesFormStore),
+    provideIcons({ heroXMark }),
+  ],
   styles: [
     `
       input,
@@ -55,7 +59,7 @@ import { PlansCoursesFormStore } from './plans-courses-form.store';
         {{ 'Course.Details' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
-        <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
+        <ng-icon name="heroXMark" class="text-gray-700 dark:text-gray-100" />
       </button>
     </div>
     <form

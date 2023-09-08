@@ -1,11 +1,22 @@
-import { ICONS_OUTLINE, IconsModule } from '@amithvns/ng-heroicons';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-PA';
-import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  isDevMode,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter, TitleStrategy, withComponentInputBinding, withDisabledInitialNavigation } from '@angular/router';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
+import {
+  provideRouter,
+  TitleStrategy,
+  withComponentInputBinding,
+  withDisabledInitialNavigation,
+} from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -41,7 +52,6 @@ export const AppConfig: ApplicationConfig = {
       QuillModule.forRoot(),
       BrowserModule,
       BrowserAnimationsModule,
-      IconsModule.withIcons({ ...ICONS_OUTLINE }),
       TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,

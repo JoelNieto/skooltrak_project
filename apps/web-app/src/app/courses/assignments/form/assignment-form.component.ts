@@ -1,4 +1,3 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { NgClass, NgFor } from '@angular/common';
 import {
   Component,
@@ -17,10 +16,12 @@ import {
   UntypedFormArray,
   Validators,
 } from '@angular/forms';
+import { NgIconComponent } from '@ng-icons/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import {
+  AlertService,
   ButtonDirective,
   CardComponent,
   SelectComponent,
@@ -38,7 +39,6 @@ import { AssignmentFormStore } from './assignment-form.store';
   imports: [
     CardComponent,
     TranslateModule,
-    IconsModule,
     TabsComponent,
     TabsItemComponent,
     SelectComponent,
@@ -47,6 +47,7 @@ import { AssignmentFormStore } from './assignment-form.store';
     ReactiveFormsModule,
     NgClass,
     NgFor,
+    NgIconComponent,
   ],
   styles: [
     `
@@ -72,7 +73,7 @@ import { AssignmentFormStore } from './assignment-form.store';
       }
     `,
   ],
-  providers: [provideComponentStore(AssignmentFormStore)],
+  providers: [provideComponentStore(AssignmentFormStore), AlertService],
   template: `
     <form
       class="flex gap-4"

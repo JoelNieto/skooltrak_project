@@ -1,7 +1,12 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
@@ -19,7 +24,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
   selector: 'sk-admin-study-plans',
   standalone: true,
   imports: [
-    IconsModule,
+    NgIconComponent,
     TranslateModule,
     PaginatorComponent,
     NgFor,
@@ -30,6 +35,7 @@ import { SchoolStudyPlansStore } from './study-plans.store';
   ],
   providers: [
     provideComponentStore(SchoolStudyPlansStore),
+    provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
     ConfirmationService,
     UtilService,
   ],
@@ -41,9 +47,9 @@ import { SchoolStudyPlansStore } from './study-plans.store';
           <div
             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           >
-            <icon
-              name="magnifying-glass"
-              class="h-5 w-5 text-gray-500 dark:text-gray-400"
+            <ng-icon
+              name="heroMagnifyingGlass"
+              class="text-gray-500 dark:text-gray-400"
             />
           </div>
           <input
@@ -90,10 +96,10 @@ import { SchoolStudyPlansStore } from './study-plans.store';
           <td class="px-6 py-2.5">{{ plan.created_at | date : 'short' }}</td>
           <td class="flex content-center justify-center gap-2 px-6 py-2.5">
             <button type="button" (click)="editStudyPlan(plan)">
-              <icon name="pencil-square" class="h-6 w-6 text-green-500" />
+              <ng-icon name="heroMagnifyingGlass" class="text-green-500" />
             </button>
             <button type="button">
-              <icon name="trash" class="h-6 w-6 text-red-600" />
+              <ng-icon name="heroTrash" class="text-red-600" />
             </button>
           </td>
         </tr>

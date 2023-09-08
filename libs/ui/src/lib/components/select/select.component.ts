@@ -1,4 +1,3 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import {
   Overlay,
   OverlayConfig,
@@ -26,7 +25,9 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { asapScheduler } from 'rxjs';
 
 import { PropertyPipe } from '../../services/pipes';
@@ -42,12 +43,14 @@ import { UtilService } from '../../services/util.service';
     PortalModule,
     NgFor,
     NgIf,
-    IconsModule,
+    NgIconComponent,
     FormsModule,
     NgClass,
     PropertyPipe,
+    TranslateModule,
   ],
   providers: [
+    provideIcons({ heroMagnifyingGlass }),
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => SelectComponent),
@@ -77,9 +80,9 @@ import { UtilService } from '../../services/util.service';
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
-              <icon
-                name="magnifying-glass"
-                class="h-5 w-5 text-gray-500 dark:text-gray-400"
+              <ng-icon
+                name="heroMagnifyingGlass"
+                class="text-gray-500 dark:text-gray-400"
               />
             </div>
             <input
@@ -97,7 +100,7 @@ import { UtilService } from '../../services/util.service';
             *ngIf="!filteredItems().length"
           >
             <p class="font-sans text-gray-700 dark:text-gray-100 ">
-              Items not found!
+              {{ 'Items not found!' | translate }}
             </p>
           </div>
           <div

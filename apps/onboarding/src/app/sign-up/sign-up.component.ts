@@ -1,4 +1,3 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
@@ -24,7 +23,6 @@ import { SignUpStore } from './sign-up.store';
     ReactiveFormsModule,
     NgOptimizedImage,
     ButtonDirective,
-    IconsModule,
     RouterOutlet,
     CardComponent,
     TranslateModule,

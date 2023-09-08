@@ -1,10 +1,16 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Component, effect, inject, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroCalendarDays } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
-import { CardComponent, TabsComponent, TabsItemComponent, UsersSelectorComponent } from '@skooltrak/ui';
+import {
+  CardComponent,
+  TabsComponent,
+  TabsItemComponent,
+  UsersSelectorComponent,
+} from '@skooltrak/ui';
 import { pairwise, startWith } from 'rxjs';
 
 import { CoursesStore } from '../courses.store';
@@ -18,10 +24,11 @@ import { CoursesStore } from '../courses.store';
     TabsItemComponent,
     TranslateModule,
     RouterOutlet,
-    IconsModule,
+    NgIconComponent,
     UsersSelectorComponent,
     ReactiveFormsModule,
   ],
+  providers: [provideIcons({ heroCalendarDays })],
   template: `<sk-card>
     <div header>
       <a
@@ -58,7 +65,7 @@ import { CoursesStore } from '../courses.store';
 
     <div class="mt-2" skooltrak-tabs>
       <sk-tabs-item link="schedule">
-        <icon name="calendar-days" />
+        <ng-icon name="heroCalendarDays" />
         {{ 'Schedule' | translate }}</sk-tabs-item
       >
     </div>

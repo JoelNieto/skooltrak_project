@@ -1,7 +1,8 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import {
@@ -20,7 +21,7 @@ import { GroupsStore } from '../groups.store';
   imports: [
     TranslateModule,
     CardComponent,
-    IconsModule,
+    NgIconComponent,
     NgFor,
     PaginatorComponent,
     ButtonDirective,
@@ -29,6 +30,7 @@ import { GroupsStore } from '../groups.store';
     UserChipComponent,
     DialogModule,
   ],
+  providers: [provideIcons({ heroMagnifyingGlass })],
   template: `
     <div class="relative mt-1 overflow-x-auto">
       <div class="mb-4 flex justify-between px-1 py-2">
@@ -38,9 +40,9 @@ import { GroupsStore } from '../groups.store';
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
-              <icon
-                name="magnifying-glass"
-                class="h-5 w-5 text-gray-500 dark:text-gray-400"
+              <ng-icon
+                name="heroMagnifyingGlass"
+                class="text-gray-500 dark:text-gray-400"
               />
             </div>
             <input

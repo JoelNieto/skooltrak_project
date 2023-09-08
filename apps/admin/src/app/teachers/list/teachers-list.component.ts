@@ -1,8 +1,13 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Teacher } from '@skooltrak/models';
 import { AvatarComponent, ButtonDirective } from '@skooltrak/ui';
@@ -15,7 +20,7 @@ import { TeacherStore } from '../teachers.store';
   standalone: true,
   imports: [
     ButtonDirective,
-    IconsModule,
+    NgIconComponent,
     RouterLink,
     DialogModule,
     TranslateModule,
@@ -24,23 +29,26 @@ import { TeacherStore } from '../teachers.store';
     NgFor,
     AvatarComponent,
   ],
-  template: `<div class="relative overflow-x-auto mt-1">
-    <div class="flex justify-between mb-4 py-2 px-1">
+  providers: [
+    provideIcons({ heroMagnifyingGlass, heroTrash, heroPencilSquare }),
+  ],
+  template: `<div class="relative mt-1 overflow-x-auto">
+    <div class="mb-4 flex justify-between px-1 py-2">
       <div>
         <label for="table-search" class="sr-only">Search</label>
         <div class="relative">
           <div
-            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           >
-            <icon
-              name="magnifying-glass"
-              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            <ng-icon
+              name="heroMagnifyingGlass"
+              class="text-gray-500 dark:text-gray-400"
             />
           </div>
           <input
             type="text"
             id="table-search"
-            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
             placeholder="Search for items"
           />
         </div>
@@ -50,9 +58,9 @@ import { TeacherStore } from '../teachers.store';
         {{ 'New' | translate }}
       </button>
     </div>
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
       <thead
-        class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+        class="bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr class="cursor-pointer">
           <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
@@ -67,11 +75,11 @@ import { TeacherStore } from '../teachers.store';
         <tr
           *ngFor="let teacher of store.teachers()"
           [class.hidden]="store.loading()"
-          class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+          class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
           <th
             scope="row"
-            class="px-6 py-2.5 font-medium flex gap-2 items-center text-gray-900 whitespace-nowrap dark:text-white"
+            class="flex items-center gap-2 whitespace-nowrap px-6 py-2.5 font-medium text-gray-900 dark:text-white"
           >
             <sk-avatar
               [avatarUrl]="teacher.avatar_url!"
@@ -84,25 +92,29 @@ import { TeacherStore } from '../teachers.store';
           <td class="px-6 py-2.5">
             {{ teacher.created_at | date : 'medium' }}
           </td>
-          <td class="px-6 py-2.5 flex justify-center gap-2 content-center">
+          <td class="flex content-center justify-center gap-2 px-6 py-2.5">
             <button type="button">
-              <icon name="pencil-square" class="h-6 w-6 text-green-500" />
+              <ng-icon
+                name="heroPencilSquare"
+                size="24"
+                class="text-green-500"
+              />
             </button>
             <button type="button">
-              <icon name="trash" class="h-6 w-6 text-red-600" />
+              <ng-icon name="heroTrash" size="24" class=" text-red-600" />
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="animate-pulse mt-2" *ngIf="store.loading()">
-      <h3 class="h-4 bg-gray-200 rounded-md dark:bg-gray-700 w-10/12"></h3>
+    <div class="mt-2 animate-pulse" *ngIf="store.loading()">
+      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
 
       <ul class="mt-5 space-y-3">
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
   </div> `,

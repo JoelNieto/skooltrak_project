@@ -14,6 +14,6 @@
     "errorLens.onSave": true,
     "editor.formatOnSave": true,
     "typescriptHero.imports.organizeOnSave": true,
-    "cSpell.words": ["subapase", "Supabase", "tailwindcss", "typeorm"]
+    "cSpell.words": ["subapase", "Supabase", "Swal", "tailwindcss", "typeorm"]
   }
 }

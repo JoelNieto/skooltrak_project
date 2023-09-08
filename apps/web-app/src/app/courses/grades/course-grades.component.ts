@@ -6,7 +6,7 @@ import { heroPencil } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
-import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
+import { AlertService, ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
 import { CoursesStore } from '../courses.store';
 import { GradesFormComponent } from '../grades-form/grades-form.component';
@@ -37,6 +37,7 @@ import { CourseGradesStore } from './course-grades.store';
   providers: [
     provideComponentStore(CourseGradesStore),
     provideIcons({ heroPencil }),
+    AlertService,
   ],
   template: `
     <div class="mb-4 mt-2 flex justify-between">
@@ -118,15 +119,10 @@ export class CourseGradesComponent {
   public groups = this.store.groups;
 
   newGrade() {
-    const dialogRef = this.dialog.open<Partial<Grade>>(GradesFormComponent, {
+    this.dialog.open<Partial<Grade>>(GradesFormComponent, {
       minWidth: '42rem',
       disableClose: true,
       data: { course: this.courseStore.selected() },
-    });
-    dialogRef.closed.subscribe({
-      next: (request) => {
-        console.info(request);
-      },
     });
   }
 }

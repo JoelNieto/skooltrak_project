@@ -21,6 +21,7 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import {
+  AlertService,
   ButtonDirective,
   CardComponent,
   SelectComponent,
@@ -72,7 +73,7 @@ import { AssignmentFormStore } from './assignment-form.store';
       }
     `,
   ],
-  providers: [provideComponentStore(AssignmentFormStore)],
+  providers: [provideComponentStore(AssignmentFormStore), AlertService],
   template: `
     <form
       class="flex gap-4"

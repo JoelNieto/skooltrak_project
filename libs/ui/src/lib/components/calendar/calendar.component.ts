@@ -259,6 +259,5 @@ export class CalendarComponent implements OnInit {
 
   eventClicked(event: CalendarEvent<{ assignment: AssignmentView }>): void {
     this.router.navigate(['app', 'courses', 'assignments', event.id]);
-    console.info(event);
   }
 }

@@ -13,6 +13,7 @@ import {
   GroupAssignment,
   Table,
 } from '@skooltrak/models';
+import { AlertService } from '@skooltrak/ui';
 import { pick } from 'lodash';
 import {
   EMPTY,
@@ -43,6 +44,7 @@ export class AssignmentFormStore
   implements OnStoreInit
 {
   supabase = inject(SupabaseService);
+  alert = inject(AlertService);
   readonly types = this.selectSignal((state) => state.types);
   readonly assignment_id$ = this.select((state) => state.id);
   readonly selected = this.selectSignal((state) => state.assignment);
@@ -172,7 +174,11 @@ export class AssignmentFormStore
               return EMPTY;
             }),
             tapResponse(
-              () => console.info('Saved'),
+              () =>
+                this.alert.showAlert({
+                  icon: 'success',
+                  message: 'Saved changes',
+                }),
               (error) => console.error(error),
               () => this.patchState({ loading: false })
             )
@@ -211,6 +217,7 @@ export class AssignmentFormStore
       );
     }
   );
+
   ngrxOnStoreInit = () => {
     this.setState({
       id: undefined,

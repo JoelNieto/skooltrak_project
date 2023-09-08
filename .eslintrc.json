@@ -10,7 +10,7 @@
         "no-console": [
           "error",
           {
-            "allow": ["error", "warn", "info"]
+            "allow": ["error", "warn"]
           }
         ],
         "@nx/enforce-module-boundaries": [

@@ -1,25 +1,11 @@
 /* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
-import { Course, Table } from '@skooltrak/models';
+import { ClassGroup, Course, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import {
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   courses: Course[];
@@ -30,6 +16,7 @@ type State = {
   start: number;
   end: number;
   loading: boolean;
+  groups: Partial<ClassGroup>[];
 };
 
 @Injectable()
@@ -47,6 +34,13 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
   readonly end$ = this.select((state) => state.end);
   readonly selectedId = this.selectSignal((state) => state.selectedId);
   readonly selected = this.selectSignal((state) =>
+    state.selectedId
+      ? state.courses.find((x) => x.id === state.selectedId)
+      : null
+  );
+
+  public readonly groups = this.selectSignal((state) => state.groups);
+  public readonly selected$ = this.select((state) =>
     state.selectedId
       ? state.courses.find((x) => x.id === state.selectedId)
       : null
@@ -84,41 +78,39 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
     { debounce: true }
   );
 
-  private readonly fetchCourses = this.effect(
-    (data$: Observable<{ start: number; end: number; pageSize: number }>) => {
-      return data$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        filter(({ end }) => end > 0),
-        switchMap(({ start, end }) => {
-          return from(
-            this.supabase.client
-              .from(Table.Courses)
-              .select(
-                'id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
-                {
-                  count: 'exact',
-                }
-              )
-              .range(start, end)
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { courses: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ courses }) => this.setCourses(courses as unknown as Course[]),
-              (error) => {
-                console.error(error);
-                return of([]);
-              },
-              () => this.patchState({ loading: false })
+  private readonly fetchCourses = this.effect(() => {
+    return this.fetchCoursesData$.pipe(
+      tap(() => this.patchState({ loading: true })),
+      filter(({ end }) => end > 0),
+      switchMap(({ start, end }) => {
+        return from(
+          this.supabase.client
+            .from(Table.Courses)
+            .select(
+              'id, school_id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
+              {
+                count: 'exact',
+              }
             )
-          );
-        })
-      );
-    }
-  );
+            .range(start, end)
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { courses: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ courses }) => this.setCourses(courses as unknown as Course[]),
+            (error) => {
+              console.error(error);
+              return of([]);
+            },
+            () => this.patchState({ loading: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveCourse = this.effect(
     (request$: Observable<Partial<Course>>) => {
@@ -137,7 +129,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
           );
         }),
         tapResponse(
-          () => this.fetchCourses(this.fetchCoursesData$),
+          () => this.fetchCourses(),
           (error) => console.error(error),
           () => this.patchState({ loading: false })
         )
@@ -145,9 +137,38 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
     }
   );
 
-  ngrxOnStoreInit = () => {
+  readonly fetchGroups = this.effect(() => {
+    return this.selected$.pipe(
+      filter((course) => !!course),
+      switchMap((course) => {
+        return from(
+          this.supabase.client
+            .from(Table.Groups)
+            .select(
+              'id, name, plan:school_plans(*), degree:school_degrees(*), created_at, updated_at'
+            )
+            .eq('plan_id', course?.plan_id)
+        )
+          .pipe(
+            map(({ error, data }) => {
+              if (error) throw new Error(error.message);
+              return data as Partial<ClassGroup>[];
+            })
+          )
+          .pipe(
+            tapResponse(
+              (groups) => this.patchState({ groups }),
+              (error) => console.error(error)
+            )
+          );
+      })
+    );
+  });
+
+  ngrxOnStoreInit = () =>
     this.setState({
       courses: [],
+      groups: [],
       loading: true,
       pages: 0,
       count: 0,
@@ -155,6 +176,4 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
       start: 0,
       end: 9,
     });
-    this.fetchCourses(this.fetchCoursesData$);
-  };
 }

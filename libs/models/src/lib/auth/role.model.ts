@@ -11,6 +11,7 @@ export type UserRole = Partial<User> & {
   school_id: string;
   school_name: string;
   role: RoleTypeEnum;
+  school?: Partial<School>;
 };
 
 export type Link = {

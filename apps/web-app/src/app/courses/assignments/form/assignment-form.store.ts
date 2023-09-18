@@ -1,31 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
-import {
-  Assignment,
-  AssignmentType,
-  ClassGroup,
-  Course,
-  GroupAssignment,
-  Table,
-} from '@skooltrak/models';
+import { Assignment, AssignmentType, Course, GroupAssignment, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import { pick } from 'lodash';
-import {
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   id: string | undefined;
@@ -33,7 +12,6 @@ type State = {
   types: AssignmentType[];
   courses: Course[];
   course_id: string | undefined;
-  groups: Partial<ClassGroup>[];
   dates: GroupAssignment[];
   loading: boolean;
 };
@@ -48,7 +26,6 @@ export class AssignmentFormStore
   readonly types = this.selectSignal((state) => state.types);
   readonly assignment_id$ = this.select((state) => state.id);
   readonly selected = this.selectSignal((state) => state.assignment);
-  readonly groups = this.selectSignal((state) => state.groups);
   readonly dates = this.selectSignal((state) => state.dates);
   readonly courses = this.selectSignal((state) => state.courses);
   readonly course$ = this.select((state) =>
@@ -74,36 +51,6 @@ export class AssignmentFormStore
         )
       );
   });
-
-  readonly fetchGroups = this.effect(
-    (course$: Observable<Course | undefined>) => {
-      return course$.pipe(
-        filter((course) => !!course),
-        switchMap((course) => {
-          return from(
-            this.supabase.client
-              .from(Table.Groups)
-              .select(
-                'id, name, plan:school_plans(*), degree:school_degrees(*), created_at, updated_at'
-              )
-              .eq('plan_id', course?.plan_id)
-          )
-            .pipe(
-              map(({ error, data }) => {
-                if (error) throw new Error(error.message);
-                return data as Partial<ClassGroup>[];
-              })
-            )
-            .pipe(
-              tapResponse(
-                (groups) => this.patchState({ groups }),
-                (error) => console.error(error)
-              )
-            );
-        })
-      );
-    }
-  );
 
   readonly fetchCourses = this.effect(() => {
     return from(
@@ -188,48 +135,40 @@ export class AssignmentFormStore
     }
   );
 
-  readonly fetchAssignment = this.effect(
-    (id$: Observable<string | undefined>) => {
-      return id$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        filter((id) => !!id),
-        switchMap((id) => {
-          return from(
-            this.supabase.client
-              .from(Table.Assignments)
-              .select(
-                'id,title,course_id,type_id,description,created_at,user_id'
-              )
-              .eq('id', id)
-              .single()
-          ).pipe(
-            map(({ error, data }) => {
-              if (error) throw new Error(error.message);
-              return data as Assignment;
-            }),
-            tapResponse(
-              (assignment) => this.patchState({ assignment }),
-              (error) => console.error(error),
-              () => this.patchState({ loading: false })
-            )
-          );
-        })
-      );
-    }
-  );
+  readonly fetchAssignment = this.effect(() => {
+    return this.assignment_id$.pipe(
+      tap(() => this.patchState({ loading: true })),
+      filter((id) => !!id),
+      switchMap((id) => {
+        return from(
+          this.supabase.client
+            .from(Table.Assignments)
+            .select('id,title,course_id,type_id,description,created_at,user_id')
+            .eq('id', id)
+            .single()
+        ).pipe(
+          map(({ error, data }) => {
+            if (error) throw new Error(error.message);
+            return data as Assignment;
+          }),
+          tapResponse(
+            (assignment) => this.patchState({ assignment }),
+            (error) => console.error(error),
+            () => this.patchState({ loading: false })
+          )
+        );
+      })
+    );
+  });
 
-  ngrxOnStoreInit = () => {
+  ngrxOnStoreInit = () =>
     this.setState({
       id: undefined,
       assignment: undefined,
       types: [],
       courses: [],
       loading: false,
-      groups: [],
       course_id: undefined,
       dates: [],
     });
-    this.fetchGroups(this.course$);
-    this.fetchAssignment(this.assignment_id$);
-  };
 }

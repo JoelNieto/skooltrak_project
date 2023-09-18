@@ -3,12 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroBookmarkSquare,
-  heroCalendarDays,
-  heroClipboardDocument,
-  heroHome,
-} from '@ng-icons/heroicons/outline';
+import { heroBookmarkSquare, heroCalendarDays, heroClipboardDocument, heroHome } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
@@ -75,22 +70,30 @@ import { AvatarComponent } from '../avatar/avatar.component';
           >
             <li>
               <a routerLink="home" class="link" routerLinkActive="active"
-                ><ng-icon name="heroHome" size="24" />Home</a
+                ><ng-icon name="heroHome" size="24" />{{
+                  'Home' | translate
+                }}</a
               >
             </li>
             <li>
               <a routerLink="courses" class="link" routerLinkActive="active"
-                ><ng-icon name="heroBookmarkSquare" size="24" />Courses</a
+                ><ng-icon name="heroBookmarkSquare" size="24" />{{
+                  'Courses' | translate
+                }}</a
               >
             </li>
             <li>
               <a routerLink="grades" class="link" routerLinkActive="active"
-                ><ng-icon name="heroClipboardDocument" size="24" />Grades</a
+                ><ng-icon name="heroClipboardDocument" size="24" />{{
+                  'Grades.Title' | translate
+                }}</a
               >
             </li>
             <li>
               <a href="#" class="link"
-                ><ng-icon name="heroCalendarDays" size="24" />Schedules</a
+                ><ng-icon name="heroCalendarDays" size="24" />{{
+                  'Schedule' | translate
+                }}</a
               >
             </li>
           </ul>
@@ -148,15 +151,15 @@ import { AvatarComponent } from '../avatar/avatar.component';
                       routerLink="profile"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       cdkMenuItem
-                      >Profile</a
+                      >{{ 'Profile' | translate }}</a
                     >
                   </li>
                   <li>
                     <a
-                      href="#"
+                      routerLink="settings"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       cdkMenuItem
-                      >Settings</a
+                      >{{ 'Settings' | translate }}</a
                     >
                   </li>
                   <li>

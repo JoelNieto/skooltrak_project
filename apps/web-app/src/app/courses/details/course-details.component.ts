@@ -91,6 +91,9 @@ import { CoursesStore } from '../courses.store';
             'Grades.Title' | translate
           }}</sk-tabs-item>
           <sk-tabs-item link="files">{{ 'File' | translate }}</sk-tabs-item>
+          <sk-tabs-item link="students">{{
+            'Students' | translate
+          }}</sk-tabs-item>
         </div>
         <router-outlet />
       </sk-card>
@@ -99,18 +102,18 @@ import { CoursesStore } from '../courses.store';
 })
 export class CourseDetailsComponent implements OnInit {
   @Input() course_id?: string;
-  private store = inject(CoursesStore);
-  selected = this.store.selected;
-  courses = this.store.courses;
+  private state = inject(CoursesStore);
+  selected = this.state.selected;
+  courses = this.state.courses;
   router = inject(Router);
   route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    !!this.course_id && this.store.patchState({ selectedId: this.course_id });
+    !!this.course_id && this.state.patchState({ selectedId: this.course_id });
   }
 
   setSelectedId = (course_id: string) => {
-    this.store.patchState({ selectedId: course_id });
+    this.state.patchState({ selectedId: course_id });
     this.router.navigate(['../details'], {
       relativeTo: this.route,
       queryParams: { course_id },

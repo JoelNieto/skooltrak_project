@@ -1,9 +1,4 @@
-import {
-  Overlay,
-  OverlayConfig,
-  OverlayModule,
-  OverlayRef,
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -20,11 +15,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -56,7 +47,6 @@ import { UtilService } from '../../services/util.service';
       useExisting: forwardRef(() => SelectComponent),
       multi: true,
     },
-    UtilService,
   ],
   template: `
     <div class="select-wrapper">
@@ -76,7 +66,7 @@ import { UtilService } from '../../services/util.service';
       ></div>
       <ng-template cdk-portal>
         <div id="options-container" class="w-full">
-          <div class="relative">
+          <div class="relative" *ngIf="search">
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >

@@ -1,36 +1,16 @@
 import { NgClass, NgFor } from '@angular/common';
-import {
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Component, DestroyRef, effect, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  UntypedFormArray,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, UntypedFormArray, Validators } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import {
-  AlertService,
-  ButtonDirective,
-  CardComponent,
-  SelectComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, SelectComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 import { asapScheduler } from 'rxjs';
 
+import { CoursesStore } from '../../courses.store';
 import { AssignmentFormStore } from './assignment-form.store';
 
 @Component({
@@ -73,7 +53,7 @@ import { AssignmentFormStore } from './assignment-form.store';
       }
     `,
   ],
-  providers: [provideComponentStore(AssignmentFormStore), AlertService],
+  providers: [provideComponentStore(AssignmentFormStore)],
   template: `
     <form
       class="flex gap-4"
@@ -145,7 +125,7 @@ import { AssignmentFormStore } from './assignment-form.store';
             *ngFor="let group of formGroups.controls; let i = index"
           >
             <div [formGroupName]="i">
-              <label [for]="i">{{ store.groups()[i].name }}</label>
+              <label [for]="i">{{ groups()[i].name }}</label>
               <input type="datetime-local" formControlName="start_at" />
             </div>
           </ng-container>
@@ -159,6 +139,8 @@ export class AssignmentFormComponent implements OnInit {
   @Input({ required: false }) id?: string;
   private destroyRef = inject(DestroyRef);
   public store = inject(AssignmentFormStore);
+  private state = inject(CoursesStore);
+  public groups = this.state.groups;
 
   assignmentForm = new FormGroup({
     title: new FormControl<string>('', {
@@ -190,7 +172,7 @@ export class AssignmentFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const groups = this.store.groups();
+      const groups = this.state.groups();
       !!groups && this.setGroups(groups);
     });
     effect(() => {

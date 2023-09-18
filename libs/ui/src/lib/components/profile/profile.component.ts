@@ -1,7 +1,12 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';

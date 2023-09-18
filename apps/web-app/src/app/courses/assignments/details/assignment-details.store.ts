@@ -1,8 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { Assignment, Table } from '@skooltrak/models';
-import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import { filter, from, map, switchMap, tap } from 'rxjs';
 
 type State = {
   assignment_id: string | undefined;
@@ -19,38 +23,36 @@ export class AssignmentDetailsStore
   public readonly assignment_id$ = this.select((state) => state.assignment_id);
   public readonly assignment = this.selectSignal((state) => state.assignment);
 
-  private readonly fetchAssignment = this.effect(
-    (id$: Observable<string | undefined>) => {
-      return id$.pipe(
-        filter((id) => !!id),
-        tap(() => this.patchState({ loading: true })),
-        switchMap((id) => {
-          return from(
-            this.supabase.client
-              .from(Table.Assignments)
-              .select(
-                'id, title, course_id, description, type_id, type:assignment_types(*), dates:group_assignments(group:school_groups(id, name), start_at), course:courses(id, subject:school_subjects(*), plan:school_plans(*)), created_at, updated_at, user:users(email, first_name, father_name)'
-              )
-              .eq('id', id)
-              .single()
-          )
-            .pipe(
-              map(({ error, data }) => {
-                if (error) throw new Error(error.message);
-                return data as unknown as Assignment;
-              })
+  readonly fetchAssignment = this.effect(() => {
+    return this.assignment_id$.pipe(
+      filter((id) => !!id),
+      tap(() => this.patchState({ loading: true })),
+      switchMap((id) => {
+        return from(
+          this.supabase.client
+            .from(Table.Assignments)
+            .select(
+              'id, title, course_id, description, type_id, type:assignment_types(*), dates:group_assignments(group:school_groups(id, name), start_at), course:courses(id, subject:school_subjects(*), plan:school_plans(*)), created_at, updated_at, user:users(email, first_name, father_name)'
             )
-            .pipe(
-              tapResponse(
-                (assignment) => this.patchState({ assignment }),
-                (error) => console.error(error),
-                () => this.patchState({ loading: false })
-              )
-            );
-        })
-      );
-    }
-  );
+            .eq('id', id)
+            .single()
+        )
+          .pipe(
+            map(({ error, data }) => {
+              if (error) throw new Error(error.message);
+              return data as unknown as Assignment;
+            })
+          )
+          .pipe(
+            tapResponse(
+              (assignment) => this.patchState({ assignment }),
+              (error) => console.error(error),
+              () => this.patchState({ loading: false })
+            )
+          );
+      })
+    );
+  });
 
   ngrxOnStoreInit = () => {
     this.setState({
@@ -58,6 +60,5 @@ export class AssignmentDetailsStore
       assignment_id: undefined,
       loading: false,
     });
-    this.fetchAssignment(this.assignment_id$);
   };
 }

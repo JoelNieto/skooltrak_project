@@ -5,14 +5,16 @@ import {
   tapResponse,
 } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
-import { ClassGroup, Table } from '@skooltrak/models';
-import { from, map, tap } from 'rxjs';
+import { GradeObject, Period, Table } from '@skooltrak/models';
+import { filter, from, map, switchMap, tap } from 'rxjs';
 
 import { CoursesStore } from '../courses.store';
 
 type State = {
-  groups: Partial<ClassGroup>[];
+  periods: Period[];
+  selectedPeriod: string | undefined;
   loading: boolean;
+  grades: Partial<GradeObject>[];
 };
 
 @Injectable()
@@ -23,18 +25,51 @@ export class CourseGradesStore
   private courseStore = inject(CoursesStore);
   private supabase = inject(SupabaseService);
 
-  private course = this.courseStore.selected;
+  public course = this.courseStore.selected;
 
-  public groups = this.selectSignal((state) => state.groups);
+  public periods = this.selectSignal((state) => state.periods);
+  public period = this.selectSignal((state) => state.selectedPeriod);
+  private selectedPeriod$ = this.select((state) => state.selectedPeriod);
 
-  readonly fetchCourses = this.effect(() => {
+  private readonly fetchGrades = this.effect(() => {
+    return this.selectedPeriod$.pipe(
+      filter((period_id) => !!period_id),
+      tap(() => this.patchState({ loading: true })),
+      switchMap((period_id) => {
+        return from(
+          this.supabase.client
+            .from(Table.Grades)
+            .select(
+              'id, title, period:periods(id, name), bucket:grade_buckets(*), start_at, items:grade_items(*)'
+            )
+            .eq('course_id', this.course()?.id)
+            .eq('period_id', period_id)
+        )
+          .pipe(
+            map(({ data, error }) => {
+              if (error) throw new Error(error.message);
+              return data as Partial<GradeObject>[];
+            })
+          )
+          .pipe(
+            tapResponse(
+              (grades) => this.patchState({ grades }),
+              (error) => console.error(error),
+              () => this.patchState({ loading: false })
+            )
+          );
+      })
+    );
+  });
+
+  private readonly fetchPeriods = this.effect(() => {
     return (
       tap(() => this.patchState({ loading: true })),
       from(
         this.supabase.client
-          .from(Table.Groups)
-          .select('id, name, plan_id, degree_id')
-          .eq('plan_id', this.course()?.plan_id)
+          .from(Table.Periods)
+          .select('id, name, year, start_at, end_at, school_id')
+          .eq('school_id', this.course()?.school_id)
       )
         .pipe(
           map(({ error, data }) => {
@@ -44,7 +79,7 @@ export class CourseGradesStore
         )
         .pipe(
           tapResponse(
-            (groups) => this.patchState({ groups }),
+            (periods) => this.patchState({ periods }),
             (error) => {
               console.error(error);
             },
@@ -54,5 +89,11 @@ export class CourseGradesStore
     );
   });
 
-  ngrxOnStoreInit = () => this.setState({ groups: [], loading: false });
+  ngrxOnStoreInit = () =>
+    this.setState({
+      loading: false,
+      periods: [],
+      selectedPeriod: this.course()?.period_id,
+      grades: [],
+    });
 }

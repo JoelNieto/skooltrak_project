@@ -24,7 +24,9 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
     </div>
     <div class="mt-2" skooltrak-tabs>
       <sk-tabs-item link="schedule">{{ 'Schedule' | translate }}</sk-tabs-item>
-      <sk-tabs-item link="grades"> {{ 'Grades' | translate }}</sk-tabs-item>
+      <sk-tabs-item link="grades">
+        {{ 'Grades.Title' | translate }}</sk-tabs-item
+      >
     </div>
     <router-outlet />
   </sk-card>`,

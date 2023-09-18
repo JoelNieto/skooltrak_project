@@ -1,7 +1,16 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Table, User } from '@skooltrak/models';
-import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
+import {
+  catchError,
+  exhaustMap,
+  from,
+  iif,
+  map,
+  mergeMap,
+  of,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';

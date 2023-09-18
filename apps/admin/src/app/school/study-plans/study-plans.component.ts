@@ -2,20 +2,11 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  PaginatorComponent,
-  UtilService,
-} from '@skooltrak/ui';
+import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './form/study-plans-form.component';
 import { SchoolStudyPlansStore } from './study-plans.store';
@@ -37,7 +28,6 @@ import { SchoolStudyPlansStore } from './study-plans.store';
     provideComponentStore(SchoolStudyPlansStore),
     provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
     ConfirmationService,
-    UtilService,
   ],
   template: `<div class="relative mt-1 overflow-x-auto">
     <div class="mb-4 flex justify-between px-1 py-4">

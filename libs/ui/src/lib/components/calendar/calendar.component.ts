@@ -5,25 +5,10 @@ import { Router, RouterLink } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssignmentView } from '@skooltrak/models';
-import {
-  CalendarDateFormatter,
-  CalendarEvent,
-  CalendarModule,
-  CalendarView,
-  DateAdapter,
-} from 'angular-calendar';
+import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK, EventColor } from 'calendar-utils';
-import {
-  endOfDay,
-  endOfMonth,
-  endOfWeek,
-  isSameDay,
-  isSameMonth,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
+import { endOfDay, endOfMonth, endOfWeek, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
 
 import { ButtonDirective } from '../button/button.component';
 import { CalendarStore } from './calendar.store';

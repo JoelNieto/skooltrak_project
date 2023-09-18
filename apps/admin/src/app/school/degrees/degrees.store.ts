@@ -65,40 +65,38 @@ export class SchoolDegreesStore
     { debounce: true }
   );
 
-  private readonly fetchDegrees = this.effect(
-    (data$: Observable<{ start: number; end: number; pageSize: number }>) => {
-      return data$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        filter(({ end }) => end > 0),
-        switchMap(({ start, end }) => {
-          return from(
-            this.supabase.client
-              .from(Table.Degrees)
-              .select('id,name, created_at, level:levels(*), level_id', {
-                count: 'exact',
-              })
-              .order('name', { ascending: true })
-              .range(start, end)
-              .eq('school_id', this.auth.currentSchoolId())
-          ).pipe(
-            exhaustMap(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return of({ degrees: data, count });
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ degrees }) => this.setDegrees(degrees as unknown as Degree[]),
-              (error) => {
-                console.error(error);
-                return of([]);
-              },
-              () => this.patchState({ loading: false })
-            )
-          );
-        })
-      );
-    }
-  );
+  private readonly fetchDegrees = this.effect(() => {
+    return this.fetchDegreesData$.pipe(
+      tap(() => this.patchState({ loading: true })),
+      filter(({ end }) => end > 0),
+      switchMap(({ start, end }) => {
+        return from(
+          this.supabase.client
+            .from(Table.Degrees)
+            .select('id, name, created_at, level:levels(*), level_id', {
+              count: 'exact',
+            })
+            .order('name', { ascending: true })
+            .range(start, end)
+            .eq('school_id', this.auth.currentSchoolId())
+        ).pipe(
+          exhaustMap(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return of({ degrees: data, count });
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ degrees }) => this.setDegrees(degrees as unknown as Degree[]),
+            (error) => {
+              console.error(error);
+              return of([]);
+            },
+            () => this.patchState({ loading: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveDegree = this.effect(
     (request$: Observable<Partial<Degree>>) => {
@@ -117,7 +115,7 @@ export class SchoolDegreesStore
           );
         }),
         tapResponse(
-          () => this.fetchDegrees(this.fetchDegreesData$),
+          () => this.fetchDegrees(),
           (error) => console.error(error),
           () => this.patchState({ loading: false })
         )
@@ -125,7 +123,7 @@ export class SchoolDegreesStore
     }
   );
 
-  ngrxOnStoreInit = () => {
+  ngrxOnStoreInit = () =>
     this.setState({
       degrees: [],
       loading: true,
@@ -135,6 +133,4 @@ export class SchoolDegreesStore
       start: 0,
       end: 4,
     });
-    this.fetchDegrees(this.fetchDegreesData$);
-  };
 }

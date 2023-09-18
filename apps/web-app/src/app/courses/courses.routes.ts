@@ -48,7 +48,13 @@ export const coursesRoutes: Routes = [
                 (x) => x.CourseScheduleComponent
               ),
           },
-
+          {
+            path: 'students',
+            loadComponent: () =>
+              import('./students/students.component').then(
+                (x) => x.CoursesComponent
+              ),
+          },
           {
             path: 'files',
             loadComponent: () =>

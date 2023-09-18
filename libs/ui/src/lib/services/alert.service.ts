@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AlertService {
   private toast = Swal.mixin({
     toast: true,

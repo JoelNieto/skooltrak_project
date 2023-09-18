@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
-import { UtilService } from '@skooltrak/ui';
 
 import { CoursesStore } from './courses.store';
 
@@ -9,7 +8,7 @@ import { CoursesStore } from './courses.store';
   selector: 'sk-admin-courses',
   standalone: true,
   imports: [RouterOutlet],
-  providers: [provideComponentStore(CoursesStore), UtilService],
+  providers: [provideComponentStore(CoursesStore)],
   template: `<router-outlet />`,
 })
 export class CoursesComponent {}

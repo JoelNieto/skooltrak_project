@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, UtilService } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 import { GroupsStore } from './groups.store';
 
@@ -10,7 +10,7 @@ import { GroupsStore } from './groups.store';
   selector: 'sk-admin-groups',
   standalone: true,
   imports: [RouterOutlet, CardComponent, TranslateModule],
-  providers: [provideComponentStore(GroupsStore), UtilService],
+  providers: [provideComponentStore(GroupsStore)],
   template: `<sk-card
     ><h2
       header

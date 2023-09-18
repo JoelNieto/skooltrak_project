@@ -6,6 +6,7 @@ import {
 } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { Grade, GradeBucket, Table } from '@skooltrak/models';
+import { AlertService } from '@skooltrak/ui';
 import { EMPTY, filter, from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -21,6 +22,7 @@ export class GradesFormStore
   implements OnStoreInit
 {
   private supabase = inject(SupabaseService);
+  private alert = inject(AlertService);
 
   private course_id$ = this.select((state) => state.course_id);
 
@@ -97,7 +99,8 @@ export class GradesFormStore
           )
           .pipe(
             tapResponse(
-              () => console.info('Created'),
+              () =>
+                this.alert.showAlert({ icon: 'success', message: 'Created' }),
               (error) => console.error(error),
               () => this.patchState({ loading: false })
             )

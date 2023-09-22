@@ -33,3 +33,8 @@ export const selectSchoolId = createSelector(
   selectCurrentRole,
   (state) => state?.school_id
 );
+
+export const selectSchools = createSelector(
+  selectAuthState,
+  (state) => state.schools
+);

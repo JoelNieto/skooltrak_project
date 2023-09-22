@@ -1,18 +1,15 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroBookmarkSquare,
-  heroCalendarDays,
-  heroClipboardDocument,
-  heroHome,
-} from '@ng-icons/heroicons/outline';
+import { heroBookmarkSquare, heroCalendarDays, heroClipboardDocument, heroHome } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
+import { SelectComponent } from '../select/select.component';
 
 @Component({
   selector: 'sk-navbar',
@@ -25,6 +22,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
     TranslateModule,
     AvatarComponent,
     NgIconComponent,
+    NgFor,
+    SelectComponent,
+    ReactiveFormsModule,
   ],
   providers: [
     provideIcons({
@@ -89,9 +89,14 @@ import { AvatarComponent } from '../avatar/avatar.component';
               >
             </li>
             <li>
-              <a href="#" class="link"
-                ><ng-icon name="heroCalendarDays" size="24" />Schedules</a
+              <select
+                class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 pr-8 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
               >
+                <option>---Select role---</option>
+                <option *ngFor="let school of schools()">
+                  {{ school.short_name }}
+                </option>
+              </select>
             </li>
           </ul>
         </div>
@@ -160,14 +165,6 @@ import { AvatarComponent } from '../avatar/avatar.component';
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      cdkMenuItem
-                      >Earnings</a
-                    >
-                  </li>
-                  <li>
                     <a href="#" class="menu-item" cdkMenuItem>Sign out</a>
                   </li>
                 </ul>
@@ -194,6 +191,13 @@ import { AvatarComponent } from '../avatar/avatar.component';
 })
 export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);
+  roleSelect = new FormControl(this.auth.currentRole(), {
+    validators: [Validators.required],
+    nonNullable: true,
+  });
+
   user = this.auth.user;
   role = this.auth.currentRole;
+  roles = this.auth.roles;
+  schools = this.auth.schools;
 }

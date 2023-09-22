@@ -15,6 +15,7 @@ export class AuthStateFacade {
   public roles = this.store$.selectSignal(selectors.selectRoles);
   public currentRole = this.store$.selectSignal(selectors.selectCurrentRole);
   public currentSchoolId = this.store$.selectSignal(selectors.selectSchoolId);
+  public schools = this.store$.selectSignal(selectors.selectSchools);
 
   public init() {
     this.store$.dispatch(AuthActions.initState());

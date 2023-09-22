@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { User as Profile, UserRole } from '@skooltrak/models';
+import { School, User as Profile, UserRole } from '@skooltrak/models';
 import { Session, User } from '@supabase/supabase-js';
 
 export const AuthActions = createActionGroup({
@@ -11,6 +11,7 @@ export const AuthActions = createActionGroup({
     updateProfile: props<{ request: Partial<Profile> }>(),
     setUser: props<{ user: Profile }>(),
     setRoles: props<{ roles: UserRole[] }>(),
+    setSchools: props<{ schools: Partial<School>[] }>(),
     setCurrentRole: props<{ role: UserRole }>(),
     signInEmail: props<{ email: string; password: string }>(),
     signInSuccess: props<{ user: User; session: Session }>(),

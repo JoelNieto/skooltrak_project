@@ -10,7 +10,8 @@ export type State = {
   session: Session | null;
   roles: UserRole[];
   currentRole: UserRole | undefined;
-  school: Partial<School> | undefined;
+  schools: Partial<School>[];
+  school_id: string | undefined;
   error: unknown | undefined;
 };
 
@@ -19,7 +20,8 @@ export const initialState: State = {
   roles: [],
   user: undefined,
   session: null,
-  school: undefined,
+  schools: [],
+  school_id: undefined,
   currentRole: undefined,
   error: undefined,
 };
@@ -36,6 +38,11 @@ export const authFeature = createFeature({
     on(
       actions.setUser,
       (state, { user }): State => ({ ...state, user, loading: false })
+    ),
+    on(actions.setRoles, (state, { roles }): State => ({ ...state, roles })),
+    on(
+      actions.setSchools,
+      (state, { schools }): State => ({ ...state, schools })
     )
   ),
 });

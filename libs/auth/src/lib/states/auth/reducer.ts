@@ -43,6 +43,10 @@ export const authFeature = createFeature({
     on(
       actions.setSchools,
       (state, { schools }): State => ({ ...state, schools })
+    ),
+    on(
+      actions.setSchoolId,
+      (state, { school_id }): State => ({ ...state, school_id })
     )
   ),
 });

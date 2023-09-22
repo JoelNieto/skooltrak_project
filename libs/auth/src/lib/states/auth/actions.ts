@@ -17,5 +17,6 @@ export const AuthActions = createActionGroup({
     signInSuccess: props<{ user: User; session: Session }>(),
     signInFailure: props<{ error: unknown }>(),
     signOut: emptyProps(),
+    setSchoolId: props<{ school_id: string | undefined }>(),
   },
 });

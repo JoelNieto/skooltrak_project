@@ -1,14 +1,21 @@
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule, NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroBookmarkSquare, heroCalendarDays, heroClipboardDocument, heroHome } from '@ng-icons/heroicons/outline';
+import {
+  heroBookmarkSquare,
+  heroCalendarDays,
+  heroClipboardDocument,
+  heroHome,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
+import { SchoolSelectorComponent } from '../school-selector.ts/school-selector.component';
 import { SelectComponent } from '../select/select.component';
 
 @Component({
@@ -25,6 +32,7 @@ import { SelectComponent } from '../select/select.component';
     NgFor,
     SelectComponent,
     ReactiveFormsModule,
+    DialogModule,
   ],
   providers: [
     provideIcons({
@@ -37,7 +45,7 @@ import { SelectComponent } from '../select/select.component';
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
-        <div class="flex items-center justify-start">
+        <div class="flex flex-1 items-center justify-start">
           <button
             type="button"
             class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
@@ -57,7 +65,7 @@ import { SelectComponent } from '../select/select.component';
               ></path>
             </svg>
           </button>
-          <a routerLink="home" class="ml-2 flex md:mr-24">
+          <a routerLink="home" class="ml-2 flex md:mr-8">
             <img
               src="assets/skooltrak-logo.svg"
               class="mr-2 h-7"
@@ -68,39 +76,46 @@ import { SelectComponent } from '../select/select.component';
               >{{ 'App title' | translate }}</span
             >
           </a>
+          <button
+            class="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-2"
+            (click)="changeSchool()"
+          >
+            <sk-avatar
+              *ngIf="school()?.crest_url"
+              [avatarUrl]="school()?.crest_url!"
+              bucket="crests"
+              class="w-8"
+            />{{ school()?.short_name ?? ('Select school' | translate) }}
+          </button>
         </div>
-        <div class="hidden w-full md:block md:w-auto">
+        <div class="hidden w-full flex-1 md:block md:w-auto">
           <ul
-            class="mt-4 flex flex-col rounded-xl border border-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:items-center md:space-x-4 md:border-0 md:p-0"
+            class="mt-4 flex flex-col justify-center rounded-xl border border-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:items-center md:space-x-4 md:border-0 md:p-0"
           >
             <li>
               <a routerLink="home" class="link" routerLinkActive="active"
-                ><ng-icon name="heroHome" size="24" />Home</a
+                ><ng-icon name="heroHome" size="24" />{{
+                  'Home' | translate
+                }}</a
               >
             </li>
             <li>
               <a routerLink="courses" class="link" routerLinkActive="active"
-                ><ng-icon name="heroBookmarkSquare" size="24" />Courses</a
+                ><ng-icon name="heroBookmarkSquare" size="24" />{{
+                  'Courses' | translate
+                }}</a
               >
             </li>
             <li>
               <a routerLink="grades" class="link" routerLinkActive="active"
-                ><ng-icon name="heroClipboardDocument" size="24" />Grades</a
+                ><ng-icon name="heroClipboardDocument" size="24" />{{
+                  'Grades.Title' | translate
+                }}</a
               >
-            </li>
-            <li>
-              <select
-                class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 pr-8 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
-              >
-                <option>---Select role---</option>
-                <option *ngFor="let school of schools()">
-                  {{ school.short_name }}
-                </option>
-              </select>
             </li>
           </ul>
         </div>
-        <div class="flex items-center">
+        <div class="flex flex-1 items-center justify-end">
           <div class="ml-3 flex items-center">
             <div>
               <button
@@ -120,9 +135,6 @@ import { SelectComponent } from '../select/select.component';
                     class="font-sans text-sm font-semibold text-gray-800 dark:text-white"
                   >
                     {{ user()?.first_name }} {{ user()?.father_name }}
-                  </p>
-                  <p class="font-title text-xs text-gray-400">
-                    {{ role()?.role }}
                   </p>
                 </div>
               </button>
@@ -191,13 +203,15 @@ import { SelectComponent } from '../select/select.component';
 })
 export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);
-  roleSelect = new FormControl(this.auth.currentRole(), {
-    validators: [Validators.required],
-    nonNullable: true,
-  });
+  private dialog = inject(Dialog);
 
   user = this.auth.user;
   role = this.auth.currentRole;
   roles = this.auth.roles;
   schools = this.auth.schools;
+  school = this.auth.currentSchool;
+
+  public changeSchool(): void {
+    this.dialog.open(SchoolSelectorComponent, { width: '36rem' });
+  }
 }

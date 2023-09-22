@@ -1,7 +1,16 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { School, Table, User } from '@skooltrak/models';
-import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
+import {
+  catchError,
+  exhaustMap,
+  from,
+  iif,
+  map,
+  mergeMap,
+  of,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -146,6 +155,18 @@ export const getSchools = createEffect(
         )
       ),
       map((schools) => AuthActions.setSchools({ schools }))
+    );
+  },
+  { functional: true }
+);
+
+export const setDefaultSchool = createEffect(
+  () => {
+    return inject(Actions).pipe(
+      ofType(AuthActions.setSchools),
+      map(({ schools }) =>
+        AuthActions.setSchoolId({ school_id: schools[0].id })
+      )
     );
   },
   { functional: true }

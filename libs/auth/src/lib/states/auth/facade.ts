@@ -16,6 +16,7 @@ export class AuthStateFacade {
   public currentRole = this.store$.selectSignal(selectors.selectCurrentRole);
   public currentSchoolId = this.store$.selectSignal(selectors.selectSchoolId);
   public schools = this.store$.selectSignal(selectors.selectSchools);
+  public currentSchool = this.store$.selectSignal(selectors.selectSchool);
 
   public init() {
     this.store$.dispatch(AuthActions.initState());
@@ -27,5 +28,9 @@ export class AuthStateFacade {
 
   public updateProfile(request: Partial<User>) {
     this.store$.dispatch(AuthActions.updateProfile({ request }));
+  }
+
+  public setSchoolId(school_id: string) {
+    this.store$.dispatch(AuthActions.setSchoolId({ school_id }));
   }
 }

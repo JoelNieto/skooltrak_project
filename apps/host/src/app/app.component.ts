@@ -13,13 +13,13 @@ import { DashboardComponent } from '@skooltrak/ui';
   template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {
-  store$ = inject(Store);
-  auth = inject(authState.AuthStateFacade);
-  router = inject(Router);
-  translate = inject(TranslateService);
-  currentRole = this.auth.currentRole;
-  user = this.auth.user;
-  loading = this.auth.loading;
+  private store$ = inject(Store);
+  private auth = inject(authState.AuthStateFacade);
+  private router = inject(Router);
+  private translate = inject(TranslateService);
+  private currentRole = this.auth.currentRole;
+  private user = this.auth.user;
+  private loading = this.auth.loading;
   constructor() {
     effect(() => {
       if (this.loading()) {
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.translate.setDefaultLang('es');
     this.auth.init();
   }

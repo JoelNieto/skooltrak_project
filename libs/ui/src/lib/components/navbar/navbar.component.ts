@@ -1,13 +1,20 @@
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroBookmarkSquare, heroCalendarDays, heroClipboardDocument, heroHome } from '@ng-icons/heroicons/outline';
+import {
+  heroBookmarkSquare,
+  heroCalendarDays,
+  heroClipboardDocument,
+  heroHome,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
+import { SchoolSelectorComponent } from '../school-selector.ts/school-selector.component';
 
 @Component({
   selector: 'sk-navbar',
@@ -20,6 +27,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
     TranslateModule,
     AvatarComponent,
     NgIconComponent,
+    DialogModule,
   ],
   providers: [
     provideIcons({
@@ -32,7 +40,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
   template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
-        <div class="flex items-center justify-start">
+        <div class="flex flex-1 items-center justify-start">
           <button
             type="button"
             class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
@@ -52,7 +60,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
               ></path>
             </svg>
           </button>
-          <a routerLink="home" class="ml-2 flex md:mr-24">
+          <a routerLink="home" class="ml-2 flex md:mr-8">
             <img
               src="assets/skooltrak-logo.svg"
               class="mr-2 h-7"
@@ -63,10 +71,21 @@ import { AvatarComponent } from '../avatar/avatar.component';
               >{{ 'App title' | translate }}</span
             >
           </a>
+          <button
+            class="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-2"
+            (click)="changeSchool()"
+          >
+            <sk-avatar
+              *ngIf="school()?.crest_url"
+              [avatarUrl]="school()?.crest_url!"
+              bucket="crests"
+              class="w-8"
+            />{{ school()?.short_name ?? ('Select school' | translate) }}
+          </button>
         </div>
-        <div class="hidden w-full md:block md:w-auto">
+        <div class="hidden w-full flex-1 md:block md:w-auto">
           <ul
-            class="mt-4 flex flex-col rounded-xl border border-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:items-center md:space-x-4 md:border-0 md:p-0"
+            class="mt-4 flex flex-col justify-center rounded-xl border border-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:items-center md:space-x-4 md:border-0 md:p-0"
           >
             <li>
               <a routerLink="home" class="link" routerLinkActive="active"
@@ -89,16 +108,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
                 }}</a
               >
             </li>
-            <li>
-              <a href="#" class="link"
-                ><ng-icon name="heroCalendarDays" size="24" />{{
-                  'Schedule' | translate
-                }}</a
-              >
-            </li>
           </ul>
         </div>
-        <div class="flex items-center">
+        <div class="flex flex-1 items-center justify-end">
           <div class="ml-3 flex items-center">
             <div>
               <button
@@ -118,9 +130,6 @@ import { AvatarComponent } from '../avatar/avatar.component';
                     class="font-sans text-sm font-semibold text-gray-800 dark:text-white"
                   >
                     {{ user()?.first_name }} {{ user()?.father_name }}
-                  </p>
-                  <p class="font-title text-xs text-gray-400">
-                    {{ role()?.role }}
                   </p>
                 </div>
               </button>
@@ -163,14 +172,6 @@ import { AvatarComponent } from '../avatar/avatar.component';
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      cdkMenuItem
-                      >Earnings</a
-                    >
-                  </li>
-                  <li>
                     <a href="#" class="menu-item" cdkMenuItem>Sign out</a>
                   </li>
                 </ul>
@@ -197,6 +198,15 @@ import { AvatarComponent } from '../avatar/avatar.component';
 })
 export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);
+  private dialog = inject(Dialog);
+
   user = this.auth.user;
   role = this.auth.currentRole;
+  roles = this.auth.roles;
+  schools = this.auth.schools;
+  school = this.auth.currentSchool;
+
+  public changeSchool(): void {
+    this.dialog.open(SchoolSelectorComponent, { width: '36rem' });
+  }
 }

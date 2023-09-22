@@ -1,7 +1,16 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Table, User } from '@skooltrak/models';
-import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
+import { School, Table, User } from '@skooltrak/models';
+import {
+  catchError,
+  exhaustMap,
+  from,
+  iif,
+  map,
+  mergeMap,
+  of,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -128,6 +137,36 @@ export const updateProfile = createEffect(
         )
       ),
       map((user) => AuthActions.setUser({ user }))
+    );
+  },
+  { functional: true }
+);
+
+export const getSchools = createEffect(
+  (actions = inject(Actions), supabase = inject(SupabaseService)) => {
+    return actions.pipe(
+      ofType(AuthActions.setUser),
+      exhaustMap(() =>
+        from(supabase.client.rpc('get_my_schools')).pipe(
+          map(({ data, error }) => {
+            if (error) throw new Error(error.message);
+            return data as Partial<School>[];
+          })
+        )
+      ),
+      map((schools) => AuthActions.setSchools({ schools }))
+    );
+  },
+  { functional: true }
+);
+
+export const setDefaultSchool = createEffect(
+  () => {
+    return inject(Actions).pipe(
+      ofType(AuthActions.setSchools),
+      map(({ schools }) =>
+        AuthActions.setSchoolId({ school_id: schools[0].id })
+      )
     );
   },
   { functional: true }

@@ -5,13 +5,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroCalendarDays } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
-import {
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-  UsersSelectorComponent,
-} from '@skooltrak/ui';
-import { pairwise, startWith } from 'rxjs';
+import { CardComponent, TabsComponent, TabsItemComponent, UsersSelectorComponent } from '@skooltrak/ui';
 
 import { CoursesStore } from '../courses.store';
 
@@ -91,11 +85,5 @@ export class CourseDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.patchState({ selectedId: this.id });
-    this.teacherControl.valueChanges.pipe(startWith([]), pairwise()).subscribe({
-      next: ([prev, value]) => {
-        console.info('prev', prev);
-        console.info('next', value);
-      },
-    });
   }
 }

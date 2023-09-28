@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { School } from '@skooltrak/models';
+import { School, SchoolUser } from '@skooltrak/models';
 
 import { authFeature, State } from './reducer';
 
@@ -20,29 +20,30 @@ export const selectUser = createSelector(
   (state: State) => state.user
 );
 
-export const selectRoles = createSelector(
-  selectAuthState,
-  (state: State) => state.roles
-);
-
-export const selectCurrentRole = createSelector(
-  selectAuthState,
-  (state: State) => state.currentRole
-);
-
 export const selectSchoolId = createSelector(
   selectAuthState,
   (state) => state.school_id
 );
 
-export const selectSchools = createSelector(
+export const selectProfiles = createSelector(
   selectAuthState,
-  (state) => state.schools
+  (state) => state.profiles
 );
+
+export const selectSchools = createSelector(selectProfiles, (state) => [
+  ...new Set(state.map((x) => x.school)),
+]);
 
 export const selectSchool = createSelector(
   selectSchools,
   selectSchoolId,
   (schools: Partial<School>[], id: string | undefined) =>
     schools.find((x) => x.id === id)
+);
+
+export const selectRoles = createSelector(
+  selectProfiles,
+  selectSchoolId,
+  (profiles: SchoolUser[], id: string | undefined) =>
+    profiles.filter((x) => x.school_id === id).map((x) => x.role)
 );

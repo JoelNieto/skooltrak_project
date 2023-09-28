@@ -9,13 +9,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styles: [
     `
       .link {
-        @apply inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 dark:hover:text-gray-300;
+        @apply inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:text-gray-600 dark:hover:text-gray-300;
       }
       .active {
-        @apply text-gray-800 border-sky-600 dark:text-sky-600 dark:border-sky-600;
+        @apply border-sky-600 font-semibold text-gray-800 dark:border-sky-600 dark:text-sky-600;
       }
       .disabled {
-        @apply text-gray-400 cursor-not-allowed dark:text-gray-500;
+        @apply cursor-not-allowed text-gray-400 dark:text-gray-500;
       }
     `,
   ],
@@ -24,7 +24,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       routerLink="{{ link }}"
       routerLinkActive="active"
       queryParamsHandling="preserve"
-      class="link flex gap-2 items-center"
+      class="link flex items-center gap-2 font-sans"
     >
       <ng-content />
     </a>

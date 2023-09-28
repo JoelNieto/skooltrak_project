@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
-import { SchoolSelectorComponent } from '../school-selector.ts/school-selector.component';
+import { SchoolSelectorComponent } from '../school-selector/school-selector.component';
 
 @Component({
   selector: 'sk-navbar',
@@ -67,12 +67,12 @@ import { SchoolSelectorComponent } from '../school-selector.ts/school-selector.c
               alt="Skooltrak Logo"
             />
             <span
-              class="font-title self-center whitespace-nowrap text-xl font-semibold text-gray-700 dark:text-white"
+              class="font-title hidden self-center whitespace-nowrap text-xl font-semibold text-gray-700 dark:text-white md:block"
               >{{ 'App title' | translate }}</span
             >
           </a>
           <button
-            class="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-2"
+            class="flex hidden items-center gap-3 rounded-lg border border-gray-200 px-4 py-2 font-sans text-sm dark:text-gray-100 md:flex"
             (click)="changeSchool()"
           >
             <sk-avatar
@@ -201,12 +201,13 @@ export class NavbarComponent {
   private dialog = inject(Dialog);
 
   user = this.auth.user;
-  role = this.auth.currentRole;
-  roles = this.auth.roles;
   schools = this.auth.schools;
   school = this.auth.currentSchool;
 
   public changeSchool(): void {
-    this.dialog.open(SchoolSelectorComponent, { width: '36rem' });
+    this.dialog.open(SchoolSelectorComponent, {
+      width: '36rem',
+      maxWidth: '90%',
+    });
   }
 }

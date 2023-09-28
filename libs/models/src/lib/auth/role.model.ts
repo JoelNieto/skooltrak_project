@@ -1,5 +1,7 @@
 import { School, User } from '@skooltrak/models';
 
+import { RoleEnum, StatusEnum } from '../enums';
+
 export type Role = {
   id?: string;
   name?: string;
@@ -27,19 +29,19 @@ export type SchoolRole = {
   school?: Partial<School>;
 };
 
-export enum RoleEnum {
-  Administrator = 'admin',
-  AccountingAdmin = 'accounting_admin',
-  CollectionAdmin = 'collection_admin',
-  AcademicAdmin = 'academic_admin',
-  Teacher = 'teacher',
-  Parent = 'parent',
-  Student = 'student',
-}
-
 export enum RoleTypeEnum {
   Administrator = 'admin',
   Teacher = 'teacher',
   Parent = 'parent',
   Student = 'student',
 }
+
+export type SchoolUser = {
+  school_id: string;
+  user_id: string;
+  role: RoleEnum;
+  status: StatusEnum;
+  created_at: Date;
+  user?: Partial<User>;
+  school: Partial<School>;
+};

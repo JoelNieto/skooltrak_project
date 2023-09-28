@@ -6,7 +6,7 @@ import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/hero
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
+import { ButtonDirective, ConfirmationService, defaultConfirmationOptions, PaginatorComponent } from '@skooltrak/ui';
 
 import { SubjectsFormComponent } from './form/subjects-forms.component';
 import { SchoolSubjectsStore } from './school-subjects.store';
@@ -160,6 +160,6 @@ export class SchoolSubjectsComponent {
   }
 
   deleteSubject() {
-    this.confirmation.openDialog('delete').subscribe();
+    this.confirmation.openDialog({ ...defaultConfirmationOptions }).subscribe();
   }
 }

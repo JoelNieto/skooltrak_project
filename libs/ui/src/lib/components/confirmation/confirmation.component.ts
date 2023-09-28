@@ -1,50 +1,98 @@
-import { DialogModule, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject } from '@angular/core';
+import { DIALOG_DATA, DialogModule, DialogRef } from '@angular/cdk/dialog';
+import { NgIf } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroExclamationCircle } from '@ng-icons/heroicons/outline';
+import { heroCheckCircle, heroExclamationCircle, heroTrash, heroXCircle } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CardComponent } from '../card/card.component';
+import { ConfirmationOptions } from './confirmation.type';
 
 @Component({
   selector: 'sk-confirmation',
   standalone: true,
-  imports: [CardComponent, TranslateModule, NgIconComponent, DialogModule],
-  providers: [provideIcons({ heroExclamationCircle })],
+  imports: [
+    CardComponent,
+    TranslateModule,
+    NgIconComponent,
+    DialogModule,
+    NgIf,
+  ],
+  providers: [
+    provideIcons({
+      heroExclamationCircle,
+      heroCheckCircle,
+      heroTrash,
+      heroXCircle,
+    }),
+  ],
   template: `
     <sk-card>
-      <div class="mb-3 flex justify-center">
-        <div class="rounded-full bg-red-200 p-2">
-          <ng-icon
-            name="heroExclamationCircle"
-            size="22"
-            class="text-red-600"
-          />
-        </div>
+      <div class="flex justify-center">
+        <ng-icon
+          [name]="options.icon"
+          size="52"
+          [class]="iconColor[options.color]"
+        />
       </div>
-      <p class="mb-3 text-center font-sans text-gray-500">
-        {{ 'Confirmation.Delete.Text' | translate }}
-      </p>
-
-      <div class="flex justify-around px-4">
+      <p
+        class="font-title my-3 text-center text-lg font-semibold text-gray-600"
+        [innerHTML]="options.title"
+      ></p>
+      <p
+        class="my-3 text-center text-sm text-gray-400"
+        [innerHTML]="options.description"
+      ></p>
+      <div class="my-3 flex justify-around px-4">
         <button
-          class="rounded-full bg-white px-5 py-2 font-sans text-red-500 dark:bg-gray-600"
+          *ngIf="options.showCancelButton"
+          class="rounded-full bg-white px-5 py-2.5 font-sans dark:bg-gray-600"
+          [class]="cancelButtonColor[options.color]"
           cdkFocusInitial
           (click)="dialogRef.close(false)"
         >
-          {{ 'Confirmation.Cancel' | translate }}
+          {{ options.cancelButtonText ?? 'Confirmation.Cancel' | translate }}
         </button>
         <button
-          class="rounded-full bg-red-600 px-5 py-2 font-sans text-white"
+          class="rounded-full px-5 py-2.5 font-sans text-white"
+          [class]="confirmButtonColor[options.color]"
           (click)="dialogRef.close(true)"
         >
-          {{ 'Confirm' | translate }}
+          {{ options.confirmButtonText ?? 'Confirm' | translate }}
         </button>
       </div>
     </sk-card>
   `,
-  styles: [],
 })
-export class ConfirmationComponent {
+export class ConfirmationComponent implements OnInit {
+  public options!: ConfirmationOptions;
   public dialogRef = inject(DialogRef<boolean>);
+  private data: {
+    options: ConfirmationOptions;
+  } = inject(DIALOG_DATA);
+
+  ngOnInit(): void {
+    this.options = this.data.options;
+  }
+
+  public iconColor = {
+    blue: 'text-blue-400',
+    yellow: 'text-yellow-400',
+    green: 'text-green-400',
+    red: 'text-red-400',
+  };
+
+  public confirmButtonColor = {
+    blue: 'bg-blue-300',
+    yellow: 'bg-yellow-400',
+    green: 'bg-green-400',
+    red: 'bg-red-400',
+  };
+
+  public cancelButtonColor = {
+    blue: 'text-blue-300',
+    yellow: 'text-yellow-400',
+    green: 'text-green-400',
+    red: 'text-red-400',
+  };
 }

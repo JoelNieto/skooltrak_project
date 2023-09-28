@@ -84,5 +84,16 @@
     "Details": "Datos del docente"
   },
   "Teachers": "Docentes",
-  "Welcome": "Bienvenido, {{ name }} 👋"
+  "Welcome": "Bienvenido, {{ name }} 👋",
+  "ADMIN": "Administrador",
+  "PARENT": "Acudiente",
+  "TEACHER": "Docente",
+  "STUDENT": "Estudiante",
+  "Errors": {
+    "minLength": "Se necesitan al menos {{ length }} caracteres",
+    "required": "Campo requerido"
+  },
+  "School Connector": {
+    "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
+  }
 }

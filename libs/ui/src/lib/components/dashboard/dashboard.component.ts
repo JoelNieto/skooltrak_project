@@ -52,7 +52,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
                 >
                 <span
                   class="font-title truncate text-xs text-gray-600 dark:text-gray-300"
-                  >{{ role()?.role }}</span
+                  >{{ 'role()?.role' }}</span
                 >
               </button>
             </div>
@@ -136,5 +136,4 @@ export class DashboardComponent {
   private auth = inject(authState.AuthStateFacade);
   links = signal([]);
   user = inject(Store).selectSignal(this.auth.user);
-  role = inject(Store).selectSignal(this.auth.currentRole);
 }

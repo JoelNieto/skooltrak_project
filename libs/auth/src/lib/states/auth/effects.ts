@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { School, Table, User } from '@skooltrak/models';
+import { SchoolUser, Table, User } from '@skooltrak/models';
 import {
   catchError,
   exhaustMap,
@@ -76,29 +76,6 @@ export const setSession = createEffect(
   { functional: true }
 );
 
-export const setUser = createEffect(
-  (actions = inject(Actions), supabase = inject(SupabaseService)) => {
-    return actions.pipe(
-      ofType(AuthActions.setUser),
-      exhaustMap(({ user }) =>
-        from(
-          supabase.client
-            .from(Table.UserProfiles)
-            .select('role, school_id, school_name')
-            .eq('id', user.id)
-        ).pipe(
-          map(({ error, data }) => {
-            if (error) throw new Error(error.message);
-            return data;
-          }),
-          map((roles) => AuthActions.setRoles({ roles }))
-        )
-      )
-    );
-  },
-  { functional: true }
-);
-
 export const signIn = createEffect(
   (actions = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions.pipe(
@@ -142,19 +119,26 @@ export const updateProfile = createEffect(
   { functional: true }
 );
 
-export const getSchools = createEffect(
+export const getProfiles = createEffect(
   (actions = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions.pipe(
       ofType(AuthActions.setUser),
-      exhaustMap(() =>
-        from(supabase.client.rpc('get_my_schools')).pipe(
-          map(({ data, error }) => {
+      exhaustMap(({ user }) =>
+        from(
+          supabase.client
+            .from(Table.SchoolUsers)
+            .select(
+              'user_id, school_id, school:schools(*), status, role, created_at'
+            )
+            .eq('user_id', user.id)
+        ).pipe(
+          map(({ error, data }) => {
             if (error) throw new Error(error.message);
-            return data as Partial<School>[];
-          })
+            return data as SchoolUser[];
+          }),
+          map((profiles) => AuthActions.setProfiles({ profiles }))
         )
-      ),
-      map((schools) => AuthActions.setSchools({ schools }))
+      )
     );
   },
   { functional: true }
@@ -163,9 +147,9 @@ export const getSchools = createEffect(
 export const setDefaultSchool = createEffect(
   () => {
     return inject(Actions).pipe(
-      ofType(AuthActions.setSchools),
-      map(({ schools }) =>
-        AuthActions.setSchoolId({ school_id: schools[0].id })
+      ofType(AuthActions.setProfiles),
+      map(({ profiles }) =>
+        AuthActions.setSchoolId({ school_id: profiles[0].school_id })
       )
     );
   },

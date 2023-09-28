@@ -12,11 +12,10 @@ export class AuthStateFacade {
   public user = this.store$.selectSignal(selectors.selectUser);
   public loading = this.store$.selectSignal(selectors.selectLoading);
   public session = this.store$.selectSignal(selectors.selectSession);
-  public roles = this.store$.selectSignal(selectors.selectRoles);
-  public currentRole = this.store$.selectSignal(selectors.selectCurrentRole);
   public currentSchoolId = this.store$.selectSignal(selectors.selectSchoolId);
   public schools = this.store$.selectSignal(selectors.selectSchools);
   public currentSchool = this.store$.selectSignal(selectors.selectSchool);
+  public roles = this.store$.selectSignal(selectors.selectRoles);
 
   public init() {
     this.store$.dispatch(AuthActions.initState());

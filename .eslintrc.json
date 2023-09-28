@@ -1,11 +1,18 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nx", "rxjs"],
+  "plugins": ["@nx", "rxjs", "deprecation"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "deprecation/deprecation": "warn",
+        "no-console": [
+          "error",
+          {
+            "allow": ["error", "warn", "info"]
+          }
+        ],
         "@nx/enforce-module-boundaries": [
           "off",
           {
@@ -47,6 +54,11 @@
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nx/typescript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@ngrx/recommended"],
       "rules": {}
     },
     {

@@ -1,23 +1,37 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroXMark } from '@ng-icons/heroicons/outline';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonComponent, CardComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-subjects-form',
+  selector: 'sk-admin-subjects-form',
   standalone: true,
-  imports: [CardComponent, IconsModule, ButtonComponent, ReactiveFormsModule],
-  template: `<skooltrak-card>
+  imports: [
+    CardComponent,
+    NgIconComponent,
+    ButtonDirective,
+    ReactiveFormsModule,
+    TranslateModule,
+  ],
+  providers: [provideIcons({ heroXMark })],
+  template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-mono text-xl text-gray-700 dark:text-gray-100 font-semibold mb-4"
+        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        Subject details
+        {{ 'Subjects.Details' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
-        <icon name="x-mark" class="text-gray-700 dark:text-gray-100" />
+        <ng-icon name="heroXMark" class="text-gray-700 dark:text-gray-100" />
       </button>
     </div>
     <form
@@ -26,45 +40,40 @@ import { ButtonComponent, CardComponent } from '@skooltrak/ui';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="name">Name</label>
+        <label for="name">{{ 'Name' | translate }}</label>
         <input type="text" formControlName="name" />
       </div>
       <div>
-        <label for="name">Short name</label>
+        <label for="short_name">{{ 'Short name' | translate }}</label>
         <input type="text" formControlName="short_name" />
       </div>
       <div>
-        <label for="name">Code</label>
+        <label for="code">{{ 'Code' | translate }}</label>
         <input type="text" formControlName="code" />
       </div>
       <div>
-        <label for="name">Description</label>
+        <label for="description">{{ 'Description' | translate }}</label>
         <textarea rows="3" formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">
-        <button
-          skooltrak-button
-          color="sky"
-          type="submit"
-          [disabled]="form.invalid"
-        >
-          Save changes
+        <button skButton color="sky" type="submit" [disabled]="form.invalid">
+          {{ 'Save changes' | translate }}
         </button>
       </div>
     </form>
-  </skooltrak-card>`,
+  </sk-card>`,
   styles: [
     `
       input,
       textarea {
-        @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500;
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
         &.ng-invalid.ng-dirty {
-          @apply text-red-800 border-red-400 bg-red-100 focus:ring-red-600 focus:border-red-600;
+          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
         }
       }
 
       label {
-        @apply block mb-2 text-sm font-sans text-gray-600 font-medium dark:text-white;
+        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
       }
     `,
   ],

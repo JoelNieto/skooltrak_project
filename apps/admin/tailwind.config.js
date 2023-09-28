@@ -12,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Barlow', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Manrope', 'Helvetica Neue', 'sans-serif'],
+        title: ['Unbounded', 'Helvetica Neue', 'sans-serif'],
       },
     },
   },

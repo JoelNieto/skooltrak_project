@@ -1,101 +1,116 @@
-import { IconsModule } from '@amithvns/ng-heroicons';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, inject, ViewChild } from '@angular/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonComponent, PaginatorComponent, UtilService } from '@skooltrak/ui';
+import { ButtonDirective, ConfirmationService, defaultConfirmationOptions, PaginatorComponent } from '@skooltrak/ui';
 
 import { SubjectsFormComponent } from './form/subjects-forms.component';
 import { SchoolSubjectsStore } from './school-subjects.store';
 
 @Component({
-  selector: 'skooltrak-school-subjects',
+  selector: 'sk-admin-school-subjects',
   standalone: true,
   imports: [
-    IconsModule,
     NgFor,
     NgIf,
-    ButtonComponent,
+    ButtonDirective,
     PaginatorComponent,
     DialogModule,
     NgClass,
     SubjectsFormComponent,
     DatePipe,
-    IconsModule,
+    NgIconComponent,
+    TranslateModule,
   ],
-  providers: [provideComponentStore(SchoolSubjectsStore), UtilService],
-  template: `<div class="relative overflow-x-auto mt-1">
-    <div class="flex justify-between mb-4 py-2 px-1">
+  providers: [
+    provideComponentStore(SchoolSubjectsStore),
+    provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
+    ConfirmationService,
+  ],
+  template: `<div class="relative mt-1 overflow-x-auto">
+    <div class="mb-4 flex justify-between px-1 py-4">
       <div>
         <label for="table-search" class="sr-only">Search</label>
         <div class="relative">
           <div
-            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           >
-            <icon
-              name="magnifying-glass"
-              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            <ng-icon
+              name="heroMagnifyingGlass"
+              class="text-gray-500 dark:text-gray-400"
             />
           </div>
           <input
             type="text"
             id="table-search"
-            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
             placeholder="Search for items"
           />
         </div>
       </div>
 
-      <button skooltrak-button color="sky" (click)="newSubject()">New</button>
+      <button skButton color="green" (click)="newSubject()">
+        {{ 'New' | translate }}
+      </button>
     </div>
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
       <thead
-        class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+        class="bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr class="cursor-pointer">
-          <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">Short name</th>
-          <th scope="col" class="px-6 py-3">Code</th>
-          <th score="col" class="px-6 py-3">Created</th>
-          <th scope="col" class="px-6 py-3">Actions</th>
+          <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Short name' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'Code' | translate }}</th>
+          <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
+          <th score="col" class="px-6 py-3">{{ 'Created by' | translate }}</th>
+          <th scope="col" class="px-6 py-3 text-center">
+            {{ 'Actions' | translate }}
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr
           *ngFor="let subject of store.subjects()"
           [class.hidden]="store.loading()"
-          class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+          class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
           <th
             scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
           >
             {{ subject.name }}
           </th>
           <td class="px-6 py-4">{{ subject.short_name }}</td>
           <td class="px-6 py-4">{{ subject.code }}</td>
-          <td class="px-6 py-4">{{ subject.created_at | date : 'medium' }}</td>
-          <td class="px-6 ">
+          <td class="px-6 py-4">{{ subject.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
+          <td class="flex content-center justify-center gap-2 px-6 py-4">
             <button type="button" (click)="editSubject(subject)">
-              <icon name="pencil-square" class="h-6 w-6 text-green-600" />
+              <ng-icon name="heroPencilSquare" class="text-green-500" />
+            </button>
+            <button type="button" (click)="deleteSubject()">
+              <ng-icon name="heroTrash" class="text-red-400" />
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="animate-pulse mt-2" *ngIf="store.loading()">
-      <h3 class="h-4 bg-gray-200 rounded-md dark:bg-gray-700 w-10/12"></h3>
+    <div class="mt-2 animate-pulse" *ngIf="store.loading()">
+      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
 
       <ul class="mt-5 space-y-3">
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
-        <li class="w-full h-4 bg-gray-200 rounded-md dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
 
-    <skooltrak-paginator
+    <sk-paginator
       [count]="store.count()"
       [pageSize]="store.pageSize"
       (paginate)="getCurrentPage($event)"
@@ -106,6 +121,7 @@ export class SchoolSubjectsComponent {
   @ViewChild(PaginatorComponent) paginator!: PaginatorComponent;
   store = inject(SchoolSubjectsStore);
   dialog = inject(Dialog);
+  confirmation = inject(ConfirmationService);
   getCurrentPage(pagination: { currentPage: number; start: number }): void {
     const { start } = pagination;
     this.store.setRange(start);
@@ -128,7 +144,6 @@ export class SchoolSubjectsComponent {
   }
 
   editSubject(subject: Subject) {
-    console.log(subject);
     const dialogRef = this.dialog.open<Partial<Subject>>(
       SubjectsFormComponent,
       {
@@ -142,5 +157,9 @@ export class SchoolSubjectsComponent {
         !!request && this.store.saveSubject({ ...request, id: subject.id });
       },
     });
+  }
+
+  deleteSubject() {
+    this.confirmation.openDialog({ ...defaultConfirmationOptions }).subscribe();
   }
 }

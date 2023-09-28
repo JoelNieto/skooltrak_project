@@ -1,9 +1,9 @@
 {
   "folders": [
     { "path": "apps/host", "name": "host" },
+    { "path": "apps/web-app", "name": "web-app" },
+    { "path": "apps/onboarding", "name": "onboarding" },
     { "path": "apps/admin", "name": "admin" },
-    { "path": "apps/teacher", "name": "teacher" },
-    { "path": "apps/student", "name": "student" },
     { "path": "apps/mobile", "name": "mobile" },
     { "path": "libs/auth", "name": "auth" },
     { "path": "libs/models", "name": "models" },
@@ -15,6 +15,6 @@
     "errorLens.onSave": true,
     "editor.formatOnSave": true,
     "typescriptHero.imports.organizeOnSave": true,
-    "cSpell.words": ["subapase", "Supabase", "tailwindcss", "typeorm"]
+    "cSpell.words": ["subapase", "Supabase", "Swal", "tailwindcss", "typeorm"]
   }
 }

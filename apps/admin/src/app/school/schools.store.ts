@@ -1,12 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
-import { Country, School } from '@skooltrak/models';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/auth';
+import { Country, School, Table } from '@skooltrak/models';
 import { exhaustMap, from, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -17,34 +12,43 @@ type State = {
 
 @Injectable()
 export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
-  store = inject(Store);
-  currentSchool = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
   supabase = inject(SupabaseService);
 
   readonly countries = this.selectSignal((state) => state.countries);
   readonly school = this.selectSignal((state) => state.school);
   private readonly setCountries = this.updater(
-    (state, countries: Country[]) => ({ ...state, countries, loading: false })
+    (state, countries: Country[]): State => ({
+      ...state,
+      countries,
+      loading: false,
+    })
   );
 
-  private setSchool = this.updater((state, school: Partial<School>) => ({
-    ...state,
-    school,
-  }));
-  private setSchoolCrest = this.updater((state, crest_url: string) => ({
-    ...state,
-    school: { ...state.school, crest_url },
-  }));
+  private setSchool = this.updater(
+    (state, school: Partial<School>): State => ({
+      ...state,
+      school,
+    })
+  );
+  private setSchoolCrest = this.updater(
+    (state, crest_url: string): State => ({
+      ...state,
+      school: { ...state.school, crest_url },
+    })
+  );
 
-  private readonly setLoading = this.updater((state, loading: boolean) => ({
-    ...state,
-    loading,
-  }));
+  private readonly setLoading = this.updater(
+    (state, loading: boolean): State => ({
+      ...state,
+      loading,
+    })
+  );
 
   readonly fetchCountries = this.effect(() => {
     return from(
       this.supabase.client
-        .from('countries')
+        .from(Table.Countries)
         .select('*')
         .order('name', { ascending: true })
     ).pipe(
@@ -91,11 +95,11 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
           const update = { ...request, updated_at: new Date() };
           return from(
             this.supabase.client
-              .from('schools')
+              .from(Table.Schools)
               .update(update)
               .eq('id', request.id)
           ).pipe(
-            exhaustMap(({ data, error }) => {
+            exhaustMap(({ error }) => {
               if (error) throw new Error(error?.message);
               return of(update);
             })
@@ -111,7 +115,7 @@ export class SchoolStore extends ComponentStore<State> implements OnStoreInit {
 
   ngrxOnStoreInit = () =>
     this.setState({
-      school: this.currentSchool(),
+      school: undefined,
       loading: true,
       countries: [],
     });

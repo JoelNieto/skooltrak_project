@@ -1,4 +1,4 @@
-import { EntityBase } from '../entity';
+import { EntityBase } from '@skooltrak/models';
 
 export type Level = EntityBase & {
   name: string;

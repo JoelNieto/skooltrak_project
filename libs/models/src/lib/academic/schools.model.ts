@@ -1,6 +1,4 @@
-import { Country } from '../country.model';
-import { EntityBase } from '../entity';
-import { Level } from './levels.model';
+import { Country, EntityBase, Level } from '@skooltrak/models';
 
 export type School = EntityBase & {
   full_name?: string;

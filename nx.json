@@ -3,7 +3,7 @@
   "npmScope": "skooltrak",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx-cloud",
+      "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "NGEyOTAzNTUtZWY3Zi00ZjczLTljMmItOGJmOWNkNjY5ZmM5fHJlYWQtd3JpdGU="
@@ -36,7 +36,8 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.eslintrc.json"
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/src/test-setup.[jt]s"
     ],
     "sharedGlobals": []
   },

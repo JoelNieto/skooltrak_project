@@ -1,0 +1,99 @@
+{
+  "Actions": "Acciones",
+  "Administrators": {
+    "Title": "Administradores"
+  },
+  "App title": "Skooltrak",
+  "Assignments": {
+    "Details": "Datos de la asignación",
+    "New": "Nueva asignación"
+  },
+  "Birth date": "Fecha de nacimiento",
+  "Calendar": {
+    "Day": "Día",
+    "Month": "Mes",
+    "Next": "Siguiente",
+    "Previous": "Anterior",
+    "Today": "Hoy",
+    "Week": "Semana"
+  },
+  "Classes": "Clases",
+  "Code": "Codigo",
+  "Collection": "Cobros",
+  "Confirmation": {
+    "Cancel": "Cancelar",
+    "Confirmar": "Si, confirmar",
+    "Delete": {
+      "Text": "Este cambio no podra ser reversado",
+      "Title": "Desea borrar esto?"
+    }
+  },
+  "Course": {
+    "Details": "Detalles del curso",
+    "Title": "Curso"
+  },
+  "Courses": "Cursos",
+  "Created": "Creado",
+  "Created by": "Creado por",
+  "Degrees": {
+    "Details": "Detalles del certificado",
+    "Title": "Certificados"
+  },
+  "Description": "Descripcion",
+  "Document ID": "Nro. Documento",
+  "Father name": "Apellido paterno",
+  "Female": "Femenino",
+  "Files": "Archivos",
+  "First name": "Nombre",
+  "Full name": "Nombre completo",
+  "Gender": "Genero",
+  "Go back": "Volver",
+  "Grades": {
+    "Title": "Calificaciones",
+    "Details": "Datos de la calificacion"
+  },
+  "Groups": "Grupos",
+  "Home": "Inicio",
+  "Male": "Masculino",
+  "Messages": "Mensajes",
+  "Middle name": "Segundo nombre",
+  "Mother name": "Apellido materno",
+  "Name": "Nombre",
+  "New": "Nuevo",
+  "News": "Novedades",
+  "Other": "Otro",
+  "Plans": {
+    "Details": "Detalles del Plan de estudio",
+    "Title": "Planes de estudio"
+  },
+  "Polls": "Encuestas",
+  "Profile": "Perfil",
+  "Save changes": "Guardar cambios",
+  "Schedule": "Agenda",
+  "School": "Escuela",
+  "Select school": "Elija una escuela",
+  "Settings": "Ajustes",
+  "Short name": "Nombre corto",
+  "Students": "Estudiantes",
+  "Subjects": {
+    "Details": "Detalles de asignatura",
+    "Label": "Asignatura",
+    "Title": "Asignaturas"
+  },
+  "Teacher": {
+    "Details": "Datos del docente"
+  },
+  "Teachers": "Docentes",
+  "Welcome": "Bienvenido, {{ name }} 👋",
+  "ADMIN": "Administrador",
+  "PARENT": "Acudiente",
+  "TEACHER": "Docente",
+  "STUDENT": "Estudiante",
+  "Errors": {
+    "minLength": "Se necesitan al menos {{ length }} caracteres",
+    "required": "Campo requerido"
+  },
+  "School Connector": {
+    "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
+  }
+}

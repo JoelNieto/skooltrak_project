@@ -1,51 +1,37 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { state } from '@skooltrak/auth';
-import { RoleEnum } from '@skooltrak/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { authState } from '@skooltrak/auth';
 import { DashboardComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'skooltrak-root',
+  selector: 'sk-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, DashboardComponent],
-  template: ` <router-outlet /> `,
-  styles: [``],
+  imports: [RouterOutlet, RouterLink, DashboardComponent, TranslateModule],
+  template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {
-  store = inject(Store);
-  router = inject(Router);
-  currentRole = this.store.selectSignal(state.selectors.selectCurrentRole);
-  title = 'host';
+  private store$ = inject(Store);
+  private auth = inject(authState.AuthStateFacade);
+  private router = inject(Router);
+  private translate = inject(TranslateService);
+  private user = this.auth.user;
+  private loading = this.auth.loading;
   constructor() {
     effect(() => {
-      if (!this.currentRole()) {
+      if (this.loading()) {
         return;
       }
-      const { role } = this.currentRole()!;
-
-      if (role?.code === RoleEnum.Administrator) {
-        this.router.resetConfig([
-          {
-            path: 'app',
-            loadComponent: () =>
-              import('@skooltrak/ui').then((x) => x.DashboardComponent),
-            children: [
-              {
-                path: '',
-                loadChildren: () =>
-                  import('admin/Module').then((m) => m.RemoteEntryModule),
-              },
-            ],
-          },
-          { path: '', redirectTo: 'app', pathMatch: 'full' },
-        ]);
-        this.router.navigate(['']);
+      if (!this.user()) {
+        this.router.initialNavigation();
+        return;
       }
     });
   }
 
-  ngOnInit(): void {
-    this.store.dispatch(state.AuthActions.initState());
+  async ngOnInit(): Promise<void> {
+    this.translate.setDefaultLang('es');
+    this.auth.init();
   }
 }

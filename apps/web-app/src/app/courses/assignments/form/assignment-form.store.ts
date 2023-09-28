@@ -1,0 +1,174 @@
+import { inject, Injectable } from '@angular/core';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import { SupabaseService } from '@skooltrak/auth';
+import { Assignment, AssignmentType, Course, GroupAssignment, Table } from '@skooltrak/models';
+import { AlertService } from '@skooltrak/ui';
+import { pick } from 'lodash';
+import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+
+type State = {
+  id: string | undefined;
+  assignment: Assignment | undefined;
+  types: AssignmentType[];
+  courses: Course[];
+  course_id: string | undefined;
+  dates: GroupAssignment[];
+  loading: boolean;
+};
+
+@Injectable()
+export class AssignmentFormStore
+  extends ComponentStore<State>
+  implements OnStoreInit
+{
+  supabase = inject(SupabaseService);
+  alert = inject(AlertService);
+  readonly types = this.selectSignal((state) => state.types);
+  readonly assignment_id$ = this.select((state) => state.id);
+  readonly selected = this.selectSignal((state) => state.assignment);
+  readonly dates = this.selectSignal((state) => state.dates);
+  readonly courses = this.selectSignal((state) => state.courses);
+  readonly course$ = this.select((state) =>
+    state.courses.find((x) => x.id === state.course_id)
+  );
+
+  readonly fetchTypes = this.effect(() => {
+    return from(
+      this.supabase.client
+        .from(Table.AssignmentTypes)
+        .select('id, name, is_urgent, is_summative')
+    )
+      .pipe(
+        exhaustMap(({ data, error }) => {
+          if (error) throw new Error(error.message);
+          return of(data as AssignmentType[]);
+        })
+      )
+      .pipe(
+        tapResponse(
+          (types) => this.patchState({ types }),
+          (error) => console.error(error)
+        )
+      );
+  });
+
+  readonly fetchCourses = this.effect(() => {
+    return from(
+      this.supabase.client
+        .from(Table.Courses)
+        .select(
+          'id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at'
+        )
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw new Error(error.message);
+        return data as unknown as Course[];
+      }),
+      tapResponse(
+        (courses) => this.patchState({ courses }),
+        (error) => {
+          console.error(error);
+          return of([]);
+        }
+      )
+    );
+  });
+
+  readonly saveAssignment = this.effect((request$: Observable<Assignment>) => {
+    return request$.pipe(
+      tap(() => this.patchState({ loading: true })),
+      switchMap((request) => {
+        return from(
+          this.supabase.client
+            .from(Table.Assignments)
+            .upsert([
+              pick(request, ['title', 'description', 'course_id', 'type_id']),
+            ])
+            .select('id')
+            .single()
+        ).pipe(
+          map(({ data, error }) => {
+            if (error) throw new Error(error.message);
+            return data;
+          }),
+          tapResponse(
+            ({ id }) =>
+              this.saveGroupsDate({ groups: this.dates(), assignment_id: id }),
+            (error) => console.error(error)
+          )
+        );
+      })
+    );
+  });
+
+  readonly saveGroupsDate = this.effect(
+    (
+      request$: Observable<{
+        groups: GroupAssignment[];
+        assignment_id: string;
+      }>
+    ) => {
+      return request$.pipe(
+        switchMap((request) => {
+          let { groups } = request;
+          const { assignment_id } = request;
+          groups = groups.map((x) => ({ ...x, assignment_id }));
+          return from(
+            this.supabase.client.from(Table.GroupAssignments).upsert(groups)
+          ).pipe(
+            map(({ error }) => {
+              if (error) throw new Error(error.message);
+              return EMPTY;
+            }),
+            tapResponse(
+              () =>
+                this.alert.showAlert({
+                  icon: 'success',
+                  message: 'Saved changes',
+                }),
+              (error) => console.error(error),
+              () => this.patchState({ loading: false })
+            )
+          );
+        })
+      );
+    }
+  );
+
+  readonly fetchAssignment = this.effect(() => {
+    return this.assignment_id$.pipe(
+      tap(() => this.patchState({ loading: true })),
+      filter((id) => !!id),
+      switchMap((id) => {
+        return from(
+          this.supabase.client
+            .from(Table.Assignments)
+            .select('id,title,course_id,type_id,description,created_at,user_id')
+            .eq('id', id)
+            .single()
+        ).pipe(
+          map(({ error, data }) => {
+            if (error) throw new Error(error.message);
+            return data as Assignment;
+          }),
+          tapResponse(
+            (assignment) => this.patchState({ assignment }),
+            (error) => console.error(error),
+            () => this.patchState({ loading: false })
+          )
+        );
+      })
+    );
+  });
+
+  ngrxOnStoreInit = () =>
+    this.setState({
+      id: undefined,
+      assignment: undefined,
+      types: [],
+      courses: [],
+      loading: false,
+      course_id: undefined,
+      dates: [],
+    });
+}

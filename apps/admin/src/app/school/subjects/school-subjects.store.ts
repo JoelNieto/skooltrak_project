@@ -1,9 +1,9 @@
+/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { Store } from '@ngrx/store';
-import { state, SupabaseService } from '@skooltrak/auth';
-import { Subject } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/auth';
+import { Subject, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
 import { EMPTY, exhaustMap, filter, from, Observable, of, switchMap, tap } from 'rxjs';
 
@@ -22,8 +22,7 @@ export class SchoolSubjectsStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  store = inject(Store);
-  school = this.store.selectSignal(state.selectors.selectCurrentSchool);
+  auth = inject(authState.AuthStateFacade);
   supabase = inject(SupabaseService);
   util = inject(UtilService);
 
@@ -34,22 +33,28 @@ export class SchoolSubjectsStore
   readonly start$ = this.select((state) => state.start);
   readonly end$ = this.select((state) => state.end);
 
-  private setSubjects = this.updater((state, subjects: Subject[]) => ({
-    ...state,
-    subjects,
-  }));
+  private setSubjects = this.updater(
+    (state, subjects: Subject[]): State => ({
+      ...state,
+      subjects,
+    })
+  );
 
-  private setCount = this.updater((state, count: number) => ({
-    ...state,
-    count,
-    pages: this.util.getPages(count, 10),
-  }));
+  private setCount = this.updater(
+    (state, count: number): State => ({
+      ...state,
+      count,
+      pages: this.util.getPages(count, 10),
+    })
+  );
 
-  setRange = this.updater((state, start: number) => ({
-    ...state,
-    start: start,
-    end: start + (state.pageSize - 1),
-  }));
+  setRange = this.updater(
+    (state, start: number): State => ({
+      ...state,
+      start: start,
+      end: start + (state.pageSize - 1),
+    })
+  );
 
   readonly fetchSubjectsData$ = this.select(
     {
@@ -68,21 +73,25 @@ export class SchoolSubjectsStore
         switchMap(({ start, end }) => {
           return from(
             this.supabase.client
-              .from('school_subjects')
-              .select('id,name, short_name, code, description, created_at', {
-                count: 'exact',
-              })
+              .from(Table.Subjects)
+              .select(
+                'id,name, short_name, code, description, created_at, user:users(full_name)',
+                {
+                  count: 'exact',
+                }
+              )
               .order('name', { ascending: true })
               .range(start, end)
-              .eq('school_id', this.school()?.id)
+              .eq('school_id', this.auth.currentSchoolId())
           ).pipe(
             exhaustMap(({ data, error, count }) => {
               if (error) throw new Error(error.message);
               return of({ subjects: data, count });
             }),
-            tap(({ count }) => this.setCount(count!)),
+            tap(({ count }) => !!count && this.setCount(count)),
             tapResponse(
-              ({ subjects }) => this.setSubjects(subjects as Subject[]),
+              ({ subjects }) =>
+                this.setSubjects(subjects as unknown as Subject[]),
               (error) => {
                 console.error(error);
                 return of([]);
@@ -102,8 +111,8 @@ export class SchoolSubjectsStore
         switchMap((request) => {
           return from(
             this.supabase.client
-              .from('school_subjects')
-              .upsert([{ ...request, school_id: this.school()?.id }])
+              .from(Table.Subjects)
+              .upsert([{ ...request, school_id: this.auth.currentSchoolId() }])
           ).pipe(
             exhaustMap(({ error }) => {
               if (error) throw new Error(error.message);
@@ -113,7 +122,7 @@ export class SchoolSubjectsStore
         }),
         tapResponse(
           () => this.fetchSubjects(this.fetchSubjectsData$),
-          (error) => console.log(error),
+          (error) => console.error(error),
           () => this.patchState({ loading: false })
         )
       );

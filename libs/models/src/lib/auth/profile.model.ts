@@ -1,8 +1,10 @@
-export type User = {
+import { Person } from '@skooltrak/models';
+
+export type User = Partial<Person> & {
   id?: string;
-  full_name: string;
+  full_name?: string;
   email: string;
   updated_at?: Date;
-  avatar_url?: string;
+  avatar_url: string;
   password?: string;
 };

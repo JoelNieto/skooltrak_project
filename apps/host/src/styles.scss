@@ -1,15 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @import '@angular/cdk/overlay-prebuilt.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
 
 /* You can add global styles to this file, and also import other style files */
 
 html,
 body {
   height: 100%;
+  font-weight: 400;
 }
 body {
   margin: 0;
+}
+
+.ql-container {
+  font-family: 'Manrope', 'Helvetica Neue', 'sans-serif';
 }

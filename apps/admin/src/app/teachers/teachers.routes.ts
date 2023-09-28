@@ -13,14 +13,6 @@ export const teacherRoutes: Routes = [
             (x) => x.TeachersListComponent
           ),
       },
-      {
-        path: 'new',
-        loadComponent: () =>
-          import('./form/teachers-form.component').then(
-            (x) => x.TeachersFormComponent
-          ),
-        title: 'New Teacher',
-      },
       { path: '', redirectTo: 'all', pathMatch: 'full' },
     ],
   },

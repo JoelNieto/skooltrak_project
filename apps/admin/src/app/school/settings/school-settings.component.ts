@@ -7,28 +7,32 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   AvatarComponent,
-  ButtonComponent,
+  ButtonDirective,
   ImageCropperComponent,
+  SelectComponent,
 } from '@skooltrak/ui';
 
 import { SchoolStore } from '../schools.store';
 
 @Component({
-  selector: 'skooltrak-school-settings',
+  selector: 'sk-admin-school-settings',
   standalone: true,
   imports: [
     ImageCropperComponent,
     NgIf,
     AvatarComponent,
     ReactiveFormsModule,
-    ButtonComponent,
+    ButtonDirective,
     NgFor,
     DialogModule,
+    SelectComponent,
+    TranslateModule,
   ],
   template: ` <div class="flex flex-col items-center justify-center space-y-4">
-      <skooltrak-avatar
+      <sk-avatar
         *ngIf="school()?.crest_url"
         [avatarUrl]="school()?.crest_url!"
         (click)="uploadCrest()"
@@ -51,18 +55,18 @@ import { SchoolStore } from '../schools.store';
       </div>
       <div>
         <label for="country" class="label">Country</label>
-        <select class="input" formControlName="country_id">
-          <option *ngFor="let country of countries()" [value]="country.id">
-            {{ country.name }}
-          </option>
-        </select>
+        <sk-select
+          [items]="countries()"
+          label="name"
+          formControlName="country_id"
+        />
       </div>
       <div>
         <label for="address" class="label">Address</label>
         <input type="text" class="input" formControlName="address" />
       </div>
       <div>
-        <label for="motto" class="label">Motto</label>
+        <label for="motto" class="label font-sans">Motto</label>
         <input type="text" class="input" formControlName="motto" />
       </div>
       <div>
@@ -70,7 +74,14 @@ import { SchoolStore } from '../schools.store';
         <input type="email" class="input" formControlName="contact_email" />
       </div>
       <div class="col-span-4 flex justify-end">
-        <button type="submit" skooltrak-button color="sky">Save changes</button>
+        <button
+          type="submit"
+          skButton
+          color="sky"
+          [disabled]="this.form.invalid || this.form.untouched"
+        >
+          {{ 'Save changes' | translate }}
+        </button>
       </div>
     </form>`,
   styles: [
@@ -120,7 +131,8 @@ export class SchoolSettingsComponent {
 
   constructor() {
     effect(() => {
-      this.school()! && this.form.patchValue(this.school()!);
+      const school = this.school();
+      !!school && this.form.patchValue(school);
     });
   }
 
@@ -134,14 +146,13 @@ export class SchoolSettingsComponent {
         if (!result) return;
         const { imageFile, cropImgPreview } = result;
         this.currentCrest = cropImgPreview;
-        this.store.uploadCrest(imageFile!);
+        !!imageFile && this.store.uploadCrest(imageFile);
         this.cdRef.detectChanges();
       },
     });
   }
 
   saveChanges() {
-    const value = this.form.getRawValue();
-    this.store.updateSchool(value);
+    this.store.updateSchool(this.form.getRawValue());
   }
 }

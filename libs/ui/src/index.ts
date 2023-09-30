@@ -19,3 +19,4 @@ export * from './lib/components/calendar/calendar.component';
 export * from './lib/components/input/input.directive';
 export * from './lib/services/alert.service';
 export * from './lib/components/confirmation/confirmation.type';
+export * from './lib/components/school-form/school-form.component';

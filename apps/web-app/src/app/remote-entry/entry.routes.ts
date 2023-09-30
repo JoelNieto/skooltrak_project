@@ -35,6 +35,12 @@ export const remoteRoutes: Route[] = [
         loadChildren: () =>
           import('../settings/settings.routes').then((x) => x.settingRoutes),
       },
+      {
+        path: 'school',
+        title: 'School Settings',
+        loadChildren: () =>
+          import('../school/school.routes').then((x) => x.schoolRoutes),
+      },
       { path: '', pathMatch: 'full', redirectTo: 'home' },
     ],
   },

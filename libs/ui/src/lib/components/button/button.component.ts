@@ -75,6 +75,10 @@ export class ButtonDirective implements OnInit {
       `px-5`,
       `py-2.5`,
       `text-center`,
+      `flex`,
+      `items-center`,
+      `gap-2`,
+      `justify-center`,
     ];
   }
 }

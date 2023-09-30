@@ -1,16 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SchoolUser, Table, User } from '@skooltrak/models';
-import {
-  catchError,
-  exhaustMap,
-  from,
-  iif,
-  map,
-  mergeMap,
-  of,
-  throwError,
-} from 'rxjs';
+import { catchError, exhaustMap, from, iif, map, mergeMap, of, throwError } from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -128,7 +119,7 @@ export const getProfiles = createEffect(
           supabase.client
             .from(Table.SchoolUsers)
             .select(
-              'user_id, school_id, school:schools(*), status, role, created_at'
+              'user_id, school_id, school:schools(*, country:countries(*)), status, role, created_at'
             )
             .eq('user_id', user.id)
         ).pipe(

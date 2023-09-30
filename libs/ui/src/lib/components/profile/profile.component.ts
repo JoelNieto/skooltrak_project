@@ -1,12 +1,7 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
@@ -97,7 +92,7 @@ import { ProfileFormStore } from './profile.store';
                 type="submit"
                 skButton
                 color="sky"
-                [disabled]="this.form.invalid || this.form.untouched"
+                [disabled]="this.form.invalid || this.form.pristine"
               >
                 {{ 'Save changes' | translate }}
               </button>
@@ -138,19 +133,17 @@ export class ProfileComponent implements OnInit {
       validators: [Validators.required, Validators.email],
       nonNullable: true,
     }),
-    full_name: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
     avatar_url: new FormControl<string>('', { nonNullable: true }),
     first_name: new FormControl<string>('', {
       nonNullable: true,
+      validators: [Validators.required],
     }),
     middle_name: new FormControl<string>('', {
       nonNullable: true,
     }),
     father_name: new FormControl<string>('', {
       nonNullable: true,
+      validators: [Validators.required],
     }),
     mother_name: new FormControl<string>('', {
       nonNullable: true,
@@ -194,10 +187,9 @@ export class ProfileComponent implements OnInit {
   }
 
   saveChanges() {
-    /* this.state$.dispatch(
-      state.AuthActions.updateProfile({
-        request: { ...this.form.getRawValue(), id: this.user()?.id },
-      })
-    ) */
+    this.auth.updateProfile({
+      ...this.form.getRawValue(),
+      id: this.user()?.id,
+    });
   }
 }

@@ -24,15 +24,19 @@ export class AuthStateFacade {
     this.store$.dispatch(AuthActions.initState());
   }
 
-  public signIn(email: string, password: string) {
+  public signIn(email: string, password: string): void {
     this.store$.dispatch(AuthActions.signInEmail({ email, password }));
   }
 
-  public updateProfile(request: Partial<User>) {
+  public updateProfile(request: Partial<User>): void {
     this.store$.dispatch(AuthActions.updateProfile({ request }));
   }
 
-  public setSchoolId(school_id: string) {
+  public getProfiles(): void {
+    this.store$.dispatch(AuthActions.getProfiles());
+  }
+
+  public setSchoolId(school_id: string): void {
     this.store$.dispatch(AuthActions.setSchoolId({ school_id }));
   }
 }

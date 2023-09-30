@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Country, School, Table } from '@skooltrak/models';
 import { EMPTY, from, map, Observable, switchMap, tap } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class SchoolFormStore
   readonly school = this.selectSignal((state) => state.school);
   private alert = inject(AlertService);
   countries = this.selectSignal((state) => state.countries);
-
+  private auth = inject(authState.AuthStateFacade);
   readonly fetchCountries = this.effect(() => {
     return from(
       this.supabase.client
@@ -78,7 +78,10 @@ export class SchoolFormStore
           this.alert.showAlert({ icon: 'success', message: 'School created!' }),
         (error: string) =>
           this.alert.showAlert({ icon: 'error', message: error }),
-        () => this.patchState({ loading: false })
+        () => {
+          this.patchState({ loading: false });
+          this.auth.getProfiles();
+        }
       )
     );
   });

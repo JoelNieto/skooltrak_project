@@ -4,12 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroBookmarkSquare,
-  heroCalendarDays,
-  heroClipboardDocument,
-  heroHome,
-} from '@ng-icons/heroicons/outline';
+import { heroBookmarkSquare, heroCalendarDays, heroClipboardDocument, heroHome } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
@@ -163,6 +158,14 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
                       >{{ 'Profile' | translate }}</a
                     >
                   </li>
+                  <li *ngIf="isAdmin()">
+                    <a
+                      routerLink="school"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                      cdkMenuItem
+                      >{{ 'School' | translate }}</a
+                    >
+                  </li>
                   <li>
                     <a
                       routerLink="settings"
@@ -203,6 +206,7 @@ export class NavbarComponent {
   user = this.auth.user;
   schools = this.auth.schools;
   school = this.auth.currentSchool;
+  isAdmin = this.auth.isAdmin;
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {

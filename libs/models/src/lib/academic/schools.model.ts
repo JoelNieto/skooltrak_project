@@ -15,6 +15,7 @@ export type School = EntityBase & {
   country_id: string;
   country: Country;
   profile?: { full_name: string };
+  code?: string;
 };
 
 export enum SchoolType {

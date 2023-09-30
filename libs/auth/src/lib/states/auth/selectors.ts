@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { School, SchoolUser } from '@skooltrak/models';
+import { RoleEnum, School, SchoolUser } from '@skooltrak/models';
 
 import { authFeature, State } from './reducer';
 
@@ -46,4 +46,14 @@ export const selectRoles = createSelector(
   selectSchoolId,
   (profiles: SchoolUser[], id: string | undefined) =>
     profiles.filter((x) => x.school_id === id).map((x) => x.role)
+);
+
+export const selectIsAdmin = createSelector(selectRoles, (roles) =>
+  roles.includes(RoleEnum.Administrator)
+);
+export const selectIsTeacher = createSelector(selectRoles, (roles) =>
+  roles.includes(RoleEnum.Teacher)
+);
+export const selectIsStudent = createSelector(selectRoles, (roles) =>
+  roles.includes(RoleEnum.Student)
 );

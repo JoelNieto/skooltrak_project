@@ -2,14 +2,17 @@ import { Dialog, DialogModule, DialogRef } from '@angular/cdk/dialog';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
+import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ButtonDirective } from '../button/button.component';
 import { CardComponent } from '../card/card.component';
+import { ConfirmationService } from '../confirmation/confirmation.service';
+import { defaultConfirmationOptions } from '../confirmation/confirmation.type';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
+import { SchoolFormComponent } from '../school-form/school-form.component';
 
 @Component({
   standalone: true,
@@ -25,7 +28,10 @@ import { SchoolConnectorComponent } from '../school-connector/school-connector.c
     ButtonDirective,
     DialogModule,
   ],
-  providers: [provideIcons({ heroXMark })],
+  providers: [
+    provideIcons({ heroXMark, heroLink, heroPlus }),
+    ConfirmationService,
+  ],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -43,11 +49,6 @@ import { SchoolConnectorComponent } from '../school-connector/school-connector.c
     </div>
     <div>
       <div class="flex flex-col gap-2">
-        <div>
-          <button skButton color="green" (click)="addSchool()">
-            + {{ 'Add school' | translate }}
-          </button>
-        </div>
         <div
           *ngFor="let school of schools()"
           (click)="setSchool(school.id!)"
@@ -85,12 +86,23 @@ import { SchoolConnectorComponent } from '../school-connector/school-connector.c
         </div>
       </div>
     </div>
+    <div class="flex justify-end gap-4 pt-4" footer>
+      <button skButton color="green" (click)="addSchoolConnection()">
+        <ng-icon name="heroLink" size="16" />
+        {{ 'Connect to school' | translate }}
+      </button>
+      <button skButton color="blue" (click)="createSchool()">
+        <ng-icon name="heroPlus" size="16" />
+        {{ 'Create school' | translate }}
+      </button>
+    </div>
   </sk-card>`,
 })
 export class SchoolSelectorComponent {
   private auth = inject(authState.AuthStateFacade);
   public dialogRef = inject(DialogRef);
   private dialog = inject(Dialog);
+  private confirm = inject(ConfirmationService);
 
   public schools = this.auth.schools;
   public selected = this.auth.currentSchoolId;
@@ -100,11 +112,34 @@ export class SchoolSelectorComponent {
     this.dialogRef.close();
   }
 
-  public addSchool(): void {
+  public addSchoolConnection(): void {
     this.dialogRef.close();
     this.dialog.open(SchoolConnectorComponent, {
       width: '36rem',
       maxWidth: '90%',
     });
+  }
+
+  public createSchool(): void {
+    this.confirm
+      .openDialog({
+        ...defaultConfirmationOptions,
+        showCancelButton: true,
+        title: 'Want to create a new school?',
+        description:
+          'This is free and you can option for a premium school later',
+        confirmButtonText: 'Yes',
+        color: 'green',
+      })
+      .subscribe({
+        next: (response) => {
+          !!response &&
+            this.dialog.open(SchoolFormComponent, {
+              width: '64rem',
+              maxWidth: '90%',
+              disableClose: true,
+            });
+        },
+      });
   }
 }

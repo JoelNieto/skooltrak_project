@@ -53,7 +53,7 @@ const colors: Record<string, EventColor> = {
       {{ 'Assignments.New' | translate }}
     </a>
     <div class="mt-4 flex w-full items-center justify-around text-center">
-      <div class=" flex-1 rounded-md" role="group">
+      <div class=" flex flex-1 rounded-md" role="group">
         <button
           type="button"
           mwlCalendarPreviousView
@@ -106,7 +106,7 @@ const colors: Record<string, EventColor> = {
           }}
         </h3>
       </div>
-      <div class="flex-1 rounded-md" role="group">
+      <div class="flex flex-1 rounded-md" role="group">
         <button
           type="button"
           skButton

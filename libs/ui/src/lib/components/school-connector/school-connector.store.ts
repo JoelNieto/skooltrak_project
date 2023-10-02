@@ -1,8 +1,21 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { RoleEnum, School, Table } from '@skooltrak/models';
-import { catchError, filter, from, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
+import {
+  catchError,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 
 import { AlertService } from '../../services/alert.service';
 import { ConfirmationService } from '../confirmation/confirmation.service';
@@ -20,6 +33,7 @@ export class SchoolConnectorStore
   private readonly supabase = inject(SupabaseService);
   private confirmation = inject(ConfirmationService);
   private alertService = inject(AlertService);
+  private readonly auth = inject(authState.AuthStateFacade);
 
   private readonly role$ = this.select((state) => state.role);
 
@@ -89,11 +103,13 @@ export class SchoolConnectorStore
           )
         ),
         tapResponse(
-          () =>
+          () => {
             this.alertService.showAlert({
               icon: 'success',
               message: 'School connected successfully!',
-            }),
+            });
+            this.auth.getProfiles();
+          },
           (error: string) =>
             this.alertService.showAlert({ icon: 'error', message: error }),
           () => this.patchState({ loading: false })

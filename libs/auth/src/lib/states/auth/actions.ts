@@ -1,5 +1,9 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { SchoolUser, User as Profile } from '@skooltrak/models';
+import {
+  SchoolUser,
+  SignUpCredentials,
+  User as Profile,
+} from '@skooltrak/models';
 import { Session, User } from '@supabase/supabase-js';
 
 export const AuthActions = createActionGroup({
@@ -13,6 +17,9 @@ export const AuthActions = createActionGroup({
     setUser: props<{ user: Profile }>(),
     getProfiles: emptyProps(),
     setProfiles: props<{ profiles: SchoolUser[] }>(),
+    signUp: props<{ request: SignUpCredentials }>(),
+    signUpSuccess: emptyProps(),
+    signUpFailure: props<{ error: string }>(),
     signInEmail: props<{ email: string; password: string }>(),
     signInSuccess: props<{ user: User; session: Session }>(),
     signInFailure: props<{ error: unknown }>(),

@@ -2,7 +2,18 @@ import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SchoolUser, Table } from '@skooltrak/models';
 import { AlertService } from 'libs/ui/src/lib/services/alert.service';
-import { catchError, EMPTY, exhaustMap, filter, from, iif, map, mergeMap, of, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  iif,
+  map,
+  of,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -29,6 +40,25 @@ export const getSession = createEffect(
           map((session) => AuthActions.setSession({ session }))
         )
       )
+    );
+  },
+  { functional: true }
+);
+
+export const signUp = createEffect(
+  (actions = inject(Actions), supabase = inject(SupabaseService)) => {
+    return actions.pipe(
+      ofType(AuthActions.signUp),
+      exhaustMap(({ request }) =>
+        from(supabase.signUp(request)).pipe(
+          map(({ error }) => {
+            if (error) throw new Error(error.message);
+            return EMPTY;
+          }),
+          map(() => AuthActions.signUpSuccess())
+        )
+      ),
+      catchError((error: string) => of(AuthActions.signUpFailure({ error })))
     );
   },
   { functional: true }
@@ -70,7 +100,7 @@ export const setSession = createEffect(
   (actions = inject(Actions)) => {
     return actions.pipe(
       ofType(AuthActions.setSession),
-      mergeMap(({ session }) =>
+      exhaustMap(({ session }) =>
         iif(
           () => !!session,
           of(session),

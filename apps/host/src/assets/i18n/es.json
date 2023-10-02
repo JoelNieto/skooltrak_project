@@ -95,5 +95,16 @@
   },
   "School Connector": {
     "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
+  },
+  "SIGN_UP": {
+    "TITLE": "Registrarse",
+    "PROVIDE_INFO": "Introduzca su información personal",
+    "FIRST_NAME": "Nombre",
+    "FATHER_NAME": "Apellido",
+    "EMAIL": "Correo electrónico",
+    "PASSWORD": "Contraseña",
+    "CREATE_ACCOUNT": "Crear cuenta",
+    "EXISTING_ACCOUNT": "Ya tiene una cuenta?",
+    "SIGN_IN": "Iniciar sesión"
   }
 }

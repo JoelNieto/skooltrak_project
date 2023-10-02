@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { User } from '@skooltrak/models';
+import { SignUpCredentials, User } from '@skooltrak/models';
 
 import { AuthActions } from './actions';
 import * as selectors from './selectors';
@@ -26,6 +26,10 @@ export class AuthStateFacade {
 
   public signIn(email: string, password: string): void {
     this.store$.dispatch(AuthActions.signInEmail({ email, password }));
+  }
+
+  public signUp(request: SignUpCredentials): void {
+    this.store$.dispatch(AuthActions.signUp({ request }));
   }
 
   public updateProfile(request: Partial<User>): void {

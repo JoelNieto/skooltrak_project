@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
@@ -24,10 +23,11 @@ import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { User } from '@skooltrak/models';
 
-import { AvatarComponent } from '../avatar/avatar.component';
+import { AvatarComponent } from '../../../../../../apps/web-app/src/app/components/avatar/avatar.component';
 import { UserChipComponent } from '../user-chip/user-chip.component';
 import { UsersSelectorStore } from './users-selector.store';
 
+/* eslint-disable @typescript-eslint/no-empty-function */
 @Component({
   standalone: true,
   selector: 'sk-users-selector',

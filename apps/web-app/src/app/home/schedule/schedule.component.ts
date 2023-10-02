@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { CalendarComponent } from '@skooltrak/ui';
+
+import { CalendarComponent } from '../../components/calendar/calendar.component';
 
 @Component({
   standalone: true,

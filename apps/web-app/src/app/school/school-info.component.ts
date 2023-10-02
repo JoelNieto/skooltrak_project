@@ -3,7 +3,10 @@ import { DatePipe, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { AvatarComponent, ButtonDirective, SchoolFormComponent } from '@skooltrak/ui';
+import { ButtonDirective } from '@skooltrak/ui';
+
+import { AvatarComponent } from '../components/avatar/avatar.component';
+import { SchoolFormComponent } from '../components/school-form/school-form.component';
 
 @Component({
   standalone: true,

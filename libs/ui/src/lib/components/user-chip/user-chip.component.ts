@@ -4,7 +4,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { User } from '@skooltrak/models';
 
-import { AvatarComponent } from '../avatar/avatar.component';
+import { AvatarComponent } from '../../../../../../apps/web-app/src/app/components/avatar/avatar.component';
 
 @Component({
   selector: 'sk-user-chip',

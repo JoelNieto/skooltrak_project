@@ -27,7 +27,9 @@ export const remoteRoutes: Route[] = [
         path: 'profile',
         title: 'Profile',
         loadComponent: () =>
-          import('@skooltrak/ui').then((x) => x.ProfileComponent),
+          import('../components/profile/profile.component').then(
+            (x) => x.ProfileComponent
+          ),
       },
       {
         path: 'settings',

@@ -3,12 +3,11 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { DashboardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, DashboardComponent, TranslateModule],
+  imports: [RouterOutlet, RouterLink, TranslateModule],
   template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {

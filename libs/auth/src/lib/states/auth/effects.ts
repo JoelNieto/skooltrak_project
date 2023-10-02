@@ -1,19 +1,9 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SchoolUser, Table } from '@skooltrak/models';
+import { ConfirmationService } from '@skooltrak/ui';
 import { AlertService } from 'libs/ui/src/lib/services/alert.service';
-import {
-  catchError,
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  iif,
-  map,
-  of,
-  tap,
-  throwError,
-} from 'rxjs';
+import { catchError, EMPTY, exhaustMap, filter, from, iif, map, of, tap, throwError } from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -62,6 +52,24 @@ export const signUp = createEffect(
     );
   },
   { functional: true }
+);
+
+export const signUpSuccess = createEffect(
+  (actions = inject(Actions), confirmation = inject(ConfirmationService)) => {
+    return actions.pipe(
+      ofType(AuthActions.signUpSuccess),
+      exhaustMap(() =>
+        confirmation.openDialog({
+          title: 'Account created',
+          description: 'Please, check your email to confirm',
+          showCancelButton: false,
+          icon: 'heroCheckCircle',
+          color: 'green',
+        })
+      )
+    );
+  },
+  { functional: true, dispatch: false }
 );
 
 export const getUser = createEffect(

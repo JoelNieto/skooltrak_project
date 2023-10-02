@@ -7,7 +7,7 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
-import { ButtonDirective } from '../button/button.component';
+import { ButtonDirective } from '../../directives/button/button.directive';
 import { CardComponent } from '../card/card.component';
 
 @Component({

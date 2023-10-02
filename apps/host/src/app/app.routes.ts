@@ -9,15 +9,4 @@ export const appRoutes: Route[] = [
     path: 'app',
     loadChildren: () => import('web-app/Routes').then((m) => m.remoteRoutes),
   },
-  {
-    path: 'admin',
-    loadComponent: () =>
-      import('@skooltrak/ui').then((x) => x.DashboardComponent),
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('admin/Routes').then((m) => m.remoteRoutes),
-      },
-    ],
-  },
 ];

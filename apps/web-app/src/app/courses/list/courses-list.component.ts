@@ -4,14 +4,9 @@ import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  CardComponent,
-  PaginatorComponent,
-  TabsComponent,
-  TabsItemComponent,
-  UserChipComponent,
-} from '@skooltrak/ui';
+import { CardComponent, PaginatorComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
+import { UserChipComponent } from '../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
 
 @Component({

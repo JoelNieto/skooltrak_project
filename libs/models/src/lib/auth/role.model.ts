@@ -9,13 +9,6 @@ export type Role = {
   links?: Link[];
 };
 
-export type UserRole = Partial<User> & {
-  school_id: string;
-  school_name: string;
-  role: RoleTypeEnum;
-  school?: Partial<School>;
-};
-
 export type Link = {
   sort: number;
   name: string;
@@ -28,13 +21,6 @@ export type SchoolRole = {
   role?: Role;
   school?: Partial<School>;
 };
-
-export enum RoleTypeEnum {
-  Administrator = 'admin',
-  Teacher = 'teacher',
-  Parent = 'parent',
-  Student = 'student',
-}
 
 export type SchoolUser = {
   school_id: string;

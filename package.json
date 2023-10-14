@@ -34,6 +34,7 @@
     "calendar-utils": "^0.10.4",
     "date-fns": "^2.30.0",
     "flowbite": "^1.6.5",
+    "ionicons": "^7.0.0",
     "lodash": "^4.17.21",
     "ngx-image-cropper": "^7.0.0",
     "ngx-quill": "^22.0.0",

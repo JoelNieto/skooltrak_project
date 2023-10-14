@@ -6,42 +6,13 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssignmentView } from '@skooltrak/models';
 import { ButtonDirective } from '@skooltrak/ui';
-import {
-  CalendarDateFormatter,
-  CalendarEvent,
-  CalendarModule,
-  CalendarView,
-  DateAdapter,
-} from 'angular-calendar';
+import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { DAYS_OF_WEEK, EventColor } from 'calendar-utils';
-import {
-  endOfDay,
-  endOfMonth,
-  endOfWeek,
-  isSameDay,
-  isSameMonth,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
+import { DAYS_OF_WEEK } from 'calendar-utils';
+import { endOfDay, endOfMonth, endOfWeek, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
 
 import { CalendarStore } from './calendar.store';
 
-const colors: Record<string, EventColor> = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
 @Component({
   selector: 'sk-calendar',
   standalone: true,
@@ -65,9 +36,9 @@ const colors: Record<string, EventColor> = {
       routerLink="/app/courses/assignments"
       [queryParams]="{ course_id: query_value }"
     >
-      {{ 'Assignments.New' | translate }}
+      {{ 'CALENDAR.NEW_ASSIGNMENT' | translate }}
     </a>
-    <div class="mt-4 flex w-full items-center justify-around text-center">
+    <div class="my-4 flex w-full items-center justify-around text-center">
       <div class=" flex flex-1 rounded-md" role="group">
         <button
           type="button"
@@ -80,7 +51,7 @@ const colors: Record<string, EventColor> = {
           color="green"
           class="rounded-e-none"
         >
-          {{ 'Calendar.Previous' | translate }}
+          {{ 'CALENDAR.PREVIOUS' | translate }}
         </button>
         <button
           type="button"
@@ -91,7 +62,7 @@ const colors: Record<string, EventColor> = {
           class="rounded-none"
           (viewDateChange)="fetchEvents()"
         >
-          {{ 'Calendar.Today' | translate }}
+          {{ 'CALENDAR.TODAY' | translate }}
         </button>
         <button
           type="button"
@@ -104,7 +75,7 @@ const colors: Record<string, EventColor> = {
           color="green"
           class="disabled rounded-s-none"
         >
-          {{ 'Calendar.Next' | translate }}
+          {{ 'CALENDAR.NEXT' | translate }}
         </button>
       </div>
       <div class="flex-1">
@@ -121,7 +92,7 @@ const colors: Record<string, EventColor> = {
           }}
         </h3>
       </div>
-      <div class="flex flex-1 rounded-md" role="group">
+      <div class="flex flex-1 justify-end rounded-md" role="group">
         <button
           type="button"
           skButton
@@ -130,7 +101,7 @@ const colors: Record<string, EventColor> = {
           class="rounded-e-none"
           (click)="setView(CalendarView.Month)"
         >
-          {{ 'Calendar.Month' | translate }}
+          {{ 'CALENDAR.MONTH' | translate }}
         </button>
         <button
           type="button"
@@ -140,7 +111,7 @@ const colors: Record<string, EventColor> = {
           [disabled]="view === CalendarView.Week"
           (click)="setView(CalendarView.Week)"
         >
-          {{ 'Calendar.Week' | translate }}
+          {{ 'CALENDAR.WEEK' | translate }}
         </button>
         <button
           type="button"
@@ -150,7 +121,7 @@ const colors: Record<string, EventColor> = {
           [disabled]="view === CalendarView.Day"
           (click)="setView(CalendarView.Day)"
         >
-          {{ 'Calendar.Day' | translate }}
+          {{ 'CALENDAR.DAY' | translate }}
         </button>
       </div>
     </div>

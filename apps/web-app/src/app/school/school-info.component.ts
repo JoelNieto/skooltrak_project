@@ -23,10 +23,10 @@ import { SchoolFormComponent } from '../components/school-form/school-form.compo
   styles: [
     `
       .label {
-        @apply block font-mono text-sm text-gray-500;
+        @apply block font-mono text-sm text-gray-500 dark:text-gray-400;
       }
       .value {
-        @apply block font-sans text-gray-700;
+        @apply block font-sans text-gray-700 dark:text-gray-200;
       }
     `,
   ],
@@ -38,7 +38,7 @@ import { SchoolFormComponent } from '../components/school-form/school-form.compo
         bucket="crests"
         class="h-16"
       />
-      <h4 class="font-title text-xl text-gray-700">
+      <h4 class="font-title text-xl text-gray-700 dark:text-gray-100">
         {{ school()?.full_name }}
       </h4>
       <div>
@@ -87,7 +87,7 @@ import { SchoolFormComponent } from '../components/school-form/school-form.compo
 })
 export class SchoolInfoComponent {
   private auth = inject(authState.AuthStateFacade);
-  public school = this.auth.currentSchool;
+  public school = this.auth.CURRENT_SCHOOL;
   private dialog = inject(Dialog);
 
   editInfo() {

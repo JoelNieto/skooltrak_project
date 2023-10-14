@@ -7,27 +7,27 @@ export const selectAuthState = createFeatureSelector<State>(authFeature.name);
 
 export const selectSession = createSelector(
   selectAuthState,
-  (state: State) => state.session
+  (state: State) => state.SESSION
 );
 
 export const selectLoading = createSelector(
   selectAuthState,
-  (state: State) => state.loading
+  (state: State) => state.LOADING
 );
 
 export const selectUser = createSelector(
   selectAuthState,
-  (state: State) => state.user
+  (state: State) => state.USER
 );
 
 export const selectSchoolId = createSelector(
   selectAuthState,
-  (state) => state.school_id
+  (state) => state.SCHOOL_ID
 );
 
 export const selectProfiles = createSelector(
   selectAuthState,
-  (state) => state.profiles
+  (state) => state.PROFILES
 );
 
 export const selectSchools = createSelector(selectProfiles, (state) => [

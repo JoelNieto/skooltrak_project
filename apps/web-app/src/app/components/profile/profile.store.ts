@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Gender, Table } from '@skooltrak/models';
 import { exhaustMap, from, Observable, of, switchMap, tap } from 'rxjs';
@@ -49,7 +53,7 @@ export class ProfileFormStore
       ),
       tapResponse(
         (avatar_url) =>
-          this.auth.updateProfile({ ...this.auth.user(), avatar_url }),
+          this.auth.updateProfile({ ...this.auth.USER(), avatar_url }),
         (error) => console.error(error),
         () => this.patchState({ loading: false })
       )

@@ -106,8 +106,8 @@ export class SchoolSelectorComponent {
   private dialog = inject(Dialog);
   private confirm = inject(ConfirmationService);
 
-  public schools = this.auth.schools;
-  public selected = this.auth.currentSchoolId;
+  public schools = this.auth.SCHOOLS;
+  public selected = this.auth.CURRENT_SCHOOL_ID;
 
   public setSchool(id: string): void {
     this.auth.setSchoolId(id);

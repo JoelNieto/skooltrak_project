@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styles: [
     `
       :host {
-        @apply mb-2 border-b border-gray-200 text-center font-sans text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400;
+        @apply my-2 text-center font-sans text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400;
       }
     `,
   ],

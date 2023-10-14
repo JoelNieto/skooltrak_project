@@ -168,9 +168,8 @@ export class SchoolFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      if (this.store.school()) {
-        this.form.patchValue(this.store.school()!);
-      }
+      const school = this.store.school();
+      !!school && this.form.patchValue(school);
     });
   }
 

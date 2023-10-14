@@ -3,7 +3,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SchoolUser, Table } from '@skooltrak/models';
 import { ConfirmationService } from '@skooltrak/ui';
 import { AlertService } from 'libs/ui/src/lib/services/alert.service';
-import { catchError, EMPTY, exhaustMap, filter, from, iif, map, of, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  iif,
+  map,
+  of,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -27,7 +38,7 @@ export const getSession = createEffect(
       ofType(AuthActions.getSession),
       exhaustMap(() =>
         supabase.session$.pipe(
-          map((session) => AuthActions.setSession({ session }))
+          map((SESSION) => AuthActions.setSession({ SESSION }))
         )
       )
     );
@@ -39,8 +50,8 @@ export const signUp = createEffect(
   (actions = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions.pipe(
       ofType(AuthActions.signUp),
-      exhaustMap(({ request }) =>
-        from(supabase.signUp(request)).pipe(
+      exhaustMap(({ REQUEST }) =>
+        from(supabase.signUp(REQUEST)).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
             return EMPTY;
@@ -48,7 +59,7 @@ export const signUp = createEffect(
           map(() => AuthActions.signUpSuccess())
         )
       ),
-      catchError((error: string) => of(AuthActions.signUpFailure({ error })))
+      catchError((ERROR: string) => of(AuthActions.signUpFailure({ ERROR })))
     );
   },
   { functional: true }
@@ -80,7 +91,7 @@ export const getUser = createEffect(
   ) => {
     return actions.pipe(
       ofType(AuthActions.getUser),
-      filter(() => !!auth.session()),
+      filter(() => !!auth.SESSION()),
       exhaustMap(() =>
         from(
           supabase.client
@@ -88,14 +99,14 @@ export const getUser = createEffect(
             .select(
               'id, email, first_name, middle_name, father_name, document_id, mother_name, avatar_url, updated_at, birth_date, gender'
             )
-            .eq('id', auth.session()?.user?.id)
+            .eq('id', auth.SESSION()?.user?.id)
             .single()
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data;
           }),
-          map((user) => AuthActions.setUser({ user }))
+          map((USER) => AuthActions.setUser({ USER }))
         )
       )
     );
@@ -108,10 +119,10 @@ export const setSession = createEffect(
   (actions = inject(Actions)) => {
     return actions.pipe(
       ofType(AuthActions.setSession),
-      exhaustMap(({ session }) =>
+      exhaustMap(({ SESSION }) =>
         iif(
-          () => !!session,
-          of(session),
+          () => !!SESSION,
+          of(SESSION),
           throwError(() => new Error('no session'))
         )
       ),
@@ -125,14 +136,14 @@ export const signIn = createEffect(
   (actions = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions.pipe(
       ofType(AuthActions.signInEmail),
-      exhaustMap(({ email, password }) =>
-        from(supabase.signInWithEmail(email, password)).pipe(
+      exhaustMap(({ EMAIL, PASSWORD }) =>
+        from(supabase.signInWithEmail(EMAIL, PASSWORD)).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data;
           }),
-          map(({ session }) => AuthActions.setSession({ session })),
-          catchError((error) => of(AuthActions.signInFailure({ error })))
+          map(({ session }) => AuthActions.setSession({ SESSION: session })),
+          catchError((ERROR) => of(AuthActions.signInFailure({ ERROR })))
         )
       )
     );
@@ -148,12 +159,12 @@ export const updateProfile = createEffect(
   ) => {
     return actions.pipe(
       ofType(AuthActions.updateProfile),
-      exhaustMap(({ request }) =>
+      exhaustMap(({ REQUEST }) =>
         from(
           supabase.client
             .from(Table.Users)
-            .update([request])
-            .eq('id', request.id)
+            .update([REQUEST])
+            .eq('id', REQUEST.id)
         ).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -195,13 +206,13 @@ export const getUserProfiles = createEffect(
             .select(
               'user_id, school_id, school:schools(*, country:countries(*)), status, role, created_at'
             )
-            .eq('user_id', auth.user()?.id)
+            .eq('user_id', auth.USER()?.id)
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data as SchoolUser[];
           }),
-          map((profiles) => AuthActions.setProfiles({ profiles }))
+          map((PROFILES) => AuthActions.setProfiles({ PROFILES }))
         )
       )
     );
@@ -213,8 +224,8 @@ export const setDefaultSchool = createEffect(
   () => {
     return inject(Actions).pipe(
       ofType(AuthActions.setProfiles),
-      map(({ profiles }) =>
-        AuthActions.setSchoolId({ school_id: profiles[0].school_id })
+      map(({ PROFILES }) =>
+        AuthActions.setSchoolId({ SCHOOL_ID: PROFILES[0].school_id })
       )
     );
   },

@@ -163,7 +163,7 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
                       >{{ 'Profile' | translate }}</a
                     >
                   </li>
-                  <li *ngIf="isAdmin()">
+                  <li *ngIf="IS_ADMIN()">
                     <a
                       routerLink="school"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -208,10 +208,10 @@ export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);
   private dialog = inject(Dialog);
 
-  user = this.auth.user;
-  schools = this.auth.schools;
-  school = this.auth.currentSchool;
-  isAdmin = this.auth.isAdmin;
+  user = this.auth.USER;
+  schools = this.auth.SCHOOLS;
+  school = this.auth.CURRENT_SCHOOL;
+  IS_ADMIN = this.auth.IS_ADMIN;
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {

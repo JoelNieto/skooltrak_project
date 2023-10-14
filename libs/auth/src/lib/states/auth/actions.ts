@@ -1,5 +1,9 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { SchoolUser, User as Profile } from '@skooltrak/models';
+import {
+  SchoolUser,
+  SignUpCredentials,
+  User as Profile,
+} from '@skooltrak/models';
 import { Session, User } from '@supabase/supabase-js';
 
 export const AuthActions = createActionGroup({
@@ -7,14 +11,19 @@ export const AuthActions = createActionGroup({
   events: {
     initState: emptyProps(),
     getSession: emptyProps(),
-    setSession: props<{ session: Session | null }>(),
-    updateProfile: props<{ request: Partial<Profile> }>(),
-    setUser: props<{ user: Profile }>(),
-    setProfiles: props<{ profiles: SchoolUser[] }>(),
-    signInEmail: props<{ email: string; password: string }>(),
-    signInSuccess: props<{ user: User; session: Session }>(),
-    signInFailure: props<{ error: unknown }>(),
+    setSession: props<{ SESSION: Session | null }>(),
+    updateProfile: props<{ REQUEST: Partial<Profile> }>(),
+    getUser: emptyProps(),
+    setUser: props<{ USER: Profile }>(),
+    getProfiles: emptyProps(),
+    setProfiles: props<{ PROFILES: SchoolUser[] }>(),
+    signUp: props<{ REQUEST: SignUpCredentials }>(),
+    signUpSuccess: emptyProps(),
+    signUpFailure: props<{ ERROR: string }>(),
+    signInEmail: props<{ EMAIL: string; PASSWORD: string }>(),
+    signInSuccess: props<{ USER: User; SESSION: Session }>(),
+    signInFailure: props<{ ERROR: unknown }>(),
     signOut: emptyProps(),
-    setSchoolId: props<{ school_id: string | undefined }>(),
+    setSchoolId: props<{ SCHOOL_ID: string | undefined }>(),
   },
 });

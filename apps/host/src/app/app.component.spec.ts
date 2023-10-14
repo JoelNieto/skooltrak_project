@@ -16,12 +16,6 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
-  it(`should have as title 'host'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-  });
-
   it('should render title', fakeAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const router = TestBed.inject(Router);

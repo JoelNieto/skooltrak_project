@@ -1,12 +1,26 @@
-/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Course, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
+/* eslint-disable rxjs/finnish */
 type State = {
   courses: Course[];
   selectedId?: string;
@@ -22,7 +36,7 @@ type State = {
 @Injectable()
 export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
   private readonly auth = inject(authState.AuthStateFacade);
-  school = this.auth.currentSchoolId;
+  school = this.auth.CURRENT_SCHOOL_ID;
   supabase = inject(SupabaseService);
   util = inject(UtilService);
 

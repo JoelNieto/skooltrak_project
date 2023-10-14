@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { User } from '@skooltrak/models';
+import { SignUpCredentials, User } from '@skooltrak/models';
 
 import { AuthActions } from './actions';
 import * as selectors from './selectors';
@@ -9,27 +9,41 @@ import * as selectors from './selectors';
 export class AuthStateFacade {
   private store$ = inject(Store);
 
-  public user = this.store$.selectSignal(selectors.selectUser);
-  public loading = this.store$.selectSignal(selectors.selectLoading);
-  public session = this.store$.selectSignal(selectors.selectSession);
-  public currentSchoolId = this.store$.selectSignal(selectors.selectSchoolId);
-  public schools = this.store$.selectSignal(selectors.selectSchools);
-  public currentSchool = this.store$.selectSignal(selectors.selectSchool);
-  public roles = this.store$.selectSignal(selectors.selectRoles);
+  public USER = this.store$.selectSignal(selectors.selectUser);
+  public LOADING = this.store$.selectSignal(selectors.selectLoading);
+  public SESSION = this.store$.selectSignal(selectors.selectSession);
+  public CURRENT_SCHOOL_ID = this.store$.selectSignal(selectors.selectSchoolId);
+  public CURRENT_SCHOOL_ID$ = this.store$.select(selectors.selectSchoolId);
+  public SCHOOLS = this.store$.selectSignal(selectors.selectSchools);
+  public CURRENT_SCHOOL = this.store$.selectSignal(selectors.selectSchool);
+  public ROLES = this.store$.selectSignal(selectors.selectRoles);
+  public IS_ADMIN = this.store$.selectSignal(selectors.selectIsAdmin);
+  public IS_TEACHER = this.store$.selectSignal(selectors.selectIsTeacher);
+  public IS_STUDENT = this.store$.selectSignal(selectors.selectIsStudent);
 
   public init() {
     this.store$.dispatch(AuthActions.initState());
   }
 
-  public signIn(email: string, password: string) {
-    this.store$.dispatch(AuthActions.signInEmail({ email, password }));
+  public signIn(email: string, password: string): void {
+    this.store$.dispatch(
+      AuthActions.signInEmail({ EMAIL: email, PASSWORD: password })
+    );
   }
 
-  public updateProfile(request: Partial<User>) {
-    this.store$.dispatch(AuthActions.updateProfile({ request }));
+  public signUp(request: SignUpCredentials): void {
+    this.store$.dispatch(AuthActions.signUp({ REQUEST: request }));
   }
 
-  public setSchoolId(school_id: string) {
-    this.store$.dispatch(AuthActions.setSchoolId({ school_id }));
+  public updateProfile(request: Partial<User>): void {
+    this.store$.dispatch(AuthActions.updateProfile({ REQUEST: request }));
+  }
+
+  public getProfiles(): void {
+    this.store$.dispatch(AuthActions.getProfiles());
+  }
+
+  public setSchoolId(school_id: string): void {
+    this.store$.dispatch(AuthActions.setSchoolId({ SCHOOL_ID: school_id }));
   }
 }

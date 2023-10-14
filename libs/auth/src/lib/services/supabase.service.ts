@@ -1,14 +1,19 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '@skooltrak/environments';
 import { SchoolRole, SignUpCredentials, User } from '@skooltrak/models';
-import { AuthChangeEvent, createClient, Session, SupabaseClient } from '@supabase/supabase-js';
+import {
+  AuthChangeEvent,
+  createClient,
+  Session,
+  SupabaseClient,
+} from '@supabase/supabase-js';
 import { from, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
   public client: SupabaseClient;
   currentRole = signal<SchoolRole | null>(null);
-  private _currentSchoolId?: string;
+  private _CURRENT_SCHOOL_ID?: string;
 
   constructor() {
     this.client = createClient(

@@ -7,7 +7,7 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
-import { ButtonDirective } from '../button/button.component';
+import { ButtonDirective } from '../../directives/button/button.directive';
 import { CardComponent } from '../card/card.component';
 
 @Component({
@@ -22,9 +22,9 @@ import { CardComponent } from '../card/card.component';
   ],
   providers: [provideIcons({ heroXMark })],
   template: `<sk-card>
-      <div class="flex items-start justify-between">
+      <div class="flex items-start justify-between" header>
         <h3
-          class="mb-4 font-mono text-xl font-semibold text-gray-700 dark:text-gray-100"
+          class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
         >
           Image cropper
         </h3>
@@ -50,7 +50,7 @@ import { CardComponent } from '../card/card.component';
         />
         <div class="my-4 flex ">
           <div>
-            <span class="font-mono font-semibold text-gray-600"
+            <span class="font-sans font-semibold text-gray-600"
               >Image preview</span
             >
             <br />
@@ -61,17 +61,17 @@ import { CardComponent } from '../card/card.component';
             />
           </div>
         </div>
-        <div class="mt-2 flex gap-2">
-          <button
-            skButton
-            color="blue"
-            class="w-full"
-            [disabled]="!imageFile"
-            (click)="dialogRef.close({ imageFile, cropImgPreview })"
-          >
-            Save
-          </button>
-        </div>
+      </div>
+      <div class="flex justify-end" footer>
+        <button
+          skButton
+          color="blue"
+          class="w-full"
+          [disabled]="!imageFile"
+          (click)="dialogRef.close({ imageFile, cropImgPreview })"
+        >
+          Save
+        </button>
       </div>
     </sk-card>
     <input

@@ -27,13 +27,21 @@ export const remoteRoutes: Route[] = [
         path: 'profile',
         title: 'Profile',
         loadComponent: () =>
-          import('@skooltrak/ui').then((x) => x.ProfileComponent),
+          import('../components/profile/profile.component').then(
+            (x) => x.ProfileComponent
+          ),
       },
       {
         path: 'settings',
         title: 'Settings',
         loadChildren: () =>
           import('../settings/settings.routes').then((x) => x.settingRoutes),
+      },
+      {
+        path: 'school',
+        title: 'School Settings',
+        loadChildren: () =>
+          import('../school/school.routes').then((x) => x.schoolRoutes),
       },
       { path: '', pathMatch: 'full', redirectTo: 'home' },
     ],

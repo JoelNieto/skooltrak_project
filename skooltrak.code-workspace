@@ -3,7 +3,6 @@
     { "path": "apps/host", "name": "host" },
     { "path": "apps/web-app", "name": "web-app" },
     { "path": "apps/onboarding", "name": "onboarding" },
-    { "path": "apps/admin", "name": "admin" },
     { "path": "apps/mobile", "name": "mobile" },
     { "path": "libs/auth", "name": "auth" },
     { "path": "libs/models", "name": "models" },

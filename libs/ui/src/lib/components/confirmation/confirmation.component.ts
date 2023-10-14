@@ -2,7 +2,12 @@ import { DIALOG_DATA, DialogModule, DialogRef } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroCheckCircle, heroExclamationCircle, heroTrash, heroXCircle } from '@ng-icons/heroicons/outline';
+import {
+  heroCheckCircle,
+  heroExclamationCircle,
+  heroTrash,
+  heroXCircle,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CardComponent } from '../card/card.component';
@@ -36,12 +41,12 @@ import { ConfirmationOptions } from './confirmation.type';
         />
       </div>
       <p
-        class="font-title my-3 text-center text-lg font-semibold text-gray-600"
-        [innerHTML]="options.title"
+        class="font-title my-3 text-center text-lg font-semibold text-gray-600 dark:text-gray-100"
+        [innerHTML]="options.title | translate"
       ></p>
       <p
-        class="my-3 text-center text-sm text-gray-400"
-        [innerHTML]="options.description"
+        class="my-3 text-center text-sm text-gray-400 dark:text-gray-300"
+        [innerHTML]="options.description ?? '' | translate"
       ></p>
       <div class="my-3 flex justify-around px-4">
         <button

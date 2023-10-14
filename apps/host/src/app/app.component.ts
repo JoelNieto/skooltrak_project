@@ -3,12 +3,11 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { DashboardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, DashboardComponent, TranslateModule],
+  imports: [RouterOutlet, RouterLink, TranslateModule],
   template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {
@@ -16,8 +15,8 @@ export class AppComponent implements OnInit {
   private auth = inject(authState.AuthStateFacade);
   private router = inject(Router);
   private translate = inject(TranslateService);
-  private user = this.auth.user;
-  private loading = this.auth.loading;
+  private user = this.auth.USER;
+  private loading = this.auth.LOADING;
   constructor() {
     effect(() => {
       if (this.loading()) {

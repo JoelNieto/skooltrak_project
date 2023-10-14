@@ -10,7 +10,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 import { SignUpStore } from './sign-up.store';
@@ -49,18 +49,20 @@ import { SignUpStore } from './sign-up.store';
       </a>
       <sk-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/2">
         <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
-          Sign up
+          {{ 'SIGN_UP.TITLE' | translate }}
         </h1>
         <h3 class="font-sans text-gray-500 dark:text-gray-300" header>
-          Provide your personal information
+          {{ 'SIGN_UP.PROVIDE_INFO' | translate }}
         </h3>
         <form
           [formGroup]="form"
           (ngSubmit)="onSubmit()"
-          class="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2"
+          class="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-3"
         >
           <div>
-            <label for="first_name">First name</label>
+            <label for="first_name">{{
+              'SIGN_UP.FIRST_NAME' | translate
+            }}</label>
             <input
               type="text"
               name="first_name"
@@ -69,7 +71,9 @@ import { SignUpStore } from './sign-up.store';
             />
           </div>
           <div>
-            <label for="first_name">Father name</label>
+            <label for="first_name">{{
+              'SIGN_UP.FATHER_NAME' | translate
+            }}</label>
             <input
               type="text"
               name="father_name"
@@ -78,7 +82,7 @@ import { SignUpStore } from './sign-up.store';
             />
           </div>
           <div>
-            <label for="email">Email</label>
+            <label for="email">{{ 'SIGN_UP.EMAIL' | translate }}</label>
             <input
               type="email"
               name="email"
@@ -87,7 +91,7 @@ import { SignUpStore } from './sign-up.store';
             />
           </div>
           <div>
-            <label for="password">Password</label>
+            <label for="password">{{ 'SIGN_UP.PASSWORD' | translate }}</label>
             <input
               type="password"
               name="password"
@@ -105,16 +109,16 @@ import { SignUpStore } from './sign-up.store';
               type="submit"
               [disabled]="form.invalid"
             >
-              Confirm changes
+              {{ 'SIGN_UP.CREATE_ACCOUNT' | translate }}
             </button>
           </div>
         </form>
         <p class="mt-4 text-sm font-light text-gray-500 dark:text-gray-300">
-          Do you have an account already?
+          {{ 'SIGN_UP.EXISTING_ACCOUNT' | translate }}
           <a
             class="font-medium text-sky-600 hover:underline dark:text-sky-500"
             routerLink="../sign-in"
-            >Sign in</a
+            >{{ 'SIGN_UP.SIGN_IN' | translate }}</a
           >
         </p>
       </sk-card>
@@ -130,7 +134,7 @@ import { SignUpStore } from './sign-up.store';
       }
 
       label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
+        @apply mb-1.5 block font-sans text-sm font-medium text-gray-600 dark:text-white;
       }
     `,
   ],
@@ -138,6 +142,7 @@ import { SignUpStore } from './sign-up.store';
 export class SignUpComponent {
   supabase = inject(SupabaseService);
   store$ = inject(Store);
+  auth = inject(authState.AuthStateFacade);
   router = inject(Router);
   form = new FormGroup({
     first_name: new FormControl('', {
@@ -158,21 +163,14 @@ export class SignUpComponent {
     }),
   });
 
-  async onSubmit() {
+  onSubmit() {
     const { father_name, first_name, email, password } =
       this.form.getRawValue();
-    const { data, error } = await this.supabase.signUp({
+    this.auth.signUp({
       email,
       password,
       first_name,
       father_name,
     });
-
-    if (error) {
-      console.error(error.message);
-      return;
-    }
-
-    console.info(data);
   }
 }

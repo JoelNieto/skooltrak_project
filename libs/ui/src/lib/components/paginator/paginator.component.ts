@@ -1,11 +1,14 @@
 import { NgClass, NgFor } from '@angular/common';
 import { Component, computed, effect, EventEmitter, Input, Output, Signal, signal } from '@angular/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroChevronLeft, heroChevronRight } from '@ng-icons/heroicons/outline';
 import { range } from 'lodash';
 
 @Component({
   selector: 'sk-paginator',
   standalone: true,
-  imports: [NgFor, NgClass],
+  imports: [NgFor, NgClass, NgIconComponent],
+  providers: [provideIcons({ heroChevronLeft, heroChevronRight })],
   template: `<nav
     class="flex items-center justify-between pt-4"
     aria-label="Table navigation"
@@ -28,34 +31,21 @@ import { range } from 'lodash';
           [ngClass]="{ disabled: currentPage() === 1 }"
         >
           <span class="sr-only">Previous</span>
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
+          <ng-icon name="heroChevronLeft" />
         </a>
       </li>
       <li *ngFor="let page of pages()">
         <a
           (click)="setPage(page)"
-          class="item"
+          class="item block"
           [ngClass]="{ active: currentPage() === page }"
           >{{ page }}</a
         >
       </li>
       <li>
-        <a class="item">...</a>
-      </li>
-      <li>
-        <a (click)="setPage(totalPages())" class="item">{{ totalPages() }}</a>
+        <a (click)="setPage(totalPages())" class="item block">{{
+          totalPages()
+        }}</a>
       </li>
       <li>
         <a
@@ -64,19 +54,7 @@ import { range } from 'lodash';
           [ngClass]="{ disabled: currentPage() === totalPages() }"
         >
           <span class="sr-only">Next</span>
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
+          <ng-icon name="heroChevronRight" />
         </a>
       </li>
     </ul>
@@ -84,13 +62,13 @@ import { range } from 'lodash';
   styles: [
     `
       .item {
-        @apply px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
+        @apply border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
       }
       .active {
-        @apply z-10 text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
+        @apply block border border-blue-300 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
       }
       .disabled {
-        @apply z-10 text-gray-300 bg-gray-100 border border-gray-300 cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400;
+        @apply z-10 cursor-not-allowed border border-gray-300 bg-gray-100 text-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400;
       }
     `,
   ],

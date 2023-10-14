@@ -8,15 +8,14 @@ module.exports = {
   content: [
     join(__dirname, 'src/**/!(*.stories|*.spec).{ts,html}'),
     ...createGlobPatternsForDependencies(__dirname),
-    join(__dirname, '../admin/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../onboarding/src/**/!(*.stories|*.spec).{ts,html}'),
     join(__dirname, '../../libs/ui/src/**/!(*.stories|*.spec).{ts,html}'),
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'Helvetica Neue', 'sans-serif'],
-        title: ['Unbounded', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Urbanist', 'Helvetica Neue', 'sans-serif'],
+        title: ['Gabarito', 'Helvetica Neue', 'sans-serif'],
       },
     },
   },

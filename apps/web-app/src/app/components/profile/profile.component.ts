@@ -131,7 +131,7 @@ import { ProfileFormStore } from './profile.store';
 export class ProfileComponent implements OnInit {
   private auth = inject(authState.AuthStateFacade);
   public store = inject(ProfileFormStore);
-  user = this.auth.user;
+  user = this.auth.USER;
   private dialog = inject(Dialog);
   currentAvatar = this.user()?.avatar_url;
 

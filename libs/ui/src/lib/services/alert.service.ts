@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
+  private translate = inject(TranslateService);
   private toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -18,7 +20,7 @@ export class AlertService {
     const { icon, message: title } = alert;
     this.toast.fire({
       icon,
-      title,
+      title: this.translate.instant(title),
     });
   }
 }

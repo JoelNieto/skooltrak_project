@@ -1,4 +1,9 @@
-import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayConfig,
+  OverlayModule,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -15,7 +20,11 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -54,18 +63,18 @@ import { UtilService } from '../../services/util.service';
         #select
         (click)="showOptions()"
         role="listbox"
-        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400 sm:text-sm"
+        class="block w-full whitespace-nowrap rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400 sm:text-sm"
         [ngClass]="{
           'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
             isOpen(),
           'cursor-not-allowed opacity-75': isDisabled
         }"
-        [class.text-gray-700]="currentValue()"
+        [class.text-gray-800]="currentValue()"
         [class.dark:text-white]="currentValue()"
         [innerHTML]="innerContent"
       ></div>
       <ng-template cdk-portal>
-        <div id="options-container" class="w-full">
+        <div id="options-container" class="w-full shadow-lg">
           <div class="relative" *ngIf="search">
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
@@ -78,8 +87,8 @@ import { UtilService } from '../../services/util.service';
             <input
               type="text"
               id="table-search"
-              class="block w-full rounded-tl-lg rounded-tr-lg border-0 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:ring-0 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-              placeholder="Search for items"
+              class="block w-full rounded-tl-lg rounded-tr-lg border-0 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:ring-0 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
+              [placeholder]="'SELECT.SEARCH' | translate"
               autocomplete="new-password"
               [ngModel]="searchText()"
               (ngModelChange)="onFilterChange($event)"
@@ -90,7 +99,7 @@ import { UtilService } from '../../services/util.service';
             *ngIf="!filteredItems().length"
           >
             <p class="font-sans text-gray-700 dark:text-gray-100 ">
-              {{ 'Items not found!' | translate }}
+              {{ 'SELECT.NOT_FOUND' | translate }}
             </p>
           </div>
           <div
@@ -147,7 +156,7 @@ export class SelectComponent
   @Input({}) valueId = 'id';
   @Input() search = true;
   @Input() multiple = false;
-  @Input() placeholder = 'Select value';
+  @Input() placeholder = 'SELECT.SELECT_VALUE';
   private overlayRef!: OverlayRef;
   @ViewChild(CdkPortal) public container!: CdkPortal;
   @ViewChild('select') public select!: ElementRef;
@@ -170,6 +179,7 @@ export class SelectComponent
 
   constructor() {
     this.innerContent = this.translate.instant(this.placeholder);
+
     effect(
       () => {
         this.onChange(this.currentValue());
@@ -184,7 +194,7 @@ export class SelectComponent
                 this.label
               )} - ${this.util.getProperty(value, this.secondaryLabel)}`
             : value[this.label]
-          : this.placeholder;
+          : this.translate.instant(this.placeholder);
       },
       { allowSignalWrites: true }
     );

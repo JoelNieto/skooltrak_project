@@ -15,8 +15,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'Helvetica Neue', 'sans-serif'],
-        title: ['Unbounded', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Urbanist', 'Helvetica Neue', 'sans-serif'],
+        title: ['Gabarito', 'Helvetica Neue', 'sans-serif'],
         mono: ['Space Mono', 'monospace'],
       },
     },

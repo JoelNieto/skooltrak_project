@@ -3,19 +3,25 @@
   "Administrators": {
     "Title": "Administradores"
   },
+  "ALERT": {
+    "SUCCESS": "Cambios realizados exitosamente",
+    "FAILURE": "Algo salio mal!",
+    "TRY_AGAIN": "Por favor, intente nuevamente"
+  },
   "App title": "Skooltrak",
   "Assignments": {
     "Details": "Datos de la asignación",
     "New": "Nueva asignación"
   },
   "Birth date": "Fecha de nacimiento",
-  "Calendar": {
-    "Day": "Día",
-    "Month": "Mes",
-    "Next": "Siguiente",
-    "Previous": "Anterior",
-    "Today": "Hoy",
-    "Week": "Semana"
+  "CALENDAR": {
+    "DAY": "Día",
+    "MONTH": "Mes",
+    "NEW_ASSIGNMENT": "Nueva asignación",
+    "NEXT": "Siguiente",
+    "PREVIOUS": "Anterior",
+    "TODAY": "Hoy",
+    "WEEK": "Semana"
   },
   "Classes": "Clases",
   "Code": "Codigo",
@@ -27,6 +33,18 @@
       "Text": "Este cambio no podra ser reversado",
       "Title": "Desea borrar esto?"
     }
+  },
+  "CONFIRMATION": {
+    "DELETE": {
+      "TITLE": "Desea borrar esto?",
+      "TEXT": "Este cambio no podra ser reversado",
+      "CONFIRM": "Si, borrar",
+      "CANCEL": "Cancelar"
+    }
+  },
+  "COURSES": {
+    "SELECT_DEGREE": "Seleccione nivel",
+    "SELECT_PLAN": "Seleccione plan"
   },
   "Course": {
     "Details": "Detalles del curso",
@@ -52,7 +70,10 @@
     "Title": "Calificaciones",
     "Details": "Datos de la calificacion"
   },
-  "Groups": "Grupos",
+  "GROUPS": {
+    "TITLE": "Grupos",
+    "DETAILS": "Detalles del grupo"
+  },
   "Home": "Inicio",
   "Male": "Masculino",
   "Messages": "Mensajes",
@@ -65,6 +86,13 @@
   "Plans": {
     "Details": "Detalles del Plan de estudio",
     "Title": "Planes de estudio"
+  },
+  "PERIODS": {
+    "TITLE": "Periodos",
+    "DETAILS": "Datos del periodo",
+    "YEAR": "Año",
+    "START_AT": "Fecha inicio",
+    "END_AT": "Fecha final"
   },
   "Polls": "Encuestas",
   "Profile": "Perfil",
@@ -95,6 +123,11 @@
   },
   "School Connector": {
     "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
+  },
+  "SELECT": {
+    "SELECT_VALUE": "--Elegir valor--",
+    "SEARCH": "Buscar items",
+    "NOT_FOUND": "Sin elementos encontrados"
   },
   "SIGN_UP": {
     "TITLE": "Registrarse",

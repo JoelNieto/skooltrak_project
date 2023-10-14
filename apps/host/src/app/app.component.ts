@@ -15,8 +15,8 @@ export class AppComponent implements OnInit {
   private auth = inject(authState.AuthStateFacade);
   private router = inject(Router);
   private translate = inject(TranslateService);
-  private user = this.auth.user;
-  private loading = this.auth.loading;
+  private user = this.auth.USER;
+  private loading = this.auth.LOADING;
   constructor() {
     effect(() => {
       if (this.loading()) {

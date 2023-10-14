@@ -24,8 +24,26 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
     <div>
       <div skooltrak-tabs>
         <sk-tabs-item link="info">{{ 'Info' | translate }}</sk-tabs-item>
+        <sk-tabs-item link="courses">{{ 'Courses' | translate }}</sk-tabs-item>
+        <sk-tabs-item link="plans">{{
+          'Plans.Title' | translate
+        }}</sk-tabs-item>
+        <sk-tabs-item link="subjects">{{
+          'Subjects.Title' | translate
+        }}</sk-tabs-item>
+        <sk-tabs-item link="degrees">{{
+          'Degrees.Title' | translate
+        }}</sk-tabs-item>
+        <sk-tabs-item link="groups">{{
+          'GROUPS.TITLE' | translate
+        }}</sk-tabs-item>
+        <sk-tabs-item link="periods">{{
+          'PERIODS.TITLE' | translate
+        }}</sk-tabs-item>
       </div>
-      <router-outlet />
+      <div class="p-4">
+        <router-outlet />
+      </div>
     </div>
   </sk-card>`,
 })

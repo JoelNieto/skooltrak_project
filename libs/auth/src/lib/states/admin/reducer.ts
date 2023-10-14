@@ -6,7 +6,7 @@ import { AdminActions } from './actions';
 export type State = {
   loading: boolean;
   schools: Partial<School>[];
-  currentSchool: Partial<School> | undefined;
+  CURRENT_SCHOOL: Partial<School> | undefined;
   links: Link[];
 };
 
@@ -14,7 +14,7 @@ export const initialState: State = {
   loading: false,
   schools: [],
   links: [],
-  currentSchool: undefined,
+  CURRENT_SCHOOL: undefined,
 };
 
 export const adminFeature = createFeature({

@@ -18,4 +18,5 @@ export enum Table {
   GradeBuckets = 'grade_buckets',
   Periods = 'periods',
   SchoolUsers = 'school_users',
+  Levels = 'levels',
 }

@@ -9,10 +9,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styles: [
     `
       .link {
-        @apply inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:text-gray-600 dark:hover:text-gray-300;
+        @apply inline-block rounded-lg px-5 py-2.5 hover:text-gray-800 dark:hover:text-gray-300;
       }
       .active {
-        @apply border-sky-600 font-semibold text-gray-800 dark:border-sky-600 dark:text-sky-600;
+        @apply bg-sky-600 font-semibold text-gray-50 hover:text-gray-50 dark:bg-sky-300 dark:text-sky-800 dark:hover:text-sky-800;
       }
       .disabled {
         @apply cursor-not-allowed text-gray-400 dark:text-gray-500;

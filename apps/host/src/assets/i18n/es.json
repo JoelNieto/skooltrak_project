@@ -87,6 +87,13 @@
     "Details": "Detalles del Plan de estudio",
     "Title": "Planes de estudio"
   },
+  "PEOPLE": {
+    "TITLE": "Personas",
+    "ALL": "--Todos--",
+    "ADMINS": "Administrativos",
+    "TEACHERS": "Docentes",
+    "STUDENTS": "Estudiantes"
+  },
   "PERIODS": {
     "TITLE": "Periodos",
     "DETAILS": "Datos del periodo",

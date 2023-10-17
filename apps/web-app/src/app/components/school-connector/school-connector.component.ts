@@ -1,22 +1,13 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  ConfirmationService,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ConfirmationService } from '@skooltrak/ui';
 
 import { SchoolConnectorStore } from './school-connector.store';
 
@@ -75,7 +66,7 @@ import { SchoolConnectorStore } from './school-connector.store';
       </button>
     </div>
     <form [formGroup]="form" (ngSubmit)="validateCode()">
-      <p class="mb-2 text-sm text-sm italic text-gray-500">
+      <p class="mb-2 text-sm italic text-gray-500">
         {{ 'School Connector.Message' | translate }}
       </p>
       <div class="grid grid-cols-2 gap-4">
@@ -110,7 +101,8 @@ export class SchoolConnectorComponent {
   public roles = Object.values(RoleEnum);
   private store = inject(SchoolConnectorStore);
   private numberRegEx = /^\d+$/;
-  form = new FormGroup({
+
+  public form = new FormGroup({
     code: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -128,7 +120,7 @@ export class SchoolConnectorComponent {
 
   public validateCode(): void {
     const { code, role } = this.form.getRawValue();
-    this.store.patchState({ role });
+    this.store.patchState({ ROLE: role });
     this.store.fetchSchoolByCode(code);
   }
 }

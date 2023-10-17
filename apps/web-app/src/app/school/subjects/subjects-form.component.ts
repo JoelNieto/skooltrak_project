@@ -77,7 +77,7 @@ import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
 export class SubjectsFormComponent implements AfterViewInit {
   public dialogRef = inject(DialogRef<Partial<Subject>>);
   private data: Subject | undefined = inject(DIALOG_DATA);
-  form = new FormGroup({
+  public form = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -94,11 +94,11 @@ export class SubjectsFormComponent implements AfterViewInit {
     }),
   });
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     !!this.data && this.form.patchValue(this.data);
   }
 
-  saveChanges() {
+  public saveChanges(): void {
     this.dialogRef.close(this.form.getRawValue());
   }
 }

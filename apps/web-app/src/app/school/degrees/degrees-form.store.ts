@@ -1,16 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { Level, Table } from '@skooltrak/models';
 import { exhaustMap, from, map, tap } from 'rxjs';
 
 type State = {
-  loading: boolean;
-  levels: Partial<Level>[];
+  LOADING: boolean;
+  LEVELS: Partial<Level>[];
 };
 
 @Injectable()
@@ -20,13 +16,13 @@ export class DegreesFormStore
 {
   private readonly supabase = inject(SupabaseService);
 
-  readonly loading = this.selectSignal((state) => state.loading);
-  readonly levels = this.selectSignal((state) => state.levels);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly LEVELS = this.selectSignal((state) => state.LEVELS);
 
-  readonly fetchLevels = this.effect<void>((trigger$) =>
+  private readonly fetchLevels = this.effect<void>((trigger$) =>
     trigger$
       .pipe(
-        tap(() => this.patchState({ loading: true })),
+        tap(() => this.patchState({ LOADING: true })),
         exhaustMap(() =>
           from(this.supabase.client.from(Table.Levels).select('id, name')).pipe(
             map(({ error, data }) => {
@@ -38,17 +34,17 @@ export class DegreesFormStore
       )
       .pipe(
         tapResponse(
-          (levels) => this.patchState({ levels }),
+          (LEVELS) => this.patchState({ LEVELS }),
           (error) => console.error(error),
-          () => this.patchState({ loading: true })
+          () => this.patchState({ LOADING: true })
         )
       )
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
-      loading: false,
-      levels: [],
+      LOADING: false,
+      LEVELS: [],
     });
     this.fetchLevels();
   };

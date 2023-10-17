@@ -1,22 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Period, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import {
-  combineLatestWith,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  tap,
-} from 'rxjs';
+import { combineLatestWith, exhaustMap, filter, from, map, Observable, tap } from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -104,7 +92,7 @@ export class SchoolPeriodsStore
         )
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({ LOADING: false, PERIODS: [] });
     this.fetchPeriods();
   };

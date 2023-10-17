@@ -2,19 +2,11 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './plans-form.component';
 import { SchoolStudyPlansStore } from './plans.store';
@@ -126,16 +118,19 @@ import { SchoolStudyPlansStore } from './plans.store';
   </div>`,
 })
 export class StudyPlansComponent {
-  store = inject(SchoolStudyPlansStore);
-  dialog = inject(Dialog);
-  confirmation = inject(ConfirmationService);
+  public store = inject(SchoolStudyPlansStore);
+  private dialog = inject(Dialog);
+  private confirmation = inject(ConfirmationService);
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
 
-  newStudyPlan() {
+  public newStudyPlan(): void {
     const dialogRef = this.dialog.open<Partial<StudyPlan>>(
       StudyPlansFormComponent,
       {
@@ -151,7 +146,7 @@ export class StudyPlansComponent {
     });
   }
 
-  editStudyPlan(degree: StudyPlan) {
+  public editStudyPlan(degree: StudyPlan): void {
     const dialogRef = this.dialog.open<Partial<StudyPlan>>(
       StudyPlansFormComponent,
       {

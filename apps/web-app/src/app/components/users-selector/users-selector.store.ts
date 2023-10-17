@@ -16,10 +16,10 @@ export class UsersSelectorStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  supabase = inject(SupabaseService);
-  readonly users = this.selectSignal((state) => state.filteredUsers);
-  readonly loading = this.selectSignal((state) => state.loading);
-  readonly query$ = this.select((state) => state.queryText, {
+  private readonly supabase = inject(SupabaseService);
+  public readonly users = this.selectSignal((state) => state.filteredUsers);
+  public readonly loading = this.selectSignal((state) => state.loading);
+  private readonly query$ = this.select((state) => state.queryText, {
     debounce: true,
   });
 
@@ -50,7 +50,7 @@ export class UsersSelectorStore
     );
   });
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       filteredUsers: [],
       selectedUsers: [],

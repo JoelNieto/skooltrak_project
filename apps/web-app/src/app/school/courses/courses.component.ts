@@ -1,6 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -151,6 +152,7 @@ import { SchoolCoursesStore } from './courses.store';
 })
 export class SchoolCoursesComponent implements OnInit {
   public store = inject(SchoolCoursesStore);
+  private destroyRef = inject(DestroyRef);
   private dialog = inject(Dialog);
 
   public degreeControl = new FormControl<string | undefined>(undefined, {
@@ -161,7 +163,7 @@ export class SchoolCoursesComponent implements OnInit {
     nonNullable: true,
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.degreeControl.valueChanges.subscribe({
       next: (degree) => this.store.patchState({ SELECTED_DEGREE: degree }),
     });
@@ -170,7 +172,10 @@ export class SchoolCoursesComponent implements OnInit {
     });
   }
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
@@ -185,7 +190,7 @@ export class SchoolCoursesComponent implements OnInit {
       }
     );
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (request) => {
         !!request && this.store.saveCourse(request);
       },
@@ -201,7 +206,7 @@ export class SchoolCoursesComponent implements OnInit {
         data: course,
       }
     );
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (request) => {
         !!request && this.store.saveCourse({ ...request, id: course.id });
       },

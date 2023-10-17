@@ -23,18 +23,18 @@ export class SchoolDegreesStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  auth = inject(authState.AuthStateFacade);
-  supabase = inject(SupabaseService);
-  alert = inject(AlertService);
-  util = inject(UtilService);
-  confirmation = inject(ConfirmationService);
+  private readonly auth = inject(authState.AuthStateFacade);
+  private readonly supabase = inject(SupabaseService);
+  private readonly alert = inject(AlertService);
+  private readonly util = inject(UtilService);
+  private readonly confirmation = inject(ConfirmationService);
 
-  readonly DEGREES = this.selectSignal((state) => state.DEGREES);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly start$ = this.select((state) => state.START);
-  readonly end$ = this.select((state) => state.END);
+  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly start$ = this.select((state) => state.START);
+  public readonly end$ = this.select((state) => state.END);
 
   private setCount = this.updater(
     (state, count: number): State => ({
@@ -44,7 +44,7 @@ export class SchoolDegreesStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       START: start,
@@ -52,7 +52,7 @@ export class SchoolDegreesStore
     })
   );
 
-  readonly fetchDegreesData$ = this.select(
+  private readonly fetchDegreesData$ = this.select(
     {
       start: this.start$,
       end: this.end$,
@@ -164,7 +164,7 @@ export class SchoolDegreesStore
     );
   });
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       DEGREES: [],
       LOADING: true,

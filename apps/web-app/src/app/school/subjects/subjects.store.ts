@@ -29,12 +29,12 @@ export class SchoolSubjectsStore
   private readonly alert = inject(AlertService);
   private readonly translate = inject(TranslateService);
 
-  readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly START$ = this.select((state) => state.START);
-  readonly END$ = this.select((state) => state.END);
+  public readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly START$ = this.select((state) => state.START);
+  public readonly END$ = this.select((state) => state.END);
 
   private setCount = this.updater(
     (state, count: number): State => ({
@@ -44,7 +44,7 @@ export class SchoolSubjectsStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       START: start,
@@ -52,7 +52,7 @@ export class SchoolSubjectsStore
     })
   );
 
-  readonly fetchSubjectsData$ = this.select(
+  private readonly fetchSubjectsData$ = this.select(
     {
       START: this.START$,
       END: this.END$,
@@ -163,7 +163,7 @@ export class SchoolSubjectsStore
     );
   });
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       SUBJECTS: [],
       LOADING: true,

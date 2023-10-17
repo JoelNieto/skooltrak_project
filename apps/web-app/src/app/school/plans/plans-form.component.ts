@@ -1,22 +1,12 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, LabelDirective, SelectComponent } from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './plans-form.store';
@@ -110,8 +100,8 @@ import { PlansFormStore } from './plans-form.store';
 export class StudyPlansFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<StudyPlan>>);
   private data: StudyPlan | undefined = inject(DIALOG_DATA);
-  store = inject(PlansFormStore);
-  form = new FormGroup({
+  public store = inject(PlansFormStore);
+  public form = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -129,7 +119,7 @@ export class StudyPlansFormComponent implements OnInit {
     }),
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.form
       .get('degree_id')
       ?.valueChanges.pipe(filter((val) => !!val))
@@ -142,7 +132,7 @@ export class StudyPlansFormComponent implements OnInit {
     !!this.data && this.form.patchValue(this.data);
   }
 
-  saveChanges() {
+  public saveChanges(): void {
     this.dialogRef.close(this.form.getRawValue());
   }
 }

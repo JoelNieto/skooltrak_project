@@ -45,7 +45,7 @@ import { CourseGradesStore } from './course-grades.store';
       <div class="w-64">
         <sk-select
           [formControl]="periodControl"
-          [items]="periods()"
+          [items]="store.PERIODS()"
           label="name"
           [search]="false"
         />
@@ -121,9 +121,9 @@ export class CourseGradesComponent implements OnInit {
   public grades = Array.from(Array(15).keys());
   private courseStore = inject(CoursesStore);
   private dialog = inject(Dialog);
-  private store = inject(CourseGradesStore);
-  public periods = this.store.periods;
-  periodControl = new FormControl<string | undefined>(
+  public store = inject(CourseGradesStore);
+
+  public periodControl = new FormControl<string | undefined>(
     this.store.course()?.period_id,
     {
       nonNullable: true,
@@ -131,10 +131,10 @@ export class CourseGradesComponent implements OnInit {
   );
 
   public ngOnInit(): void {
-    this.periodControl.setValue(this.store.period());
+    this.periodControl.setValue(this.store.PERIOD());
   }
 
-  newGrade() {
+  public newGrade(): void {
     this.dialog.open<Partial<Grade>>(GradesFormComponent, {
       minWidth: '42rem',
       disableClose: true,

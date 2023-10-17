@@ -4,12 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroBookmarkSquare,
-  heroCalendarDays,
-  heroClipboardDocument,
-  heroHome,
-} from '@ng-icons/heroicons/outline';
+import { heroBookmarkSquare, heroCalendarDays, heroClipboardDocument, heroHome } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
@@ -72,15 +67,15 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
             >
           </a>
           <button
-            class="flex hidden items-center gap-3 rounded-lg border border-gray-200 px-4 py-2 font-sans text-sm dark:text-gray-100 md:flex"
+            class="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-2 font-sans text-sm dark:text-gray-100 md:flex"
             (click)="changeSchool()"
           >
             <sk-avatar
-              *ngIf="school()?.crest_url"
-              [avatarUrl]="school()?.crest_url!"
+              *ngIf="SCHOOL()?.crest_url"
+              [avatarUrl]="SCHOOL()?.crest_url!"
               bucket="crests"
               class="w-8"
-            />{{ school()?.short_name ?? ('Select school' | translate) }}
+            />{{ SCHOOL()?.short_name ?? ('Select school' | translate) }}
           </button>
         </div>
         <div class="hidden w-full flex-1 md:block md:w-auto">
@@ -120,7 +115,7 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
               >
                 <span class="sr-only">Open user menu</span>
                 <sk-avatar
-                  [avatarUrl]="user()?.avatar_url ?? 'default_avatar.jpg'"
+                  [avatarUrl]="USER()?.avatar_url ?? 'default_avatar.jpg'"
                   [rounded]="true"
                   class="w-8"
                 />
@@ -129,7 +124,7 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
                   <p
                     class="font-sans text-sm font-semibold text-gray-800 dark:text-white"
                   >
-                    {{ user()?.first_name }} {{ user()?.father_name }}
+                    {{ USER()?.first_name }} {{ USER()?.father_name }}
                   </p>
                 </div>
               </button>
@@ -145,13 +140,13 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
                     class="text-sm font-bold text-sky-700 dark:text-white"
                     role="none"
                   >
-                    {{ user()?.first_name }} {{ user()?.father_name }}
+                    {{ USER()?.first_name }} {{ USER()?.father_name }}
                   </p>
                   <p
                     class="truncate font-sans text-sm text-gray-500 dark:text-gray-300"
                     role="none"
                   >
-                    {{ user()?.email }}
+                    {{ USER()?.email }}
                   </p>
                 </div>
                 <ul class="py-1" role="none">
@@ -208,10 +203,9 @@ export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);
   private dialog = inject(Dialog);
 
-  user = this.auth.USER;
-  schools = this.auth.SCHOOLS;
-  school = this.auth.CURRENT_SCHOOL;
-  IS_ADMIN = this.auth.IS_ADMIN;
+  public USER = this.auth.USER;
+  public SCHOOL = this.auth.CURRENT_SCHOOL;
+  public IS_ADMIN = this.auth.IS_ADMIN;
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {

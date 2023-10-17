@@ -23,7 +23,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
   </div>`,
 })
 export class UserChipComponent {
-  @Input({ required: true }) user!: Partial<User>;
-  @Input() removable = false;
-  @Output() remove = new EventEmitter<Partial<User>>();
+  @Input({ required: true }) public user!: Partial<User>;
+  @Input() public removable = false;
+  @Output() public remove = new EventEmitter<Partial<User>>();
 }

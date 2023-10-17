@@ -1,27 +1,12 @@
 /* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Table } from '@skooltrak/models';
-import { AlertService, ConfirmationService, UtilService } from '@skooltrak/ui';
-import {
-  combineLatestWith,
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { AlertService, UtilService } from '@skooltrak/ui';
+import { combineLatestWith, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 /* eslint-disable rxjs/finnish */
 type State = {
@@ -45,16 +30,15 @@ export class SchoolGroupsStore
   private readonly util = inject(UtilService);
   private readonly alert = inject(AlertService);
   private readonly translate = inject(TranslateService);
-  private readonly confirmation = inject(ConfirmationService);
 
-  readonly GROUPS = this.selectSignal((state) => state.GROUPS);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly start$ = this.select((state) => state.START);
-  readonly end$ = this.select((state) => state.END);
-  readonly SELECTED_ID = this.selectSignal((state) => state.SELECTED_ID);
-  readonly SELECTED = this.selectSignal((state) =>
+  public readonly GROUPS = this.selectSignal((state) => state.GROUPS);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly start$ = this.select((state) => state.START);
+  public readonly end$ = this.select((state) => state.END);
+  public readonly SELECTED_ID = this.selectSignal((state) => state.SELECTED_ID);
+  public readonly SELECTED = this.selectSignal((state) =>
     state.SELECTED_ID
       ? state.GROUPS.find((x) => x.id === state.SELECTED_ID)
       : null
@@ -68,7 +52,7 @@ export class SchoolGroupsStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       START: start,
@@ -76,7 +60,7 @@ export class SchoolGroupsStore
     })
   );
 
-  readonly fetchGroupsData$ = this.select(
+  private readonly fetchGroupsData$ = this.select(
     {
       start: this.start$,
       end: this.end$,
@@ -136,9 +120,8 @@ export class SchoolGroupsStore
                 { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
               ])
           ).pipe(
-            exhaustMap(({ error }) => {
+            map(({ error }) => {
               if (error) throw new Error(error.message);
-              return of(EMPTY);
             })
           );
         }),
@@ -163,7 +146,7 @@ export class SchoolGroupsStore
     }
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       GROUPS: [],
       LOADING: true,

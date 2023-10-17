@@ -2,19 +2,11 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -124,9 +116,9 @@ import { SchoolDegreesStore } from './degrees.store';
   </div>`,
 })
 export class SchoolDegreesComponent {
-  store = inject(SchoolDegreesStore);
-  dialog = inject(Dialog);
-  confirmation = inject(ConfirmationService);
+  public store = inject(SchoolDegreesStore);
+  private dialog = inject(Dialog);
+  private confirmation = inject(ConfirmationService);
 
   public getCurrentPage(pagination: {
     currentPage: number;
@@ -136,7 +128,7 @@ export class SchoolDegreesComponent {
     this.store.setRange(start);
   }
 
-  public newDegree() {
+  public newDegree(): void {
     const dialogRef = this.dialog.open<Partial<Degree>>(DegreesFormComponent, {
       minWidth: '36rem',
       disableClose: true,

@@ -22,17 +22,17 @@ export class SchoolStudyPlansStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  auth = inject(authState.AuthStateFacade);
-  supabase = inject(SupabaseService);
-  util = inject(UtilService);
-  alert = inject(AlertService);
+  private readonly auth = inject(authState.AuthStateFacade);
+  private readonly supabase = inject(SupabaseService);
+  private readonly util = inject(UtilService);
+  private readonly alert = inject(AlertService);
 
-  readonly PLANS = this.selectSignal((state) => state.PLANS);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly START$ = this.select((state) => state.START);
-  readonly END$ = this.select((state) => state.END);
+  public readonly PLANS = this.selectSignal((state) => state.PLANS);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly START$ = this.select((state) => state.START);
+  public readonly END$ = this.select((state) => state.END);
 
   private setStudyPlans = this.updater(
     (state, PLANS: StudyPlan[]): State => ({
@@ -49,7 +49,7 @@ export class SchoolStudyPlansStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, START: number): State => ({
       ...state,
       START: START,
@@ -57,7 +57,7 @@ export class SchoolStudyPlansStore
     })
   );
 
-  readonly fetchStudyPlansData$ = this.select(
+  private readonly fetchStudyPlansData$ = this.select(
     {
       START: this.START$,
       END: this.END$,
@@ -133,7 +133,7 @@ export class SchoolStudyPlansStore
     }
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       PLANS: [],
       LOADING: true,

@@ -70,7 +70,7 @@ import { GradesFormStore } from './grades-form.store';
           <div>
             <label for="bucket">{{ 'Type' | translate }}</label>
             <sk-select
-              [items]="buckets()"
+              [items]="BUCKETS()"
               label="name"
               placeholder="Select bucket"
               formControlName="bucket_id"
@@ -132,16 +132,16 @@ export class GradesFormComponent implements OnInit {
   public students = Array.from(Array(20).keys());
   private data: { course: Course; grade: Grade | undefined } =
     inject(DIALOG_DATA);
-  public buckets = this.store.buckets;
+  public BUCKETS = this.store.BUCKETS;
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const { course } = this.data;
     const { id: course_id, period_id } = course;
-    this.store.patchState({ course_id: course?.id });
+    this.store.patchState({ COURSE_ID: course?.id });
     this.gradeForm.patchValue({ course_id, period_id });
   }
 
-  saveGrade() {
+  public saveGrade(): void {
     const { grade } = this.data;
     !grade && this.store.createGrade(this.gradeForm.getRawValue());
   }

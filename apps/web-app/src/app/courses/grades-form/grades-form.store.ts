@@ -1,19 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { Grade, GradeBucket, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import { EMPTY, filter, from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
-  grade: Partial<Grade> | undefined;
-  course_id: string | undefined;
-  buckets: GradeBucket[];
-  loading: boolean;
+  GRADE: Partial<Grade> | undefined;
+  COURSE_ID: string | undefined;
+  BUCKETS: GradeBucket[];
+  LOADING: boolean;
 };
 
 @Injectable()
@@ -24,15 +20,15 @@ export class GradesFormStore
   private supabase = inject(SupabaseService);
   private alert = inject(AlertService);
 
-  private course_id$ = this.select((state) => state.course_id);
+  private COURSE_ID$ = this.select((state) => state.COURSE_ID);
 
-  public readonly buckets = this.selectSignal((state) => state?.buckets);
+  public readonly BUCKETS = this.selectSignal((state) => state?.BUCKETS);
 
   private readonly fetchBuckets = this.effect(
-    (course_id$: Observable<string | undefined>) => {
-      return course_id$.pipe(
+    (COURSE_ID$: Observable<string | undefined>) => {
+      return COURSE_ID$.pipe(
         filter((id) => !!id),
-        tap(() => this.patchState({ loading: true })),
+        tap(() => this.patchState({ LOADING: true })),
         switchMap((id) => {
           return from(
             this.supabase.client
@@ -48,9 +44,9 @@ export class GradesFormStore
             )
             .pipe(
               tapResponse(
-                (buckets) => this.patchState({ buckets }),
+                (BUCKETS) => this.patchState({ BUCKETS }),
                 (error) => console.error(error),
-                () => this.patchState({ loading: false })
+                () => this.patchState({ LOADING: false })
               )
             );
         })
@@ -58,64 +54,70 @@ export class GradesFormStore
     }
   );
 
-  readonly fetchGrade = this.effect((request_id$: Observable<string>) => {
-    return request_id$.pipe(
-      tap(() => this.patchState({ loading: true })),
-      switchMap((id) =>
-        from(
-          this.supabase.client
-            .from(Table.Grades)
-            .select('id, course_id, start_at, bucket_id, period_id, published')
-            .eq('id', id)
-            .single()
+  public readonly fetchGrade = this.effect(
+    (request_id$: Observable<string>) => {
+      return request_id$.pipe(
+        tap(() => this.patchState({ LOADING: true })),
+        switchMap((id) =>
+          from(
+            this.supabase.client
+              .from(Table.Grades)
+              .select(
+                'id, course_id, start_at, bucket_id, period_id, published'
+              )
+              .eq('id', id)
+              .single()
+          )
+            .pipe(
+              map(({ error, data }) => {
+                if (error) throw new Error(error.message);
+                return data;
+              })
+            )
+            .pipe(
+              tapResponse(
+                (GRADE) => this.patchState({ GRADE }),
+                (error) => console.error(error),
+                () => this.patchState({ LOADING: false })
+              )
+            )
         )
-          .pipe(
-            map(({ error, data }) => {
-              if (error) throw new Error(error.message);
-              return data;
-            })
-          )
-          .pipe(
-            tapResponse(
-              (grade) => this.patchState({ grade }),
-              (error) => console.error(error),
-              () => this.patchState({ loading: false })
-            )
-          )
-      )
-    );
-  });
+      );
+    }
+  );
 
-  readonly createGrade = this.effect((request$: Observable<Partial<Grade>>) => {
-    return request$.pipe(
-      tap(() => this.patchState({ loading: true })),
-      switchMap((grade) => {
-        return from(this.supabase.client.from(Table.Grades).insert([grade]))
-          .pipe(
-            map(({ error }) => {
-              if (error) throw new Error(error.message);
-              return EMPTY;
-            })
-          )
-          .pipe(
-            tapResponse(
-              () =>
-                this.alert.showAlert({ icon: 'success', message: 'Created' }),
-              (error) => console.error(error),
-              () => this.patchState({ loading: false })
+  public readonly createGrade = this.effect(
+    (request$: Observable<Partial<Grade>>) => {
+      return request$.pipe(
+        tap(() => this.patchState({ LOADING: true })),
+        switchMap((grade) => {
+          return from(this.supabase.client.from(Table.Grades).insert([grade]))
+            .pipe(
+              map(({ error }) => {
+                if (error) throw new Error(error.message);
+                return EMPTY;
+              })
             )
-          );
-      })
-    );
-  });
+            .pipe(
+              tapResponse(
+                () =>
+                  this.alert.showAlert({ icon: 'success', message: 'Created' }),
+                (error) => console.error(error),
+                () => this.patchState({ LOADING: false })
+              )
+            );
+        })
+      );
+    }
+  );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
-      buckets: [],
-      course_id: undefined,
-      loading: false,
-      grade: undefined,
+      BUCKETS: [],
+      COURSE_ID: undefined,
+      LOADING: false,
+      GRADE: undefined,
     });
-    this.fetchBuckets(this.course_id$);
+    this.fetchBuckets(this.COURSE_ID$);
   };
 }

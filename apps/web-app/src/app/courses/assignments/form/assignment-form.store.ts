@@ -21,18 +21,18 @@ export class AssignmentFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  supabase = inject(SupabaseService);
-  alert = inject(AlertService);
-  readonly types = this.selectSignal((state) => state.types);
-  readonly assignment_id$ = this.select((state) => state.id);
-  readonly selected = this.selectSignal((state) => state.assignment);
-  readonly dates = this.selectSignal((state) => state.dates);
-  readonly courses = this.selectSignal((state) => state.courses);
-  readonly course$ = this.select((state) =>
+  private readonly supabase = inject(SupabaseService);
+  private readonly alert = inject(AlertService);
+  public readonly types = this.selectSignal((state) => state.types);
+  private readonly assignment_id$ = this.select((state) => state.id);
+  public readonly selected = this.selectSignal((state) => state.assignment);
+  public readonly dates = this.selectSignal((state) => state.dates);
+  public readonly courses = this.selectSignal((state) => state.courses);
+  public readonly course$ = this.select((state) =>
     state.courses.find((x) => x.id === state.course_id)
   );
 
-  readonly fetchTypes = this.effect(() => {
+  private readonly fetchTypes = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.AssignmentTypes)
@@ -52,7 +52,7 @@ export class AssignmentFormStore
       );
   });
 
-  readonly fetchCourses = this.effect(() => {
+  private readonly fetchCourses = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.Courses)
@@ -74,34 +74,39 @@ export class AssignmentFormStore
     );
   });
 
-  readonly saveAssignment = this.effect((request$: Observable<Assignment>) => {
-    return request$.pipe(
-      tap(() => this.patchState({ loading: true })),
-      switchMap((request) => {
-        return from(
-          this.supabase.client
-            .from(Table.Assignments)
-            .upsert([
-              pick(request, ['title', 'description', 'course_id', 'type_id']),
-            ])
-            .select('id')
-            .single()
-        ).pipe(
-          map(({ data, error }) => {
-            if (error) throw new Error(error.message);
-            return data;
-          }),
-          tapResponse(
-            ({ id }) =>
-              this.saveGroupsDate({ groups: this.dates(), assignment_id: id }),
-            (error) => console.error(error)
-          )
-        );
-      })
-    );
-  });
+  public readonly saveAssignment = this.effect(
+    (request$: Observable<Assignment>) => {
+      return request$.pipe(
+        tap(() => this.patchState({ loading: true })),
+        switchMap((request) => {
+          return from(
+            this.supabase.client
+              .from(Table.Assignments)
+              .upsert([
+                pick(request, ['title', 'description', 'course_id', 'type_id']),
+              ])
+              .select('id')
+              .single()
+          ).pipe(
+            map(({ data, error }) => {
+              if (error) throw new Error(error.message);
+              return data;
+            }),
+            tapResponse(
+              ({ id }) =>
+                this.saveGroupsDate({
+                  groups: this.dates(),
+                  assignment_id: id,
+                }),
+              (error) => console.error(error)
+            )
+          );
+        })
+      );
+    }
+  );
 
-  readonly saveGroupsDate = this.effect(
+  private readonly saveGroupsDate = this.effect(
     (
       request$: Observable<{
         groups: GroupAssignment[];
@@ -135,7 +140,7 @@ export class AssignmentFormStore
     }
   );
 
-  readonly fetchAssignment = this.effect(() => {
+  private readonly fetchAssignment = this.effect(() => {
     return this.assignment_id$.pipe(
       tap(() => this.patchState({ loading: true })),
       filter((id) => !!id),
@@ -161,7 +166,7 @@ export class AssignmentFormStore
     );
   });
 
-  ngrxOnStoreInit = () =>
+  public ngrxOnStoreInit = (): void =>
     this.setState({
       id: undefined,
       assignment: undefined,

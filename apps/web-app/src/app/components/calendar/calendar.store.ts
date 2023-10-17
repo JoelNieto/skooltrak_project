@@ -24,13 +24,13 @@ export class CalendarStore
   implements OnStoreInit
 {
   private readonly supabase = inject(SupabaseService);
-  readonly start$ = this.select((state) => state.start_date);
-  readonly end$ = this.select((state) => state.end_date);
-  readonly query_item$ = this.select((state) => state.query_item);
-  readonly query_value$ = this.select((state) => state.query_value);
-  readonly assignments = this.selectSignal((state) => state.assignments);
+  public readonly start$ = this.select((state) => state.start_date);
+  public readonly end$ = this.select((state) => state.end_date);
+  public readonly query_item$ = this.select((state) => state.query_item);
+  public readonly query_value$ = this.select((state) => state.query_value);
+  public readonly assignments = this.selectSignal((state) => state.assignments);
 
-  readonly queryData$ = this.select(
+  private readonly queryData$ = this.select(
     {
       start_date: this.start$,
       end_date: this.end$,
@@ -40,7 +40,7 @@ export class CalendarStore
     { debounce: true }
   );
 
-  readonly fetchAssignments = this.effect(
+  private readonly fetchAssignments = this.effect(
     (
       query$: Observable<{
         start_date: Date;
@@ -85,7 +85,7 @@ export class CalendarStore
     }
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       start_date: startOfMonth(new Date()),
       end_date: endOfMonth(new Date()),

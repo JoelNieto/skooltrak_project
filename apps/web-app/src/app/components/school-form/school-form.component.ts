@@ -1,23 +1,14 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
-import { Component, effect, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { School } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolFormStore } from './school-form.store';
@@ -70,14 +61,14 @@ import { SchoolFormStore } from './school-form.store';
     </div>
     <div class="flex flex-col items-center justify-center space-y-4">
       <sk-avatar
-        *ngIf="school()?.crest_url"
-        [avatarUrl]="school()?.crest_url!"
+        *ngIf="store.SCHOOL()?.crest_url"
+        [avatarUrl]="store.SCHOOL()?.crest_url!"
         (click)="uploadCrest()"
         bucket="crests"
         class="h-24 rounded-md"
       />
       <img
-        *ngIf="!school()?.crest_url"
+        *ngIf="!store.SCHOOL()?.crest_url"
         (click)="uploadCrest()"
         src="assets/skooltrak-logo.svg"
         class="h-24"
@@ -101,7 +92,7 @@ import { SchoolFormStore } from './school-form.store';
         <label for="country_id">{{ 'Country' | translate }}</label>
         <sk-select
           formControlName="country_id"
-          [items]="store.countries()"
+          [items]="store.COUNTRIES()"
           label="name"
         />
       </div>
@@ -138,9 +129,9 @@ import { SchoolFormStore } from './school-form.store';
 })
 export class SchoolFormComponent implements OnInit {
   public store = inject(SchoolFormStore);
-  public school = this.store.school;
   private dialog = inject(Dialog);
   public dialogRef = inject(DialogRef);
+  private destroyRef = inject(DestroyRef);
 
   private data: School | undefined = inject(DIALOG_DATA);
   public form = new FormGroup({
@@ -168,21 +159,21 @@ export class SchoolFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const school = this.store.school();
+      const school = this.store.SCHOOL();
       !!school && this.form.patchValue(school);
     });
   }
 
-  ngOnInit(): void {
-    !!this.data && this.store.patchState({ school: this.data });
+  public ngOnInit(): void {
+    !!this.data && this.store.patchState({ SCHOOL: this.data });
   }
 
-  uploadCrest() {
+  public uploadCrest(): void {
     const dialogRef = this.dialog.open<{
       imageFile: File | undefined;
       cropImgPreview: string;
     }>(ImageCropperComponent, { minWidth: '28rem' });
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         if (!result) return;
         const { imageFile } = result;
@@ -191,9 +182,9 @@ export class SchoolFormComponent implements OnInit {
     });
   }
 
-  saveChanges() {
+  public saveChanges(): void {
     const { value } = this.form;
-    const request = { ...value, ...this.store.school() };
+    const request = { ...value, ...this.store.SCHOOL() };
     if (!request.id) {
       delete request.id;
     }

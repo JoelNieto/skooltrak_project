@@ -3,7 +3,7 @@ import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store'
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Degree, StudyPlan, Table } from '@skooltrak/models';
 import { orderBy } from 'lodash';
-import { combineLatestWith, exhaustMap, filter, from, map, Observable, tap } from 'rxjs';
+import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -20,19 +20,19 @@ export class GroupsFormStore
   private readonly supabase = inject(SupabaseService);
   private readonly auth = inject(authState.AuthStateFacade);
 
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly DEGREES = this.selectSignal((state) => state.DEGREES);
-  readonly PLANS = this.selectSignal((state) => state.PLANS);
-  readonly SELECTED_DEGREE_ID$ = this.select(
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
+  public readonly PLANS = this.selectSignal((state) => state.PLANS);
+  public readonly SELECTED_DEGREE_ID$ = this.select(
     (state) => state.SELECTED_DEGREE_ID
   );
 
-  readonly fetchDegrees = this.effect<void>((trigger$) =>
+  private readonly fetchDegrees = this.effect<void>((trigger$) =>
     trigger$.pipe(
       combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
       filter(([, school_id]) => !!school_id),
       tap(() => this.patchState({ LOADING: true })),
-      exhaustMap(([, school_id]) =>
+      switchMap(([, school_id]) =>
         from(
           this.supabase.client
             .from(Table.Degrees)
@@ -56,13 +56,13 @@ export class GroupsFormStore
     )
   );
 
-  readonly fetchPlans = this.effect(
+  private readonly fetchPlans = this.effect(
     (degree$: Observable<string | undefined>) => {
       return degree$
         .pipe(
           filter((degree) => !!degree),
           tap(() => this.patchState({ LOADING: false })),
-          exhaustMap((degree) =>
+          switchMap((degree) =>
             from(
               this.supabase.client
                 .from(Table.StudyPlans)
@@ -86,7 +86,7 @@ export class GroupsFormStore
     }
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       LOADING: false,
       DEGREES: [],

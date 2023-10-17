@@ -1,9 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { GradeObject, Period, Table } from '@skooltrak/models';
 import { filter, from, map, switchMap, tap } from 'rxjs';
@@ -11,10 +7,10 @@ import { filter, from, map, switchMap, tap } from 'rxjs';
 import { CoursesStore } from '../courses.store';
 
 type State = {
-  periods: Period[];
-  selectedPeriod: string | undefined;
-  loading: boolean;
-  grades: Partial<GradeObject>[];
+  PERIODS: Period[];
+  SELECTED_PERIOD: string | undefined;
+  LOADING: boolean;
+  GRADES: Partial<GradeObject>[];
 };
 
 @Injectable()
@@ -22,19 +18,21 @@ export class CourseGradesStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  private courseStore = inject(CoursesStore);
-  private supabase = inject(SupabaseService);
+  private readonly courseStore = inject(CoursesStore);
+  private readonly supabase = inject(SupabaseService);
 
   public course = this.courseStore.selected;
 
-  public periods = this.selectSignal((state) => state.periods);
-  public period = this.selectSignal((state) => state.selectedPeriod);
-  private selectedPeriod$ = this.select((state) => state.selectedPeriod);
+  public readonly PERIODS = this.selectSignal((state) => state.PERIODS);
+  public readonly PERIOD = this.selectSignal((state) => state.SELECTED_PERIOD);
+  private readonly SELECTED_PERIOD$ = this.select(
+    (state) => state.SELECTED_PERIOD
+  );
 
   private readonly fetchGrades = this.effect(() => {
-    return this.selectedPeriod$.pipe(
+    return this.SELECTED_PERIOD$.pipe(
       filter((period_id) => !!period_id),
-      tap(() => this.patchState({ loading: true })),
+      tap(() => this.patchState({ LOADING: true })),
       switchMap((period_id) => {
         return from(
           this.supabase.client
@@ -53,9 +51,9 @@ export class CourseGradesStore
           )
           .pipe(
             tapResponse(
-              (grades) => this.patchState({ grades }),
+              (GRADES) => this.patchState({ GRADES }),
               (error) => console.error(error),
-              () => this.patchState({ loading: false })
+              () => this.patchState({ LOADING: false })
             )
           );
       })
@@ -64,7 +62,7 @@ export class CourseGradesStore
 
   private readonly fetchPeriods = this.effect(() => {
     return (
-      tap(() => this.patchState({ loading: true })),
+      tap(() => this.patchState({ LOADING: true })),
       from(
         this.supabase.client
           .from(Table.Periods)
@@ -79,21 +77,21 @@ export class CourseGradesStore
         )
         .pipe(
           tapResponse(
-            (periods) => this.patchState({ periods }),
+            (PERIODS) => this.patchState({ PERIODS }),
             (error) => {
               console.error(error);
             },
-            () => this.patchState({ loading: false })
+            () => this.patchState({ LOADING: false })
           )
         )
     );
   });
 
-  ngrxOnStoreInit = () =>
+  public ngrxOnStoreInit = (): void =>
     this.setState({
-      loading: false,
-      periods: [],
-      selectedPeriod: this.course()?.period_id,
-      grades: [],
+      LOADING: false,
+      PERIODS: [],
+      SELECTED_PERIOD: this.course()?.period_id,
+      GRADES: [],
     });
 }

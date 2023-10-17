@@ -1,9 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Subject, Table } from '@skooltrak/models';
 import { exhaustMap, from, of } from 'rxjs';
@@ -18,13 +14,13 @@ export class CoursesFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  auth = inject(authState.AuthStateFacade);
+  private readonly auth = inject(authState.AuthStateFacade);
 
-  supabase = inject(SupabaseService);
-  readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
-  readonly PLANS = this.selectSignal((state) => state.PLANS);
+  public readonly supabase = inject(SupabaseService);
+  public readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
+  public readonly PLANS = this.selectSignal((state) => state.PLANS);
 
-  readonly fetchPlans = this.effect(() => {
+  private readonly fetchPlans = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.StudyPlans)
@@ -46,7 +42,7 @@ export class CoursesFormStore
       );
   });
 
-  readonly fetchSubjects = this.effect(() => {
+  private readonly fetchSubjects = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.Subjects)
@@ -70,5 +66,6 @@ export class CoursesFormStore
       );
   });
 
-  ngrxOnStoreInit = () => this.setState({ SUBJECTS: [], PLANS: [] });
+  public ngrxOnStoreInit = (): void =>
+    this.setState({ SUBJECTS: [], PLANS: [] });
 }

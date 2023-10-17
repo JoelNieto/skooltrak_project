@@ -1,6 +1,6 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -128,16 +128,18 @@ import { SchoolSubjectsStore } from './subjects.store';
   </div>`,
 })
 export class SchoolSubjectsComponent {
-  @ViewChild(PaginatorComponent) paginator!: PaginatorComponent;
-  store = inject(SchoolSubjectsStore);
-  dialog = inject(Dialog);
-  confirmation = inject(ConfirmationService);
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public store = inject(SchoolSubjectsStore);
+  private dialog = inject(Dialog);
+  private confirmation = inject(ConfirmationService);
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
 
-  newSubject() {
+  public newSubject(): void {
     const dialogRef = this.dialog.open<Partial<Subject>>(
       SubjectsFormComponent,
       {
@@ -153,7 +155,7 @@ export class SchoolSubjectsComponent {
     });
   }
 
-  editSubject(subject: Subject) {
+  public editSubject(subject: Subject): void {
     const dialogRef = this.dialog.open<Partial<Subject>>(
       SubjectsFormComponent,
       {
@@ -169,7 +171,7 @@ export class SchoolSubjectsComponent {
     });
   }
 
-  deleteSubject() {
+  public deleteSubject(): void {
     this.confirmation.openDialog({ ...defaultConfirmationOptions }).subscribe();
   }
 }

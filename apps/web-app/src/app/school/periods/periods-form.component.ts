@@ -1,11 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
@@ -104,7 +99,7 @@ export class SchoolPeriodsFormComponent implements OnInit {
     }),
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     !!this.data && this.form.patchValue(this.data);
   }
 

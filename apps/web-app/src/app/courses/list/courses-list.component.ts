@@ -129,7 +129,10 @@ import { CoursesStore } from '../courses.store';
 export class CoursesListComponent {
   public store = inject(CoursesStore);
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }

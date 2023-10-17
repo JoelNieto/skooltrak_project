@@ -40,6 +40,9 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
         <sk-tabs-item link="periods">{{
           'PERIODS.TITLE' | translate
         }}</sk-tabs-item>
+        <sk-tabs-item link="people">{{
+          'PEOPLE.TITLE' | translate
+        }}</sk-tabs-item>
       </div>
       <div class="p-4">
         <router-outlet />

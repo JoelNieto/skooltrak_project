@@ -1,26 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { RoleEnum, School, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService } from '@skooltrak/ui';
-import {
-  catchError,
-  filter,
-  from,
-  map,
-  Observable,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { catchError, filter, from, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
 
 type State = {
-  role: RoleEnum | undefined;
-  loading: boolean;
+  ROLE: RoleEnum | undefined;
+  LOADING: boolean;
 };
 
 @Injectable()
@@ -33,12 +20,12 @@ export class SchoolConnectorStore
   private alertService = inject(AlertService);
   private readonly auth = inject(authState.AuthStateFacade);
 
-  private readonly role$ = this.select((state) => state.role);
+  private readonly ROLE$ = this.select((state) => state.ROLE);
 
   public readonly fetchSchoolByCode = this.effect(
     (code$: Observable<string>) => {
       return code$.pipe(
-        tap(() => this.patchState({ loading: true })),
+        tap(() => this.patchState({ LOADING: true })),
         switchMap((code) =>
           from(
             this.supabase.client
@@ -87,13 +74,13 @@ export class SchoolConnectorStore
   private readonly addSchoolConnection = this.effect(
     (request$: Observable<Partial<School>>) => {
       return request$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        withLatestFrom(this.role$),
-        switchMap(([request, role]) =>
+        tap(() => this.patchState({ LOADING: true })),
+        withLatestFrom(this.ROLE$),
+        switchMap(([request, ROLE]) =>
           from(
             this.supabase.client
               .from(Table.SchoolUsers)
-              .insert([{ role, school_id: request.id }])
+              .insert([{ ROLE, school_id: request.id }])
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -110,11 +97,12 @@ export class SchoolConnectorStore
           },
           (error: string) =>
             this.alertService.showAlert({ icon: 'error', message: error }),
-          () => this.patchState({ loading: false })
+          () => this.patchState({ LOADING: false })
         )
       );
     }
   );
 
-  ngrxOnStoreInit = () => this.setState({ loading: false, role: undefined });
+  public ngrxOnStoreInit = (): void =>
+    this.setState({ LOADING: false, ROLE: undefined });
 }

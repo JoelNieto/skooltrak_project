@@ -1,9 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Degree, Table } from '@skooltrak/models';
 import { from, map } from 'rxjs';
@@ -17,11 +13,11 @@ export class PlansFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  auth = inject(authState.AuthStateFacade);
-  supabase = inject(SupabaseService);
-  readonly DEGREES = this.selectSignal((state) => state.DEGREES);
+  private readonly auth = inject(authState.AuthStateFacade);
+  private readonly supabase = inject(SupabaseService);
+  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
 
-  readonly fetchDegrees = this.effect(() => {
+  private readonly fetchDegrees = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.Degrees)
@@ -41,5 +37,6 @@ export class PlansFormStore
         )
       );
   });
-  ngrxOnStoreInit = () => this.setState({ DEGREES: [] });
+
+  public ngrxOnStoreInit = (): void => this.setState({ DEGREES: [] });
 }

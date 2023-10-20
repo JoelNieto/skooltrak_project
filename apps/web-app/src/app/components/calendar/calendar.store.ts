@@ -1,5 +1,3 @@
-/* eslint-disable rxjs/finnish */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
@@ -59,6 +57,7 @@ export class CalendarStore
               .select(
                 'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id'
               )
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               .eq(query_item!, query_value)
               .gte('start_at', format(start_date, 'yyyy-MM-dd HH:mm:ss'))
               .lte('start_at', format(end_date, 'yyyy-MM-dd HH:mm:ss'))

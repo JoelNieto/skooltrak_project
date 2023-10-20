@@ -1,4 +1,4 @@
-import { Person } from '@skooltrak/models';
+import { Person, RoleEnum, StatusEnum } from '@skooltrak/models';
 
 export type User = Partial<Person> & {
   id?: string;
@@ -7,4 +7,12 @@ export type User = Partial<Person> & {
   updated_at?: Date;
   avatar_url: string;
   password?: string;
+};
+
+export type SchoolProfile = {
+  id?: string;
+  role: RoleEnum;
+  status: StatusEnum;
+  created_at: Date;
+  user: Partial<User>;
 };

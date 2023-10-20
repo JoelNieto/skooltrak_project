@@ -40,7 +40,7 @@
               "^(canActivate|canActivateChild|canDeactivate|canLoad|intercept|resolve|validate|asyncList)$": false
             },
             "parameters": true,
-            "properties": true,
+            "properties": false,
             "strict": true,
             "types": {
               "^EventEmitter$": false

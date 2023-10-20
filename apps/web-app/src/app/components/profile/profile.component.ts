@@ -37,7 +37,7 @@ import { ProfileFormStore } from './profile.store';
         <div class="mb-4  flex justify-center">
           <sk-avatar
             *ngIf="this.USER()"
-            [avatarUrl]="this.USER()!.avatar_url!"
+            [avatarUrl]="this.USER()?.avatar_url ?? 'default_avatar.jpg'"
             bucket="avatars"
             [rounded]="true"
             class="h-24 cursor-pointer"

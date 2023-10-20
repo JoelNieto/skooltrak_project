@@ -1,4 +1,3 @@
-/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -8,7 +7,6 @@ import { ClassGroup, Table } from '@skooltrak/models';
 import { AlertService, UtilService } from '@skooltrak/ui';
 import { combineLatestWith, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   GROUPS: ClassGroup[];
   SELECTED_ID?: string;

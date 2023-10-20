@@ -6,7 +6,6 @@ import { ClassGroup, Course, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
 import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   courses: Course[];
   selectedId?: string;

@@ -1,4 +1,3 @@
-/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -8,7 +7,6 @@ import { AlertService, UtilService } from '@skooltrak/ui';
 import { orderBy } from 'lodash';
 import { combineLatestWith, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   LOADING: boolean;
   COURSES: Partial<Course>[];
@@ -141,8 +139,8 @@ export class SchoolCoursesStore
   });
 
   private readonly fetchPlans = this.effect(
-    (degree_id: Observable<string | undefined>) =>
-      degree_id.pipe(
+    (degree_id$: Observable<string | undefined>) =>
+      degree_id$.pipe(
         combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
         filter(([degree_id, school_id]) => !!degree_id && !!school_id),
         switchMap(([degree_id, school_id]) =>

@@ -1,12 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Table } from '@skooltrak/models';
 import { AlertService, UtilService } from '@skooltrak/ui';
-import { combineLatestWith, exhaustMap, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  exhaustMap,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   PLANS: StudyPlan[];
   COUNT: number;
@@ -131,6 +143,33 @@ export class SchoolStudyPlansStore
         })
       );
     }
+  );
+
+  public readonly deletePlan = this.effect((id$: Observable<string>) =>
+    id$.pipe(
+      tap(() => this.patchState({ LOADING: false })),
+      switchMap((id) =>
+        from(
+          this.supabase.client.from(Table.StudyPlans).delete().eq('id', id)
+        ).pipe(
+          map(({ error }) => {
+            if (error) throw new Error(error.message);
+          }),
+          tapResponse(
+            () =>
+              this.alert.showAlert({
+                icon: 'success',
+                message: 'ALERT.SUCCESS',
+              }),
+            (error) => {
+              this.alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+              console.error(error);
+            },
+            () => this.fetchStudyPlans(this.fetchStudyPlansData$)
+          )
+        )
+      )
+    )
   );
 
   public ngrxOnStoreInit = (): void => {

@@ -1,4 +1,3 @@
-/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -7,7 +6,6 @@ import { Degree, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService, UtilService } from '@skooltrak/ui';
 import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   DEGREES: Degree[];
   COUNT: number;
@@ -134,8 +132,8 @@ export class SchoolDegreesStore
     }
   );
 
-  public readonly deleteDegree = this.effect((id: Observable<string>) => {
-    return id.pipe(
+  public readonly deleteDegree = this.effect((id$: Observable<string>) => {
+    return id$.pipe(
       tap(() => this.patchState({ LOADING: true })),
       switchMap((id) =>
         from(

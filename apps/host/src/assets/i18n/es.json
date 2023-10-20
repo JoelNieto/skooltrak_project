@@ -82,6 +82,7 @@
   "Name": "Nombre",
   "New": "Nuevo",
   "News": "Novedades",
+  "NO_ITEMS": "Sin  elementos para este filtro",
   "Other": "Otro",
   "Plans": {
     "Details": "Detalles del Plan de estudio",
@@ -89,10 +90,15 @@
   },
   "PEOPLE": {
     "TITLE": "Personas",
-    "ALL": "--Todos--",
-    "ADMINS": "Administrativos",
-    "TEACHERS": "Docentes",
-    "STUDENTS": "Estudiantes"
+    "ALL_ROLES": "--Cualquier rol--",
+    "ALL_STATUS": "--Cualquier estatus--",
+    "ADMIN": "Administrativos",
+    "TEACHER": "Docentes",
+    "STUDENT": "Estudiantes",
+    "APPROVED": "Aprobado",
+    "PENDING": "Pendiente",
+    "REJECTED": "Rechazado",
+    "PARENT": "Acudiente"
   },
   "PERIODS": {
     "TITLE": "Periodos",

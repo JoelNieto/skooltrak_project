@@ -1,18 +1,40 @@
-import { Component } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { DatePipe, JsonPipe, NgFor, NgIf } from '@angular/common';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
+import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
+import { PaginatorComponent } from '@skooltrak/ui';
 
+import { AvatarComponent } from '../../components/avatar/avatar.component';
+import { UserChipComponent } from '../../components/user-chip/user-chip.component';
+import { SchoolPeopleFormComponent } from './people-form.component';
 import { SchoolPeopleStore } from './people.store';
 
 @Component({
   standalone: true,
   selector: 'sk-school-people',
-  imports: [TranslateModule, NgIconComponent],
+  imports: [
+    TranslateModule,
+    NgIconComponent,
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    PaginatorComponent,
+    UserChipComponent,
+    RouterLink,
+    DatePipe,
+    JsonPipe,
+    AvatarComponent,
+  ],
   providers: [
     provideComponentStore(SchoolPeopleStore),
-    provideIcons({ heroMagnifyingGlass }),
+    provideIcons({ heroMagnifyingGlass, heroPencilSquare }),
   ],
   styles: [
     `
@@ -33,11 +55,19 @@ import { SchoolPeopleStore } from './people.store';
   template: `<div class="relative overflow-x-auto">
     <div class="mb-4 flex justify-between gap-4 p-1">
       <div class="flex-1">
-        <select name="">
-          <option>{{ 'PEOPLE.ALL' | translate }}</option>
-          <option>{{ 'PEOPLE.TEACHERS' | translate }}</option>
-          <option>{{ 'PEOPLE.ADMINS' | translate }}</option>
-          <option>{{ 'PEOPLE.STUDENTS' | translate }}</option>
+        <select [formControl]="roleControl">
+          <option value="all">{{ 'PEOPLE.ALL_ROLES' | translate }}</option>
+          <option *ngFor="let role of roles" [value]="role">
+            {{ 'PEOPLE.' + role | translate }}
+          </option>
+        </select>
+      </div>
+      <div class="flex-1">
+        <select [formControl]="statusControl">
+          <option value="all">{{ 'PEOPLE.ALL_STATUS' | translate }}</option>
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ 'PEOPLE.' + status | translate }}
+          </option>
         </select>
       </div>
       <div class="flex-1">
@@ -62,6 +92,117 @@ import { SchoolPeopleStore } from './people.store';
         </div>
       </div>
     </div>
+    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+      <thead
+        class="bg-gray-100 font-sans text-xs font-semibold uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-200"
+      >
+        <tr class="cursor-pointer">
+          <th scope="col" class="flex items-center gap-3 px-6 py-3">
+            {{ 'USER' | translate }}
+          </th>
+          <th scope="col" class="px-6 py-3">{{ 'ROLE' | translate }}</th>
+          <th scope="col" class="px-6 py-3">
+            {{ 'STATUS' | translate }}
+          </th>
+          <th scope="col" class="px-6 py-3">
+            {{ 'CREATED_AT' | translate }}
+          </th>
+          <th scope="col" class="px-6 py-3 text-center">
+            {{ 'ACTIONS' | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let person of store.PEOPLE()"
+          [class.hidden]="store.LOADING()"
+          class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
+        >
+          <th
+            scope="row"
+            class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
+          >
+            <div class="flex items-center gap-2">
+              <sk-avatar
+                [avatarUrl]="person.user.avatar_url ?? 'default_avatar.jpg'"
+                class="h-9"
+                [rounded]="true"
+              />
+              <div class="flex flex-col">
+                <div class="text-base text-gray-700">
+                  {{ person.user.first_name }} {{ person.user.father_name }}
+                </div>
+                <div class="text-sm text-gray-400">{{ person.user.email }}</div>
+              </div>
+            </div>
+          </th>
+          <td class="px-6 py-3.5">{{ person.role }}</td>
+          <td class="px-6 py-3.5">{{ person.status }}</td>
+          <td class="px-6 py-3.5">
+            {{ person.created_at | date : 'medium' }}
+          </td>
+          <td class="flex content-center justify-center gap-2 px-6 py-3.5">
+            <button type="button" (click)="editPeople(person)">
+              <ng-icon
+                name="heroPencilSquare"
+                class="text-green-500"
+                size="24"
+              />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
+      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+      <ul class="mt-8 space-y-8">
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+      </ul>
+    </div>
+    <div
+      *ngIf="!store.LOADING() && !store.PEOPLE().length"
+      class="flex items-center justify-center"
+    >
+      <img src="/assets/teacher.svg" alt="" />
+    </div>
   </div>`,
 })
-export class SchoolPeopleComponent {}
+export class SchoolPeopleComponent implements OnInit {
+  public roles = Object.values(RoleEnum);
+  public statuses = Object.values(StatusEnum);
+  private destroy = inject(DestroyRef);
+  private dialog = inject(Dialog);
+  public roleControl = new FormControl<'all' | RoleEnum>('all', {
+    nonNullable: true,
+  });
+
+  public statusControl = new FormControl<'all' | StatusEnum>('all', {
+    nonNullable: true,
+  });
+  public store = inject(SchoolPeopleStore);
+
+  public ngOnInit(): void {
+    this.roleControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (role) => {
+          this.store.patchState({ SELECTED_ROLE: role });
+        },
+      });
+
+    this.statusControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (status) => {
+          this.store.patchState({ SELECTED_STATUS: status });
+        },
+      });
+  }
+
+  public editPeople(person: SchoolProfile): void {
+    this.dialog.open(SchoolPeopleFormComponent, { data: person });
+  }
+}

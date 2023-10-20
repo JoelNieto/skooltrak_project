@@ -1,13 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Subject, Table } from '@skooltrak/models';
 import { AlertService, UtilService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   SUBJECTS: Subject[];
   COUNT: number;
@@ -15,6 +26,7 @@ type State = {
   PAGE_SIZE: number;
   START: number;
   END: number;
+  TEXT_SEARCH: string;
   LOADING: boolean;
 };
 
@@ -32,6 +44,8 @@ export class SchoolSubjectsStore
   public readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
   public readonly COUNT = this.selectSignal((state) => state.COUNT);
   public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly TEXT_SEARCH = this.selectSignal((state) => state.TEXT_SEARCH);
+  public readonly TEXT_SEARCH$ = this.select((state) => state.TEXT_SEARCH);
   public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
   public readonly START$ = this.select((state) => state.START);
   public readonly END$ = this.select((state) => state.END);
@@ -57,6 +71,7 @@ export class SchoolSubjectsStore
       START: this.START$,
       END: this.END$,
       PAGE_SIZE: toObservable(this.PAGE_SIZE),
+      TEXT_SEARCH: this.TEXT_SEARCH$,
     },
     { debounce: true }
   );
@@ -67,7 +82,7 @@ export class SchoolSubjectsStore
         combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
         filter(([{ END }, school_id]) => END > 0 && !!school_id),
         tap(() => this.patchState({ LOADING: true })),
-        switchMap(([{ START, END }, school_id]) => {
+        switchMap(([{ START, END, TEXT_SEARCH }, school_id]) => {
           return from(
             this.supabase.client
               .from(Table.Subjects)
@@ -80,6 +95,9 @@ export class SchoolSubjectsStore
               .order('name', { ascending: true })
               .range(START, END)
               .eq('school_id', school_id)
+              .or(
+                `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`
+              )
           ).pipe(
             map(({ data, error, count }) => {
               if (error) throw new Error(error.message);
@@ -133,8 +151,8 @@ export class SchoolSubjectsStore
     }
   );
 
-  public readonly deleteSubject = this.effect((id: Observable<string>) => {
-    return id.pipe(
+  public readonly deleteSubject = this.effect((id$: Observable<string>) => {
+    return id$.pipe(
       tap(() => this.patchState({ LOADING: true })),
       switchMap((id) =>
         from(
@@ -170,6 +188,7 @@ export class SchoolSubjectsStore
       PAGES: 0,
       COUNT: 0,
       PAGE_SIZE: 5,
+      TEXT_SEARCH: '',
       START: 0,
       END: 4,
     });

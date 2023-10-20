@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '@skooltrak/environments';
-import { SchoolRole, SignUpCredentials, User } from '@skooltrak/models';
+import { SchoolRole, SignUpCredentials } from '@skooltrak/models';
 import {
   AuthChangeEvent,
   createClient,
@@ -26,20 +26,6 @@ export class SupabaseService {
     return from(this.client.auth.getSession()).pipe(
       map(({ data }) => data.session)
     );
-  }
-
-  async updateUser(user: Partial<User>) {
-    const { id, email, full_name, avatar_url } = user;
-    const update = {
-      ...{ id, email, full_name, avatar_url },
-      updated_at: new Date(),
-    };
-
-    const { password } = user;
-
-    await this.client.auth.updateUser({ password, email });
-
-    return this.client.from('users').upsert(update);
   }
 
   authChanges(

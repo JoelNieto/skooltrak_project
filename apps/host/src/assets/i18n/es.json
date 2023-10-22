@@ -1,5 +1,5 @@
 {
-  "Actions": "Acciones",
+  "ACTIONS": "Acciones",
   "Administrators": {
     "Title": "Administradores"
   },
@@ -80,7 +80,7 @@
   "Middle name": "Segundo nombre",
   "Mother name": "Apellido materno",
   "Name": "Nombre",
-  "New": "Nuevo",
+  "NEW": "Nuevo",
   "News": "Novedades",
   "NO_ITEMS": "Sin  elementos para este filtro",
   "Other": "Otro",
@@ -92,13 +92,16 @@
     "TITLE": "Personas",
     "ALL_ROLES": "--Cualquier rol--",
     "ALL_STATUS": "--Cualquier estatus--",
-    "ADMIN": "Administrativos",
-    "TEACHER": "Docentes",
-    "STUDENT": "Estudiantes",
+    "ADMIN": "Administrativo",
+    "EDIT": "Editar usuario",
+    "TEACHER": "Docente",
+    "STUDENT": "Estudiante",
     "APPROVED": "Aprobado",
     "PENDING": "Pendiente",
     "REJECTED": "Rechazado",
-    "PARENT": "Acudiente"
+    "ROLE": "Rol",
+    "PARENT": "Acudiente",
+    "STATUS": "Estatus"
   },
   "PERIODS": {
     "TITLE": "Periodos",
@@ -152,5 +155,6 @@
     "CREATE_ACCOUNT": "Crear cuenta",
     "EXISTING_ACCOUNT": "Ya tiene una cuenta?",
     "SIGN_IN": "Iniciar sesión"
-  }
+  },
+  "SEARCH_ITEMS": "Buscar elementos"
 }

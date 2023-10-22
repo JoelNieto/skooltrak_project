@@ -5,7 +5,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare } from '@ng-icons/heroicons/outline';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
@@ -86,7 +89,7 @@ import { SchoolPeopleStore } from './people.store';
               type="text"
               id="table-search"
               class="pl-10"
-              placeholder="Search for items"
+              [placeholder]="'SEARCH_ITEMS' | translate"
             />
           </div>
         </div>
@@ -100,6 +103,7 @@ import { SchoolPeopleStore } from './people.store';
           <th scope="col" class="flex items-center gap-3 px-6 py-3">
             {{ 'USER' | translate }}
           </th>
+          <th scope="col" class="px-6 py-3">{{ 'DOCUMENT_ID' | translate }}</th>
           <th scope="col" class="px-6 py-3">{{ 'ROLE' | translate }}</th>
           <th scope="col" class="px-6 py-3">
             {{ 'STATUS' | translate }}
@@ -132,12 +136,15 @@ import { SchoolPeopleStore } from './people.store';
                 <div class="text-base text-gray-700">
                   {{ person.user.first_name }} {{ person.user.father_name }}
                 </div>
-                <div class="text-sm text-gray-400">{{ person.user.email }}</div>
+                <div class="font-mono text-sm text-gray-400">
+                  {{ person.user.email }}
+                </div>
               </div>
             </div>
           </th>
-          <td class="px-6 py-3.5">{{ person.role }}</td>
-          <td class="px-6 py-3.5">{{ person.status }}</td>
+          <td class="px-6 py-3.5">{{ person.user.document_id }}</td>
+          <td class="px-6 py-3.5">{{ person.role | translate }}</td>
+          <td class="px-6 py-3.5">{{ person.status | translate }}</td>
           <td class="px-6 py-3.5">
             {{ person.created_at | date : 'medium' }}
           </td>
@@ -203,6 +210,11 @@ export class SchoolPeopleComponent implements OnInit {
   }
 
   public editPeople(person: SchoolProfile): void {
-    this.dialog.open(SchoolPeopleFormComponent, { data: person });
+    const dialogRef = this.dialog.open(SchoolPeopleFormComponent, {
+      width: '34rem',
+      maxWidth: '90%',
+      data: person,
+    });
+    dialogRef.closed.subscribe({ next: () => this.store.fetchPeople() });
   }
 }

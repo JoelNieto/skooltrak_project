@@ -225,7 +225,7 @@ export const setDefaultSchool = createEffect(
     return inject(Actions).pipe(
       ofType(AuthActions.setProfiles),
       map(({ PROFILES }) =>
-        AuthActions.setSchoolId({ SCHOOL_ID: PROFILES[0].school_id })
+        AuthActions.setSchoolId({ SCHOOL_ID: PROFILES[0]?.school_id })
       )
     );
   },

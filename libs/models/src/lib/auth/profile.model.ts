@@ -10,7 +10,7 @@ export type User = Partial<Person> & {
 };
 
 export type SchoolProfile = {
-  id?: string;
+  user_id?: string;
   role: RoleEnum;
   status: StatusEnum;
   created_at: Date;

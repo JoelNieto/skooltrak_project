@@ -1,9 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { RoleEnum, School, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService } from '@skooltrak/ui';
-import { catchError, filter, from, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
+import {
+  catchError,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 
 type State = {
   ROLE: RoleEnum | undefined;
@@ -80,7 +93,7 @@ export class SchoolConnectorStore
           from(
             this.supabase.client
               .from(Table.SchoolUsers)
-              .insert([{ ROLE, school_id: request.id }])
+              .insert([{ role: ROLE, school_id: request.id }])
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -95,8 +108,13 @@ export class SchoolConnectorStore
             });
             this.auth.getProfiles();
           },
-          (error: string) =>
-            this.alertService.showAlert({ icon: 'error', message: error }),
+          (error: string) => {
+            console.error(error);
+            this.alertService.showAlert({
+              icon: 'error',
+              message: 'ALERT.FAILURE',
+            });
+          },
           () => this.patchState({ LOADING: false })
         )
       );

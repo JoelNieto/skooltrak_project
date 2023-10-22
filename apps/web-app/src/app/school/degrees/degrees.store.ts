@@ -1,10 +1,22 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Degree, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService, UtilService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   DEGREES: Degree[];
@@ -59,41 +71,40 @@ export class SchoolDegreesStore
     { debounce: true }
   );
 
-  private readonly fetchDegrees = this.effect(
-    (request$: typeof this.fetchDegreesData$) => {
-      return request$.pipe(
-        combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-        tap(() => this.patchState({ LOADING: true })),
-        filter(([{ end }, school_id]) => end > 0 && !!school_id),
-        switchMap(([{ start, end }, school_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.Degrees)
-              .select('id, name, created_at, level:levels(*), level_id', {
-                count: 'exact',
-              })
-              .order('name', { ascending: true })
-              .range(start, end)
-              .eq('school_id', school_id)
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { degrees: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ degrees }) =>
-                this.patchState({ DEGREES: degrees as unknown as Degree[] }),
-              (error) => {
-                console.error(error);
-              },
-              () => this.patchState({ LOADING: false })
-            )
-          );
-        })
-      );
-    }
-  );
+  private readonly fetchDegrees = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() => this.fetchDegreesData$),
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      tap(() => this.patchState({ LOADING: true })),
+      filter(([{ end }, school_id]) => end > 0 && !!school_id),
+      switchMap(([{ start, end }, school_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.Degrees)
+            .select('id, name, created_at, level:levels(*), level_id', {
+              count: 'exact',
+            })
+            .order('name', { ascending: true })
+            .range(start, end)
+            .eq('school_id', school_id)
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { degrees: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ degrees }) =>
+              this.patchState({ DEGREES: degrees as unknown as Degree[] }),
+            (error) => {
+              console.error(error);
+            },
+            () => this.patchState({ LOADING: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveDegree = this.effect(
     (request$: Observable<Partial<Degree>>) => {
@@ -123,7 +134,7 @@ export class SchoolDegreesStore
                   message: 'ALERT.FAILURE',
                 }),
               () => {
-                this.fetchDegrees(this.fetchDegreesData$);
+                this.fetchDegrees();
               }
             )
           );
@@ -154,7 +165,7 @@ export class SchoolDegreesStore
                 message: 'ALERT.FAILURE',
               }),
             () => {
-              this.fetchDegrees(this.fetchDegreesData$);
+              this.fetchDegrees();
             }
           )
         )
@@ -172,6 +183,6 @@ export class SchoolDegreesStore
       START: 0,
       END: 4,
     });
-    this.fetchDegrees(this.fetchDegreesData$);
+    this.fetchDegrees();
   };
 }

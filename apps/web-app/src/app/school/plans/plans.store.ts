@@ -78,42 +78,40 @@ export class SchoolStudyPlansStore
     { debounce: true }
   );
 
-  private readonly fetchStudyPlans = this.effect(
-    (data$: typeof this.fetchStudyPlansData$) => {
-      return data$.pipe(
-        combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-        tap(() => this.patchState({ LOADING: true })),
-        filter(([{ END }, school_id]) => END > 0 && !!school_id),
-        switchMap(([{ START, END }, school_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.StudyPlans)
-              .select(
-                'id,name, level:levels(*), level_id, degree_id, degree:school_degrees(*), year, created_at',
-                {
-                  count: 'exact',
-                }
-              )
-              .order('year', { ascending: true })
-              .range(START, END)
-              .eq('school_id', school_id)
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { PLANS: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ PLANS }) =>
-                this.setStudyPlans(PLANS as unknown as StudyPlan[]),
-              (error) => console.error(error),
-              () => this.patchState({ LOADING: false })
+  private readonly fetchStudyPlans = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() => this.fetchStudyPlansData$),
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      tap(() => this.patchState({ LOADING: true })),
+      filter(([{ END }, school_id]) => END > 0 && !!school_id),
+      switchMap(([{ START, END }, school_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.StudyPlans)
+            .select(
+              'id,name, level:levels(*), level_id, degree_id, degree:school_degrees(*), year, created_at',
+              {
+                count: 'exact',
+              }
             )
-          );
-        })
-      );
-    }
-  );
+            .order('year', { ascending: true })
+            .range(START, END)
+            .eq('school_id', school_id)
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { PLANS: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ PLANS }) => this.setStudyPlans(PLANS as unknown as StudyPlan[]),
+            (error) => console.error(error),
+            () => this.patchState({ LOADING: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveStudyPlan = this.effect(
     (request$: Observable<Partial<StudyPlan>>) => {
@@ -137,7 +135,7 @@ export class SchoolStudyPlansStore
                   message: 'ALERT.SUCCESS',
                 }),
               (error) => console.error(error),
-              () => this.fetchStudyPlans(this.fetchStudyPlansData$)
+              () => this.fetchStudyPlans()
             )
           );
         })
@@ -165,7 +163,7 @@ export class SchoolStudyPlansStore
               this.alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
               console.error(error);
             },
-            () => this.fetchStudyPlans(this.fetchStudyPlansData$)
+            () => this.fetchStudyPlans()
           )
         )
       )
@@ -182,6 +180,6 @@ export class SchoolStudyPlansStore
       START: 0,
       END: 4,
     });
-    this.fetchStudyPlans(this.fetchStudyPlansData$);
+    this.fetchStudyPlans();
   };
 }

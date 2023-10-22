@@ -1,6 +1,11 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -102,7 +107,7 @@ import { CoursesFormStore } from './courses-form.store';
 })
 export class SchoolCoursesFormComponent implements OnInit {
   public store = inject(CoursesFormStore);
-  public dialogRef = inject(DialogRef<Partial<Course>>);
+  public dialogRef = inject(DialogRef);
   private data: Course | undefined = inject(DIALOG_DATA);
 
   public form = new FormGroup({

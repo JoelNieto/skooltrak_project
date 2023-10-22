@@ -76,45 +76,44 @@ export class SchoolSubjectsStore
     { debounce: true }
   );
 
-  private readonly fetchSubjects = this.effect(
-    (data$: typeof this.fetchSubjectsData$) => {
-      return data$.pipe(
-        combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-        filter(([{ END }, school_id]) => END > 0 && !!school_id),
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap(([{ START, END, TEXT_SEARCH }, school_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.Subjects)
-              .select(
-                'id,name, short_name, code, description, created_at, user:users(full_name)',
-                {
-                  count: 'exact',
-                }
-              )
-              .order('name', { ascending: true })
-              .range(START, END)
-              .eq('school_id', school_id)
-              .or(
-                `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`
-              )
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { SUBJECTS: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ SUBJECTS }) =>
-                this.patchState({ SUBJECTS: SUBJECTS as unknown as Subject[] }),
-              (error) => console.error(error),
-              () => this.patchState({ LOADING: false })
+  private readonly fetchSubjects = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() => this.fetchSubjectsData$),
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      filter(([{ END }, school_id]) => END > 0 && !!school_id),
+      tap(() => this.patchState({ LOADING: true })),
+      switchMap(([{ START, END, TEXT_SEARCH }, school_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.Subjects)
+            .select(
+              'id,name, short_name, code, description, created_at, user:users(full_name)',
+              {
+                count: 'exact',
+              }
             )
-          );
-        })
-      );
-    }
-  );
+            .order('name', { ascending: true })
+            .range(START, END)
+            .eq('school_id', school_id)
+            .or(
+              `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`
+            )
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { SUBJECTS: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ SUBJECTS }) =>
+              this.patchState({ SUBJECTS: SUBJECTS as unknown as Subject[] }),
+            (error) => console.error(error),
+            () => this.patchState({ LOADING: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveSubject = this.effect(
     (request$: Observable<Partial<Subject>>) => {
@@ -143,7 +142,7 @@ export class SchoolSubjectsStore
                   message: this.translate.instant('ALERT.FAILURE'),
                 });
               },
-              () => this.fetchSubjects(this.fetchSubjectsData$)
+              () => this.fetchSubjects()
             )
           );
         })
@@ -173,7 +172,7 @@ export class SchoolSubjectsStore
                 message: this.translate.instant('ALERT.FAILURE'),
               }),
             () => {
-              this.fetchSubjects(this.fetchSubjectsData$);
+              this.fetchSubjects();
             }
           )
         )
@@ -192,6 +191,6 @@ export class SchoolSubjectsStore
       START: 0,
       END: 4,
     });
-    this.fetchSubjects(this.fetchSubjectsData$);
+    this.fetchSubjects();
   };
 }

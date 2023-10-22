@@ -1,11 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Table } from '@skooltrak/models';
 import { AlertService, UtilService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   GROUPS: ClassGroup[];
@@ -67,44 +80,43 @@ export class SchoolGroupsStore
     { debounce: true }
   );
 
-  private readonly fetchGroups = this.effect(
-    (data$: Observable<{ start: number; end: number; pageSize: number }>) => {
-      return data$.pipe(
-        combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-        filter(([{ end }, school_id]) => end > 0 && !!school_id),
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap(([{ end, start }, school_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.Groups)
-              .select(
-                'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
-                {
-                  count: 'exact',
-                }
-              )
-              .range(start, end)
-              .eq('school_id', school_id)
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { groups: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ groups }) =>
-                this.patchState({ GROUPS: groups as unknown as ClassGroup[] }),
-              (error) => {
-                console.error(error);
-                return of([]);
-              },
-              () => this.patchState({ LOADING: false })
+  private readonly fetchGroups = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() => this.fetchGroupsData$),
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      filter(([{ end }, school_id]) => end > 0 && !!school_id),
+      tap(() => this.patchState({ LOADING: true })),
+      switchMap(([{ end, start }, school_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.Groups)
+            .select(
+              'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
+              {
+                count: 'exact',
+              }
             )
-          );
-        })
-      );
-    }
-  );
+            .range(start, end)
+            .eq('school_id', school_id)
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { groups: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ groups }) =>
+              this.patchState({ GROUPS: groups as unknown as ClassGroup[] }),
+            (error) => {
+              console.error(error);
+              return of([]);
+            },
+            () => this.patchState({ LOADING: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveClassGroup = this.effect(
     (request$: Observable<Partial<ClassGroup>>) => {
@@ -129,7 +141,7 @@ export class SchoolGroupsStore
               icon: 'success',
               message: this.translate.instant('ALERT.SUCCESS'),
             });
-            this.fetchGroups(this.fetchGroupsData$);
+            this.fetchGroups();
           },
           (error) => {
             this.alert.showAlert({
@@ -154,6 +166,6 @@ export class SchoolGroupsStore
       START: 0,
       END: 4,
     });
-    this.fetchGroups(this.fetchGroupsData$);
+    this.fetchGroups();
   };
 }

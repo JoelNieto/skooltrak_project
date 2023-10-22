@@ -51,6 +51,13 @@ export const schoolRoutes: Routes = [
             (x) => x.SchoolPeriodsComponent
           ),
       },
+      {
+        path: 'people',
+        loadComponent: () =>
+          import('./people/people.component').then(
+            (x) => x.SchoolPeopleComponent
+          ),
+      },
       { path: '', redirectTo: 'info', pathMatch: 'full' },
     ],
   },

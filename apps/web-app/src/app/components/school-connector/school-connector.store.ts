@@ -19,8 +19,8 @@ import {
 } from 'rxjs';
 
 type State = {
-  role: RoleEnum | undefined;
-  loading: boolean;
+  ROLE: RoleEnum | undefined;
+  LOADING: boolean;
 };
 
 @Injectable()
@@ -33,12 +33,12 @@ export class SchoolConnectorStore
   private alertService = inject(AlertService);
   private readonly auth = inject(authState.AuthStateFacade);
 
-  private readonly role$ = this.select((state) => state.role);
+  private readonly ROLE$ = this.select((state) => state.ROLE);
 
   public readonly fetchSchoolByCode = this.effect(
     (code$: Observable<string>) => {
       return code$.pipe(
-        tap(() => this.patchState({ loading: true })),
+        tap(() => this.patchState({ LOADING: true })),
         switchMap((code) =>
           from(
             this.supabase.client
@@ -87,13 +87,13 @@ export class SchoolConnectorStore
   private readonly addSchoolConnection = this.effect(
     (request$: Observable<Partial<School>>) => {
       return request$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        withLatestFrom(this.role$),
-        switchMap(([request, role]) =>
+        tap(() => this.patchState({ LOADING: true })),
+        withLatestFrom(this.ROLE$),
+        switchMap(([request, ROLE]) =>
           from(
             this.supabase.client
               .from(Table.SchoolUsers)
-              .insert([{ role, school_id: request.id }])
+              .insert([{ role: ROLE, school_id: request.id }])
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -108,13 +108,19 @@ export class SchoolConnectorStore
             });
             this.auth.getProfiles();
           },
-          (error: string) =>
-            this.alertService.showAlert({ icon: 'error', message: error }),
-          () => this.patchState({ loading: false })
+          (error: string) => {
+            console.error(error);
+            this.alertService.showAlert({
+              icon: 'error',
+              message: 'ALERT.FAILURE',
+            });
+          },
+          () => this.patchState({ LOADING: false })
         )
       );
     }
   );
 
-  ngrxOnStoreInit = () => this.setState({ loading: false, role: undefined });
+  public ngrxOnStoreInit = (): void =>
+    this.setState({ LOADING: false, ROLE: undefined });
 }

@@ -9,5 +9,5 @@ import { CalendarComponent } from '../../components/calendar/calendar.component'
   template: `<sk-calendar [query_value]="course_id!" />`,
 })
 export class ScheduleComponent {
-  @Input() course_id?: string;
+  @Input() public course_id?: string;
 }

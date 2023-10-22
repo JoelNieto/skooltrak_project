@@ -40,7 +40,7 @@
               "^(canActivate|canActivateChild|canDeactivate|canLoad|intercept|resolve|validate|asyncList)$": false
             },
             "parameters": true,
-            "properties": true,
+            "properties": false,
             "strict": true,
             "types": {
               "^EventEmitter$": false
@@ -49,7 +49,7 @@
           }
         ]
       },
-      "extends": ["plugin:@ngrx/recommended"]
+      "extends": ["plugin:@ngrx/recommended", "plugin:@ngrx/component-store"]
     },
     {
       "files": ["*.ts", "*.tsx"],
@@ -58,7 +58,7 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@ngrx/recommended"],
+      "extends": ["plugin:@ngrx/recommended", "plugin:@ngrx/component-store"],
       "rules": {}
     },
     {

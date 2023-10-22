@@ -2,19 +2,11 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../components/user-chip/user-chip.component';
 import { SchoolGroupsFormComponent } from './groups-form.component';
@@ -142,14 +134,17 @@ import { SchoolGroupsStore } from './groups.store';
 })
 export class SchoolGroupsComponent {
   public store = inject(SchoolGroupsStore);
-  dialog = inject(Dialog);
+  private dialog = inject(Dialog);
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
 
-  newGroup(): void {
+  public newGroup(): void {
     const dialogRef = this.dialog.open<Partial<ClassGroup>>(
       SchoolGroupsFormComponent,
       {
@@ -165,7 +160,7 @@ export class SchoolGroupsComponent {
     });
   }
 
-  editGroup(group: ClassGroup): void {
+  public editGroup(group: ClassGroup): void {
     const dialogRef = this.dialog.open<Partial<ClassGroup>>(
       SchoolGroupsFormComponent,
       {

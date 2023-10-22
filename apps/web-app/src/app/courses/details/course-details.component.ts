@@ -70,18 +70,18 @@ import { CoursesStore } from '../courses.store';
   `,
 })
 export class CourseDetailsComponent implements OnInit {
-  @Input() course_id?: string;
+  @Input() private course_id?: string;
   private state = inject(CoursesStore);
-  selected = this.state.selected;
-  courses = this.state.courses;
-  router = inject(Router);
-  route = inject(ActivatedRoute);
+  public selected = this.state.selected;
+  public courses = this.state.courses;
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     !!this.course_id && this.state.patchState({ selectedId: this.course_id });
   }
 
-  setSelectedId = (course_id: string) => {
+  public setSelectedId = (course_id: string): void => {
     this.state.patchState({ selectedId: course_id });
     this.router.navigate(['../details'], {
       relativeTo: this.route,

@@ -1,11 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/auth';
 
@@ -28,20 +22,20 @@ import { SupabaseService } from '@skooltrak/auth';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
-  @Input() bucket: 'avatars' | 'crests' = 'avatars';
-  @Input() rounded!: boolean;
+  @Input() public bucket: 'avatars' | 'crests' = 'avatars';
+  @Input() public rounded!: boolean;
   @Input({ required: true })
-  set avatarUrl(url: string | null) {
+  public set avatarUrl(url: string | null) {
     if (url) {
       this.downloadImage(url);
     }
   }
-  _avatarUrl: SafeResourceUrl | undefined;
+  public _avatarUrl: SafeResourceUrl | undefined;
   private supabase = inject(SupabaseService);
   private dom = inject(DomSanitizer);
   private cd = inject(ChangeDetectorRef);
 
-  async downloadImage(path: string) {
+  private async downloadImage(path: string): Promise<void> {
     try {
       const { data } = await this.supabase.downLoadImage(path, this.bucket);
 

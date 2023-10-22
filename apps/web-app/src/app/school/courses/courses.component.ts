@@ -1,14 +1,25 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroChevronUpDown, heroEye, heroMagnifyingGlass, heroPencilSquare } from '@ng-icons/heroicons/outline';
+import {
+  heroChevronUpDown,
+  heroEye,
+  heroMagnifyingGlass,
+  heroPencilSquare,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonDirective, PaginatorComponent, SelectComponent, UtilService } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  PaginatorComponent,
+  SelectComponent,
+  UtilService,
+} from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../components/user-chip/user-chip.component';
 import { SchoolCoursesFormComponent } from './courses-form.component';
@@ -110,6 +121,12 @@ import { SchoolCoursesStore } from './courses.store';
             {{ course.created_at | date : 'medium' }}
           </td>
           <td class="flex content-center justify-center gap-2 px-6 py-3.5">
+            <a
+              routerLink="../../courses/details"
+              [queryParams]="{ course_id: course.id }"
+            >
+              <ng-icon name="heroEye" size="24" class="text-sky-500" />
+            </a>
             <button type="button" (click)="editCourse(course)">
               <ng-icon
                 name="heroPencilSquare"
@@ -117,12 +134,6 @@ import { SchoolCoursesStore } from './courses.store';
                 size="24"
               />
             </button>
-            <a
-              routerLink="../../courses/details"
-              [queryParams]="{ course_id: course.id }"
-            >
-              <ng-icon name="heroEye" size="24" class="text-sky-500" />
-            </a>
           </td>
         </tr>
       </tbody>
@@ -138,9 +149,12 @@ import { SchoolCoursesStore } from './courses.store';
     </div>
     <div
       *ngIf="!store.LOADING() && !store.COURSES().length"
-      class="flex items-center justify-center"
+      class="flex flex-col items-center justify-center gap-4 py-12"
     >
-      <img src="/assets/teacher.svg" alt="" />
+      <img src="/assets/books-lineal-colored.svg" class="h-24" alt="" />
+      <p class="font-sans italic text-gray-400">
+        {{ 'NO_ITEMS' | translate }}
+      </p>
     </div>
     <sk-paginator
       [count]="store.COUNT()"
@@ -151,6 +165,7 @@ import { SchoolCoursesStore } from './courses.store';
 })
 export class SchoolCoursesComponent implements OnInit {
   public store = inject(SchoolCoursesStore);
+  private destroyRef = inject(DestroyRef);
   private dialog = inject(Dialog);
 
   public degreeControl = new FormControl<string | undefined>(undefined, {
@@ -161,7 +176,7 @@ export class SchoolCoursesComponent implements OnInit {
     nonNullable: true,
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.degreeControl.valueChanges.subscribe({
       next: (degree) => this.store.patchState({ SELECTED_DEGREE: degree }),
     });
@@ -170,7 +185,10 @@ export class SchoolCoursesComponent implements OnInit {
     });
   }
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
@@ -185,7 +203,7 @@ export class SchoolCoursesComponent implements OnInit {
       }
     );
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (request) => {
         !!request && this.store.saveCourse(request);
       },
@@ -201,10 +219,15 @@ export class SchoolCoursesComponent implements OnInit {
         data: course,
       }
     );
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (request) => {
         !!request && this.store.saveCourse({ ...request, id: course.id });
       },
     });
+  }
+
+  public deleteCourse(course: Course): void {
+    const { id } = course;
+    if (!id) return;
   }
 }

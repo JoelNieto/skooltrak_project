@@ -1,12 +1,23 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonDirective, ConfirmationService, defaultConfirmationOptions, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  PaginatorComponent,
+} from '@skooltrak/ui';
+import { debounceTime } from 'rxjs';
 
 import { SubjectsFormComponent } from './subjects-form.component';
 import { SchoolSubjectsStore } from './subjects.store';
@@ -25,6 +36,7 @@ import { SchoolSubjectsStore } from './subjects.store';
     DatePipe,
     NgIconComponent,
     TranslateModule,
+    ReactiveFormsModule,
   ],
   providers: [
     provideComponentStore(SchoolSubjectsStore),
@@ -46,15 +58,15 @@ import { SchoolSubjectsStore } from './subjects.store';
           </div>
           <input
             type="text"
-            id="table-search"
+            [formControl]="textSearch"
             class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
-            placeholder="Search for items"
+            [placeholder]="'SEARCH_ITEMS' | translate"
           />
         </div>
       </div>
 
       <button skButton color="green" (click)="newSubject()">
-        {{ 'New' | translate }}
+        {{ 'NEW' | translate }}
       </button>
     </div>
     <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -68,7 +80,7 @@ import { SchoolSubjectsStore } from './subjects.store';
           <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
           <th score="col" class="px-6 py-3">{{ 'Created by' | translate }}</th>
           <th scope="col" class="px-6 py-3 text-center">
-            {{ 'Actions' | translate }}
+            {{ 'ACTIONS' | translate }}
           </th>
         </tr>
       </thead>
@@ -96,8 +108,8 @@ import { SchoolSubjectsStore } from './subjects.store';
                 size="24"
               />
             </button>
-            <button type="button" (click)="deleteSubject()">
-              <ng-icon name="heroTrash" class="text-red-400" size="24" />
+            <button type="button" (click)="deleteSubject(subject)">
+              <ng-icon name="heroTrash" class="text-red-600" size="24" />
             </button>
           </td>
         </tr>
@@ -127,17 +139,31 @@ import { SchoolSubjectsStore } from './subjects.store';
     />
   </div>`,
 })
-export class SchoolSubjectsComponent {
-  @ViewChild(PaginatorComponent) paginator!: PaginatorComponent;
-  store = inject(SchoolSubjectsStore);
-  dialog = inject(Dialog);
-  confirmation = inject(ConfirmationService);
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+export class SchoolSubjectsComponent implements OnInit {
+  public store = inject(SchoolSubjectsStore);
+  private dialog = inject(Dialog);
+  private confirmation = inject(ConfirmationService);
+  private destroy = inject(DestroyRef);
+
+  public textSearch = new FormControl('', { nonNullable: true });
+
+  public ngOnInit(): void {
+    this.textSearch.valueChanges
+      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (text) => this.store.patchState({ TEXT_SEARCH: text }),
+      });
+  }
+
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
 
-  newSubject() {
+  public newSubject(): void {
     const dialogRef = this.dialog.open<Partial<Subject>>(
       SubjectsFormComponent,
       {
@@ -146,14 +172,14 @@ export class SchoolSubjectsComponent {
       }
     );
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
         !!request && this.store.saveSubject(request);
       },
     });
   }
 
-  editSubject(subject: Subject) {
+  public editSubject(subject: Subject): void {
     const dialogRef = this.dialog.open<Partial<Subject>>(
       SubjectsFormComponent,
       {
@@ -162,14 +188,31 @@ export class SchoolSubjectsComponent {
         data: subject,
       }
     );
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
         !!request && this.store.saveSubject({ ...request, id: subject.id });
       },
     });
   }
 
-  deleteSubject() {
-    this.confirmation.openDialog({ ...defaultConfirmationOptions }).subscribe();
+  public deleteSubject(subject: Subject): void {
+    const { id } = subject;
+    if (!id) return;
+    this.confirmation
+      .openDialog({
+        title: 'CONFIRMATION.DELETE.TITLE',
+        description: 'CONFIRMATION.DELETE.TEXT',
+        icon: 'heroTrash',
+        color: 'red',
+        confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
+        cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
+        showCancelButton: true,
+      })
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (res) => {
+          !!res && this.store.deleteSubject(id);
+        },
+      });
   }
 }

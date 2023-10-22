@@ -14,11 +14,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -146,14 +142,14 @@ import { UsersSelectorStore } from './users-selector.store';
   </div>`,
 })
 export class UsersSelectorComponent implements ControlValueAccessor {
-  currentValue = signal<Partial<User>[]>([]);
+  public currentValue = signal<Partial<User>[]>([]);
   public overlay = inject(Overlay);
   public store = inject(UsersSelectorStore);
   private overlayRef!: OverlayRef;
   private cdr = inject(ChangeDetectorRef);
 
-  innerContent: string;
-  placeholder = 'Select value';
+  public innerContent: string;
+  public placeholder = 'Select value';
   @ViewChild(CdkPortal) public container!: CdkPortal;
   @ViewChild('select') public select!: ElementRef;
   @ViewChild('searchInput') public searchInput!: ElementRef;
@@ -163,8 +159,8 @@ export class UsersSelectorComponent implements ControlValueAccessor {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onChange = (value: any | any[]): void => {};
-  onTouch: any = () => {};
+  public onChange = (value: any | any[]): void => {};
+  public onTouch: any = () => {};
 
   constructor() {
     this.innerContent = this.placeholder;
@@ -175,32 +171,32 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     effect(() => this.onChange(this.currentValue()));
   }
 
-  onFilterChange = (value: string) => {
+  public onFilterChange = (value: string): void => {
     this.searchText.set(value);
   };
 
-  searchText = signal('');
-  isOpen = signal(false);
-  isDisabled!: boolean;
+  public searchText = signal('');
+  public isOpen = signal(false);
+  public isDisabled!: boolean;
 
-  writeValue(obj: Partial<User>[] | undefined): void {
+  public writeValue(obj: Partial<User>[] | undefined): void {
     !!obj && this.currentValue.set(obj);
   }
 
-  registerOnChange = (fn: any) => {
+  public registerOnChange = (fn: any): void => {
     this.onChange = fn;
     !!isDevMode && console.info(fn, 'on change');
   };
 
-  registerOnTouched = (fn: unknown) => {
+  public registerOnTouched = (fn: unknown): void => {
     !!isDevMode && console.info(fn, 'on touch');
   };
 
-  setDisabledState? = (isDisabled: boolean) => {
+  public setDisabledState? = (isDisabled: boolean): void => {
     this.isDisabled = isDisabled;
   };
 
-  private syncWidth = () => {
+  private syncWidth = (): void => {
     if (!this.overlayRef) {
       return;
     }
@@ -209,7 +205,7 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     this.overlayRef.updateSize({ width: refRectWidth });
   };
 
-  toggleValue = (val: Partial<User>) => {
+  public toggleValue = (val: Partial<User>): void => {
     this.currentValue().find((x) => x.id === val.id)
       ? this.currentValue.update((value) =>
           value.filter((x) => x.id !== val.id)
@@ -218,7 +214,7 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     this.onTouch();
   };
 
-  private hide = () => {
+  private hide = (): void => {
     this.overlayRef.detach();
     this.isOpen.set(false);
     this.searchText.set('');
@@ -251,7 +247,7 @@ export class UsersSelectorComponent implements ControlValueAccessor {
       backdropClass: 'cdk-overlay-transparent-backdrop',
     });
 
-  public showOptions = () => {
+  public showOptions = (): void => {
     if (this.isDisabled) return;
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.container);

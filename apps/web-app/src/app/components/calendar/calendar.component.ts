@@ -1,4 +1,4 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { DialogModule } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -160,32 +160,31 @@ import { CalendarStore } from './calendar.store';
     </div>`,
 })
 export class CalendarComponent implements OnInit {
-  @Input() query_value?: string;
-  @Input() query_item: 'course_id' | 'group_id' = 'course_id';
-  dialog = inject(Dialog);
-  store = inject(CalendarStore);
-  router = inject(Router);
-  assignments = this.store.assignments;
-  view: CalendarView = CalendarView.Month;
-  CalendarView = CalendarView;
+  @Input() public query_value?: string;
+  @Input() public query_item: 'course_id' | 'group_id' = 'course_id';
+  public store = inject(CalendarStore);
+  private router = inject(Router);
+  public assignments = this.store.assignments;
+  public view: CalendarView = CalendarView.Month;
+  public CalendarView = CalendarView;
 
-  viewDate: Date = new Date();
-  weekStartOn = DAYS_OF_WEEK.MONDAY;
-  weekendDays = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
-  excludeDays: number[] = [0, 8];
-  locale = 'es-PA';
-  events: CalendarEvent[] = this.store.assignments();
+  public viewDate: Date = new Date();
+  public weekStartOn = DAYS_OF_WEEK.MONDAY;
+  public weekendDays = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
+  public excludeDays: number[] = [0, 8];
+  public locale = 'es-PA';
+  public events: CalendarEvent[] = this.store.assignments();
 
-  activeDayIsOpen = true;
+  public activeDayIsOpen = true;
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.store.patchState({
       query_item: this.query_item,
       query_value: this.query_value,
     });
   }
 
-  fetchEvents(): void {
+  public fetchEvents(): void {
     this.closeOpenMonthViewDay();
     const getStart = {
       month: startOfMonth,
@@ -205,12 +204,18 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  setView(view: CalendarView) {
+  public setView(view: CalendarView): void {
     this.view = view;
     this.fetchEvents();
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+  public dayClicked({
+    date,
+    events,
+  }: {
+    date: Date;
+    events: CalendarEvent[];
+  }): void {
     if (isSameMonth(date, this.viewDate)) {
       if (
         (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
@@ -224,11 +229,13 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  closeOpenMonthViewDay() {
+  public closeOpenMonthViewDay(): void {
     this.activeDayIsOpen = false;
   }
 
-  eventClicked(event: CalendarEvent<{ assignment: AssignmentView }>): void {
+  public eventClicked(
+    event: CalendarEvent<{ assignment: AssignmentView }>
+  ): void {
     this.router.navigate(['app', 'courses', 'assignments', event.id]);
   }
 }

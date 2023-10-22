@@ -67,7 +67,7 @@ import { DegreesFormStore } from './degrees-form.store';
       <div>
         <label for="level_id">{{ 'Level' | translate }}</label>
         <sk-select
-          [items]="store.levels()"
+          [items]="store.LEVELS()"
           label="name"
           formControlName="level_id"
         />
@@ -96,11 +96,11 @@ export class DegreesFormComponent implements OnInit {
     }),
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     !!this.data && this.form.patchValue(this.data);
   }
 
-  saveChanges() {
+  public saveChanges(): void {
     this.dialogRef.close(this.form.getRawValue());
   }
 }

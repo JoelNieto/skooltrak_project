@@ -1,5 +1,3 @@
-/* eslint-disable rxjs/finnish */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
@@ -24,13 +22,13 @@ export class CalendarStore
   implements OnStoreInit
 {
   private readonly supabase = inject(SupabaseService);
-  readonly start$ = this.select((state) => state.start_date);
-  readonly end$ = this.select((state) => state.end_date);
-  readonly query_item$ = this.select((state) => state.query_item);
-  readonly query_value$ = this.select((state) => state.query_value);
-  readonly assignments = this.selectSignal((state) => state.assignments);
+  public readonly start$ = this.select((state) => state.start_date);
+  public readonly end$ = this.select((state) => state.end_date);
+  public readonly query_item$ = this.select((state) => state.query_item);
+  public readonly query_value$ = this.select((state) => state.query_value);
+  public readonly assignments = this.selectSignal((state) => state.assignments);
 
-  readonly queryData$ = this.select(
+  private readonly queryData$ = this.select(
     {
       start_date: this.start$,
       end_date: this.end$,
@@ -40,7 +38,7 @@ export class CalendarStore
     { debounce: true }
   );
 
-  readonly fetchAssignments = this.effect(
+  private readonly fetchAssignments = this.effect(
     (
       query$: Observable<{
         start_date: Date;
@@ -59,6 +57,7 @@ export class CalendarStore
               .select(
                 'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id'
               )
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               .eq(query_item!, query_value)
               .gte('start_at', format(start_date, 'yyyy-MM-dd HH:mm:ss'))
               .lte('start_at', format(end_date, 'yyyy-MM-dd HH:mm:ss'))
@@ -85,7 +84,7 @@ export class CalendarStore
     }
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       start_date: startOfMonth(new Date()),
       end_date: endOfMonth(new Date()),

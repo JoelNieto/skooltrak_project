@@ -1,13 +1,23 @@
-/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Degree, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService, UtilService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   DEGREES: Degree[];
   COUNT: number;
@@ -23,18 +33,18 @@ export class SchoolDegreesStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  auth = inject(authState.AuthStateFacade);
-  supabase = inject(SupabaseService);
-  alert = inject(AlertService);
-  util = inject(UtilService);
-  confirmation = inject(ConfirmationService);
+  private readonly auth = inject(authState.AuthStateFacade);
+  private readonly supabase = inject(SupabaseService);
+  private readonly alert = inject(AlertService);
+  private readonly util = inject(UtilService);
+  private readonly confirmation = inject(ConfirmationService);
 
-  readonly DEGREES = this.selectSignal((state) => state.DEGREES);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly start$ = this.select((state) => state.START);
-  readonly end$ = this.select((state) => state.END);
+  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly start$ = this.select((state) => state.START);
+  public readonly end$ = this.select((state) => state.END);
 
   private setCount = this.updater(
     (state, count: number): State => ({
@@ -44,7 +54,7 @@ export class SchoolDegreesStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       START: start,
@@ -52,7 +62,7 @@ export class SchoolDegreesStore
     })
   );
 
-  readonly fetchDegreesData$ = this.select(
+  private readonly fetchDegreesData$ = this.select(
     {
       start: this.start$,
       end: this.end$,
@@ -61,41 +71,40 @@ export class SchoolDegreesStore
     { debounce: true }
   );
 
-  private readonly fetchDegrees = this.effect(
-    (request$: typeof this.fetchDegreesData$) => {
-      return request$.pipe(
-        combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-        tap(() => this.patchState({ LOADING: true })),
-        filter(([{ end }, school_id]) => end > 0 && !!school_id),
-        switchMap(([{ start, end }, school_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.Degrees)
-              .select('id, name, created_at, level:levels(*), level_id', {
-                count: 'exact',
-              })
-              .order('name', { ascending: true })
-              .range(start, end)
-              .eq('school_id', school_id)
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { degrees: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ degrees }) =>
-                this.patchState({ DEGREES: degrees as unknown as Degree[] }),
-              (error) => {
-                console.error(error);
-              },
-              () => this.patchState({ LOADING: false })
-            )
-          );
-        })
-      );
-    }
-  );
+  private readonly fetchDegrees = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() => this.fetchDegreesData$),
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      tap(() => this.patchState({ LOADING: true })),
+      filter(([{ end }, school_id]) => end > 0 && !!school_id),
+      switchMap(([{ start, end }, school_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.Degrees)
+            .select('id, name, created_at, level:levels(*), level_id', {
+              count: 'exact',
+            })
+            .order('name', { ascending: true })
+            .range(start, end)
+            .eq('school_id', school_id)
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { degrees: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ degrees }) =>
+              this.patchState({ DEGREES: degrees as unknown as Degree[] }),
+            (error) => {
+              console.error(error);
+            },
+            () => this.patchState({ LOADING: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveDegree = this.effect(
     (request$: Observable<Partial<Degree>>) => {
@@ -125,7 +134,7 @@ export class SchoolDegreesStore
                   message: 'ALERT.FAILURE',
                 }),
               () => {
-                this.fetchDegrees(this.fetchDegreesData$);
+                this.fetchDegrees();
               }
             )
           );
@@ -134,8 +143,8 @@ export class SchoolDegreesStore
     }
   );
 
-  public readonly deleteDegree = this.effect((id: Observable<string>) => {
-    return id.pipe(
+  public readonly deleteDegree = this.effect((id$: Observable<string>) => {
+    return id$.pipe(
       tap(() => this.patchState({ LOADING: true })),
       switchMap((id) =>
         from(
@@ -156,7 +165,7 @@ export class SchoolDegreesStore
                 message: 'ALERT.FAILURE',
               }),
             () => {
-              this.fetchDegrees(this.fetchDegreesData$);
+              this.fetchDegrees();
             }
           )
         )
@@ -164,7 +173,7 @@ export class SchoolDegreesStore
     );
   });
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       DEGREES: [],
       LOADING: true,
@@ -174,6 +183,6 @@ export class SchoolDegreesStore
       START: 0,
       END: 4,
     });
-    this.fetchDegrees(this.fetchDegreesData$);
+    this.fetchDegrees();
   };
 }

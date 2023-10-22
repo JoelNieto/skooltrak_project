@@ -1,6 +1,11 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -102,10 +107,10 @@ import { CoursesFormStore } from './courses-form.store';
 })
 export class SchoolCoursesFormComponent implements OnInit {
   public store = inject(CoursesFormStore);
-  public dialogRef = inject(DialogRef<Partial<Course>>);
+  public dialogRef = inject(DialogRef);
   private data: Course | undefined = inject(DIALOG_DATA);
 
-  form = new FormGroup({
+  public form = new FormGroup({
     plan_id: new FormControl<string | undefined>(undefined, {
       validators: [Validators.required],
       nonNullable: true,
@@ -120,11 +125,11 @@ export class SchoolCoursesFormComponent implements OnInit {
     description: new FormControl<string>('', { nonNullable: true }),
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     !!this.data && this.form.patchValue(this.data);
   }
 
-  saveChanges() {
+  public saveChanges(): void {
     this.dialogRef.close(this.form.getRawValue());
   }
 }

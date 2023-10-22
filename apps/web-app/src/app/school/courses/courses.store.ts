@@ -1,4 +1,3 @@
-/* eslint-disable rxjs/finnish */
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
@@ -8,7 +7,6 @@ import { AlertService, UtilService } from '@skooltrak/ui';
 import { orderBy } from 'lodash';
 import { combineLatestWith, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   LOADING: boolean;
   COURSES: Partial<Course>[];
@@ -33,17 +31,21 @@ export class SchoolCoursesStore
   private readonly util = inject(UtilService);
   private readonly alert = inject(AlertService);
 
-  readonly COURSES = this.selectSignal((state) => state.COURSES);
-  readonly DEGREES = this.selectSignal((state) => state.DEGREES);
-  readonly PLANS = this.selectSignal((state) => state.PLANS);
-  readonly selectedDegree$ = this.select((state) => state.SELECTED_DEGREE);
-  readonly selectedPlan$ = this.select((state) => state.SELECTED_PLAN);
-  readonly selectedPlan = this.selectSignal((state) => state.SELECTED_PLAN);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly start$ = this.select((state) => state.START);
-  readonly end$ = this.select((state) => state.END);
+  public readonly COURSES = this.selectSignal((state) => state.COURSES);
+  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
+  public readonly PLANS = this.selectSignal((state) => state.PLANS);
+  public readonly selectedDegree$ = this.select(
+    (state) => state.SELECTED_DEGREE
+  );
+  public readonly selectedPlan$ = this.select((state) => state.SELECTED_PLAN);
+  public readonly selectedPlan = this.selectSignal(
+    (state) => state.SELECTED_PLAN
+  );
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly start$ = this.select((state) => state.START);
+  public readonly end$ = this.select((state) => state.END);
 
   private setCount = this.updater(
     (state, count: number): State => ({
@@ -53,7 +55,7 @@ export class SchoolCoursesStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       START: start,
@@ -61,7 +63,7 @@ export class SchoolCoursesStore
     })
   );
 
-  readonly fetchCoursesData$ = this.select(
+  private readonly fetchCoursesData$ = this.select(
     {
       start: this.start$,
       end: this.end$,
@@ -71,7 +73,7 @@ export class SchoolCoursesStore
     { debounce: true }
   );
 
-  readonly fetchDegrees = this.effect<void>((trigger$) =>
+  private readonly fetchDegrees = this.effect<void>((trigger$) =>
     trigger$.pipe(
       combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
       filter(([, school_id]) => !!school_id),
@@ -98,7 +100,7 @@ export class SchoolCoursesStore
     )
   );
 
-  readonly fetchCourses = this.effect(() => {
+  private readonly fetchCourses = this.effect(() => {
     return this.fetchCoursesData$.pipe(
       combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
       filter(([{ end, plan }, school_id]) => end > 0 && !!school_id && !!plan),
@@ -136,9 +138,9 @@ export class SchoolCoursesStore
     );
   });
 
-  readonly fetchPlans = this.effect(
-    (degree_id: Observable<string | undefined>) =>
-      degree_id.pipe(
+  private readonly fetchPlans = this.effect(
+    (degree_id$: Observable<string | undefined>) =>
+      degree_id$.pipe(
         combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
         filter(([degree_id, school_id]) => !!degree_id && !!school_id),
         switchMap(([degree_id, school_id]) =>
@@ -165,36 +167,39 @@ export class SchoolCoursesStore
       )
   );
 
-  readonly saveCourse = this.effect((request$: Observable<Partial<Course>>) =>
-    request$.pipe(
-      switchMap((request) =>
-        from(
-          this.supabase.client
-            .from(Table.Courses)
-            .upsert([{ ...request, school_id: this.auth.CURRENT_SCHOOL_ID() }])
-        ).pipe(
-          map(({ error }) => {
-            if (error) throw new Error(error.message);
-          }),
-          tapResponse(
-            () =>
-              this.alert.showAlert({
-                icon: 'success',
-                message: 'ALERT.SUCCESS',
-              }),
-            () =>
-              this.alert.showAlert({
-                icon: 'error',
-                message: 'ALERT.FAILURE',
-              }),
-            () => this.setRange(0)
+  public readonly saveCourse = this.effect(
+    (request$: Observable<Partial<Course>>) =>
+      request$.pipe(
+        switchMap((request) =>
+          from(
+            this.supabase.client
+              .from(Table.Courses)
+              .upsert([
+                { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
+              ])
+          ).pipe(
+            map(({ error }) => {
+              if (error) throw new Error(error.message);
+            }),
+            tapResponse(
+              () =>
+                this.alert.showAlert({
+                  icon: 'success',
+                  message: 'ALERT.SUCCESS',
+                }),
+              () =>
+                this.alert.showAlert({
+                  icon: 'error',
+                  message: 'ALERT.FAILURE',
+                }),
+              () => this.setRange(0)
+            )
           )
         )
       )
-    )
   );
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       LOADING: false,
       PLANS: [],

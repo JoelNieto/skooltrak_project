@@ -1,30 +1,28 @@
 import { inject } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Country, School, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import { EMPTY, from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
-  loading: boolean;
-  countries: Country[];
-  school: Partial<School> | undefined;
-  crest_url: string | undefined;
+  LOADING: boolean;
+  COUNTRIES: Country[];
+  SCHOOL: Partial<School> | undefined;
+  CREST_URL: string | undefined;
 };
 export class SchoolFormStore
   extends ComponentStore<State>
   implements OnStoreInit
 {
-  private supabase = inject(SupabaseService);
-  readonly school = this.selectSignal((state) => state.school);
-  private alert = inject(AlertService);
-  countries = this.selectSignal((state) => state.countries);
-  private auth = inject(authState.AuthStateFacade);
-  readonly fetchCountries = this.effect(() => {
+  private readonly supabase = inject(SupabaseService);
+  private readonly alert = inject(AlertService);
+  private readonly auth = inject(authState.AuthStateFacade);
+
+  public readonly SCHOOL = this.selectSignal((state) => state.SCHOOL);
+  public readonly COUNTRIES = this.selectSignal((state) => state.COUNTRIES);
+
+  private readonly fetchCountries = this.effect(() => {
     return from(
       this.supabase.client
         .from(Table.Countries)
@@ -39,15 +37,15 @@ export class SchoolFormStore
       )
       .pipe(
         tapResponse(
-          (countries) => this.patchState({ countries }),
+          (COUNTRIES) => this.patchState({ COUNTRIES }),
           (error) => console.error(error)
         )
       );
   });
 
-  readonly uploadCrest = this.effect((request$: Observable<File>) => {
+  public readonly uploadCrest = this.effect((request$: Observable<File>) => {
     return request$.pipe(
-      tap(() => this.patchState({ loading: true })),
+      tap(() => this.patchState({ LOADING: true })),
       switchMap((request) =>
         from(this.supabase.uploadCrest(request)).pipe(
           map(({ error, data }) => {
@@ -58,42 +56,47 @@ export class SchoolFormStore
       ),
       tapResponse(
         (crest_url) =>
-          this.patchState({ school: { ...this.school(), crest_url } }),
+          this.patchState({ SCHOOL: { ...this.SCHOOL(), crest_url } }),
         (error) => console.error(error),
-        () => this.patchState({ loading: false })
+        () => this.patchState({ LOADING: false })
       )
     );
   });
 
-  saveSchool = this.effect((request$: Observable<Partial<School>>) => {
-    return request$.pipe(
-      tap(() => this.patchState({ loading: true })),
-      switchMap((request) =>
-        from(this.supabase.client.from(Table.Schools).upsert([request])).pipe(
-          map(({ error }) => {
-            if (error) throw new Error(error.message);
-            return EMPTY;
-          })
+  public readonly saveSchool = this.effect(
+    (request$: Observable<Partial<School>>) => {
+      return request$.pipe(
+        tap(() => this.patchState({ LOADING: true })),
+        switchMap((request) =>
+          from(this.supabase.client.from(Table.Schools).upsert([request])).pipe(
+            map(({ error }) => {
+              if (error) throw new Error(error.message);
+              return EMPTY;
+            })
+          )
+        ),
+        tapResponse(
+          () =>
+            this.alert.showAlert({
+              icon: 'success',
+              message: 'School created!',
+            }),
+          (error: string) =>
+            this.alert.showAlert({ icon: 'error', message: error }),
+          () => {
+            this.patchState({ LOADING: false });
+            this.auth.getProfiles();
+          }
         )
-      ),
-      tapResponse(
-        () =>
-          this.alert.showAlert({ icon: 'success', message: 'School created!' }),
-        (error: string) =>
-          this.alert.showAlert({ icon: 'error', message: error }),
-        () => {
-          this.patchState({ loading: false });
-          this.auth.getProfiles();
-        }
-      )
-    );
-  });
+      );
+    }
+  );
 
-  ngrxOnStoreInit = () =>
+  public ngrxOnStoreInit = (): void =>
     this.setState({
-      school: undefined,
-      loading: false,
-      countries: [],
-      crest_url: undefined,
+      SCHOOL: undefined,
+      LOADING: false,
+      COUNTRIES: [],
+      CREST_URL: undefined,
     });
 }

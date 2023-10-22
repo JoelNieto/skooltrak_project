@@ -90,7 +90,7 @@ export class SchoolInfoComponent {
   public school = this.auth.CURRENT_SCHOOL;
   private dialog = inject(Dialog);
 
-  editInfo() {
+  public editInfo(): void {
     this.dialog.open(SchoolFormComponent, {
       width: '64rem',
       maxWidth: '90%',

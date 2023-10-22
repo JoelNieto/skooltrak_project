@@ -1,26 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Course, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
-import {
-  EMPTY,
-  exhaustMap,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   courses: Course[];
   selectedId?: string;
@@ -36,18 +21,18 @@ type State = {
 @Injectable()
 export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
   private readonly auth = inject(authState.AuthStateFacade);
-  school = this.auth.CURRENT_SCHOOL_ID;
-  supabase = inject(SupabaseService);
-  util = inject(UtilService);
+  private readonly school = this.auth.CURRENT_SCHOOL_ID;
+  private readonly supabase = inject(SupabaseService);
+  private readonly util = inject(UtilService);
 
-  readonly courses = this.selectSignal((state) => state.courses);
-  readonly count = this.selectSignal((state) => state.count);
-  readonly loading = this.selectSignal((state) => state.loading);
-  readonly pageSize = this.selectSignal((state) => state.pageSize);
-  readonly start$ = this.select((state) => state.start);
-  readonly end$ = this.select((state) => state.end);
-  readonly selectedId = this.selectSignal((state) => state.selectedId);
-  readonly selected = this.selectSignal((state) =>
+  public readonly courses = this.selectSignal((state) => state.courses);
+  public readonly count = this.selectSignal((state) => state.count);
+  public readonly loading = this.selectSignal((state) => state.loading);
+  public readonly pageSize = this.selectSignal((state) => state.pageSize);
+  public readonly start$ = this.select((state) => state.start);
+  public readonly end$ = this.select((state) => state.end);
+  public readonly selectedId = this.selectSignal((state) => state.selectedId);
+  public readonly selected = this.selectSignal((state) =>
     state.selectedId
       ? state.courses.find((x) => x.id === state.selectedId)
       : null
@@ -75,7 +60,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       start: start,
@@ -83,7 +68,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
     })
   );
 
-  readonly fetchCoursesData$ = this.select(
+  private readonly fetchCoursesData$ = this.select(
     {
       start: this.start$,
       end: this.end$,
@@ -151,7 +136,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
     }
   );
 
-  readonly fetchGroups = this.effect(() => {
+  private readonly fetchGroups = this.effect(() => {
     return this.selected$.pipe(
       filter((course) => !!course),
       switchMap((course) => {
@@ -179,7 +164,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
     );
   });
 
-  ngrxOnStoreInit = () =>
+  public ngrxOnStoreInit = (): void =>
     this.setState({
       courses: [],
       groups: [],

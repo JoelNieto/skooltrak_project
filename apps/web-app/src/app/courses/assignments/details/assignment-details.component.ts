@@ -3,12 +3,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  ButtonDirective,
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { AssignmentDetailsStore } from './assignment-details.store';
 
@@ -35,18 +30,18 @@ import { AssignmentDetailsStore } from './assignment-details.store';
             <h3
               class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
             >
-              {{ assignment()?.title }}
+              {{ ASSIGNMENT()?.title }}
             </h3>
             <a
               class="font-title text-gray-500 dark:text-gray-100"
               routerLink="/app/courses/details/"
-              [queryParams]="{ course_id: assignment()?.course_id }"
+              [queryParams]="{ course_id: ASSIGNMENT()?.course_id }"
             >
-              {{ assignment()?.course?.subject?.name }} /
-              {{ assignment()?.course?.plan?.name }}
+              {{ ASSIGNMENT()?.course?.subject?.name }} /
+              {{ ASSIGNMENT()?.course?.plan?.name }}
             </a>
             <p class="mb-4 font-sans text-sky-600 dark:text-gray-100">
-              {{ assignment()?.type?.name }}
+              {{ ASSIGNMENT()?.type?.name }}
             </p>
           </div>
           <a skButton color="green" routerLink="edit">{{
@@ -79,7 +74,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
         <div>
           <div
             class="mb-2 flex flex-col "
-            *ngFor="let date of assignment()?.dates"
+            *ngFor="let date of ASSIGNMENT()?.dates"
           >
             <div
               class="font-sans font-semibold text-gray-700 dark:text-gray-200"
@@ -96,13 +91,13 @@ import { AssignmentDetailsStore } from './assignment-details.store';
   `,
 })
 export class AssignmentDetailsComponent implements OnInit {
-  @Input() id: string | undefined;
+  @Input() private id: string | undefined;
 
   private store = inject(AssignmentDetailsStore);
 
-  public assignment = this.store.assignment;
+  public ASSIGNMENT = this.store.ASSIGNMENT;
 
   public ngOnInit(): void {
-    !!this.id && this.store.patchState({ assignment_id: this.id });
+    !!this.id && this.store.patchState({ ASSIGNMENT_ID: this.id });
   }
 }

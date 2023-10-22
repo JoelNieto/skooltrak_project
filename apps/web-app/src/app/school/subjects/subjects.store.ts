@@ -1,13 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Subject, Table } from '@skooltrak/models';
 import { AlertService, UtilService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
-/* eslint-disable rxjs/finnish */
 type State = {
   SUBJECTS: Subject[];
   COUNT: number;
@@ -15,6 +26,7 @@ type State = {
   PAGE_SIZE: number;
   START: number;
   END: number;
+  TEXT_SEARCH: string;
   LOADING: boolean;
 };
 
@@ -29,12 +41,14 @@ export class SchoolSubjectsStore
   private readonly alert = inject(AlertService);
   private readonly translate = inject(TranslateService);
 
-  readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
-  readonly COUNT = this.selectSignal((state) => state.COUNT);
-  readonly LOADING = this.selectSignal((state) => state.LOADING);
-  readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  readonly START$ = this.select((state) => state.START);
-  readonly END$ = this.select((state) => state.END);
+  public readonly SUBJECTS = this.selectSignal((state) => state.SUBJECTS);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly TEXT_SEARCH = this.selectSignal((state) => state.TEXT_SEARCH);
+  public readonly TEXT_SEARCH$ = this.select((state) => state.TEXT_SEARCH);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly START$ = this.select((state) => state.START);
+  public readonly END$ = this.select((state) => state.END);
 
   private setCount = this.updater(
     (state, count: number): State => ({
@@ -44,7 +58,7 @@ export class SchoolSubjectsStore
     })
   );
 
-  setRange = this.updater(
+  public setRange = this.updater(
     (state, start: number): State => ({
       ...state,
       START: start,
@@ -52,51 +66,54 @@ export class SchoolSubjectsStore
     })
   );
 
-  readonly fetchSubjectsData$ = this.select(
+  private readonly fetchSubjectsData$ = this.select(
     {
       START: this.START$,
       END: this.END$,
       PAGE_SIZE: toObservable(this.PAGE_SIZE),
+      TEXT_SEARCH: this.TEXT_SEARCH$,
     },
     { debounce: true }
   );
 
-  private readonly fetchSubjects = this.effect(
-    (data$: typeof this.fetchSubjectsData$) => {
-      return data$.pipe(
-        combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-        filter(([{ END }, school_id]) => END > 0 && !!school_id),
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap(([{ START, END }, school_id]) => {
-          return from(
-            this.supabase.client
-              .from(Table.Subjects)
-              .select(
-                'id,name, short_name, code, description, created_at, user:users(full_name)',
-                {
-                  count: 'exact',
-                }
-              )
-              .order('name', { ascending: true })
-              .range(START, END)
-              .eq('school_id', school_id)
-          ).pipe(
-            map(({ data, error, count }) => {
-              if (error) throw new Error(error.message);
-              return { SUBJECTS: data, count };
-            }),
-            tap(({ count }) => !!count && this.setCount(count)),
-            tapResponse(
-              ({ SUBJECTS }) =>
-                this.patchState({ SUBJECTS: SUBJECTS as unknown as Subject[] }),
-              (error) => console.error(error),
-              () => this.patchState({ LOADING: false })
+  private readonly fetchSubjects = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() => this.fetchSubjectsData$),
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      filter(([{ END }, school_id]) => END > 0 && !!school_id),
+      tap(() => this.patchState({ LOADING: true })),
+      switchMap(([{ START, END, TEXT_SEARCH }, school_id]) => {
+        return from(
+          this.supabase.client
+            .from(Table.Subjects)
+            .select(
+              'id,name, short_name, code, description, created_at, user:users(full_name)',
+              {
+                count: 'exact',
+              }
             )
-          );
-        })
-      );
-    }
-  );
+            .order('name', { ascending: true })
+            .range(START, END)
+            .eq('school_id', school_id)
+            .or(
+              `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`
+            )
+        ).pipe(
+          map(({ data, error, count }) => {
+            if (error) throw new Error(error.message);
+            return { SUBJECTS: data, count };
+          }),
+          tap(({ count }) => !!count && this.setCount(count)),
+          tapResponse(
+            ({ SUBJECTS }) =>
+              this.patchState({ SUBJECTS: SUBJECTS as unknown as Subject[] }),
+            (error) => console.error(error),
+            () => this.patchState({ LOADING: false })
+          )
+        );
+      })
+    );
+  });
 
   public readonly saveSubject = this.effect(
     (request$: Observable<Partial<Subject>>) => {
@@ -125,7 +142,7 @@ export class SchoolSubjectsStore
                   message: this.translate.instant('ALERT.FAILURE'),
                 });
               },
-              () => this.fetchSubjects(this.fetchSubjectsData$)
+              () => this.fetchSubjects()
             )
           );
         })
@@ -133,8 +150,8 @@ export class SchoolSubjectsStore
     }
   );
 
-  public readonly deleteSubject = this.effect((id: Observable<string>) => {
-    return id.pipe(
+  public readonly deleteSubject = this.effect((id$: Observable<string>) => {
+    return id$.pipe(
       tap(() => this.patchState({ LOADING: true })),
       switchMap((id) =>
         from(
@@ -155,7 +172,7 @@ export class SchoolSubjectsStore
                 message: this.translate.instant('ALERT.FAILURE'),
               }),
             () => {
-              this.fetchSubjects(this.fetchSubjectsData$);
+              this.fetchSubjects();
             }
           )
         )
@@ -163,16 +180,17 @@ export class SchoolSubjectsStore
     );
   });
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
       SUBJECTS: [],
       LOADING: true,
       PAGES: 0,
       COUNT: 0,
       PAGE_SIZE: 5,
+      TEXT_SEARCH: '',
       START: 0,
       END: 4,
     });
-    this.fetchSubjects(this.fetchSubjectsData$);
+    this.fetchSubjects();
   };
 }

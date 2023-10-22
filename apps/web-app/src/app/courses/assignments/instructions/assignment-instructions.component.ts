@@ -12,5 +12,5 @@ import { AssignmentDetailsStore } from '../details/assignment-details.store';
 })
 export class AssignmentInstructionsComponent {
   private store = inject(AssignmentDetailsStore);
-  public assignment = this.store.assignment;
+  public assignment = this.store.ASSIGNMENT;
 }

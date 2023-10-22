@@ -1,6 +1,7 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
   heroMagnifyingGlass,
@@ -100,7 +101,7 @@ import { SchoolStudyPlansStore } from './plans.store';
                 size="24"
               />
             </button>
-            <button type="button">
+            <button type="button" (click)="deletePlan(plan)">
               <ng-icon name="heroTrash" class="text-red-600" size="24" />
             </button>
           </td>
@@ -126,16 +127,20 @@ import { SchoolStudyPlansStore } from './plans.store';
   </div>`,
 })
 export class StudyPlansComponent {
-  store = inject(SchoolStudyPlansStore);
-  dialog = inject(Dialog);
-  confirmation = inject(ConfirmationService);
+  public store = inject(SchoolStudyPlansStore);
+  private dialog = inject(Dialog);
+  private confirmation = inject(ConfirmationService);
+  private destroy = inject(DestroyRef);
 
-  getCurrentPage(pagination: { currentPage: number; start: number }): void {
+  public getCurrentPage(pagination: {
+    currentPage: number;
+    start: number;
+  }): void {
     const { start } = pagination;
     this.store.setRange(start);
   }
 
-  newStudyPlan() {
+  public newStudyPlan(): void {
     const dialogRef = this.dialog.open<Partial<StudyPlan>>(
       StudyPlansFormComponent,
       {
@@ -144,26 +149,46 @@ export class StudyPlansComponent {
       }
     );
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
         !!request && this.store.saveStudyPlan(request);
       },
     });
   }
 
-  editStudyPlan(degree: StudyPlan) {
+  public editStudyPlan(plan: StudyPlan): void {
     const dialogRef = this.dialog.open<Partial<StudyPlan>>(
       StudyPlansFormComponent,
       {
         minWidth: '36rem',
         disableClose: true,
-        data: degree,
+        data: plan,
       }
     );
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
-        !!request && this.store.saveStudyPlan({ ...request, id: degree.id });
+        !!request && this.store.saveStudyPlan({ ...request, id: plan.id });
       },
     });
+  }
+
+  public deletePlan(plan: StudyPlan): void {
+    const { id } = plan;
+    if (!id) return;
+
+    this.confirmation
+      .openDialog({
+        title: 'CONFIRMATION.DELETE.TITLE',
+        description: 'CONFIRMATION.DELETE.TEXT',
+        icon: 'heroTrash',
+        color: 'red',
+        confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
+        cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
+        showCancelButton: true,
+      })
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (res) => !!res && this.store.deletePlan(id),
+      });
   }
 }

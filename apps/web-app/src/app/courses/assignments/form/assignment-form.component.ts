@@ -135,14 +135,14 @@ import { AssignmentFormStore } from './assignment-form.store';
   `,
 })
 export class AssignmentFormComponent implements OnInit {
-  @Input({ required: true }) course_id!: string;
-  @Input({ required: false }) id?: string;
+  @Input({ required: true }) public course_id!: string;
+  @Input({ required: false }) public id?: string;
   private destroyRef = inject(DestroyRef);
   public store = inject(AssignmentFormStore);
   private state = inject(CoursesStore);
   public groups = this.state.groups;
 
-  assignmentForm = new FormGroup({
+  public assignmentForm = new FormGroup({
     title: new FormControl<string>('', {
       validators: [Validators.required],
       nonNullable: true,
@@ -159,7 +159,7 @@ export class AssignmentFormComponent implements OnInit {
     groups: new UntypedFormArray([]),
   });
 
-  modules = {
+  public modules = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
       [{ align: [] }],
@@ -183,7 +183,7 @@ export class AssignmentFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.assignmentForm
       .get('course_id')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
@@ -204,16 +204,16 @@ export class AssignmentFormComponent implements OnInit {
       asapScheduler.schedule(() => this.store.patchState({ id: this.id }));
   }
 
-  get formGroups() {
+  get formGroups(): FormArray {
     return this.assignmentForm.get('groups') as FormArray;
   }
 
-  setCourse() {
+  private setCourse(): void {
     this.assignmentForm.get('course_id')?.patchValue(this.course_id);
     this.assignmentForm.get('course_id')?.disable();
   }
 
-  setGroups(groups: Partial<ClassGroup>[]) {
+  private setGroups(groups: Partial<ClassGroup>[]): void {
     const control = this.assignmentForm.controls.groups;
     groups.forEach((group) => {
       control.push(
@@ -227,7 +227,7 @@ export class AssignmentFormComponent implements OnInit {
     });
   }
 
-  saveAssignment() {
+  public saveAssignment(): void {
     const value = this.assignmentForm.getRawValue();
     this.store.saveAssignment(value);
   }

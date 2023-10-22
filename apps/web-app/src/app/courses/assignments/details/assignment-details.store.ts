@@ -1,17 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { Assignment, Table } from '@skooltrak/models';
 import { filter, from, map, switchMap, tap } from 'rxjs';
 
 type State = {
-  assignment_id: string | undefined;
-  assignment: Assignment | undefined;
-  loading: boolean;
+  ASSIGNMENT_ID: string | undefined;
+  ASSIGNMENT: Assignment | undefined;
+  LOADING: boolean;
 };
 
 @Injectable()
@@ -20,13 +16,13 @@ export class AssignmentDetailsStore
   implements OnStoreInit
 {
   private readonly supabase = inject(SupabaseService);
-  public readonly assignment_id$ = this.select((state) => state.assignment_id);
-  public readonly assignment = this.selectSignal((state) => state.assignment);
+  public readonly ASSIGNMENT_ID$ = this.select((state) => state.ASSIGNMENT_ID);
+  public readonly ASSIGNMENT = this.selectSignal((state) => state.ASSIGNMENT);
 
-  readonly fetchAssignment = this.effect(() => {
-    return this.assignment_id$.pipe(
+  private readonly fetchAssignment = this.effect(() => {
+    return this.ASSIGNMENT_ID$.pipe(
       filter((id) => !!id),
-      tap(() => this.patchState({ loading: true })),
+      tap(() => this.patchState({ LOADING: true })),
       switchMap((id) => {
         return from(
           this.supabase.client
@@ -45,20 +41,20 @@ export class AssignmentDetailsStore
           )
           .pipe(
             tapResponse(
-              (assignment) => this.patchState({ assignment }),
+              (ASSIGNMENT) => this.patchState({ ASSIGNMENT }),
               (error) => console.error(error),
-              () => this.patchState({ loading: false })
+              () => this.patchState({ LOADING: false })
             )
           );
       })
     );
   });
 
-  ngrxOnStoreInit = () => {
+  public ngrxOnStoreInit = (): void => {
     this.setState({
-      assignment: undefined,
-      assignment_id: undefined,
-      loading: false,
+      ASSIGNMENT: undefined,
+      ASSIGNMENT_ID: undefined,
+      LOADING: false,
     });
   };
 }

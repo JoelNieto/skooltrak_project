@@ -1,16 +1,12 @@
 import { Dialog, DialogModule, DialogRef } from '@angular/cdk/dialog';
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import {
-  ButtonDirective,
-  CardComponent,
-  ConfirmationService,
-  defaultConfirmationOptions,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -105,6 +101,7 @@ export class SchoolSelectorComponent {
   public dialogRef = inject(DialogRef);
   private dialog = inject(Dialog);
   private confirm = inject(ConfirmationService);
+  private destroyRef = inject(DestroyRef);
 
   public schools = this.auth.SCHOOLS;
   public selected = this.auth.CURRENT_SCHOOL_ID;
@@ -133,6 +130,7 @@ export class SchoolSelectorComponent {
         confirmButtonText: 'Yes',
         color: 'green',
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           !!response &&

@@ -1,6 +1,7 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
   heroMagnifyingGlass,
@@ -125,6 +126,7 @@ import { SchoolPeriodsStore } from './periods.store';
 export class SchoolPeriodsComponent {
   public store = inject(SchoolPeriodsStore);
   private dialog = inject(Dialog);
+  private destroy = inject(DestroyRef);
 
   public createPeriod(): void {
     const dialogRef = this.dialog.open<Partial<Period>>(
@@ -136,7 +138,7 @@ export class SchoolPeriodsComponent {
       }
     );
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
         !!request && this.store.savePeriod(request);
       },
@@ -154,7 +156,7 @@ export class SchoolPeriodsComponent {
       }
     );
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
         !!request && this.store.savePeriod({ ...request, id: period.id });
       },

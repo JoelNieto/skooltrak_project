@@ -215,6 +215,8 @@ export class SchoolPeopleComponent implements OnInit {
       maxWidth: '90%',
       data: person,
     });
-    dialogRef.closed.subscribe({ next: () => this.store.fetchPeople() });
+    dialogRef.closed
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({ next: () => this.store.fetchPeople() });
   }
 }

@@ -1,6 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
@@ -101,6 +102,7 @@ export class SchoolPeopleFormComponent implements OnInit {
 
   public roles = Object.values(RoleEnum);
   public statuses = Object.values(StatusEnum);
+  private destroy = inject(DestroyRef);
 
   public form = new FormGroup({
     status: new FormControl<StatusEnum | undefined>(undefined, {
@@ -115,7 +117,7 @@ export class SchoolPeopleFormComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form.patchValue(this.data);
-    this.form.valueChanges.subscribe({
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: ({ status, role }) =>
         this.store.savePerson({ status, role, user_id: this.data.user_id }),
     });

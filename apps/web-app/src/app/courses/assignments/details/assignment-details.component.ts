@@ -3,7 +3,12 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonDirective, CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  TabsComponent,
+  TabsItemComponent,
+} from '@skooltrak/ui';
 
 import { AssignmentDetailsStore } from './assignment-details.store';
 
@@ -51,13 +56,13 @@ import { AssignmentDetailsStore } from './assignment-details.store';
         <div>
           <div skooltrak-tabs>
             <sk-tabs-item link="instructions">{{
-              'Instructions' | translate
+              'ASSIGNMENTS.INSTRUCTIONS' | translate
             }}</sk-tabs-item>
             <sk-tabs-item link="students-work">{{
-              'Students work' | translate
+              'ASSIGNMENTS.WORK' | translate
             }}</sk-tabs-item>
             <sk-tabs-item link="grades">{{
-              'Grades' | translate
+              'ASSIGNMENTS.GRADES' | translate
             }}</sk-tabs-item>
           </div>
           <router-outlet />

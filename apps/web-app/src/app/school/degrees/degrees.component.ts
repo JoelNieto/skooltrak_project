@@ -1,12 +1,21 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -119,6 +128,7 @@ export class SchoolDegreesComponent {
   public store = inject(SchoolDegreesStore);
   private dialog = inject(Dialog);
   private confirmation = inject(ConfirmationService);
+  private destroyRef = inject(DestroyRef);
 
   public getCurrentPage(pagination: {
     currentPage: number;
@@ -134,7 +144,7 @@ export class SchoolDegreesComponent {
       disableClose: true,
     });
 
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (request) => {
         !!request && this.store.saveDegree(request);
       },
@@ -147,7 +157,7 @@ export class SchoolDegreesComponent {
       disableClose: true,
       data: degree,
     });
-    dialogRef.closed.subscribe({
+    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (request) => {
         !!request && this.store.saveDegree({ ...request, id: degree.id });
       },
@@ -166,6 +176,7 @@ export class SchoolDegreesComponent {
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (res) => !!id && !!res && this.store.deleteDegree(id),
       });

@@ -1,16 +1,9 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { ClassGroup } from '@skooltrak/models';
 import {
   ButtonDirective,
   CardComponent,
@@ -18,12 +11,11 @@ import {
 } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../components/user-chip/user-chip.component';
-import { SchoolGroupsFormComponent } from './groups-form.component';
-import { SchoolGroupsStore } from './groups.store';
+import { GroupsStore } from '../groups.store';
 
 @Component({
-  selector: 'sk-admin-groups-list',
   standalone: true,
+  selector: 'sk-groups-list',
   imports: [
     TranslateModule,
     CardComponent,
@@ -32,17 +24,21 @@ import { SchoolGroupsStore } from './groups.store';
     PaginatorComponent,
     ButtonDirective,
     DatePipe,
-    NgIf,
     UserChipComponent,
-    DialogModule,
+    NgIf,
+    RouterLink,
   ],
-  providers: [
-    provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
-    provideComponentStore(SchoolGroupsStore),
-  ],
-  template: `
-    <div class="relative overflow-x-auto">
-      <div class="mb-2 flex justify-between px-1 py-2">
+  providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
+  template: `<sk-card>
+    <div header>
+      <h2
+        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
+      >
+        {{ 'GROUPS.TITLE' | translate }}
+      </h2>
+    </div>
+    <div class="relative mt-1 overflow-x-auto">
+      <div class="mb-4 flex justify-between px-1 py-3.5">
         <div>
           <label for="table-search" class="sr-only">Search</label>
           <div class="relative">
@@ -62,17 +58,15 @@ import { SchoolGroupsStore } from './groups.store';
             />
           </div>
         </div>
-
-        <button skButton color="green" (click)="newGroup()">
-          {{ 'New' | translate }}
-        </button>
       </div>
       <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
         <thead
-          class="bg-gray-100 font-sans text-xs uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-200"
+          class="bg-sky-100 font-sans text-xs uppercase text-sky-700 dark:bg-sky-800 dark:text-gray-200"
         >
           <tr class="cursor-pointer">
-            <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
+            <th scope="col" class="rounded-tl-xl px-6 py-3">
+              {{ 'Name' | translate }}
+            </th>
             <th scope="col" class="px-6 py-3">{{ 'Plan' | translate }}</th>
             <th scope="col" class="px-6 py-3">
               {{ 'Teachers' | translate }}
@@ -81,7 +75,7 @@ import { SchoolGroupsStore } from './groups.store';
               {{ 'Degree' | translate }}
             </th>
             <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-            <th scope="col" class="px-6 py-3 text-center">
+            <th scope="col" class="rounded-tr-xl px-6 py-3 text-center">
               {{ 'Actions' | translate }}
             </th>
           </tr>
@@ -110,16 +104,9 @@ import { SchoolGroupsStore } from './groups.store';
               {{ group.created_at | date : 'medium' }}
             </td>
             <td class="flex items-center justify-center gap-2 px-6 py-4">
-              <button type="button" (click)="editGroup(group)">
-                <ng-icon
-                  name="heroPencilSquare"
-                  class="text-green-500"
-                  size="24"
-                />
-              </button>
-              <button type="button">
-                <ng-icon name="heroTrash" class="text-red-600" size="24" />
-              </button>
+              <a routerLink="../details" [queryParams]="{ group_id: group.id }">
+                <ng-icon name="heroEye" size="24" class="text-sky-500" />
+              </a>
             </td>
           </tr>
         </tbody>
@@ -137,14 +124,11 @@ import { SchoolGroupsStore } from './groups.store';
         [count]="store.COUNT()"
         [pageSize]="store.PAGE_SIZE"
         (paginate)="getCurrentPage($event)"
-      />
-    </div>
-  `,
+      /></div
+  ></sk-card> `,
 })
-export class SchoolGroupsComponent {
-  public store = inject(SchoolGroupsStore);
-  private dialog = inject(Dialog);
-  private destroy = inject(DestroyRef);
+export class GroupsListComponent {
+  public store = inject(GroupsStore);
 
   public getCurrentPage(pagination: {
     currentPage: number;
@@ -152,38 +136,5 @@ export class SchoolGroupsComponent {
   }): void {
     const { start } = pagination;
     this.store.setRange(start);
-  }
-
-  public newGroup(): void {
-    const dialogRef = this.dialog.open<Partial<ClassGroup>>(
-      SchoolGroupsFormComponent,
-      {
-        minWidth: '36rem',
-        maxWidth: '55%',
-        disableClose: true,
-      }
-    );
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveClassGroup(request);
-      },
-    });
-  }
-
-  public editGroup(group: ClassGroup): void {
-    const dialogRef = this.dialog.open<Partial<ClassGroup>>(
-      SchoolGroupsFormComponent,
-      {
-        minWidth: '36rem',
-        maxWidth: '55%',
-        disableClose: true,
-        data: group,
-      }
-    );
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveClassGroup({ ...request, id: group.id });
-      },
-    });
   }
 }

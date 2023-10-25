@@ -1,19 +1,40 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
-import { Assignment, AssignmentType, Course, GroupAssignment, Table } from '@skooltrak/models';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/auth';
+import {
+  Assignment,
+  AssignmentType,
+  Course,
+  GroupAssignment,
+  Table,
+} from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import { pick } from 'lodash';
-import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { orderBy, pick } from 'lodash';
+import {
+  combineLatestWith,
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
-  id: string | undefined;
-  assignment: Assignment | undefined;
-  types: AssignmentType[];
-  courses: Course[];
-  course_id: string | undefined;
-  dates: GroupAssignment[];
-  loading: boolean;
+  SELECTED_ID: string | undefined;
+  ASSIGNMENT: Assignment | undefined;
+  TYPES: AssignmentType[];
+  COURSES: Course[];
+  COURSE_ID: string | undefined;
+  DATES: GroupAssignment[];
+  LOADING: boolean;
 };
 
 @Injectable()
@@ -23,53 +44,69 @@ export class AssignmentFormStore
 {
   private readonly supabase = inject(SupabaseService);
   private readonly alert = inject(AlertService);
-  public readonly types = this.selectSignal((state) => state.types);
-  private readonly assignment_id$ = this.select((state) => state.id);
-  public readonly selected = this.selectSignal((state) => state.assignment);
-  public readonly dates = this.selectSignal((state) => state.dates);
-  public readonly courses = this.selectSignal((state) => state.courses);
-  public readonly course$ = this.select((state) =>
-    state.courses.find((x) => x.id === state.course_id)
+  private readonly auth = inject(authState.AuthStateFacade);
+
+  public readonly TYPES = this.selectSignal((state) => state.TYPES);
+  private readonly SELECTED_ID$ = this.select((state) => state.SELECTED_ID);
+  public readonly ASSIGNMENT = this.selectSignal((state) => state.ASSIGNMENT);
+  public readonly DATES = this.selectSignal((state) => state.DATES);
+  public readonly COURSES = this.selectSignal((state) => state.COURSES);
+  public readonly COURSE$ = this.select((state) =>
+    state.COURSES.find((x) => x.id === state.COURSE_ID)
   );
 
-  private readonly fetchTypes = this.effect(() => {
-    return from(
-      this.supabase.client
-        .from(Table.AssignmentTypes)
-        .select('id, name, is_urgent, is_summative')
-    )
-      .pipe(
-        exhaustMap(({ data, error }) => {
-          if (error) throw new Error(error.message);
-          return of(data as AssignmentType[]);
-        })
-      )
-      .pipe(
-        tapResponse(
-          (types) => this.patchState({ types }),
-          (error) => console.error(error)
+  private readonly fetchTypes = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      switchMap(() =>
+        from(
+          this.supabase.client
+            .from(Table.AssignmentTypes)
+            .select('id, name, is_urgent, is_summative')
         )
-      );
+          .pipe(
+            exhaustMap(({ data, error }) => {
+              if (error) throw new Error(error.message);
+              return of(data as AssignmentType[]);
+            })
+          )
+          .pipe(
+            tapResponse(
+              (TYPES) => this.patchState({ TYPES }),
+              (error) => console.error(error)
+            )
+          )
+      )
+    );
   });
 
-  private readonly fetchCourses = this.effect(() => {
-    return from(
-      this.supabase.client
-        .from(Table.Courses)
-        .select(
-          'id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at'
+  private readonly fetchCourses = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
+      filter(([, school_id]) => !!school_id),
+      switchMap(([, school_id]) =>
+        from(
+          this.supabase.client
+            .from(Table.Courses)
+            .select(
+              'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at'
+            )
+            .eq('school_id', school_id)
+        ).pipe(
+          map(({ data, error }) => {
+            if (error) throw new Error(error.message);
+            return orderBy(data, [
+              'subject.name',
+              'plan.year',
+            ]) as unknown as Course[];
+          }),
+          tapResponse(
+            (COURSES) => this.patchState({ COURSES }),
+            (error) => {
+              console.error(error);
+              return of([]);
+            }
+          )
         )
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw new Error(error.message);
-        return data as unknown as Course[];
-      }),
-      tapResponse(
-        (courses) => this.patchState({ courses }),
-        (error) => {
-          console.error(error);
-          return of([]);
-        }
       )
     );
   });
@@ -77,7 +114,7 @@ export class AssignmentFormStore
   public readonly saveAssignment = this.effect(
     (request$: Observable<Assignment>) => {
       return request$.pipe(
-        tap(() => this.patchState({ loading: true })),
+        tap(() => this.patchState({ LOADING: true })),
         switchMap((request) => {
           return from(
             this.supabase.client
@@ -95,7 +132,7 @@ export class AssignmentFormStore
             tapResponse(
               ({ id }) =>
                 this.saveGroupsDate({
-                  groups: this.dates(),
+                  groups: this.DATES(),
                   assignment_id: id,
                 }),
               (error) => console.error(error)
@@ -132,7 +169,7 @@ export class AssignmentFormStore
                   message: 'Saved changes',
                 }),
               (error) => console.error(error),
-              () => this.patchState({ loading: false })
+              () => this.patchState({ LOADING: false })
             )
           );
         })
@@ -140,11 +177,12 @@ export class AssignmentFormStore
     }
   );
 
-  private readonly fetchAssignment = this.effect(() => {
-    return this.assignment_id$.pipe(
-      tap(() => this.patchState({ loading: true })),
-      filter((id) => !!id),
-      switchMap((id) => {
+  private readonly fetchAssignment = this.effect<void>((trigger$) => {
+    return trigger$.pipe(
+      combineLatestWith(this.SELECTED_ID$),
+      filter(([, id]) => !!id),
+      tap(() => this.patchState({ LOADING: true })),
+      switchMap(([, id]) => {
         return from(
           this.supabase.client
             .from(Table.Assignments)
@@ -157,23 +195,27 @@ export class AssignmentFormStore
             return data as Assignment;
           }),
           tapResponse(
-            (assignment) => this.patchState({ assignment }),
+            (ASSIGNMENT) => this.patchState({ ASSIGNMENT }),
             (error) => console.error(error),
-            () => this.patchState({ loading: false })
+            () => this.patchState({ LOADING: false })
           )
         );
       })
     );
   });
 
-  public ngrxOnStoreInit = (): void =>
+  public ngrxOnStoreInit = (): void => {
     this.setState({
-      id: undefined,
-      assignment: undefined,
-      types: [],
-      courses: [],
-      loading: false,
-      course_id: undefined,
-      dates: [],
+      SELECTED_ID: undefined,
+      ASSIGNMENT: undefined,
+      TYPES: [],
+      COURSES: [],
+      LOADING: false,
+      COURSE_ID: undefined,
+      DATES: [],
     });
+    this.fetchAssignment();
+    this.fetchTypes();
+    this.fetchCourses();
+  };
 }

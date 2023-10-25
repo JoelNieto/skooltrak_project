@@ -7,15 +7,21 @@ export const remoteRoutes: Route[] = [
     children: [
       {
         path: 'home',
-        title: 'Home',
+        title: 'HOME',
         loadChildren: () =>
           import('../home/home.routes').then((x) => x.homeRoutes),
       },
       {
         path: 'courses',
-        title: 'Courses',
+        title: 'COURSES.TITLE',
         loadChildren: () =>
           import('../courses/courses.routes').then((x) => x.coursesRoutes),
+      },
+      {
+        path: 'groups',
+        title: 'GROUPS.TITLE',
+        loadChildren: () =>
+          import('../groups/groups.routes').then((x) => x.groupsRoutes),
       },
       {
         path: 'grades',

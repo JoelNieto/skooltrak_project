@@ -9,9 +9,12 @@
     "TRY_AGAIN": "Por favor, intente nuevamente"
   },
   "App title": "Skooltrak",
-  "Assignments": {
-    "Details": "Datos de la asignación",
-    "New": "Nueva asignación"
+  "ASSIGNMENTS": {
+    "EDIT": "Datos de la asignación",
+    "NEW": "Nueva asignación",
+    "INSTRUCTIONS": "Instrucciones",
+    "WORK": "Trabajo",
+    "GRADES": "Calificaciones"
   },
   "Birth date": "Fecha de nacimiento",
   "CALENDAR": {
@@ -43,6 +46,7 @@
     }
   },
   "COURSES": {
+    "TITLE": "Cursos",
     "SELECT_DEGREE": "Seleccione nivel",
     "SELECT_PLAN": "Seleccione plan"
   },
@@ -57,7 +61,7 @@
     "Details": "Detalles del certificado",
     "Title": "Certificados"
   },
-  "Description": "Descripcion",
+  "DESCRIPTION": "Descripción",
   "Document ID": "Nro. Documento",
   "Father name": "Apellido paterno",
   "Female": "Femenino",
@@ -75,11 +79,12 @@
     "DETAILS": "Detalles del grupo"
   },
   "Home": "Inicio",
+  "HOME": "Inicio",
   "Male": "Masculino",
   "Messages": "Mensajes",
   "Middle name": "Segundo nombre",
   "Mother name": "Apellido materno",
-  "Name": "Nombre",
+  "NAME": "Nombre",
   "NEW": "Nuevo",
   "News": "Novedades",
   "NO_ITEMS": "Sin  elementos para este filtro",
@@ -112,11 +117,13 @@
   },
   "Polls": "Encuestas",
   "Profile": "Perfil",
-  "Save changes": "Guardar cambios",
+  "SAVE_CHANGES": "Guardar cambios",
   "Schedule": "Agenda",
-  "School": "Escuela",
+  "SCHOOL": {
+    "TITLE": "Escuela"
+  },
   "Select school": "Elija una escuela",
-  "Settings": "Ajustes",
+  "SETTINGS": "Ajustes",
   "Short name": "Nombre corto",
   "Students": "Estudiantes",
   "Subjects": {
@@ -145,6 +152,7 @@
     "SEARCH": "Buscar items",
     "NOT_FOUND": "Sin elementos encontrados"
   },
+  "SIGN_OUT": "Cerrar sesión",
   "SIGN_UP": {
     "TITLE": "Registrarse",
     "PROVIDE_INFO": "Introduzca su información personal",
@@ -156,5 +164,6 @@
     "EXISTING_ACCOUNT": "Ya tiene una cuenta?",
     "SIGN_IN": "Iniciar sesión"
   },
-  "SEARCH_ITEMS": "Buscar elementos"
+  "SEARCH_ITEMS": "Buscar elementos",
+  "TYPE": "Tipo"
 }

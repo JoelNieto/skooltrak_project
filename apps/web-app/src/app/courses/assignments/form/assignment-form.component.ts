@@ -1,12 +1,33 @@
 import { NgClass, NgFor } from '@angular/common';
-import { Component, DestroyRef, effect, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, UntypedFormArray, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  UntypedFormArray,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, SelectComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  LabelDirective,
+  SelectComponent,
+  TabsComponent,
+  TabsItemComponent,
+} from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 import { asapScheduler } from 'rxjs';
 
@@ -28,6 +49,7 @@ import { AssignmentFormStore } from './assignment-form.store';
     NgClass,
     NgFor,
     NgIconComponent,
+    LabelDirective,
   ],
   styles: [
     `
@@ -40,9 +62,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
         }
       }
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
+
       quill-editor {
         @apply block p-0;
       }
@@ -63,35 +83,39 @@ import { AssignmentFormStore } from './assignment-form.store';
       <sk-card class="flex-1">
         <div class="flex items-start justify-between" header>
           <h3
-            class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+            class="font-title mb-4 text-2xl  text-gray-700 dark:text-gray-100"
           >
-            {{ 'Assignments.Details' | translate }}
+            {{ (id ? 'ASSIGNMENTS.EDIT' : 'ASSIGNMENTS.NEW') | translate }}
           </h3>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="title">{{ 'Title' | translate }}</label>
+            <label for="title" skLabel>{{ 'NAME' | translate }}</label>
             <input type="text" name="title" formControlName="title" />
           </div>
           <div>
-            <label for="course">{{ 'Course.Title' | translate }}</label>
+            <label for="course" skLabel>{{
+              'COURSES.TITLE' | translate
+            }}</label>
             <sk-select
-              [items]="store.courses()"
+              [items]="store.COURSES()"
               label="subject.name"
               secondaryLabel="plan.name"
               formControlName="course_id"
             />
           </div>
           <div>
-            <label for="type">{{ 'Type' | translate }}</label>
+            <label for="type" skLabel>{{ 'TYPE' | translate }}</label>
             <sk-select
-              [items]="store.types()"
+              [items]="store.TYPES()"
               label="name"
               formControlName="type_id"
             />
           </div>
           <div class="col-span-2">
-            <label for="description">{{ 'Description' | translate }}</label>
+            <label for="description" skLabel>{{
+              'DESCRIPTION' | translate
+            }}</label>
             <quill-editor
               formControlName="description"
               [modules]="modules"
@@ -107,7 +131,7 @@ import { AssignmentFormStore } from './assignment-form.store';
             type="submit"
             [disabled]="assignmentForm.invalid"
           >
-            {{ 'Save changes' | translate }}
+            {{ 'SAVE_CHANGES' | translate }}
           </button>
         </div>
       </sk-card>
@@ -116,10 +140,10 @@ import { AssignmentFormStore } from './assignment-form.store';
           <h2
             class="font-title mb-1 flex text-lg leading-tight tracking-tight text-gray-700 dark:text-white"
           >
-            {{ 'Groups' | translate }}
+            {{ 'GROUPS.TITLE' | translate }}
           </h2>
         </div>
-        {{ store.selected()?.title }}
+        {{ store.ASSIGNMENT()?.title }}
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
           <ng-container
             *ngFor="let group of formGroups.controls; let i = index"
@@ -176,7 +200,7 @@ export class AssignmentFormComponent implements OnInit {
       !!groups && this.setGroups(groups);
     });
     effect(() => {
-      const assignment = this.store.selected();
+      const assignment = this.store.ASSIGNMENT();
       if (assignment) {
         this.assignmentForm.patchValue(assignment);
       }
@@ -188,8 +212,8 @@ export class AssignmentFormComponent implements OnInit {
       .get('course_id')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (course_id) =>
-          asapScheduler.schedule(() => this.store.patchState({ course_id })),
+        next: (COURSE_ID) =>
+          asapScheduler.schedule(() => this.store.patchState({ COURSE_ID })),
       });
 
     this.assignmentForm
@@ -197,11 +221,13 @@ export class AssignmentFormComponent implements OnInit {
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (value) =>
-          asapScheduler.schedule(() => this.store.patchState({ dates: value })),
+          asapScheduler.schedule(() => this.store.patchState({ DATES: value })),
       });
     !!this.course_id && this.setCourse();
     !!this.id &&
-      asapScheduler.schedule(() => this.store.patchState({ id: this.id }));
+      asapScheduler.schedule(() =>
+        this.store.patchState({ SELECTED_ID: this.id })
+      );
   }
 
   get formGroups(): FormArray {

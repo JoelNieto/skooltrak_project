@@ -177,12 +177,16 @@ export class SchoolCoursesComponent implements OnInit {
   });
 
   public ngOnInit(): void {
-    this.degreeControl.valueChanges.subscribe({
-      next: (degree) => this.store.patchState({ SELECTED_DEGREE: degree }),
-    });
-    this.planControl.valueChanges.subscribe({
-      next: (plan) => this.store.patchState({ SELECTED_PLAN: plan }),
-    });
+    this.degreeControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (degree) => this.store.patchState({ SELECTED_DEGREE: degree }),
+      });
+    this.planControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (plan) => this.store.patchState({ SELECTED_PLAN: plan }),
+      });
   }
 
   public getCurrentPage(pagination: {

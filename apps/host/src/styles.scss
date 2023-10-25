@@ -14,6 +14,7 @@ html,
 body {
   height: 100%;
   font-weight: 400;
+  @apply bg-sky-50 dark:bg-gray-800;
 }
 body {
   margin: 0;

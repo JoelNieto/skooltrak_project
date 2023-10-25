@@ -1,4 +1,4 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { DialogModule } from '@angular/cdk/dialog';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
@@ -14,7 +14,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
 import { AvatarComponent } from '../avatar/avatar.component';
-import { SchoolSelectorComponent } from '../school-selector/school-selector.component';
 
 @Component({
   selector: 'sk-navbar',
@@ -37,7 +36,7 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
       heroCalendarDays,
     }),
   ],
-  template: `<nav class="fixed top-0 z-50 w-full bg-white dark:bg-gray-800">
+  template: `<nav class="fixed top-0 z-50 w-full bg-sky-50 dark:bg-gray-800">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex flex-1 items-center justify-start">
@@ -71,44 +70,6 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
               >{{ 'App title' | translate }}</span
             >
           </a>
-          <button
-            class="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-2 font-sans text-sm dark:text-gray-100 md:flex"
-            (click)="changeSchool()"
-          >
-            <sk-avatar
-              *ngIf="SCHOOL()?.crest_url"
-              [avatarUrl]="SCHOOL()?.crest_url!"
-              bucket="crests"
-              class="w-8"
-            />{{ SCHOOL()?.short_name ?? ('Select school' | translate) }}
-          </button>
-        </div>
-        <div class="hidden w-full flex-1 md:block md:w-auto">
-          <ul
-            class="mt-4 flex flex-col justify-center rounded-xl border border-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:items-center md:space-x-4 md:border-0 md:p-0"
-          >
-            <li>
-              <a routerLink="home" class="link" routerLinkActive="active"
-                ><ng-icon name="heroHome" size="24" />{{
-                  'Home' | translate
-                }}</a
-              >
-            </li>
-            <li>
-              <a routerLink="courses" class="link" routerLinkActive="active"
-                ><ng-icon name="heroBookmarkSquare" size="24" />{{
-                  'Courses' | translate
-                }}</a
-              >
-            </li>
-            <li>
-              <a routerLink="grades" class="link" routerLinkActive="active"
-                ><ng-icon name="heroClipboardDocument" size="24" />{{
-                  'Grades.Title' | translate
-                }}</a
-              >
-            </li>
-          </ul>
         </div>
         <div class="flex flex-1 items-center justify-end">
           <div class="ml-3 flex items-center">
@@ -163,25 +124,6 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
                       >{{ 'Profile' | translate }}</a
                     >
                   </li>
-                  <li *ngIf="IS_ADMIN()">
-                    <a
-                      routerLink="school"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      cdkMenuItem
-                      >{{ 'School' | translate }}</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      routerLink="settings"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      cdkMenuItem
-                      >{{ 'Settings' | translate }}</a
-                    >
-                  </li>
-                  <li>
-                    <a href="#" class="menu-item" cdkMenuItem>Sign out</a>
-                  </li>
                 </ul>
               </div>
             </ng-template>
@@ -206,16 +148,8 @@ import { SchoolSelectorComponent } from '../school-selector/school-selector.comp
 })
 export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);
-  private dialog = inject(Dialog);
 
   public USER = this.auth.USER;
   public SCHOOL = this.auth.CURRENT_SCHOOL;
   public IS_ADMIN = this.auth.IS_ADMIN;
-
-  public changeSchool(): void {
-    this.dialog.open(SchoolSelectorComponent, {
-      width: '36rem',
-      maxWidth: '90%',
-    });
-  }
 }

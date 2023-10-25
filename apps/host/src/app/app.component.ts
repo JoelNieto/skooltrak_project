@@ -1,6 +1,5 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
@@ -11,7 +10,6 @@ import { authState } from '@skooltrak/auth';
   template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {
-  private store$ = inject(Store);
   private auth = inject(authState.AuthStateFacade);
   private router = inject(Router);
   private translate = inject(TranslateService);

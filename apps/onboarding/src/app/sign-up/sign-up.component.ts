@@ -11,7 +11,7 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
-import { ButtonDirective, CardComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, InputDirective } from '@skooltrak/ui';
 
 import { SignUpStore } from './sign-up.store';
 
@@ -27,6 +27,7 @@ import { SignUpStore } from './sign-up.store';
     CardComponent,
     TranslateModule,
     ReactiveFormsModule,
+    InputDirective,
   ],
   providers: [provideComponentStore(SignUpStore)],
   template: `
@@ -68,6 +69,7 @@ import { SignUpStore } from './sign-up.store';
               name="first_name"
               placeholder="John"
               formControlName="first_name"
+              skInput
             />
           </div>
           <div>
@@ -75,6 +77,7 @@ import { SignUpStore } from './sign-up.store';
               'SIGN_UP.FATHER_NAME' | translate
             }}</label>
             <input
+              skInput
               type="text"
               name="father_name"
               placeholder="Doe"
@@ -88,6 +91,7 @@ import { SignUpStore } from './sign-up.store';
               name="email"
               placeholder="user@domain.com"
               formControlName="email"
+              skInput
             />
           </div>
           <div>
@@ -98,6 +102,7 @@ import { SignUpStore } from './sign-up.store';
               autocomplete="new-password"
               formControlName="password"
               placeholder="•••••••••"
+              skInput
             />
           </div>
 
@@ -124,20 +129,7 @@ import { SignUpStore } from './sign-up.store';
       </sk-card>
     </div>
   `,
-  styles: [
-    `
-      input {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-
-      label {
-        @apply mb-1.5 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
-    `,
-  ],
+  styles: [``],
 })
 export class SignUpComponent {
   supabase = inject(SupabaseService);

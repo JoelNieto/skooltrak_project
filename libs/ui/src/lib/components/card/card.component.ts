@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 
   template: `
     <div
-      class="w-100 rounded-xl border border-gray-300 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
+      class="w-100 rounded-xl bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
     >
       <ng-content select="[header]" class="mb-3"></ng-content>
       <ng-content></ng-content>

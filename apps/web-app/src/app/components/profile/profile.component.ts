@@ -2,11 +2,22 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { ButtonDirective, CardComponent, ImageCropperComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  ImageCropperComponent,
+  InputDirective,
+  LabelDirective,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
@@ -23,6 +34,8 @@ import { ProfileFormStore } from './profile.store';
     ButtonDirective,
     AvatarComponent,
     DialogModule,
+    LabelDirective,
+    InputDirective,
   ],
   providers: [provideComponentStore(ProfileFormStore)],
   template: `
@@ -48,32 +61,44 @@ import { ProfileFormStore } from './profile.store';
         <form [formGroup]="form" (ngSubmit)="saveChanges()">
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <div>
-              <label for="first_name">{{ 'First name' | translate }}</label>
-              <input type="text" formControlName="first_name" />
+              <label skLabel for="first_name">{{
+                'First name' | translate
+              }}</label>
+              <input skInput type="text" formControlName="first_name" />
             </div>
             <div>
-              <label for="middle_name">{{ 'Middle name' | translate }}</label>
-              <input type="text" formControlName="middle_name" />
+              <label skLabel for="middle_name">{{
+                'Middle name' | translate
+              }}</label>
+              <input skInput type="text" formControlName="middle_name" />
             </div>
             <div>
-              <label for="father_name">{{ 'Father name' | translate }}</label>
-              <input type="text" formControlName="father_name" />
+              <label skLabel for="father_name">{{
+                'Father name' | translate
+              }}</label>
+              <input skInput type="text" formControlName="father_name" />
             </div>
             <div>
-              <label for="mother_name">{{ 'Mother name' | translate }}</label>
-              <input type="text" formControlName="mother_name" />
+              <label skLabel for="mother_name">{{
+                'Mother name' | translate
+              }}</label>
+              <input skInput type="text" formControlName="mother_name" />
             </div>
             <div>
-              <label for="document_id">{{ 'Document ID' | translate }}</label>
-              <input type="text" formControlName="document_id" />
+              <label skLabel for="document_id">{{
+                'Document ID' | translate
+              }}</label>
+              <input skInput type="text" formControlName="document_id" />
             </div>
             <div>
-              <label for="birth_date">{{ 'Birth date' | translate }}</label>
-              <input type="date" formControlName="birth_date" />
+              <label skLabel for="birth_date">{{
+                'Birth date' | translate
+              }}</label>
+              <input skInput type="date" formControlName="birth_date" />
             </div>
             <div>
-              <label for="gender">{{ 'Gender' | translate }}</label>
-              <select formControlName="gender">
+              <label skLabel for="gender">{{ 'Gender' | translate }}</label>
+              <select skInput formControlName="gender">
                 <option
                   *ngFor="let gender of store.GENDERS()"
                   [value]="gender.id"
@@ -83,8 +108,8 @@ import { ProfileFormStore } from './profile.store';
               </select>
             </div>
             <div>
-              <label for="email">{{ 'Email' | translate }}</label>
-              <input type="email" formControlName="email" />
+              <label skLabel for="email">{{ 'Email' | translate }}</label>
+              <input skInput type="email" formControlName="email" />
             </div>
             <div class="mt-2 md:col-span-4">
               <button
@@ -101,24 +126,6 @@ import { ProfileFormStore } from './profile.store';
       </sk-card>
     </div>
   `,
-  styles: [
-    `
-      input,
-      select {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-        &[disabled] {
-          @apply cursor-not-allowed text-gray-400 dark:text-gray-500;
-        }
-      }
-
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
-    `,
-  ],
 })
 export class ProfileComponent implements OnInit {
   private auth = inject(authState.AuthStateFacade);
@@ -150,6 +157,7 @@ export class ProfileComponent implements OnInit {
     }),
     document_id: new FormControl<string>('', {
       nonNullable: true,
+      validators: [Validators.required],
     }),
     birth_date: new FormControl<Date | undefined>(undefined, {
       nonNullable: true,

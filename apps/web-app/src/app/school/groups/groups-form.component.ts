@@ -15,6 +15,7 @@ import { ClassGroup } from '@skooltrak/models';
 import {
   ButtonDirective,
   CardComponent,
+  InputDirective,
   LabelDirective,
   SelectComponent,
 } from '@skooltrak/ui';
@@ -32,22 +33,13 @@ import { GroupsFormStore } from './groups-form.store';
     SelectComponent,
     ButtonDirective,
     LabelDirective,
+    InputDirective,
   ],
   providers: [
     provideComponentStore(GroupsFormStore),
     provideIcons({ heroXMark }),
   ],
-  styles: [
-    `
-      input,
-      textarea {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-    `,
-  ],
+
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -70,7 +62,7 @@ import { GroupsFormStore } from './groups-form.store';
     >
       <div>
         <label for="name" skLabel>{{ 'Name' | translate }}</label>
-        <input type="text" formControlName="name" />
+        <input type="text" formControlName="name" skInput />
       </div>
       <div>
         <label for="degree_id" skLabel>{{ 'Degree' | translate }}</label>

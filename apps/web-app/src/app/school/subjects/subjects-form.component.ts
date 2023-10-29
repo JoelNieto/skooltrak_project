@@ -1,11 +1,21 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+} from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-school-subjects-form',
@@ -17,6 +27,7 @@ import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
     ReactiveFormsModule,
     TranslateModule,
     LabelDirective,
+    InputDirective,
   ],
   providers: [provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -41,19 +52,19 @@ import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
     >
       <div>
         <label for="name" skLabel>{{ 'Name' | translate }}</label>
-        <input type="text" formControlName="name" />
+        <input type="text" formControlName="name" skInput />
       </div>
       <div>
         <label for="short_name" skLabel>{{ 'Short name' | translate }}</label>
-        <input type="text" formControlName="short_name" />
+        <input type="text" formControlName="short_name" skInput />
       </div>
       <div>
         <label for="code" skLabel>{{ 'Code' | translate }}</label>
-        <input type="text" formControlName="code" />
+        <input type="text" formControlName="code" skInput />
       </div>
       <div>
         <label for="description" skLabel>{{ 'Description' | translate }}</label>
-        <textarea rows="3" formControlName="description"></textarea>
+        <textarea rows="3" formControlName="description" skInput></textarea>
       </div>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
@@ -62,17 +73,6 @@ import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
       </div>
     </form>
   </sk-card>`,
-  styles: [
-    `
-      input,
-      textarea {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-    `,
-  ],
 })
 export class SubjectsFormComponent implements AfterViewInit {
   public dialogRef = inject(DialogRef<Partial<Subject>>);

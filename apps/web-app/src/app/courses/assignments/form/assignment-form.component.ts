@@ -23,6 +23,7 @@ import { ClassGroup } from '@skooltrak/models';
 import {
   ButtonDirective,
   CardComponent,
+  InputDirective,
   LabelDirective,
   SelectComponent,
   TabsComponent,
@@ -50,19 +51,10 @@ import { AssignmentFormStore } from './assignment-form.store';
     NgFor,
     NgIconComponent,
     LabelDirective,
+    InputDirective,
   ],
   styles: [
     `
-      input,
-      select,
-      quill-editor,
-      textarea {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-
       quill-editor {
         @apply block p-0;
       }
@@ -91,7 +83,7 @@ import { AssignmentFormStore } from './assignment-form.store';
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label for="title" skLabel>{{ 'NAME' | translate }}</label>
-            <input type="text" name="title" formControlName="title" />
+            <input skInput type="text" name="title" formControlName="title" />
           </div>
           <div>
             <label for="course" skLabel>{{
@@ -121,6 +113,7 @@ import { AssignmentFormStore } from './assignment-form.store';
               [modules]="modules"
               theme="snow"
               [styles]="{ height: '32vh' }"
+              skInput
             ></quill-editor>
           </div>
         </div>
@@ -150,7 +143,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           >
             <div [formGroupName]="i">
               <label [for]="i">{{ groups()[i].name }}</label>
-              <input type="datetime-local" formControlName="start_at" />
+              <input skInput type="datetime-local" formControlName="start_at" />
             </div>
           </ng-container>
         </div>

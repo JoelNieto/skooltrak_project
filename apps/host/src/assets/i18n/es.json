@@ -80,6 +80,10 @@
   },
   "Home": "Inicio",
   "HOME": "Inicio",
+  "INPUT": {
+    "INVALID": "Campo invalido",
+    "REQUIRED": "Campo requerido"
+  },
   "Male": "Masculino",
   "Messages": "Mensajes",
   "Middle name": "Segundo nombre",

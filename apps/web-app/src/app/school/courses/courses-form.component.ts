@@ -11,7 +11,13 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { UsersSelectorComponent } from '../../components/users-selector/users-selector.component';
 import { CoursesFormStore } from './courses-form.store';
@@ -26,26 +32,12 @@ import { CoursesFormStore } from './courses-form.store';
     SelectComponent,
     ButtonDirective,
     UsersSelectorComponent,
+    LabelDirective,
+    InputDirective,
   ],
   providers: [
     provideComponentStore(CoursesFormStore),
     provideIcons({ heroXMark }),
-  ],
-  styles: [
-    `
-      input,
-      select,
-      textarea {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
-    `,
   ],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
@@ -68,7 +60,7 @@ import { CoursesFormStore } from './courses-form.store';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label class="label" for="plan_id">{{ 'Plan' | translate }}</label>
+        <label for="plan_id" skLabel>{{ 'Plan' | translate }}</label>
         <sk-select
           label="name"
           [items]="store.PLANS()"
@@ -76,7 +68,7 @@ import { CoursesFormStore } from './courses-form.store';
         />
       </div>
       <div>
-        <label class="label" for="subject_id">{{
+        <label for="subject_id" skLabel>{{
           'Subjects.Label' | translate
         }}</label>
         <sk-select
@@ -86,16 +78,14 @@ import { CoursesFormStore } from './courses-form.store';
         />
       </div>
       <div>
-        <label class="label" for="weekly_hours">{{
+        <label for="weekly_hours" skLabel>{{
           'Weekly hours' | translate
         }}</label>
-        <input formControlName="weekly_hours" type="number" />
+        <input skInput formControlName="weekly_hours" type="number" />
       </div>
       <div>
-        <label class="label" for="description">{{
-          'Description' | translate
-        }}</label>
-        <textarea formControlName="description"></textarea>
+        <label for="description" skLabel>{{ 'Description' | translate }}</label>
+        <textarea skInput formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">

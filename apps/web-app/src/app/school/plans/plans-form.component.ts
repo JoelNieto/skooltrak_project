@@ -1,12 +1,23 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './plans-form.store';
@@ -22,21 +33,11 @@ import { PlansFormStore } from './plans-form.store';
     SelectComponent,
     ButtonDirective,
     LabelDirective,
+    InputDirective,
   ],
   providers: [
     provideComponentStore(PlansFormStore),
     provideIcons({ heroXMark }),
-  ],
-  styles: [
-    `
-      input,
-      select {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-    `,
   ],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
@@ -60,7 +61,7 @@ import { PlansFormStore } from './plans-form.store';
     >
       <div>
         <label for="name" skLabel>{{ 'Name' | translate }}</label>
-        <input type="text" formControlName="name" />
+        <input type="text" formControlName="name" skInput />
       </div>
       <div>
         <label for="degree_id" skLabel>{{ 'Degree' | translate }}</label>
@@ -72,7 +73,7 @@ import { PlansFormStore } from './plans-form.store';
       </div>
       <div>
         <label for="year" skLabel>{{ 'Year' | translate }}</label>
-        <select label="name" formControlName="year">
+        <select label="name" formControlName="year" skInput>
           <option [value]="-1">Pre-Kinder</option>
           <option [value]="0">Kinder</option>
           <option [value]="1">1</option>

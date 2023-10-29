@@ -13,7 +13,7 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import { CardComponent } from '@skooltrak/ui';
+import { CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { SchoolPeopleStore } from './people.store';
@@ -27,26 +27,12 @@ import { SchoolPeopleStore } from './people.store';
     ReactiveFormsModule,
     NgFor,
     AvatarComponent,
+    InputDirective,
+    LabelDirective,
   ],
   providers: [
     provideIcons({ heroXMark }),
     provideComponentStore(SchoolPeopleStore),
-  ],
-  styles: [
-    `
-      input,
-      select,
-      textarea {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
-    `,
   ],
   template: `<sk-card
     ><div class="flex items-start justify-between" header>
@@ -77,16 +63,16 @@ import { SchoolPeopleStore } from './people.store';
         <p class="font-mono text-sm text-sky-800">{{ data.user.email }}</p>
       </div>
       <div>
-        <label for="role">{{ 'PEOPLE.ROLE' | translate }}</label>
-        <select formControlName="role">
+        <label for="role" skLabel>{{ 'PEOPLE.ROLE' | translate }}</label>
+        <select formControlName="role" skInput>
           <option *ngFor="let role of roles" [value]="role">
             {{ 'PEOPLE.' + role | translate }}
           </option>
         </select>
       </div>
       <div>
-        <label for="status">{{ 'PEOPLE.STATUS' | translate }}</label>
-        <select formControlName="status">
+        <label for="status" skLabel>{{ 'PEOPLE.STATUS' | translate }}</label>
+        <select formControlName="status" skInput>
           <option *ngFor="let status of statuses" [value]="status">
             {{ 'PEOPLE.' + status | translate }}
           </option>

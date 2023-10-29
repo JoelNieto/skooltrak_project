@@ -2,13 +2,25 @@ import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { School } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  ImageCropperComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolFormStore } from './school-form.store';
@@ -25,24 +37,12 @@ import { SchoolFormStore } from './school-form.store';
     SelectComponent,
     NgIf,
     NgIconComponent,
+    LabelDirective,
+    InputDirective,
   ],
   providers: [
     provideComponentStore(SchoolFormStore),
     provideIcons({ heroXMark }),
-  ],
-  styles: [
-    `
-      input {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-500 dark:text-white;
-      }
-    `,
   ],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
@@ -81,15 +81,15 @@ import { SchoolFormStore } from './school-form.store';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="short_name">{{ 'Short name' | translate }}</label>
-        <input type="text" formControlName="short_name" />
+        <label for="short_name" skLabel>{{ 'Short name' | translate }}</label>
+        <input type="text" formControlName="short_name" skInput />
       </div>
       <div>
         <label for="full_name">{{ 'Full name' | translate }}</label>
-        <input type="text" formControlName="full_name" />
+        <input type="text" formControlName="full_name" skInput />
       </div>
       <div>
-        <label for="country_id">{{ 'Country' | translate }}</label>
+        <label for="country_id" skLabel>{{ 'Country' | translate }}</label>
         <sk-select
           formControlName="country_id"
           [items]="store.COUNTRIES()"
@@ -97,22 +97,25 @@ import { SchoolFormStore } from './school-form.store';
         />
       </div>
       <div>
-        <label for="address">{{ 'Address' | translate }}</label>
-        <input type="text" formControlName="address" />
+        <label for="address" skLabel>{{ 'Address' | translate }}</label>
+        <input type="text" formControlName="address" skInput />
       </div>
+
       <div>
-        <label for="motto" class="label font-sans">{{
-          'Motto' | translate
+        <label for="contact_email" skLabel>{{
+          'Contact email' | translate
         }}</label>
-        <input type="text" formControlName="motto" />
+        <input type="email" formControlName="contact_email" skInput />
       </div>
       <div>
-        <label for="contact_email">{{ 'Contact email' | translate }}</label>
-        <input type="email" formControlName="contact_email" />
+        <label for="contact_phone" skLabel>{{
+          'Contact phone' | translate
+        }}</label>
+        <input type="tel" formControlName="contact_phone" skInput />
       </div>
-      <div>
-        <label for="contact_phone">{{ 'Contact phone' | translate }}</label>
-        <input type="tel" formControlName="contact_phone" />
+      <div class="col-span-2">
+        <label for="motto" skLabel>{{ 'Motto' | translate }}</label>
+        <input type="text" formControlName="motto" skInput />
       </div>
       <div class="col-span-4 flex justify-end">
         <button

@@ -54,7 +54,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
           }}</a>
         </div>
         <div>
-          <div skooltrak-tabs>
+          <sk-tabs>
             <sk-tabs-item link="instructions">{{
               'ASSIGNMENTS.INSTRUCTIONS' | translate
             }}</sk-tabs-item>
@@ -64,7 +64,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
             <sk-tabs-item link="grades">{{
               'ASSIGNMENTS.GRADES' | translate
             }}</sk-tabs-item>
-          </div>
+          </sk-tabs>
           <router-outlet />
         </div>
       </sk-card>

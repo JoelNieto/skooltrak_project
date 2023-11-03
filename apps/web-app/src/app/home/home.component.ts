@@ -17,17 +17,17 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
   template: ` <sk-card>
     <div header>
       <h2
-        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
+        class="font-title mb-2 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
         {{ 'Welcome' | translate : { name: auth.USER()?.first_name } }}
       </h2>
     </div>
-    <div class="mt-2" skooltrak-tabs>
+    <sk-tabs>
       <sk-tabs-item link="schedule">{{ 'Schedule' | translate }}</sk-tabs-item>
       <sk-tabs-item link="grades">
         {{ 'Grades.Title' | translate }}</sk-tabs-item
       >
-    </div>
+    </sk-tabs>
     <router-outlet />
   </sk-card>`,
 })

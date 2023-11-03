@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent } from '@skooltrak/ui';
@@ -8,7 +7,7 @@ import { GroupsStore } from '../groups.store';
 @Component({
   standalone: true,
   selector: 'sk-groups-details',
-  imports: [CardComponent, TranslateModule, JsonPipe],
+  imports: [CardComponent, TranslateModule],
   template: `<sk-card>
     <div header>
       <h2

@@ -1,9 +1,4 @@
-import {
-  Overlay,
-  OverlayConfig,
-  OverlayModule,
-  OverlayRef,
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
@@ -20,11 +15,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -186,7 +177,6 @@ export class SelectComponent
         const value = (this.innerContent = this.itemList().find(
           (x) => x[this.valueId] === this.currentValue()
         ));
-
         this.innerContent = value
           ? this.secondaryLabel
             ? `${this.util.getProperty(

@@ -19,4 +19,5 @@ export enum Table {
   Periods = 'periods',
   SchoolUsers = 'school_users',
   Levels = 'levels',
+  GroupStudents = 'group_students',
 }

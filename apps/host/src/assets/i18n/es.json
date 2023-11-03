@@ -76,6 +76,7 @@
   },
   "GROUPS": {
     "TITLE": "Grupos",
+    "NAME": "Grupo",
     "DETAILS": "Detalles del grupo"
   },
   "Home": "Inicio",

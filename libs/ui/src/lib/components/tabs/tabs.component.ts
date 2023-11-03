@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: '[skooltrak-tabs]',
+  selector: 'sk-tabs',
   standalone: true,
   styles: [
     `

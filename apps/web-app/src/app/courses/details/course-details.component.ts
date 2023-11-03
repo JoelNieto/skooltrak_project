@@ -1,6 +1,11 @@
 import { NgClass, NgFor } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroArrowLeftCircle } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
@@ -51,7 +56,7 @@ import { CoursesStore } from '../courses.store';
             </div>
           </div>
         </div>
-        <div skooltrak-tabs>
+        <sk-tabs>
           <sk-tabs-item link="news">{{ 'News' | translate }}</sk-tabs-item>
           <sk-tabs-item link="schedule">{{
             'Schedule' | translate
@@ -63,7 +68,7 @@ import { CoursesStore } from '../courses.store';
           <sk-tabs-item link="students">{{
             'Students' | translate
           }}</sk-tabs-item>
-        </div>
+        </sk-tabs>
         <router-outlet />
       </sk-card>
     </div>

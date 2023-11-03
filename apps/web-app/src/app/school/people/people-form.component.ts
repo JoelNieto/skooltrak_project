@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgFor } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -13,10 +13,16 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import { CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
+import {
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
+import { distinctUntilChanged, filter } from 'rxjs';
 
 import { AvatarComponent } from '../../components/avatar/avatar.component';
-import { SchoolPeopleStore } from './people.store';
+import { SchoolPeopleFormStore } from './people-form.store';
 
 @Component({
   standalone: true,
@@ -29,10 +35,11 @@ import { SchoolPeopleStore } from './people.store';
     AvatarComponent,
     InputDirective,
     LabelDirective,
+    SelectComponent,
   ],
   providers: [
     provideIcons({ heroXMark }),
-    provideComponentStore(SchoolPeopleStore),
+    provideComponentStore(SchoolPeopleFormStore),
   ],
   template: `<sk-card
     ><div class="flex items-start justify-between" header>
@@ -78,11 +85,19 @@ import { SchoolPeopleStore } from './people.store';
           </option>
         </select>
       </div>
+      <div>
+        <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
+        <sk-select
+          label="name"
+          [formControl]="groupControl"
+          [items]="store.GROUPS()"
+        />
+      </div>
     </form>
   </sk-card> `,
 })
 export class SchoolPeopleFormComponent implements OnInit {
-  private store = inject(SchoolPeopleStore);
+  public store = inject(SchoolPeopleFormStore);
   public dialogRef = inject(DialogRef);
   public data: SchoolProfile = inject(DIALOG_DATA);
 
@@ -101,11 +116,46 @@ export class SchoolPeopleFormComponent implements OnInit {
     }),
   });
 
+  public groupControl = new FormControl<string | undefined>(undefined, {
+    nonNullable: true,
+  });
+
+  constructor() {
+    effect(() => {
+      const group = this.store.GROUP_ID();
+      if (!group) return;
+      this.groupControl.valueChanges
+        .pipe(
+          filter((val) => val !== group),
+          distinctUntilChanged(),
+          takeUntilDestroyed(this.destroy)
+        )
+        .subscribe({
+          next: (val) => {
+            !!val && this.store.saveGroup(val);
+          },
+        });
+      this.groupControl.disable();
+      this.groupControl.setValue(group, { emitEvent: false, onlySelf: true });
+      this.groupControl.enable();
+    });
+  }
+
   public ngOnInit(): void {
-    this.form.patchValue(this.data);
+    const { status, role, user_id } = this.data;
+    this.store.patchState({ USER_ID: user_id });
+    this.form.patchValue({ status, role });
+    if (role === 'STUDENT') {
+      this.store.fetchGroups();
+      this.store.fetchStudentGroup();
+    }
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: ({ status, role }) =>
-        this.store.savePerson({ status, role, user_id: this.data.user_id }),
+      next: ({ status, role }) => {
+        this.store.savePerson({ status, role, user_id });
+        if (role === 'STUDENT') {
+          this.store.fetchGroups();
+        }
+      },
     });
   }
 }

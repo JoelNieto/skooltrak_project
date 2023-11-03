@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'sk-card',
   standalone: true,
-
   template: `
     <div
       class="w-100 rounded-xl bg-white p-6 dark:border-gray-700 dark:bg-gray-800"

@@ -7,15 +7,7 @@ import {
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import {
-  combineLatestWith,
-  filter,
-  from,
-  map,
-  Observable,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { combineLatestWith, filter, from, map, switchMap, tap } from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -76,42 +68,6 @@ export class SchoolPeopleStore
         );
       })
     )
-  );
-
-  public readonly savePerson = this.effect(
-    (request$: Observable<Partial<SchoolProfile>>) =>
-      request$.pipe(
-        switchMap(({ status, role, user_id }) =>
-          from(
-            this.supabase.client
-              .from(Table.SchoolUsers)
-              .update({ status, role })
-              .eq('user_id', user_id)
-              .eq('school_id', this.auth.CURRENT_SCHOOL_ID())
-          ).pipe(
-            map(({ error }) => {
-              if (error) throw new Error(error.message);
-            }),
-            tapResponse(
-              () =>
-                this.alert.showAlert({
-                  icon: 'success',
-                  message: 'ALERT.SUCCESS',
-                }),
-              (error: Error) => {
-                console.error(error);
-                this.alert.showAlert({
-                  icon: 'error',
-                  message: 'ALERT_FAILURE',
-                });
-              },
-              () => {
-                this.fetchPeople();
-              }
-            )
-          )
-        )
-      )
   );
 
   public ngrxOnStoreInit = (): void => {

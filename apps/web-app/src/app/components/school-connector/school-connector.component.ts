@@ -55,7 +55,7 @@ import { SchoolConnectorStore } from './school-connector.store';
       <h3
         class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'Select school' | translate }}
+        {{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -71,7 +71,7 @@ import { SchoolConnectorStore } from './school-connector.store';
       </p>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label for="code">Code</label>
+          <label for="code">{{ 'CODE' | translate }}</label>
           <input type="text" formControlName="code" />
           <small
             *ngIf="form.get('code')?.hasError('minlength')"
@@ -80,7 +80,7 @@ import { SchoolConnectorStore } from './school-connector.store';
           >
         </div>
         <div>
-          <label for="role">{{ 'Role' | translate }}</label>
+          <label for="role">{{ 'ROLE' | translate }}</label>
           <select formControlName="role">
             <option *ngFor="let role of roles" [value]="role">
               {{ role | translate }}
@@ -90,7 +90,7 @@ import { SchoolConnectorStore } from './school-connector.store';
       </div>
       <div class="mt-4 flex justify-end">
         <button skButton color="green" type="submit" [disabled]="!form.valid">
-          + {{ 'Add' | translate }}
+          + {{ 'ADD' | translate }}
         </button>
       </div>
     </form>

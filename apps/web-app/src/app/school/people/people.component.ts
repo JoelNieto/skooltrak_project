@@ -5,10 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
@@ -129,7 +126,7 @@ import { SchoolPeopleStore } from './people.store';
             <div class="flex items-center gap-2">
               <sk-avatar
                 [avatarUrl]="person.user.avatar_url ?? 'default_avatar.jpg'"
-                class="h-9"
+                class="h-10"
                 [rounded]="true"
               />
               <div class="flex flex-col">

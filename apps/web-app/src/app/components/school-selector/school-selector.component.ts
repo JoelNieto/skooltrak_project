@@ -4,9 +4,14 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { ButtonDirective, CardComponent, ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  ConfirmationService,
+  defaultConfirmationOptions,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -35,7 +40,7 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
       <h3
         class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'Select school' | translate }}
+        {{ 'SCHOOL_CONNECTOR.TITLE' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -87,11 +92,11 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
     <div class="flex justify-end gap-4 pt-4" footer>
       <button skButton color="green" (click)="addSchoolConnection()">
         <ng-icon name="heroLink" size="16" />
-        {{ 'Connect to school' | translate }}
+        {{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}
       </button>
       <button skButton color="blue" (click)="createSchool()">
         <ng-icon name="heroPlus" size="16" />
-        {{ 'Create school' | translate }}
+        {{ 'SCHOOL_CONNECTOR.CREATE' | translate }}
       </button>
     </div>
   </sk-card>`,
@@ -102,6 +107,7 @@ export class SchoolSelectorComponent {
   private dialog = inject(Dialog);
   private confirm = inject(ConfirmationService);
   private destroyRef = inject(DestroyRef);
+  private translate = inject(TranslateService);
 
   public schools = this.auth.SCHOOLS;
   public selected = this.auth.CURRENT_SCHOOL_ID;
@@ -124,10 +130,9 @@ export class SchoolSelectorComponent {
       .openDialog({
         ...defaultConfirmationOptions,
         showCancelButton: true,
-        title: 'Want to create a new school?',
-        description:
-          'This is free and you can option for a premium school later',
-        confirmButtonText: 'Yes',
+        title: this.translate.instant('SCHOOL_CONNECTOR.CREATE_TITLE'),
+        description: this.translate.instant('SCHOOL_CONNECTOR.CREATE_MESSAGE'),
+        confirmButtonText: this.translate.instant('YES'),
         color: 'green',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))

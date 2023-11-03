@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DashboardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-host',
-  imports: [DashboardComponent, RouterOutlet],
+  imports: [RouterOutlet],
   template: `<router-outlet />`,
   standalone: true,
 })

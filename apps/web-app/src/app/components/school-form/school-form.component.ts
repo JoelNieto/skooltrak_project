@@ -49,7 +49,7 @@ import { SchoolFormStore } from './school-form.store';
       <h3
         class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'School info' | translate }}
+        {{ 'SCHOOL.INFO' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -81,15 +81,21 @@ import { SchoolFormStore } from './school-form.store';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="short_name" skLabel>{{ 'Short name' | translate }}</label>
+        <label for="short_name" skLabel>{{
+          'SCHOOL.SHORT_NAME' | translate
+        }}</label>
         <input type="text" formControlName="short_name" skInput />
       </div>
       <div>
-        <label for="full_name">{{ 'Full name' | translate }}</label>
+        <label for="full_name" skLabel>{{
+          'SCHOOL.FULL_NAME' | translate
+        }}</label>
         <input type="text" formControlName="full_name" skInput />
       </div>
       <div>
-        <label for="country_id" skLabel>{{ 'Country' | translate }}</label>
+        <label for="country_id" skLabel>{{
+          'SCHOOL.COUNTRY' | translate
+        }}</label>
         <sk-select
           formControlName="country_id"
           [items]="store.COUNTRIES()"
@@ -97,24 +103,24 @@ import { SchoolFormStore } from './school-form.store';
         />
       </div>
       <div>
-        <label for="address" skLabel>{{ 'Address' | translate }}</label>
+        <label for="address" skLabel>{{ 'SCHOOL.ADDRESS' | translate }}</label>
         <input type="text" formControlName="address" skInput />
       </div>
 
       <div>
         <label for="contact_email" skLabel>{{
-          'Contact email' | translate
+          'SCHOOL.EMAIL' | translate
         }}</label>
         <input type="email" formControlName="contact_email" skInput />
       </div>
       <div>
         <label for="contact_phone" skLabel>{{
-          'Contact phone' | translate
+          'SCHOOL.PHONE' | translate
         }}</label>
         <input type="tel" formControlName="contact_phone" skInput />
       </div>
       <div class="col-span-2">
-        <label for="motto" skLabel>{{ 'Motto' | translate }}</label>
+        <label for="motto" skLabel>{{ 'SCHOOL.MOTTO' | translate }}</label>
         <input type="text" formControlName="motto" skInput />
       </div>
       <div class="col-span-4 flex justify-end">
@@ -124,7 +130,7 @@ import { SchoolFormStore } from './school-form.store';
           color="sky"
           [disabled]="this.form.invalid || this.form.untouched"
         >
-          {{ 'Save changes' | translate }}
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

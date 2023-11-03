@@ -27,7 +27,7 @@
     "WEEK": "Semana"
   },
   "Classes": "Clases",
-  "Code": "Codigo",
+  "CODE": "Codigo",
   "Collection": "Cobros",
   "Confirmation": {
     "Cancel": "Cancelar",
@@ -122,10 +122,26 @@
   },
   "Polls": "Encuestas",
   "Profile": "Perfil",
+  "ROLE": "Rol",
   "SAVE_CHANGES": "Guardar cambios",
   "Schedule": "Agenda",
   "SCHOOL": {
-    "TITLE": "Escuela"
+    "TITLE": "Escuela",
+    "INFO": "Datos de la escuela",
+    "SHORT_NAME": "Nombre corto",
+    "FULL_NAME": "Nombre completo",
+    "COUNTRY": "Pais",
+    "ADDRESS": "Dirección",
+    "EMAIL": "Correo electrónico",
+    "PHONE": "Telefono de contacto",
+    "MOTTO": "Lema"
+  },
+  "SCHOOL_CONNECTOR": {
+    "TITLE": "Elija una escuela",
+    "CONNECT": "Conectar con escuela",
+    "CREATE": "Crear nueva escuela",
+    "CREATE_TITLE": "Desea crear una nueva escuela?",
+    "CREATE_MESSAGE": "Esto es gratuito. Mas tarde puede actualizar a una escuela de pago"
   },
   "Select school": "Elija una escuela",
   "SETTINGS": "Ajustes",
@@ -170,5 +186,6 @@
     "SIGN_IN": "Iniciar sesión"
   },
   "SEARCH_ITEMS": "Buscar elementos",
-  "TYPE": "Tipo"
+  "TYPE": "Tipo",
+  "YES": "Si"
 }

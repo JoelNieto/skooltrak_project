@@ -131,7 +131,7 @@ import { SchoolSelectorComponent } from './components/school-selector/school-sel
       </div>
     </aside>
     <main
-      class="relative top-[4rem] flex flex-col items-center rounded-tl-3xl bg-gray-50 p-8 font-sans dark:bg-gray-900 sm:ml-64"
+      class="relative top-[4rem] flex flex-col items-center rounded-tl-3xl bg-slate-50 p-8 font-sans dark:bg-gray-900 sm:ml-64"
     >
       <div class="w-full max-w-7xl">
         <router-outlet />

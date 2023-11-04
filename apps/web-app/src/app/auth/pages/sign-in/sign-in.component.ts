@@ -1,19 +1,22 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { ButtonDirective } from '@skooltrak/ui';
+import { ButtonDirective, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-in',
   standalone: true,
   imports: [
-    RouterLink,
     ReactiveFormsModule,
-    FormsModule,
-    ButtonDirective,
+    TranslateModule,
     NgOptimizedImage,
+    LabelDirective,
+    InputDirective,
+    ButtonDirective,
+    RouterLink,
   ],
   template: `<div class="w-min-screen flex h-screen">
     <section
@@ -31,7 +34,7 @@ import { ButtonDirective } from '@skooltrak/ui';
             width="40"
             height="40"
             loading="lazy"
-            ngSrc="assets/skooltrak-logo.svg"
+            ngSrc="assets/images/skooltrak-logo.svg"
             alt="logo"
           />
           SKOOLTRAK
@@ -42,7 +45,7 @@ import { ButtonDirective } from '@skooltrak/ui';
           <h1
             class="font-title text-xl leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl"
           >
-            Sign in to your account
+            {{ 'SIGN_IN.TITLE' | translate }}
           </h1>
           <form
             class="space-y-4 md:space-y-6"
@@ -50,7 +53,7 @@ import { ButtonDirective } from '@skooltrak/ui';
             (ngSubmit)="signIn()"
           >
             <div>
-              <label for="email" class="label">Your email</label>
+              <label for="email" class="label" skLabel>Your email</label>
               <input
                 formControlName="email"
                 type="email"
@@ -60,10 +63,11 @@ import { ButtonDirective } from '@skooltrak/ui';
                 autocomplete="email"
                 placeholder="name@company.com"
                 required
+                skInput
               />
             </div>
             <div>
-              <label class="label">Password</label>
+              <label class="label" skLabel>Password</label>
               <input
                 formControlName="password"
                 autocomplete="current-password"
@@ -73,6 +77,7 @@ import { ButtonDirective } from '@skooltrak/ui';
                 id="password"
                 placeholder="••••••••"
                 required=""
+                skInput
               />
             </div>
             <div class="flex items-center justify-between">
@@ -124,27 +129,17 @@ import { ButtonDirective } from '@skooltrak/ui';
   styles: [
     `
       .bg {
-        background-image: url('/assets/sign-in-bg.jpg');
+        background-image: url('/assets/images/sign-in-bg.jpg');
         background-size: cover;
-      }
-
-      .input {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-
-      .label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-500 dark:text-white;
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignInComponent {
   private auth = inject(authState.AuthStateFacade);
 
-  form = new FormGroup({
+  public form = new FormGroup({
     email: new FormControl<string>('', {
       validators: [Validators.required, Validators.email],
       nonNullable: true,
@@ -155,7 +150,7 @@ export class SignInComponent {
     }),
   });
 
-  async signIn() {
+  public signIn(): void {
     const { email, password } = this.form.getRawValue();
     this.auth.signIn(email, password);
   }

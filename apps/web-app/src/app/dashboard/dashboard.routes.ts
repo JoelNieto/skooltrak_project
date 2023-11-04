@@ -14,7 +14,7 @@ export const dashboardRoutes: Routes = [
       },
       {
         path: 'courses',
-        title: 'COURSE.TITLE',
+        title: 'COURSES.TITLE',
         loadChildren: () =>
           import('./courses/courses.routes').then((x) => x.coursesRoutes),
       },

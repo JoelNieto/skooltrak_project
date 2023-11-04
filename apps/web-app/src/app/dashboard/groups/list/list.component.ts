@@ -4,7 +4,11 @@ import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonDirective, CardComponent, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { GroupsStore } from '../groups.store';
@@ -49,7 +53,7 @@ import { GroupsStore } from '../groups.store';
             <input
               type="text"
               id="table-search"
-              class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
+              class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-emerald-500 dark:focus:ring-emerald-500"
               placeholder="Search for items"
             />
           </div>
@@ -57,7 +61,7 @@ import { GroupsStore } from '../groups.store';
       </div>
       <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
         <thead
-          class="bg-sky-100 font-sans text-xs uppercase text-sky-700 dark:bg-sky-800 dark:text-gray-200"
+          class="bg-emerald-100 font-sans text-xs uppercase text-emerald-700 dark:bg-emerald-800 dark:text-gray-200"
         >
           <tr class="cursor-pointer">
             <th scope="col" class="rounded-tl-xl px-6 py-3">
@@ -101,7 +105,7 @@ import { GroupsStore } from '../groups.store';
             </td>
             <td class="flex items-center justify-center gap-2 px-6 py-4">
               <a routerLink="../details" [queryParams]="{ group_id: group.id }">
-                <ng-icon name="heroEye" size="24" class="text-sky-500" />
+                <ng-icon name="heroEye" size="24" class="text-emerald-500" />
               </a>
             </td>
           </tr>

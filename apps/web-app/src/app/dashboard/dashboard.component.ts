@@ -1,8 +1,19 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { NgIconComponent } from '@ng-icons/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import {
+  heroArrowRightOnRectangle,
+  heroBookmarkSquare,
+  heroBookOpen,
+  heroBuildingLibrary,
+  heroCalendarDays,
+  heroClipboardDocument,
+  heroCog6Tooth,
+  heroHome,
+  heroUserGroup,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 
@@ -20,6 +31,21 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     NgIconComponent,
     TranslateModule,
     RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+  ],
+  providers: [
+    provideIcons({
+      heroHome,
+      heroArrowRightOnRectangle,
+      heroBookmarkSquare,
+      heroClipboardDocument,
+      heroCalendarDays,
+      heroUserGroup,
+      heroBuildingLibrary,
+      heroCog6Tooth,
+      heroBookOpen,
+    }),
   ],
   template: `<sk-navbar />
     <aside
@@ -31,7 +57,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
         <ul class="space-y-2 font-medium">
           <li>
             <button
-              class="flex w-full items-center gap-3 rounded-lg border border-blue-800 px-4 py-2 font-sans text-sm dark:text-gray-100"
+              class="flex w-full items-center gap-3 rounded-lg border border-emerald-600 px-4 py-2 font-sans text-sm dark:text-gray-100"
               (click)="changeSchool()"
             >
               <sk-avatar
@@ -104,9 +130,9 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       }
 
       .link {
-        @apply flex items-center gap-3 rounded-full px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
+        @apply flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
         &.active {
-          @apply bg-sky-600 text-sky-50;
+          @apply bg-emerald-200 text-emerald-800;
         }
       }
     `,

@@ -2,8 +2,12 @@ import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
   {
-    path: '',
+    path: 'app',
     loadChildren: () =>
-      import('./remote-entry/entry.routes').then((m) => m.remoteRoutes),
+      import('./dashboard/dashboard.routes').then((m) => m.dashboardRoutes),
+  },
+  {
+    path: 'sign-in',
+    loadChildren: () => import('./auth/auth.routes').then((x) => x.authRoutes),
   },
 ];

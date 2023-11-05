@@ -1,9 +1,16 @@
 import { Route } from '@angular/router';
 
+import { authGuard } from './auth/guards/auth.guard';
+
 export const appRoutes: Route[] = [
   {
-    path: '',
+    path: 'app',
+    canActivateChild: [authGuard],
     loadChildren: () =>
-      import('./remote-entry/entry.routes').then((m) => m.remoteRoutes),
+      import('./dashboard/dashboard.routes').then((m) => m.dashboardRoutes),
+  },
+  {
+    path: '',
+    loadChildren: () => import('./auth/auth.routes').then((x) => x.authRoutes),
   },
 ];

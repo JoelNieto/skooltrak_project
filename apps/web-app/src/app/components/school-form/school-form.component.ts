@@ -2,12 +2,7 @@ import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -70,7 +65,7 @@ import { SchoolFormStore } from './school-form.store';
       <img
         *ngIf="!store.SCHOOL()?.crest_url"
         (click)="uploadCrest()"
-        src="assets/skooltrak-logo.svg"
+        src="assets/images/skooltrak-logo.svg"
         class="h-24"
         alt="Skooltrak Logo"
       />

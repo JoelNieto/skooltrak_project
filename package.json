@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve host --devRemotes=web-app,onboarding",
+    "start": "nx serve web-app",
     "mobile": "nx serve mobile"
   },
   "private": true,
@@ -98,4 +98,3 @@
     "@nx/eslint": "17.0.2"
   }
 }
-

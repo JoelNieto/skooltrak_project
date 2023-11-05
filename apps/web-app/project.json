@@ -7,7 +7,7 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/angular:webpack-browser",
+      "executor": "@angular-devkit/build-angular:browser",
       "outputs": [
         "{options.outputPath}"
       ],
@@ -20,16 +20,26 @@
         ],
         "tsConfig": "apps/web-app/tsconfig.app.json",
         "assets": [
-          "apps/web-app/src/favicon.ico",
-          "apps/web-app/src/assets"
+          "apps/web-app/src/assets",
+          {
+            "input": "libs/environments/src/lib/images",
+            "glob": "**/*",
+            "output": "assets/images"
+          },
+          {
+            "input": "libs/environments/src/lib/i18n",
+            "glob": "**/*",
+            "output": "assets/i18n"
+          }
         ],
         "styles": [
+          "./node_modules/angular-calendar/css/angular-calendar.css",
           "apps/web-app/src/styles.scss"
         ],
-        "scripts": [],
-        "customWebpackConfig": {
-          "path": "apps/web-app/webpack.config.js"
-        }
+        "scripts": [
+          "./node_modules/flowbite/dist/flowbite.min.js",
+          "./node_modules/quill/dist/quill.min.js"
+        ]
       },
       "configurations": {
         "production": {
@@ -45,10 +55,7 @@
               "maximumError": "4kb"
             }
           ],
-          "outputHashing": "all",
-          "customWebpackConfig": {
-            "path": "apps/web-app/webpack.prod.config.js"
-          }
+          "outputHashing": "all"
         },
         "development": {
           "buildOptimizer": false,
@@ -62,10 +69,10 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@nx/angular:webpack-dev-server",
+      "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "port": 4202,
-        "publicHost": "http://localhost:4202"
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
       },
       "configurations": {
         "production": {
@@ -116,7 +123,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "web-app:build",
-        "port": 4202,
+        "port": 4200,
         "watch": false
       },
       "configurations": {

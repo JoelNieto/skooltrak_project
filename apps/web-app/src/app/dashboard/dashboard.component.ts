@@ -48,9 +48,65 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     }),
   ],
   template: `<sk-navbar />
+    <nav
+      class="sticky top-[4rem] z-10 flex w-full items-center justify-between border-b border-gray-200 bg-white px-12 dark:border-gray-500 dark:bg-gray-700"
+    >
+      <ul class="flex gap-8">
+        <li>
+          <a routerLink="home" class="link" routerLinkActive="active"
+            ><ng-icon name="heroHome" size="24" />{{ 'HOME' | translate }}</a
+          >
+        </li>
+        <li>
+          <a routerLink="courses" class="link" routerLinkActive="active"
+            ><ng-icon name="heroBookOpen" size="24" />{{
+              'COURSES.TITLE' | translate
+            }}</a
+          >
+        </li>
+        <li>
+          <a routerLink="groups" class="link" routerLinkActive="active"
+            ><ng-icon name="heroUserGroup" size="24" />{{
+              'GROUPS.TITLE' | translate
+            }}</a
+          >
+        </li>
+      </ul>
+      <div>
+        <ul class="flex text-sm">
+          <li>
+            <button
+              class="flex w-full items-center gap-3 rounded-lg px-4 py-2 font-sans text-sm dark:text-gray-100"
+              (click)="changeSchool()"
+            >
+              <sk-avatar
+                *ngIf="SCHOOL()?.crest_url"
+                [avatarUrl]="SCHOOL()?.crest_url!"
+                bucket="crests"
+                class="h-8"
+              />{{ SCHOOL()?.short_name ?? ('Select school' | translate) }}
+            </button>
+          </li>
+          <li *ngIf="IS_ADMIN()">
+            <a routerLink="school" class="link" routerLinkActive="active"
+              ><ng-icon name="heroBuildingLibrary" size="24" />{{
+                'SCHOOL.TITLE' | translate
+              }}</a
+            >
+          </li>
+          <li>
+            <a href="#" class="link">
+              <ng-icon name="heroArrowRightOnRectangle" size="24" />{{
+                'SIGN_OUT' | translate
+              }}</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
     <aside
       id="sidebar-multi-level-sidebar"
-      class="fixed left-0 top-[4rem] z-40 flex w-64 -translate-x-full flex-col justify-between p-4 transition-transform sm:translate-x-0"
+      class="fixed left-0 top-[4rem] z-40 hidden w-64 -translate-x-full flex-col justify-between p-4 transition-transform sm:translate-x-0"
       aria-label="Sidebar"
     >
       <div class="h-full overflow-y-auto rounded-lg px-3 dark:bg-gray-800">
@@ -90,7 +146,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
         </ul>
       </div>
       <div>
-        <ul class="space-y-1 text-sm">
+        <ul class="gap-2 space-y-1 text-sm">
           <li *ngIf="IS_ADMIN()">
             <a routerLink="school" class="link" routerLinkActive="active"
               ><ng-icon name="heroBuildingLibrary" size="24" />{{
@@ -116,7 +172,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       </div>
     </aside>
     <main
-      class="relative top-[4rem] flex flex-col items-center rounded-tl-3xl bg-slate-50 p-8 font-sans dark:bg-gray-900 sm:ml-64"
+      class="relative mt-[4rem] flex flex-col items-center bg-slate-50 p-8 font-sans dark:bg-gray-900"
     >
       <div class="w-full max-w-7xl">
         <router-outlet />
@@ -130,9 +186,9 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       }
 
       .link {
-        @apply flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
+        @apply mt-1 flex items-center gap-3 border-b-4 border-white px-4 py-3 font-sans text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
         &.active {
-          @apply bg-emerald-200 text-emerald-800;
+          @apply border-emerald-600 text-emerald-800 dark:text-emerald-500;
         }
       }
     `,

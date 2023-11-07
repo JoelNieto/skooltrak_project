@@ -43,7 +43,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
   template: `<nav
     class="fixed top-0 z-50 w-full bg-emerald-600 dark:bg-gray-800"
   >
-    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="px-4 py-3 lg:px-12">
       <div class="flex items-center justify-between">
         <div class="flex flex-1 items-center justify-start">
           <button
@@ -67,14 +67,10 @@ import { AvatarComponent } from '../avatar/avatar.component';
           </button>
           <a routerLink="home" class="ml-2 flex md:mr-8">
             <img
-              src="assets/images/skooltrak-logo.svg"
+              src="assets/images/skooltrak-white.svg"
               class="mr-2 h-7"
               alt="Skooltrak Logo"
             />
-            <span
-              class="font-title hidden self-center whitespace-nowrap text-xl font-semibold text-gray-100 dark:text-white md:block"
-              >{{ 'App title' | translate }}</span
-            >
           </a>
         </div>
         <div class="flex flex-1 items-center justify-end gap-3">

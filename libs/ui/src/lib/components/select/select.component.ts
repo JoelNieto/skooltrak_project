@@ -127,7 +127,7 @@ import { UtilService } from '../../services/util.service';
         @apply rounded-lg focus:border-sky-600 focus:ring-sky-600 focus-visible:border-sky-600 focus-visible:ring-sky-600 dark:focus:border-sky-500 dark:focus:ring-sky-500 dark:focus-visible:border-sky-500 dark:focus-visible:ring-sky-500;
       }
       .active {
-        @apply bg-blue-100 font-medium text-blue-800 dark:bg-blue-700;
+        @apply bg-blue-100 font-medium text-blue-800 dark:bg-blue-800;
       }
     `,
   ],

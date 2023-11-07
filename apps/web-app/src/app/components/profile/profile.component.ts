@@ -2,22 +2,11 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ImageCropperComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
@@ -45,7 +34,7 @@ import { ProfileFormStore } from './profile.store';
           header
           class=" font-title sticky top-0 flex pb-3 text-2xl font-bold leading-tight tracking-tight text-gray-700 dark:text-white"
         >
-          {{ 'Profile' | translate }}
+          {{ 'PROFILE.TITLE' | translate }}
         </h2>
         <div class="mb-4  flex justify-center">
           <sk-avatar
@@ -62,42 +51,44 @@ import { ProfileFormStore } from './profile.store';
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <div>
               <label skLabel for="first_name">{{
-                'First name' | translate
+                'PROFILE.FIRST_NAME' | translate
               }}</label>
               <input skInput type="text" formControlName="first_name" />
             </div>
             <div>
               <label skLabel for="middle_name">{{
-                'Middle name' | translate
+                'PROFILE.MIDDLE_NAME' | translate
               }}</label>
               <input skInput type="text" formControlName="middle_name" />
             </div>
             <div>
               <label skLabel for="father_name">{{
-                'Father name' | translate
+                'PROFILE.FATHER_NAME' | translate
               }}</label>
               <input skInput type="text" formControlName="father_name" />
             </div>
             <div>
               <label skLabel for="mother_name">{{
-                'Mother name' | translate
+                'PROFILE.MOTHER_NAME' | translate
               }}</label>
               <input skInput type="text" formControlName="mother_name" />
             </div>
             <div>
               <label skLabel for="document_id">{{
-                'Document ID' | translate
+                'PROFILE.DOCUMENT_ID' | translate
               }}</label>
               <input skInput type="text" formControlName="document_id" />
             </div>
             <div>
               <label skLabel for="birth_date">{{
-                'Birth date' | translate
+                'PROFILE.BIRTH_DATE' | translate
               }}</label>
               <input skInput type="date" formControlName="birth_date" />
             </div>
             <div>
-              <label skLabel for="gender">{{ 'Gender' | translate }}</label>
+              <label skLabel for="gender">{{
+                'PROFILE.GENDER' | translate
+              }}</label>
               <select skInput formControlName="gender">
                 <option
                   *ngFor="let gender of store.GENDERS()"
@@ -108,7 +99,9 @@ import { ProfileFormStore } from './profile.store';
               </select>
             </div>
             <div>
-              <label skLabel for="email">{{ 'Email' | translate }}</label>
+              <label skLabel for="email">{{
+                'PROFILE.EMAIL' | translate
+              }}</label>
               <input skInput type="email" formControlName="email" />
             </div>
             <div class="mt-2 md:col-span-4">
@@ -118,7 +111,7 @@ import { ProfileFormStore } from './profile.store';
                 color="sky"
                 [disabled]="this.form.invalid || this.form.pristine"
               >
-                {{ 'Save changes' | translate }}
+                {{ 'SAVE_CHANGES' | translate }}
               </button>
             </div>
           </div>

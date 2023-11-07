@@ -29,7 +29,11 @@ import { CardComponent } from '../card/card.component';
           Image cropper
         </h3>
         <button (click)="dialogRef.close()">
-          <ng-icon name="heroXMark" class="text-gray-700 dark:text-gray-100" />
+          <ng-icon
+            name="heroXMark"
+            size="24"
+            class="text-gray-700 dark:text-gray-100"
+          />
         </button>
       </div>
       <button skButton color="green" (click)="fileInput.click()">

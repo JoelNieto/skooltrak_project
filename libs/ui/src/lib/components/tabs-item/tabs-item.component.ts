@@ -12,7 +12,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         @apply inline-block rounded-lg px-5 py-2.5 hover:text-gray-800 dark:hover:text-gray-300;
       }
       .active {
-        @apply bg-sky-600 font-semibold text-gray-50 hover:text-gray-50 dark:bg-sky-300 dark:text-sky-800 dark:hover:text-sky-800;
+        @apply bg-emerald-500 font-semibold text-gray-50 hover:text-gray-50 dark:bg-emerald-300 dark:text-emerald-800 dark:hover:text-emerald-800;
       }
       .disabled {
         @apply cursor-not-allowed text-gray-400 dark:text-gray-500;

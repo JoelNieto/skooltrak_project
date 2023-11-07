@@ -1,6 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
@@ -16,23 +17,22 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
     LabelDirective,
     NgOptimizedImage,
     ButtonDirective,
+    RouterLink,
   ],
   template: `<div
     class="flex min-h-screen w-screen flex-col items-center justify-center bg-gray-100 px-8 dark:bg-gray-700"
   >
     <a
       href="#"
-      class="font-title mb-6 flex items-center text-2xl text-gray-900 dark:text-gray-100"
+      class=" mb-6 flex items-center text-2xl text-gray-900 dark:text-gray-100"
     >
       <img
-        class="mr-2 h-12 w-12"
-        width="40"
+        width="240"
         height="40"
         loading="lazy"
-        ngSrc="assets/images/skooltrak-logo.svg"
+        ngSrc="assets/images/skooltrak.svg"
         alt="logo"
       />
-      SKOOLTRAK
     </a>
     <sk-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/2">
       <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
@@ -47,7 +47,9 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
         class="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-3"
       >
         <div>
-          <label for="first_name">{{ 'SIGN_UP.FIRST_NAME' | translate }}</label>
+          <label for="first_name" skLabel>{{
+            'SIGN_UP.FIRST_NAME' | translate
+          }}</label>
           <input
             type="text"
             name="first_name"
@@ -57,7 +59,7 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
           />
         </div>
         <div>
-          <label for="first_name">{{
+          <label for="first_name" skLabel>{{
             'SIGN_UP.FATHER_NAME' | translate
           }}</label>
           <input
@@ -69,7 +71,7 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
           />
         </div>
         <div>
-          <label for="email">{{ 'SIGN_UP.EMAIL' | translate }}</label>
+          <label for="email" skLabel>{{ 'SIGN_UP.EMAIL' | translate }}</label>
           <input
             type="email"
             name="email"
@@ -79,7 +81,9 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
           />
         </div>
         <div>
-          <label for="password">{{ 'SIGN_UP.PASSWORD' | translate }}</label>
+          <label for="password" skLabel>{{
+            'SIGN_UP.PASSWORD' | translate
+          }}</label>
           <input
             type="password"
             name="password"

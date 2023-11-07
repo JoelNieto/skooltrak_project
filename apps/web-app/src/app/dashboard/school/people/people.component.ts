@@ -130,7 +130,7 @@ import { SchoolPeopleStore } from './people.store';
                 [rounded]="true"
               />
               <div class="flex flex-col">
-                <div class="text-base text-gray-700">
+                <div class="text-base text-gray-700 dark:text-gray-200">
                   {{ person.user.first_name }} {{ person.user.father_name }}
                 </div>
                 <div class="font-mono text-sm text-gray-400">

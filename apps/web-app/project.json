@@ -21,6 +21,7 @@
         "tsConfig": "apps/web-app/tsconfig.app.json",
         "assets": [
           "apps/web-app/src/assets",
+          "apps/web-app/src/favicon.ico",
           {
             "input": "libs/environments/src/lib/images",
             "glob": "**/*",

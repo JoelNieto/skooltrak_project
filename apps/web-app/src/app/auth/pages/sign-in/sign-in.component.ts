@@ -30,14 +30,13 @@ import { ButtonDirective, InputDirective, LabelDirective } from '@skooltrak/ui';
           class="font-title mb-6 flex items-center text-2xl text-gray-900 dark:text-white"
         >
           <img
-            class="mr-2 h-12 w-12"
-            width="40"
+            class="h-12"
+            width="240"
             height="40"
             loading="lazy"
-            ngSrc="assets/images/skooltrak-logo.svg"
+            ngSrc="assets/images/skooltrak.svg"
             alt="logo"
           />
-          SKOOLTRAK
         </a>
         <div
           class="w-full space-y-4 rounded-lg bg-white p-6 dark:border dark:border-gray-700 dark:bg-gray-600 sm:max-w-md sm:p-8 md:mt-0 md:space-y-6"

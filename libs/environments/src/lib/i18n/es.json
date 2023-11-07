@@ -121,7 +121,17 @@
     "END_AT": "Fecha final"
   },
   "Polls": "Encuestas",
-  "Profile": "Perfil",
+  "PROFILE": {
+    "TITLE": "Datos personales",
+    "FIRST_NAME": "Primer nombre",
+    "MIDDLE_NAME": "Segundo nombre",
+    "FATHER_NAME": "Apellido",
+    "MOTHER_NAME": "Apellido materno",
+    "DOCUMENT_ID": "Nro. Documento",
+    "BIRTH_DATE": "Fecha de nacimiento",
+    "GENDER": "Genero",
+    "EMAIL": "Correo electrónico"
+  },
   "ROLE": "Rol",
   "SAVE_CHANGES": "Guardar cambios",
   "Schedule": "Agenda",

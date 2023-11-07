@@ -6,12 +6,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import {
-  ButtonDirective,
-  CardComponent,
-  ConfirmationService,
-  defaultConfirmationOptions,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -70,7 +65,7 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
             />
             <img
               *ngIf="!school?.crest_url"
-              src="assets/skooltrak-logo.svg"
+              src="assets/images/skooltrak-logo.svg"
               class="h-16"
               alt="Skooltrak Logo"
             />

@@ -148,7 +148,7 @@ import { SchoolCoursesStore } from './courses.store';
     </div>
     <sk-paginator
       [count]="store.COUNT()"
-      [pageSize]="store.PAGE_SIZE"
+      [pageSize]="store.PAGE_SIZE()"
       (paginate)="getCurrentPage($event)"
     />
   </div>`,
@@ -184,7 +184,7 @@ export class SchoolCoursesComponent implements OnInit {
     start: number;
   }): void {
     const { start } = pagination;
-    this.store.setRange(start);
+    this.store.patchState({ START: start });
   }
 
   public createCourse(): void {

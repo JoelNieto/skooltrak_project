@@ -124,7 +124,7 @@ export class CourseGradesComponent implements OnInit {
   public store = inject(CourseGradesStore);
 
   public periodControl = new FormControl<string | undefined>(
-    this.store.course()?.period_id,
+    this.store.COURSE()?.period_id,
     {
       nonNullable: true,
     }
@@ -138,7 +138,7 @@ export class CourseGradesComponent implements OnInit {
     this.dialog.open<Partial<Grade>>(GradesFormComponent, {
       minWidth: '42rem',
       disableClose: true,
-      data: { course: this.courseStore.selected() },
+      data: { course: this.courseStore.SELECTED() },
     });
   }
 }

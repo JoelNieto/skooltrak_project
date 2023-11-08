@@ -77,8 +77,8 @@ import { CoursesStore } from '../courses.store';
         </thead>
         <tbody>
           <tr
-            *ngFor="let course of store.courses()"
-            [class.hidden]="store.loading()"
+            *ngFor="let course of store.COURSES()"
+            [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
             <th
@@ -109,7 +109,7 @@ import { CoursesStore } from '../courses.store';
           </tr>
         </tbody>
       </table>
-      <div class="mt-4 animate-pulse" *ngIf="store.loading()">
+      <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
         <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
         <ul class="mt-5 space-y-3">
           <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
@@ -119,8 +119,8 @@ import { CoursesStore } from '../courses.store';
         </ul>
       </div>
       <sk-paginator
-        [count]="store.count()"
-        [pageSize]="store.pageSize"
+        [count]="store.COUNT()"
+        [pageSize]="store.PAGE_SIZE()"
         (paginate)="getCurrentPage($event)"
       />
     </div>
@@ -134,6 +134,6 @@ export class CoursesListComponent {
     start: number;
   }): void {
     const { start } = pagination;
-    this.store.setRange(start);
+    this.store.patchState({ START: start });
   }
 }

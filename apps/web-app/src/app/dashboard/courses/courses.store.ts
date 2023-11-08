@@ -1,21 +1,17 @@
-import { inject, Injectable } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { computed, inject, Injectable } from '@angular/core';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Course, Table } from '@skooltrak/models';
-import { UtilService } from '@skooltrak/ui';
 import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
-  courses: Course[];
-  selectedId?: string;
-  count: number;
-  pages: number;
-  pageSize: number;
-  start: number;
-  end: number;
-  loading: boolean;
-  groups: Partial<ClassGroup>[];
+  COURSES: Course[];
+  SELECTED_ID?: string;
+  COUNT: number;
+  PAGE_SIZE: number;
+  START: number;
+  LOADING: boolean;
+  GROUPS: Partial<ClassGroup>[];
 };
 
 @Injectable()
@@ -23,65 +19,32 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
   private readonly auth = inject(authState.AuthStateFacade);
   private readonly school = this.auth.CURRENT_SCHOOL_ID;
   private readonly supabase = inject(SupabaseService);
-  private readonly util = inject(UtilService);
 
-  public readonly courses = this.selectSignal((state) => state.courses);
-  public readonly count = this.selectSignal((state) => state.count);
-  public readonly loading = this.selectSignal((state) => state.loading);
-  public readonly pageSize = this.selectSignal((state) => state.pageSize);
-  public readonly start$ = this.select((state) => state.start);
-  public readonly end$ = this.select((state) => state.end);
-  public readonly selectedId = this.selectSignal((state) => state.selectedId);
-  public readonly selected = this.selectSignal((state) =>
-    state.selectedId
-      ? state.courses.find((x) => x.id === state.selectedId)
+  public readonly COURSES = this.selectSignal((state) => state.COURSES);
+  public readonly COUNT = this.selectSignal((state) => state.COUNT);
+  public readonly LOADING = this.selectSignal((state) => state.LOADING);
+  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly start$ = this.select((state) => state.START);
+  public readonly START = this.selectSignal((state) => state.START);
+  private END = computed(() => this.START() + (this.PAGE_SIZE() - 1));
+  public readonly SELECTED_ID = this.selectSignal((state) => state.SELECTED_ID);
+  public readonly SELECTED = this.selectSignal((state) =>
+    state.SELECTED_ID
+      ? state.COURSES.find((x) => x.id === state.SELECTED_ID)
       : null
   );
 
-  public readonly groups = this.selectSignal((state) => state.groups);
+  public readonly groups = this.selectSignal((state) => state.GROUPS);
   public readonly selected$ = this.select((state) =>
-    state.selectedId
-      ? state.courses.find((x) => x.id === state.selectedId)
+    state.SELECTED_ID
+      ? state.COURSES.find((x) => x.id === state.SELECTED_ID)
       : null
-  );
-
-  private setCourses = this.updater(
-    (state, courses: Course[]): State => ({
-      ...state,
-      courses,
-    })
-  );
-
-  private setCount = this.updater(
-    (state, count: number): State => ({
-      ...state,
-      count,
-      pages: this.util.getPages(count, 10),
-    })
-  );
-
-  public setRange = this.updater(
-    (state, start: number): State => ({
-      ...state,
-      start: start,
-      end: start + (state.pageSize - 1),
-    })
-  );
-
-  private readonly fetchCoursesData$ = this.select(
-    {
-      start: this.start$,
-      end: this.end$,
-      pageSize: toObservable(this.pageSize),
-    },
-    { debounce: true }
   );
 
   private readonly fetchCourses = this.effect(() => {
-    return this.fetchCoursesData$.pipe(
-      tap(() => this.patchState({ loading: true })),
-      filter(({ end }) => end > 0),
-      switchMap(({ start, end }) => {
+    return this.start$.pipe(
+      tap(() => this.patchState({ LOADING: true })),
+      switchMap((start) => {
         return from(
           this.supabase.client
             .from(Table.Courses)
@@ -91,20 +54,20 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
                 count: 'exact',
               }
             )
-            .range(start, end)
+            .range(start, this.END())
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
-            return { courses: data, count };
+            return { COURSES: data as unknown as Course[], COUNT: count };
           }),
-          tap(({ count }) => !!count && this.setCount(count)),
+          tap(({ COUNT }) => !!COUNT && this.patchState({ COUNT })),
           tapResponse(
-            ({ courses }) => this.setCourses(courses as unknown as Course[]),
+            ({ COURSES }) => this.patchState({ COURSES }),
             (error) => {
               console.error(error);
               return of([]);
             },
-            () => this.patchState({ loading: false })
+            () => this.patchState({ LOADING: false })
           )
         );
       })
@@ -114,7 +77,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
   public readonly saveCourse = this.effect(
     (request$: Observable<Partial<Course>>) => {
       return request$.pipe(
-        tap(() => this.patchState({ loading: true })),
+        tap(() => this.patchState({ LOADING: true })),
         switchMap((request) => {
           return from(
             this.supabase.client
@@ -130,7 +93,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
         tapResponse(
           () => this.fetchCourses(),
           (error) => console.error(error),
-          () => this.patchState({ loading: false })
+          () => this.patchState({ LOADING: false })
         )
       );
     }
@@ -156,7 +119,7 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
           )
           .pipe(
             tapResponse(
-              (groups) => this.patchState({ groups }),
+              (GROUPS) => this.patchState({ GROUPS }),
               (error) => console.error(error)
             )
           );
@@ -166,13 +129,11 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
 
   public ngrxOnStoreInit = (): void =>
     this.setState({
-      courses: [],
-      groups: [],
-      loading: true,
-      pages: 0,
-      count: 0,
-      pageSize: 10,
-      start: 0,
-      end: 9,
+      COURSES: [],
+      GROUPS: [],
+      LOADING: true,
+      COUNT: 0,
+      PAGE_SIZE: 5,
+      START: 0,
     });
 }

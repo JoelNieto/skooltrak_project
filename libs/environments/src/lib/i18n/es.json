@@ -94,6 +94,9 @@
   "News": "Novedades",
   "NO_ITEMS": "Sin  elementos para este filtro",
   "Other": "Otro",
+  "PAGINATOR": {
+    "SHOWING": "Mostrando <span class=\"font-semibold text-gray-900 dark:text-white\">{{start}}-{{end}}</span> de <span class=\"font-semibold text-gray-900 dark:text-white\">{{count}}</span>"
+  },
   "Plans": {
     "Details": "Detalles del Plan de estudio",
     "Title": "Planes de estudio"

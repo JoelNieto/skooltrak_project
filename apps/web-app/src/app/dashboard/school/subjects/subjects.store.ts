@@ -1,31 +1,16 @@
-import { inject, Injectable } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { computed, inject, Injectable } from '@angular/core';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Subject, Table } from '@skooltrak/models';
-import { AlertService, UtilService } from '@skooltrak/ui';
-import {
-  combineLatestWith,
-  filter,
-  from,
-  map,
-  Observable,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { AlertService } from '@skooltrak/ui';
+import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
   SUBJECTS: Subject[];
   COUNT: number;
-  PAGES: number;
   PAGE_SIZE: number;
   START: number;
-  END: number;
   TEXT_SEARCH: string;
   LOADING: boolean;
 };
@@ -37,7 +22,6 @@ export class SchoolSubjectsStore
 {
   private readonly auth = inject(authState.AuthStateFacade);
   private readonly supabase = inject(SupabaseService);
-  private readonly util = inject(UtilService);
   private readonly alert = inject(AlertService);
   private readonly translate = inject(TranslateService);
 
@@ -47,31 +31,16 @@ export class SchoolSubjectsStore
   public readonly TEXT_SEARCH = this.selectSignal((state) => state.TEXT_SEARCH);
   public readonly TEXT_SEARCH$ = this.select((state) => state.TEXT_SEARCH);
   public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
+  public readonly PAGE_SIZE$ = this.select((state) => state.PAGE_SIZE);
   public readonly START$ = this.select((state) => state.START);
-  public readonly END$ = this.select((state) => state.END);
-
-  private setCount = this.updater(
-    (state, count: number): State => ({
-      ...state,
-      COUNT: count,
-      PAGES: this.util.getPages(count, 10),
-    })
-  );
-
-  public setRange = this.updater(
-    (state, start: number): State => ({
-      ...state,
-      START: start,
-      END: start + (state.PAGE_SIZE - 1),
-    })
-  );
+  public readonly START = this.selectSignal((state) => state.START);
+  public readonly END = computed(() => this.START() + (this.PAGE_SIZE() - 1));
 
   private readonly fetchSubjectsData$ = this.select(
     {
       START: this.START$,
-      END: this.END$,
-      PAGE_SIZE: toObservable(this.PAGE_SIZE),
       TEXT_SEARCH: this.TEXT_SEARCH$,
+      PAGE_SIZE: this.PAGE_SIZE$,
     },
     { debounce: true }
   );
@@ -80,9 +49,9 @@ export class SchoolSubjectsStore
     return trigger$.pipe(
       switchMap(() => this.fetchSubjectsData$),
       combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-      filter(([{ END }, school_id]) => END > 0 && !!school_id),
+      filter(([, school_id]) => !!school_id),
       tap(() => this.patchState({ LOADING: true })),
-      switchMap(([{ START, END, TEXT_SEARCH }, school_id]) => {
+      switchMap(([{ START, TEXT_SEARCH }, school_id]) => {
         return from(
           this.supabase.client
             .from(Table.Subjects)
@@ -93,7 +62,7 @@ export class SchoolSubjectsStore
               }
             )
             .order('name', { ascending: true })
-            .range(START, END)
+            .range(START, this.END())
             .eq('school_id', school_id)
             .or(
               `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`
@@ -103,7 +72,7 @@ export class SchoolSubjectsStore
             if (error) throw new Error(error.message);
             return { SUBJECTS: data, count };
           }),
-          tap(({ count }) => !!count && this.setCount(count)),
+          tap(({ count }) => !!count && this.patchState({ COUNT: count })),
           tapResponse(
             ({ SUBJECTS }) =>
               this.patchState({ SUBJECTS: SUBJECTS as unknown as Subject[] }),
@@ -184,12 +153,10 @@ export class SchoolSubjectsStore
     this.setState({
       SUBJECTS: [],
       LOADING: true,
-      PAGES: 0,
       COUNT: 0,
       PAGE_SIZE: 5,
       TEXT_SEARCH: '',
       START: 0,
-      END: 4,
     });
     this.fetchSubjects();
   };

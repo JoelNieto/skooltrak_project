@@ -127,7 +127,7 @@ import { SchoolGroupsStore } from './groups.store';
       </div>
       <sk-paginator
         [count]="store.COUNT()"
-        [pageSize]="store.PAGE_SIZE"
+        [pageSize]="store.PAGE_SIZE()"
         (paginate)="getCurrentPage($event)"
       />
     </div>

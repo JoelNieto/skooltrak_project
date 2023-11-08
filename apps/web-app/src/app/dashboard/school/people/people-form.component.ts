@@ -9,7 +9,7 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
 import { CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
-import { distinctUntilChanged, filter } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { SchoolPeopleFormStore } from './people-form.store';
@@ -114,17 +114,7 @@ export class SchoolPeopleFormComponent implements OnInit {
     effect(() => {
       const group = this.store.GROUP_ID();
       if (!group) return;
-      this.groupControl.valueChanges
-        .pipe(
-          filter((val) => val !== group),
-          distinctUntilChanged(),
-          takeUntilDestroyed(this.destroy)
-        )
-        .subscribe({
-          next: (val) => {
-            !!val && this.store.saveGroup(val);
-          },
-        });
+
       this.groupControl.disable();
       this.groupControl.setValue(group, { emitEvent: false, onlySelf: true });
       this.groupControl.enable();
@@ -139,6 +129,13 @@ export class SchoolPeopleFormComponent implements OnInit {
       this.store.fetchGroups();
       this.store.fetchStudentGroup();
     }
+    this.groupControl.valueChanges
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (val) => {
+          !!val && this.store.saveGroup(val);
+        },
+      });
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: ({ status, role }) => {
         this.store.savePerson({ status, role, user_id });

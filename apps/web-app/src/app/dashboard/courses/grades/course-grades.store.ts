@@ -21,7 +21,7 @@ export class CourseGradesStore
   private readonly courseStore = inject(CoursesStore);
   private readonly supabase = inject(SupabaseService);
 
-  public course = this.courseStore.selected;
+  public COURSE = this.courseStore.SELECTED;
 
   public readonly PERIODS = this.selectSignal((state) => state.PERIODS);
   public readonly PERIOD = this.selectSignal((state) => state.SELECTED_PERIOD);
@@ -40,7 +40,7 @@ export class CourseGradesStore
             .select(
               'id, title, period:periods(id, name), bucket:grade_buckets(*), start_at, items:grade_items(*)'
             )
-            .eq('course_id', this.course()?.id)
+            .eq('course_id', this.COURSE()?.id)
             .eq('period_id', period_id)
         )
           .pipe(
@@ -67,7 +67,7 @@ export class CourseGradesStore
         this.supabase.client
           .from(Table.Periods)
           .select('id, name, year, start_at, end_at, school_id')
-          .eq('school_id', this.course()?.school_id)
+          .eq('school_id', this.COURSE()?.school_id)
       )
         .pipe(
           map(({ error, data }) => {
@@ -91,7 +91,7 @@ export class CourseGradesStore
     this.setState({
       LOADING: false,
       PERIODS: [],
-      SELECTED_PERIOD: this.course()?.period_id,
+      SELECTED_PERIOD: this.COURSE()?.period_id,
       GRADES: [],
     });
 }

@@ -3,19 +3,11 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -119,7 +111,7 @@ import { SchoolDegreesStore } from './degrees.store';
 
     <sk-paginator
       [count]="store.COUNT()"
-      [pageSize]="store.PAGE_SIZE"
+      [pageSize]="store.PAGE_SIZE()"
       (paginate)="getCurrentPage($event)"
     />
   </div>`,

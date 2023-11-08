@@ -126,7 +126,7 @@ import { SchoolSubjectsStore } from './subjects.store';
 
     <sk-paginator
       [count]="store.COUNT()"
-      [pageSize]="store.PAGE_SIZE"
+      [pageSize]="store.PAGE_SIZE()"
       (paginate)="getCurrentPage($event)"
     />
   </div>`,
@@ -150,9 +150,10 @@ export class SchoolSubjectsComponent implements OnInit {
   public getCurrentPage(pagination: {
     currentPage: number;
     start: number;
+    pageSize: number;
   }): void {
-    const { start } = pagination;
-    this.store.setRange(start);
+    const { start, pageSize } = pagination;
+    this.store.patchState({ START: start, PAGE_SIZE: pageSize });
   }
 
   public newSubject(): void {
@@ -163,7 +164,6 @@ export class SchoolSubjectsComponent implements OnInit {
         disableClose: true,
       }
     );
-
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
         !!request && this.store.saveSubject(request);

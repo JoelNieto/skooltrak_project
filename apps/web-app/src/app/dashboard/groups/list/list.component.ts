@@ -4,11 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  ButtonDirective,
-  CardComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { GroupsStore } from '../groups.store';
@@ -122,7 +118,7 @@ import { GroupsStore } from '../groups.store';
       </div>
       <sk-paginator
         [count]="store.COUNT()"
-        [pageSize]="store.PAGE_SIZE"
+        [pageSize]="store.PAGE_SIZE()"
         (paginate)="getCurrentPage($event)"
       /></div
   ></sk-card> `,

@@ -127,9 +127,10 @@ export class StudyPlansComponent {
   public getCurrentPage(pagination: {
     currentPage: number;
     start: number;
+    pageSize: number;
   }): void {
-    const { start } = pagination;
-    this.store.setRange(start);
+    const { start, pageSize } = pagination;
+    this.store.patchState({ START: start, PAGE_SIZE: pageSize });
   }
 
   public newStudyPlan(): void {

@@ -8,16 +8,12 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/web-app",
         "index": "apps/web-app/src/index.html",
         "main": "apps/web-app/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/web-app/tsconfig.app.json",
         "assets": [
           "apps/web-app/src/assets",
@@ -77,10 +73,10 @@
       },
       "configurations": {
         "production": {
-          "browserTarget": "web-app:build:production"
+          "buildTarget": "web-app:build:production"
         },
         "development": {
-          "browserTarget": "web-app:build:development"
+          "buildTarget": "web-app:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -88,35 +84,21 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "web-app:build"
+        "buildTarget": "web-app:build"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "apps/web-app/**/*.ts",
-          "apps/web-app/**/*.html"
-        ]
+        "lintFilePatterns": ["apps/web-app/**/*.ts", "apps/web-app/**/*.html"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/web-app/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "apps/web-app/jest.config.ts"
       }
     },
     "serve-static": {

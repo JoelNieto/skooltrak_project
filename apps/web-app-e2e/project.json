@@ -22,18 +22,12 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "apps/web-app-e2e/**/*.{js,ts}"
-        ]
+        "lintFilePatterns": ["apps/web-app-e2e/**/*.{js,ts}"]
       }
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "web-app"
-  ]
+  "implicitDependencies": ["web-app"]
 }

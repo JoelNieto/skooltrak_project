@@ -57,7 +57,7 @@ import { InputDirective } from '../../directives/input/input.directive';
           <ng-icon name="heroChevronLeft" size="14" />
         </a>
       </li>
-      <li *ngFor="let page of pages()">
+      <li *ngFor="let page of PAGES()">
         <a
           (click)="setPage(page)"
           class="item block"
@@ -152,9 +152,9 @@ export class PaginatorComponent implements OnInit {
     )
   );
 
-  currentRange = computed(() => this.CURRENT_PAGE());
+  CURRENT_RANGE = computed(() => this.CURRENT_PAGE());
 
-  pages = computed(() => range(this.START_PAGE(), this.END_PAGE())); //TODO - Fix three points page
+  PAGES = computed(() => range(this.START_PAGE(), this.END_PAGE())); //TODO - Fix three points page
 
   setPage = (page: number) => this.CURRENT_PAGE.set(page);
 

@@ -1,13 +1,7 @@
 import { DIALOG_DATA, DialogModule, DialogRef } from '@angular/cdk/dialog';
-import { NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroCheckCircle,
-  heroExclamationCircle,
-  heroTrash,
-  heroXCircle,
-} from '@ng-icons/heroicons/outline';
+import { heroCheckCircle, heroExclamationCircle, heroTrash, heroXCircle } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CardComponent } from '../card/card.component';
@@ -21,7 +15,6 @@ import { ConfirmationOptions } from './confirmation.type';
     TranslateModule,
     NgIconComponent,
     DialogModule,
-    NgIf,
   ],
   providers: [
     provideIcons({
@@ -49,15 +42,16 @@ import { ConfirmationOptions } from './confirmation.type';
         [innerHTML]="options.description ?? '' | translate"
       ></p>
       <div class="my-3 flex justify-around px-4">
-        <button
-          *ngIf="options.showCancelButton"
-          class="rounded-full bg-white px-5 py-2.5 font-sans dark:bg-gray-600"
-          [class]="cancelButtonColor[options.color]"
-          cdkFocusInitial
-          (click)="dialogRef.close(false)"
-        >
-          {{ options.cancelButtonText ?? 'Confirmation.Cancel' | translate }}
-        </button>
+        @if(options.showCancelButton) {
+          <button
+            class="rounded-full bg-white px-5 py-2.5 font-sans dark:bg-gray-600"
+            [class]="cancelButtonColor[options.color]"
+            cdkFocusInitial
+            (click)="dialogRef.close(false)"
+          >
+            {{ options.cancelButtonText ?? 'Confirmation.Cancel' | translate }}
+          </button>
+        }
         <button
           class="rounded-full px-5 py-2.5 font-sans text-white"
           [class]="confirmButtonColor[options.color]"

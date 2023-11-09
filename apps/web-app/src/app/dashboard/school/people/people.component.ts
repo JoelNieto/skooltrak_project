@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { DatePipe, JsonPipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, JsonPipe } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -23,8 +23,6 @@ import { SchoolPeopleStore } from './people.store';
     TranslateModule,
     NgIconComponent,
     ReactiveFormsModule,
-    NgIf,
-    NgFor,
     PaginatorComponent,
     UserChipComponent,
     RouterLink,
@@ -57,17 +55,21 @@ import { SchoolPeopleStore } from './people.store';
       <div class="flex-1">
         <select [formControl]="roleControl">
           <option value="all">{{ 'PEOPLE.ALL_ROLES' | translate }}</option>
-          <option *ngFor="let role of roles" [value]="role">
-            {{ 'PEOPLE.' + role | translate }}
-          </option>
+          @for(role of roles; track role) {
+            <option [value]="role">
+              {{ 'PEOPLE.' + role | translate }}
+            </option>
+          }
         </select>
       </div>
       <div class="flex-1">
         <select [formControl]="statusControl">
           <option value="all">{{ 'PEOPLE.ALL_STATUS' | translate }}</option>
-          <option *ngFor="let status of statuses" [value]="status">
+          @for(status of statuses; track status) {
+            <option [value]="status">
             {{ 'PEOPLE.' + status | translate }}
           </option>
+          }
         </select>
       </div>
       <div class="flex-1">
@@ -114,8 +116,8 @@ import { SchoolPeopleStore } from './people.store';
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let person of store.PEOPLE()"
+        @for(person of store.PEOPLE(); track person.user_id) {
+          <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
         >
@@ -155,9 +157,11 @@ import { SchoolPeopleStore } from './people.store';
             </button>
           </td>
         </tr>
+        }
       </tbody>
     </table>
-    <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
+    @if(store.LOADING()) {
+      <div class="mt-4 animate-pulse">
       <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
       <ul class="mt-8 space-y-8">
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
@@ -166,12 +170,15 @@ import { SchoolPeopleStore } from './people.store';
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
-    <div
-      *ngIf="!store.LOADING() && !store.PEOPLE().length"
+    }
+    @if(!store.LOADING() && !store.PEOPLE().length){
+      <div
       class="flex items-center justify-center"
-    >
-      <img src="/assets/teacher.svg" alt="" />
+      >
+      <img src="/assets/images/teacher.svg" alt="" />
     </div>
+    }
+
   </div>`,
 })
 export class SchoolPeopleComponent implements OnInit {

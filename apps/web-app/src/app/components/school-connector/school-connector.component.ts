@@ -1,5 +1,4 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -18,8 +17,6 @@ import { SchoolConnectorStore } from './school-connector.store';
     CardComponent,
     NgIconComponent,
     TranslateModule,
-    NgFor,
-    NgIf,
     ButtonDirective,
     ReactiveFormsModule,
   ],
@@ -73,18 +70,20 @@ import { SchoolConnectorStore } from './school-connector.store';
         <div>
           <label for="code">{{ 'CODE' | translate }}</label>
           <input type="text" formControlName="code" />
-          <small
-            *ngIf="form.get('code')?.hasError('minlength')"
-            class="font-mono text-xs text-red-500"
-            >{{ 'Errors.minLength' | translate : { length: 10 } }}</small
-          >
+          @if(form.get('code')?.hasError('minlength')) {
+          <small class="font-mono text-xs text-red-500">{{
+            'Errors.minLength' | translate : { length: 10 }
+          }}</small>
+          }
         </div>
         <div>
           <label for="role">{{ 'ROLE' | translate }}</label>
           <select formControlName="role">
-            <option *ngFor="let role of roles" [value]="role">
+            @for(role of roles; track role) {
+            <option [value]="role">
               {{ role | translate }}
             </option>
+            }
           </select>
         </div>
       </div>

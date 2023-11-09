@@ -1,4 +1,4 @@
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -13,7 +13,6 @@ import { CoursesStore } from '../courses.store';
   selector: 'sk-course-details',
   imports: [
     CardComponent,
-    NgFor,
     NgClass,
     RouterLink,
     TranslateModule,

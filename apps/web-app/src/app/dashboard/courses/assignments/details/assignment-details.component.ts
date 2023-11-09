@@ -1,14 +1,9 @@
-import { DatePipe, NgFor } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  ButtonDirective,
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { AssignmentDetailsStore } from './assignment-details.store';
 
@@ -19,7 +14,6 @@ import { AssignmentDetailsStore } from './assignment-details.store';
     CardComponent,
     DatePipe,
     TranslateModule,
-    NgFor,
     ButtonDirective,
     TabsItemComponent,
     RouterOutlet,
@@ -77,9 +71,9 @@ import { AssignmentDetailsStore } from './assignment-details.store';
           </h2>
         </div>
         <div>
-          <div
+          @for(date of ASSIGNMENT()?.dates; track date.group.id) {
+            <div
             class="mb-2 flex flex-col "
-            *ngFor="let date of ASSIGNMENT()?.dates"
           >
             <div
               class="font-sans font-semibold text-gray-700 dark:text-gray-200"
@@ -90,6 +84,8 @@ import { AssignmentDetailsStore } from './assignment-details.store';
               {{ date.start_at | date : 'medium' }}
             </div>
           </div>
+          }
+
         </div>
       </sk-card>
     </div>

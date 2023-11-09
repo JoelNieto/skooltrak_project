@@ -1,13 +1,9 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
@@ -22,8 +18,6 @@ import { SchoolPeriodsStore } from './periods.store';
     NgIconComponent,
     TranslateModule,
     ButtonDirective,
-    NgFor,
-    NgIf,
     DatePipe,
     DialogModule,
   ],
@@ -79,8 +73,8 @@ import { SchoolPeriodsStore } from './periods.store';
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let period of store.PERIODS()"
+        @for(period of store.PERIODS(); track period.id) {
+          <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
@@ -109,9 +103,12 @@ import { SchoolPeriodsStore } from './periods.store';
             </button>
           </td>
         </tr>
+        }
+
       </tbody>
     </table>
-    <div class="mt-2 animate-pulse" *ngIf="store.LOADING()">
+    @if(store.LOADING()) {
+      <div class="mt-2 animate-pulse">
       <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
 
       <ul class="mt-5 space-y-3">
@@ -121,6 +118,8 @@ import { SchoolPeriodsStore } from './periods.store';
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
+    }
+
   </div>`,
 })
 export class SchoolPeriodsComponent {

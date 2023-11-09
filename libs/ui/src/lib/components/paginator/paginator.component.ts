@@ -1,4 +1,4 @@
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, computed, effect, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -12,7 +12,6 @@ import { InputDirective } from '../../directives/input/input.directive';
   selector: 'sk-paginator',
   standalone: true,
   imports: [
-    NgFor,
     NgClass,
     NgIconComponent,
     TranslateModule,
@@ -57,14 +56,16 @@ import { InputDirective } from '../../directives/input/input.directive';
           <ng-icon name="heroChevronLeft" size="14" />
         </a>
       </li>
-      <li *ngFor="let page of PAGES()">
-        <a
-          (click)="setPage(page)"
-          class="item block"
-          [ngClass]="{ active: CURRENT_PAGE() === page }"
-          >{{ page }}</a
-        >
-      </li>
+      @for(page of PAGES(); track page) {
+        <li>
+          <a
+            (click)="setPage(page)"
+            class="item block"
+            [ngClass]="{ active: CURRENT_PAGE() === page }"
+            >{{ page }}</a
+          >
+        </li>
+      }
       <li>
         <a
           (click)="setPage(TOTAL_PAGES())"

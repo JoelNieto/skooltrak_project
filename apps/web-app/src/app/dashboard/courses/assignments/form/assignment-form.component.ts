@@ -1,21 +1,7 @@
-import { NgClass, NgFor } from '@angular/common';
-import {
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, DestroyRef, effect, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  UntypedFormArray,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, UntypedFormArray, Validators } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -48,7 +34,6 @@ import { AssignmentFormStore } from './assignment-form.store';
     ButtonDirective,
     ReactiveFormsModule,
     NgClass,
-    NgFor,
     NgIconComponent,
     LabelDirective,
     InputDirective,
@@ -138,14 +123,14 @@ import { AssignmentFormStore } from './assignment-form.store';
         </div>
         {{ store.ASSIGNMENT()?.title }}
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
-          <ng-container
-            *ngFor="let group of formGroups.controls; let i = index"
-          >
-            <div [formGroupName]="i">
-              <label [for]="i">{{ groups()[i].name }}</label>
-              <input skInput type="datetime-local" formControlName="start_at" />
-            </div>
-          </ng-container>
+          @for(group of formGroups.controls; track group; let i = $index) {
+            <ng-container>
+              <div [formGroupName]="i">
+                <label [for]="i">{{ groups()[i].name }}</label>
+                <input skInput type="datetime-local" formControlName="start_at" />
+              </div>
+            </ng-container>
+          }
         </div>
       </sk-card>
     </form>

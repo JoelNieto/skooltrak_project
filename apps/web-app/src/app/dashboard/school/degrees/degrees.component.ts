@@ -1,5 +1,5 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -20,8 +20,6 @@ import { SchoolDegreesStore } from './degrees.store';
     TranslateModule,
     DatePipe,
     PaginatorComponent,
-    NgFor,
-    NgIf,
     ButtonDirective,
     DialogModule,
   ],
@@ -53,7 +51,7 @@ import { SchoolDegreesStore } from './degrees.store';
       </div>
 
       <button skButton color="green" (click)="newDegree()">
-        {{ 'New' | translate }}
+        {{ 'NEW' | translate }}
       </button>
     </div>
     <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -70,8 +68,8 @@ import { SchoolDegreesStore } from './degrees.store';
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let degree of store.DEGREES()"
+        @for(degree of store.DEGREES(); track degree.id) {
+          <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
         >
@@ -96,9 +94,12 @@ import { SchoolDegreesStore } from './degrees.store';
             </button>
           </td>
         </tr>
+        }
+
       </tbody>
     </table>
-    <div class="mt-2 animate-pulse" *ngIf="store.LOADING()">
+    @if(store.LOADING()) {
+      <div class="mt-2 animate-pulse" >
       <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
 
       <ul class="mt-5 space-y-3">
@@ -108,6 +109,7 @@ import { SchoolDegreesStore } from './degrees.store';
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
+    }
 
     <sk-paginator
       [count]="store.COUNT()"

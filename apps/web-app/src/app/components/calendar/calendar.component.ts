@@ -1,5 +1,4 @@
 import { DialogModule } from '@angular/cdk/dialog';
-import { NgIf } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -22,7 +21,6 @@ import { CalendarStore } from './calendar.store';
     TranslateModule,
     ButtonDirective,
     RouterLink,
-    NgIf,
   ],
   providers: [
     { provide: DateAdapter, useFactory: adapterFactory },
@@ -126,8 +124,7 @@ import { CalendarStore } from './calendar.store';
       </div>
     </div>
     <div class="p-2">
-      <mwl-calendar-month-view
-        *ngIf="view === CalendarView.Month"
+      @switch (view) { @case(CalendarView.Month) {<mwl-calendar-month-view
         [viewDate]="viewDate"
         [events]="this.store.assignments()"
         [locale]="locale"
@@ -136,9 +133,8 @@ import { CalendarStore } from './calendar.store';
         [weekStartsOn]="weekStartOn"
         [weekendDays]="weekendDays"
         (eventClicked)="eventClicked($event.event)"
-      />
+      />} @case(CalendarView.Week) {
       <mwl-calendar-week-view
-        *ngIf="view === CalendarView.Week"
         [viewDate]="viewDate"
         [events]="this.store.assignments()"
         [locale]="locale"
@@ -148,8 +144,8 @@ import { CalendarStore } from './calendar.store';
         [weekendDays]="weekendDays"
         (eventClicked)="eventClicked($event.event)"
       />
+      } @case (CalendarView.Day) {
       <mwl-calendar-day-view
-        *ngIf="view === CalendarView.Day"
         [viewDate]="viewDate"
         [dayStartHour]="7"
         [dayEndHour]="17"
@@ -157,6 +153,7 @@ import { CalendarStore } from './calendar.store';
         [locale]="locale"
         (eventClicked)="eventClicked($event.event)"
       />
+      } }
     </div>`,
 })
 export class CalendarComponent implements OnInit {

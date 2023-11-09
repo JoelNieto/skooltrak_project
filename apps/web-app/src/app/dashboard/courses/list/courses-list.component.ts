@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -21,9 +21,7 @@ import { CoursesStore } from '../courses.store';
     UserChipComponent,
     RouterLink,
     PaginatorComponent,
-    NgFor,
     DatePipe,
-    NgIf,
   ],
   providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: ` <sk-card>
@@ -76,8 +74,8 @@ import { CoursesStore } from '../courses.store';
           </tr>
         </thead>
         <tbody>
+          @for(course of store.COURSES(); track course.id) {
           <tr
-            *ngFor="let course of store.COURSES()"
             [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
@@ -89,10 +87,9 @@ import { CoursesStore } from '../courses.store';
             </th>
             <td class="px-6 py-3.5">{{ course.plan.name }}</td>
             <td class="flex px-6 py-3.5">
-              <sk-user-chip
-                *ngFor="let teacher of course.teachers"
-                [user]="teacher"
-              />
+              @for(teacher of course.teachers; track teacher.id) {
+              <sk-user-chip [user]="teacher" />
+              }
             </td>
             <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
             <td class="px-6 py-3.5">
@@ -107,9 +104,11 @@ import { CoursesStore } from '../courses.store';
               </a>
             </td>
           </tr>
+          }
         </tbody>
       </table>
-      <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
+      @if(store.LOADING()) {
+      <div class="mt-4 animate-pulse">
         <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
         <ul class="mt-5 space-y-3">
           <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
@@ -118,6 +117,7 @@ import { CoursesStore } from '../courses.store';
           <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
         </ul>
       </div>
+      }
       <sk-paginator
         [count]="store.COUNT()"
         [pageSize]="store.PAGE_SIZE()"
@@ -132,8 +132,9 @@ export class CoursesListComponent {
   public getCurrentPage(pagination: {
     currentPage: number;
     start: number;
+    pageSize: number;
   }): void {
-    const { start } = pagination;
-    this.store.patchState({ START: start });
+    const { start, pageSize } = pagination;
+    this.store.patchState({ START: start, PAGE_SIZE: pageSize });
   }
 }

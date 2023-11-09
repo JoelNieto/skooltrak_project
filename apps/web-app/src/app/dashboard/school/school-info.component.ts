@@ -1,5 +1,5 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
@@ -13,7 +13,6 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
   selector: 'sk-school-info',
   imports: [
     AvatarComponent,
-    NgIf,
     TranslateModule,
     DatePipe,
     ButtonDirective,
@@ -32,12 +31,14 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
   ],
   template: `
     <div class="flex flex-col items-center justify-center space-y-3">
+      @if (school()?.crest_url) {
       <sk-avatar
-        *ngIf="school()?.crest_url"
         [avatarUrl]="school()?.crest_url!"
         bucket="crests"
         class="h-16"
       />
+      }
+
       <h4 class="font-title text-xl text-gray-700 dark:text-gray-100">
         {{ school()?.full_name }}
       </h4>

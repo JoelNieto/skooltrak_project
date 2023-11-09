@@ -1,5 +1,4 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { NgIf } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,7 +29,6 @@ import { SchoolFormStore } from './school-form.store';
     AvatarComponent,
     TranslateModule,
     SelectComponent,
-    NgIf,
     NgIconComponent,
     LabelDirective,
     InputDirective,
@@ -55,20 +53,21 @@ import { SchoolFormStore } from './school-form.store';
       </button>
     </div>
     <div class="flex flex-col items-center justify-center space-y-4">
+      @if (store.SCHOOL()?.crest_url) {
       <sk-avatar
-        *ngIf="store.SCHOOL()?.crest_url"
         [avatarUrl]="store.SCHOOL()?.crest_url!"
         (click)="uploadCrest()"
         bucket="crests"
         class="h-24 rounded-md"
       />
+      } @else {
       <img
-        *ngIf="!store.SCHOOL()?.crest_url"
         (click)="uploadCrest()"
         src="assets/images/skooltrak-logo.svg"
         class="h-24"
         alt="Skooltrak Logo"
       />
+      }
     </div>
     <form
       [formGroup]="form"

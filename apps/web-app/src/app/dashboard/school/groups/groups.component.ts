@@ -1,5 +1,5 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -20,11 +20,9 @@ import { SchoolGroupsStore } from './groups.store';
     TranslateModule,
     CardComponent,
     NgIconComponent,
-    NgFor,
     PaginatorComponent,
     ButtonDirective,
     DatePipe,
-    NgIf,
     UserChipComponent,
     DialogModule,
   ],
@@ -56,7 +54,7 @@ import { SchoolGroupsStore } from './groups.store';
         </div>
 
         <button skButton color="green" (click)="newGroup()">
-          {{ 'New' | translate }}
+          {{ 'NEW' | translate }}
         </button>
       </div>
       <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -79,8 +77,8 @@ import { SchoolGroupsStore } from './groups.store';
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let group of store.GROUPS()"
+          @for(group of store.GROUPS(); track group.id) {
+            <tr
             [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
@@ -92,10 +90,9 @@ import { SchoolGroupsStore } from './groups.store';
             </th>
             <td class="px-6 py-2">{{ group.plan?.name }}</td>
             <td class="flex px-6 py-2">
-              <sk-user-chip
-                *ngFor="let teacher of group.teachers"
-                [user]="teacher"
-              />
+            @for(teacher of group.teachers; track teacher.id) {
+              <sk-user-chip [user]="teacher" />
+            }
             </td>
             <td class="px-6 py-2">{{ group.degree.name }}</td>
             <td class="px-6 py-2">
@@ -114,17 +111,21 @@ import { SchoolGroupsStore } from './groups.store';
               </button>
             </td>
           </tr>
+          }
         </tbody>
       </table>
-      <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
-        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-        <ul class="mt-5 space-y-3">
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        </ul>
-      </div>
+      @if(store.LOADING()) {
+        <div class="mt-4 animate-pulse">
+          <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+          <ul class="mt-5 space-y-3">
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          </ul>
+        </div>
+      }
+
       <sk-paginator
         [count]="store.COUNT()"
         [pageSize]="store.PAGE_SIZE()"

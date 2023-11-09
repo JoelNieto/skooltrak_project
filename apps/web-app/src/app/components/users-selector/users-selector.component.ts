@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -31,8 +31,6 @@ import { UsersSelectorStore } from './users-selector.store';
   imports: [
     NgClass,
     FormsModule,
-    NgFor,
-    NgIf,
     PortalModule,
     AvatarComponent,
     UserChipComponent,
@@ -63,18 +61,19 @@ import { UsersSelectorStore } from './users-selector.store';
       }"
       [class.text-gray-700]="currentValue()"
     >
+    @for(user of currentValue(); track user.id) {
       <sk-user-chip
-        *ngFor="let user of currentValue()"
         [user]="user"
         [removable]="true"
         (remove)="toggleValue(user)"
       />
+    } @empty {
       <div
-        *ngIf="!currentValue().length"
         class="p-1 text-gray-700 dark:text-gray-400"
       >
         Pick some users
       </div>
+    }
     </div>
     <ng-template cdk-portal>
       <div id="options-container" class="w-full">
@@ -99,19 +98,22 @@ import { UsersSelectorStore } from './users-selector.store';
             #searchInput
           />
         </div>
-        <div
+        @if(!store.users().length) {
+          <div
           class="flex items-center bg-white p-4  dark:bg-gray-700"
-          *ngIf="!store.users().length"
         >
           <p class="font-title font-semibold text-gray-700 dark:text-gray-100 ">
             Users not found!
           </p>
         </div>
+        }
+
         <div
           class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
         >
           <ul class="py-1" role="none">
-            <li *ngFor="let user of store.users()" (click)="toggleValue(user)">
+            @for(user of store.users(); track user.id) {
+              <li (click)="toggleValue(user)">
               <div
                 class="flex cursor-pointer gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                 role="menuitem"
@@ -135,6 +137,8 @@ import { UsersSelectorStore } from './users-selector.store';
                 </div>
               </div>
             </li>
+            }
+
           </ul>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -16,12 +16,10 @@ import { GroupsStore } from '../groups.store';
     TranslateModule,
     CardComponent,
     NgIconComponent,
-    NgFor,
     PaginatorComponent,
     ButtonDirective,
     DatePipe,
     UserChipComponent,
-    NgIf,
     RouterLink,
   ],
   providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
@@ -77,8 +75,8 @@ import { GroupsStore } from '../groups.store';
           </tr>
         </thead>
         <tbody>
+          @for(group of store.GROUPS(); track group.id) {
           <tr
-            *ngFor="let group of store.GROUPS()"
             [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
@@ -90,10 +88,9 @@ import { GroupsStore } from '../groups.store';
             </th>
             <td class="px-6 py-2">{{ group.plan?.name }}</td>
             <td class="flex px-6 py-2">
-              <sk-user-chip
-                *ngFor="let teacher of group.teachers"
-                [user]="teacher"
-              />
+              @for(teacher of group.teachers; track teacher.id) {
+              <sk-user-chip [user]="teacher" />
+              }
             </td>
             <td class="px-6 py-2">{{ group.degree.name }}</td>
             <td class="px-6 py-2">
@@ -105,9 +102,11 @@ import { GroupsStore } from '../groups.store';
               </a>
             </td>
           </tr>
+          }
         </tbody>
       </table>
-      <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
+      @if(store.LOADING()) {
+      <div class="mt-4 animate-pulse">
         <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
         <ul class="mt-5 space-y-3">
           <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
@@ -116,6 +115,8 @@ import { GroupsStore } from '../groups.store';
           <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
         </ul>
       </div>
+      }
+
       <sk-paginator
         [count]="store.COUNT()"
         [pageSize]="store.PAGE_SIZE()"

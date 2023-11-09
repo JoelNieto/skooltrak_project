@@ -1,5 +1,5 @@
 import { Dialog, DialogModule, DialogRef } from '@angular/cdk/dialog';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -20,8 +20,6 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
     TranslateModule,
     NgIconComponent,
     AvatarComponent,
-    NgFor,
-    NgIf,
     NgClass,
     ButtonDirective,
     DialogModule,
@@ -47,8 +45,8 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
     </div>
     <div>
       <div class="flex flex-col gap-2">
+        @for(school of schools(); track school.id) {
         <div
-          *ngFor="let school of schools()"
           (click)="setSchool(school.id!)"
           class="flex cursor-pointer rounded-xl border border-gray-200 px-6 py-3"
           [ngClass]="{
@@ -57,18 +55,19 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
           }"
         >
           <div class="flex flex-1 items-center justify-center">
+            @if (school?.crest_url) {
             <sk-avatar
-              *ngIf="school?.crest_url"
               [avatarUrl]="school.crest_url!"
               bucket="crests"
               class="h-16"
             />
+            } @else {
             <img
-              *ngIf="!school?.crest_url"
               src="assets/images/skooltrak-logo.svg"
               class="h-16"
               alt="Skooltrak Logo"
             />
+            }
           </div>
           <div class="gap flex flex-1 flex-col justify-center">
             <p
@@ -82,6 +81,7 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
             </p>
           </div>
         </div>
+        }
       </div>
     </div>
     <div class="flex justify-end gap-4 pt-4" footer>

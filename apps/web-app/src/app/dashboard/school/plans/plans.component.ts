@@ -1,5 +1,5 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -19,8 +19,6 @@ import { SchoolStudyPlansStore } from './plans.store';
     NgIconComponent,
     TranslateModule,
     PaginatorComponent,
-    NgFor,
-    NgIf,
     DatePipe,
     DialogModule,
     ButtonDirective,
@@ -53,7 +51,7 @@ import { SchoolStudyPlansStore } from './plans.store';
       </div>
 
       <button skButton color="green" (click)="newStudyPlan()">
-        {{ 'New' | translate }}
+        {{ 'NEW' | translate }}
       </button>
     </div>
     <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -71,8 +69,8 @@ import { SchoolStudyPlansStore } from './plans.store';
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let plan of store.PLANS()"
+        @for(plan of store.PLANS(); track plan.id) {
+          <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
@@ -98,11 +96,13 @@ import { SchoolStudyPlansStore } from './plans.store';
             </button>
           </td>
         </tr>
+        }
+
       </tbody>
     </table>
-    <div class="mt-2 animate-pulse" *ngIf="store.LOADING()">
+    @if(store.LOADING()) {
+      <div class="mt-2 animate-pulse" >
       <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-
       <ul class="mt-5 space-y-3">
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
@@ -110,6 +110,7 @@ import { SchoolStudyPlansStore } from './plans.store';
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
+    }
 
     <sk-paginator
       [count]="store.COUNT()"

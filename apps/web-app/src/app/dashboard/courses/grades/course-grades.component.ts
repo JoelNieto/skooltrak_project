@@ -1,5 +1,4 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { NgFor } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -18,7 +17,6 @@ import { CourseGradesStore } from './course-grades.store';
   selector: 'sk-course-grades',
   imports: [
     TranslateModule,
-    NgFor,
     NgIconComponent,
     SelectComponent,
     ButtonDirective,
@@ -66,8 +64,8 @@ import { CourseGradesStore } from './course-grades.store';
             >
               {{ 'Student' | translate }}
             </th>
-            <th
-              *ngFor="let grade of grades"
+            @for(grade of grades; track grade) {
+              <th
               scope="col"
               class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
             >
@@ -84,11 +82,12 @@ import { CourseGradesStore } from './course-grades.store';
                 </button>
               </div>
             </th>
+            }
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let student of students"
+          @for(student of students; track student) {
+            <tr
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
             <th
@@ -97,9 +96,9 @@ import { CourseGradesStore } from './course-grades.store';
             >
               Joel Nieto
             </th>
-            <td
+            @for(grade of grades; track grade) {
+              <td
               class="border px-2 py-2.5 text-center"
-              *ngFor="let grade of grades"
             >
               4.0
               <button>
@@ -110,7 +109,10 @@ import { CourseGradesStore } from './course-grades.store';
                 />
               </button>
             </td>
+            }
           </tr>
+          }
+
         </tbody>
       </table>
     </div>

@@ -1,5 +1,4 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,8 +16,6 @@ import { ProfileFormStore } from './profile.store';
   imports: [
     ReactiveFormsModule,
     CardComponent,
-    NgFor,
-    NgIf,
     TranslateModule,
     ButtonDirective,
     AvatarComponent,
@@ -37,14 +34,15 @@ import { ProfileFormStore } from './profile.store';
           {{ 'PROFILE.TITLE' | translate }}
         </h2>
         <div class="mb-4  flex justify-center">
+          @if (this.USER()) {
           <sk-avatar
-            *ngIf="this.USER()"
             [avatarUrl]="this.USER()?.avatar_url ?? 'default_avatar.jpg'"
             bucket="avatars"
             [rounded]="true"
             class="h-24 cursor-pointer"
             (click)="changeAvatar()"
           />
+          }
         </div>
 
         <form [formGroup]="form" (ngSubmit)="saveChanges()">
@@ -90,12 +88,11 @@ import { ProfileFormStore } from './profile.store';
                 'PROFILE.GENDER' | translate
               }}</label>
               <select skInput formControlName="gender">
-                <option
-                  *ngFor="let gender of store.GENDERS()"
-                  [value]="gender.id"
-                >
+                @for(gender of store.GENDERS(); track gender.id) {
+                <option [value]="gender.id">
                   {{ gender.name | translate }}
                 </option>
+                }
               </select>
             </div>
             <div>

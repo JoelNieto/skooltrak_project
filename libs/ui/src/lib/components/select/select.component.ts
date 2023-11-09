@@ -1,6 +1,6 @@
 import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   AfterContentChecked,
   ChangeDetectorRef,
@@ -32,8 +32,6 @@ import { UtilService } from '../../services/util.service';
   imports: [
     OverlayModule,
     PortalModule,
-    NgFor,
-    NgIf,
     NgIconComponent,
     FormsModule,
     NgClass,
@@ -66,7 +64,8 @@ import { UtilService } from '../../services/util.service';
       ></div>
       <ng-template cdk-portal>
         <div id="options-container" class="w-full shadow-lg">
-          <div class="relative" *ngIf="search">
+          @if(search) {
+            <div class="relative">
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
@@ -85,36 +84,38 @@ import { UtilService } from '../../services/util.service';
               (ngModelChange)="onFilterChange($event)"
             />
           </div>
+          }
+         @if(!filteredItems().length) {
           <div
             class="flex items-center bg-white p-4  dark:bg-gray-700"
-            *ngIf="!filteredItems().length"
           >
             <p class="font-sans text-gray-700 dark:text-gray-100 ">
               {{ 'SELECT.NOT_FOUND' | translate }}
             </p>
           </div>
+         }
           <div
             class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
           >
             <ul class="py-1" role="none">
-              <li
-                *ngFor="let item of filteredItems()"
-                (click)="toggleValue(item[valueId])"
-              >
+              @for(item of filteredItems(); track item[valueId]) {
+                <li (click)="toggleValue(item[valueId])">
                 <div
                   class="flex cursor-pointer justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                   role="menuitem"
                   [ngClass]="{ active: currentValue() === item[valueId] }"
                 >
                   <div>{{ item | property : label }}</div>
-                  <div
-                    class="text-xs text-gray-500 dark:text-gray-200"
-                    *ngIf="secondaryLabel"
-                  >
-                    {{ item | property : secondaryLabel }}
-                  </div>
+                  @if(secondaryLabel) {
+                    <div
+                      class="text-xs text-gray-500 dark:text-gray-200"
+                    >
+                      {{ item | property : secondaryLabel }}
+                    </div>
+                  }
                 </div>
               </li>
+              }
             </ul>
           </div>
         </div>

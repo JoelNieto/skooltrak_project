@@ -1,5 +1,5 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -18,8 +18,6 @@ import { SchoolSubjectsStore } from './subjects.store';
   selector: 'sk-school-subjects',
   standalone: true,
   imports: [
-    NgFor,
-    NgIf,
     ButtonDirective,
     PaginatorComponent,
     DialogModule,
@@ -77,8 +75,8 @@ import { SchoolSubjectsStore } from './subjects.store';
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let subject of store.SUBJECTS()"
+        @for(subject of store.SUBJECTS(); track subject.id) {
+          <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
@@ -105,25 +103,29 @@ import { SchoolSubjectsStore } from './subjects.store';
             </button>
           </td>
         </tr>
+        }
+
       </tbody>
     </table>
-    <div class="mt-2 animate-pulse" *ngIf="store.LOADING()">
-      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+    @if(store.LOADING()) {
+        <div class="mt-2 animate-pulse">
+        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+        <ul class="mt-5 space-y-3">
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        </ul>
+      </div>
+    }
 
-      <ul class="mt-5 space-y-3">
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-      </ul>
-    </div>
-    <div
-      *ngIf="!store.LOADING() && !store.SUBJECTS().length"
-      class="flex items-center justify-center"
-    >
-      <img src="/assets/teacher.svg" alt="" />
-    </div>
-
+    @if(!store.LOADING() && !store.SUBJECTS().length) {
+      <div
+        class="flex items-center justify-center"
+      >
+        <img src="/assets/images/teacher.svg" alt="" />
+      </div>
+    }
     <sk-paginator
       [count]="store.COUNT()"
       [pageSize]="store.PAGE_SIZE()"

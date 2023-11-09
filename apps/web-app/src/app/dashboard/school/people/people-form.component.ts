@@ -1,6 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { NgFor } from '@angular/common';
-import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -21,7 +20,6 @@ import { SchoolPeopleFormStore } from './people-form.store';
     TranslateModule,
     NgIconComponent,
     ReactiveFormsModule,
-    NgFor,
     AvatarComponent,
     InputDirective,
     LabelDirective,
@@ -62,27 +60,34 @@ import { SchoolPeopleFormStore } from './people-form.store';
       <div>
         <label for="role" skLabel>{{ 'PEOPLE.ROLE' | translate }}</label>
         <select formControlName="role" skInput>
-          <option *ngFor="let role of roles" [value]="role">
-            {{ 'PEOPLE.' + role | translate }}
-          </option>
+          @for(role of roles; track role) {
+            <option  [value]="role">
+              {{ 'PEOPLE.' + role | translate }}
+            </option>
+          }
+
         </select>
       </div>
       <div>
         <label for="status" skLabel>{{ 'PEOPLE.STATUS' | translate }}</label>
         <select formControlName="status" skInput>
-          <option *ngFor="let status of statuses" [value]="status">
-            {{ 'PEOPLE.' + status | translate }}
-          </option>
+          @for(status of statuses; track status) {
+            <option [value]="status">
+              {{ 'PEOPLE.' + status | translate }}
+            </option>
+          }
         </select>
       </div>
-      <div>
-        <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
-        <sk-select
-          label="name"
-          [formControl]="groupControl"
-          [items]="store.GROUPS()"
-        />
-      </div>
+      @if(IS_STUDENT()) {
+        <div>
+          <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
+          <sk-select
+            label="name"
+            [formControl]="groupControl"
+            [items]="store.GROUPS()"
+          />
+        </div>
+      }
     </form>
   </sk-card> `,
 })
@@ -90,7 +95,7 @@ export class SchoolPeopleFormComponent implements OnInit {
   public store = inject(SchoolPeopleFormStore);
   public dialogRef = inject(DialogRef);
   public data: SchoolProfile = inject(DIALOG_DATA);
-
+  public IS_STUDENT = signal(false);
   public roles = Object.values(RoleEnum);
   public statuses = Object.values(StatusEnum);
   private destroy = inject(DestroyRef);
@@ -128,6 +133,7 @@ export class SchoolPeopleFormComponent implements OnInit {
     if (role === 'STUDENT') {
       this.store.fetchGroups();
       this.store.fetchStudentGroup();
+      this.IS_STUDENT.set(true);
     }
     this.groupControl.valueChanges
       .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroy))

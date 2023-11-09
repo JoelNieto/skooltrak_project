@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -21,9 +21,7 @@ import { SchoolCoursesStore } from './courses.store';
   imports: [
     TranslateModule,
     NgIconComponent,
-    NgFor,
     UserChipComponent,
-    NgIf,
     PaginatorComponent,
     DatePipe,
     RouterLink,
@@ -61,7 +59,7 @@ import { SchoolCoursesStore } from './courses.store';
       </div>
       <div class="flex flex-1 justify-end">
         <button skButton color="green" (click)="createCourse()">
-          {{ 'New' | translate }}
+          {{ 'NEW' | translate }}
         </button>
       </div>
     </div>
@@ -88,8 +86,8 @@ import { SchoolCoursesStore } from './courses.store';
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let course of store.COURSES()"
+        @for(course of store.COURSES(); track course.id) {
+          <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
         >
@@ -101,10 +99,9 @@ import { SchoolCoursesStore } from './courses.store';
           </th>
           <td class="px-6 py-3.5">{{ course.plan?.name }}</td>
           <td class="flex px-6 py-3.5">
-            <sk-user-chip
-              *ngFor="let teacher of course.teachers"
-              [user]="teacher"
-            />
+            @for(teacher of course.teachers; track teacher.id) {
+              <sk-user-chip [user]="teacher" />
+            }
           </td>
           <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
           <td class="px-6 py-3.5">
@@ -126,9 +123,11 @@ import { SchoolCoursesStore } from './courses.store';
             </button>
           </td>
         </tr>
+        }
       </tbody>
     </table>
-    <div class="mt-4 animate-pulse" *ngIf="store.LOADING()">
+    @if(store.LOADING()) {
+      <div class="mt-4 animate-pulse">
       <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
       <ul class="mt-8 space-y-8">
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
@@ -137,15 +136,17 @@ import { SchoolCoursesStore } from './courses.store';
         <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
       </ul>
     </div>
-    <div
-      *ngIf="!store.LOADING() && !store.COURSES().length"
+    }
+    @if(!store.LOADING() && !store.COURSES().length) {
+      <div
       class="flex flex-col items-center justify-center gap-4 py-12"
     >
-      <img src="/assets/books-lineal-colored.svg" class="h-24" alt="" />
+      <img src="/assets/images/books-lineal-colored.svg" class="h-24" alt="" />
       <p class="font-sans italic text-gray-400">
         {{ 'NO_ITEMS' | translate }}
       </p>
     </div>
+    }
     <sk-paginator
       [count]="store.COUNT()"
       [pageSize]="store.PAGE_SIZE()"

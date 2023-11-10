@@ -1,24 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
 
 import { GroupsFormStore } from './groups-form.store';
 
@@ -43,7 +32,7 @@ import { GroupsFormStore } from './groups-form.store';
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'GROUPS.DETAILS' | translate }}
       </h3>

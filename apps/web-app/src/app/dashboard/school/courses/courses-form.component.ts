@@ -31,7 +31,7 @@ import { CoursesFormStore } from './courses-form.store';
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'Course.Details' | translate }}
       </h3>

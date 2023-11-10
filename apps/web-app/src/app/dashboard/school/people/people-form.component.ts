@@ -32,7 +32,7 @@ import { SchoolPeopleFormStore } from './people-form.store';
   template: `<sk-card
     ><div class="flex items-start justify-between" header>
       <h3
-        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'PEOPLE.EDIT' | translate }}
       </h3>
@@ -61,32 +61,31 @@ import { SchoolPeopleFormStore } from './people-form.store';
         <label for="role" skLabel>{{ 'PEOPLE.ROLE' | translate }}</label>
         <select formControlName="role" skInput>
           @for(role of roles; track role) {
-            <option  [value]="role">
-              {{ 'PEOPLE.' + role | translate }}
-            </option>
+          <option [value]="role">
+            {{ 'PEOPLE.' + role | translate }}
+          </option>
           }
-
         </select>
       </div>
       <div>
         <label for="status" skLabel>{{ 'PEOPLE.STATUS' | translate }}</label>
         <select formControlName="status" skInput>
           @for(status of statuses; track status) {
-            <option [value]="status">
-              {{ 'PEOPLE.' + status | translate }}
-            </option>
+          <option [value]="status">
+            {{ 'PEOPLE.' + status | translate }}
+          </option>
           }
         </select>
       </div>
       @if(IS_STUDENT()) {
-        <div>
-          <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
-          <sk-select
-            label="name"
-            [formControl]="groupControl"
-            [items]="store.GROUPS()"
-          />
-        </div>
+      <div>
+        <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
+        <sk-select
+          label="name"
+          [formControl]="groupControl"
+          [items]="store.GROUPS()"
+        />
+      </div>
       }
     </form>
   </sk-card> `,

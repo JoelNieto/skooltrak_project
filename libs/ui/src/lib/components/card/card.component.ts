@@ -7,7 +7,9 @@ import { Component } from '@angular/core';
     <div
       class="w-100 rounded-xl bg-white p-6 drop-shadow-xl dark:border-gray-700 dark:bg-gray-800"
     >
-      <ng-content select="[header]" class="mb-3"></ng-content>
+      <div class="mb-3">
+        <ng-content select="[header]"></ng-content>
+      </div>
       <ng-content></ng-content>
       <ng-content select="[footer]"></ng-content>
     </div>

@@ -15,8 +15,25 @@ export const groupsRoutes: Routes = [
         path: 'details',
         loadComponent: () =>
           import('./details/details.component').then(
-            (x) => x.GroupsDetailsComponent
+            (x) => x.GroupsDetailsComponent,
           ),
+        children: [
+          {
+            path: 'schedule',
+            loadComponent: () =>
+              import('./schedule/schedule.component').then(
+                (x) => x.GroupsScheduleComponent,
+              ),
+          },
+          {
+            path: 'students',
+            loadComponent: () =>
+              import('./students/students.component').then(
+                (x) => x.StudentsComponent,
+              ),
+          },
+          { path: '', redirectTo: 'schedule', pathMatch: 'full' },
+        ],
       },
       { path: '', redirectTo: 'all', pathMatch: 'full' },
     ],

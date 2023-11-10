@@ -1,23 +1,12 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
 
 import { DegreesFormStore } from './degrees-form.store';
 
@@ -41,7 +30,7 @@ import { DegreesFormStore } from './degrees-form.store';
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'Degrees.Details' | translate }}
       </h3>

@@ -30,7 +30,7 @@ import { GradesFormStore } from './grades-form.store';
     <sk-card>
       <div class="flex items-start justify-between" header>
         <h3
-          class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+          class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
         >
           {{ 'Grades.Details' | translate }}
         </h3>
@@ -77,18 +77,18 @@ import { GradesFormStore } from './grades-form.store';
         <h4 class="font-title mt-4">{{ 'Students' | translate }}</h4>
         <div class="mt-2 flex max-h-80 flex-col overflow-auto pb-4 pt-2">
           @for(student of students; track student) {
-            <div
-              class="flex items-center justify-between border-b border-gray-200 px-4 py-2"
-            >
-              Joel Nieto
-              <div class="w-24">
-                <input
-                  type="number"
-                  name="title"
-                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
-                />
-              </div>
+          <div
+            class="flex items-center justify-between border-b border-gray-200 px-4 py-2"
+          >
+            Joel Nieto
+            <div class="w-24">
+              <input
+                type="number"
+                name="title"
+                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
+              />
             </div>
+          </div>
           }
         </div>
       </div>

@@ -8,12 +8,16 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/mobile",
         "index": "apps/mobile/src/index.html",
         "main": "apps/mobile/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/mobile/tsconfig.app.json",
         "assets": [
           "apps/mobile/src/assets",
@@ -21,6 +25,16 @@
             "glob": "**/*.svg",
             "input": "node_modules/ionicons/dist/ionicons/svg",
             "output": "./svg"
+          },
+          {
+            "input": "libs/environments/src/lib/images",
+            "glob": "**/*",
+            "output": "assets/images"
+          },
+          {
+            "input": "libs/environments/src/lib/i18n",
+            "glob": "**/*",
+            "output": "assets/i18n"
           }
         ],
         "styles": [
@@ -81,14 +95,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/mobile/**/*.ts", "apps/mobile/**/*.html"]
+        "lintFilePatterns": [
+          "apps/mobile/**/*.ts",
+          "apps/mobile/**/*.html"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/mobile/jest.config.ts"
       }

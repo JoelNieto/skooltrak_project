@@ -1,21 +1,11 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-school-subjects-form',
@@ -33,7 +23,7 @@ import {
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
-        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'Subjects.Details' | translate }}
       </h3>

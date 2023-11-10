@@ -24,7 +24,7 @@ import { CardComponent } from '../card/card.component';
   template: `<sk-card>
       <div class="flex items-start justify-between" header>
         <h3
-          class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+          class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
         >
           Image cropper
         </h3>
@@ -101,7 +101,10 @@ export class ImageCropperComponent implements OnInit {
   };
 
   public dialogRef = inject(
-    DialogRef<{ imageFile: File | undefined; cropImgPreview: string | SafeUrl }>
+    DialogRef<{
+      imageFile: File | undefined;
+      cropImgPreview: string | SafeUrl;
+    }>,
   );
 
   private data: ImageCropperOptions | undefined = inject(DIALOG_DATA);

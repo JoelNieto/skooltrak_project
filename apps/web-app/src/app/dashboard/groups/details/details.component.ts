@@ -1,13 +1,20 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent } from '@skooltrak/ui';
+import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { GroupsStore } from '../groups.store';
 
 @Component({
   standalone: true,
   selector: 'sk-groups-details',
-  imports: [CardComponent, TranslateModule],
+  imports: [
+    CardComponent,
+    TranslateModule,
+    TabsComponent,
+    TabsItemComponent,
+    RouterOutlet,
+  ],
   template: `<sk-card>
     <div header>
       <h2
@@ -19,6 +26,11 @@ import { GroupsStore } from '../groups.store';
         {{ store.SELECTED()?.plan?.name }}
       </h3>
     </div>
+    <sk-tabs>
+      <sk-tabs-item link="schedule">{{ 'SCHEDULE' | translate }}</sk-tabs-item>
+      <sk-tabs-item link="students">{{ 'STUDENTS' | translate }}</sk-tabs-item>
+    </sk-tabs>
+    <router-outlet />
   </sk-card>`,
 })
 export class GroupsDetailsComponent implements OnInit {

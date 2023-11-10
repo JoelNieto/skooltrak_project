@@ -48,18 +48,14 @@
   "COURSES": {
     "TITLE": "Cursos",
     "SELECT_DEGREE": "Seleccione nivel",
-    "SELECT_PLAN": "Seleccione plan"
+    "SELECT_PLAN": "Seleccione plan",
+    "OPEN_CLASS": "Iniciar clase"
   },
-  "Course": {
-    "Details": "Detalles del curso",
-    "Title": "Curso"
-  },
-  "Courses": "Cursos",
   "Created": "Creado",
   "Created by": "Creado por",
-  "Degrees": {
-    "Details": "Detalles del certificado",
-    "Title": "Certificados"
+  "DEGREES": {
+    "DETAILS": "Detalles del certificado",
+    "TITLE": "Certificados"
   },
   "DESCRIPTION": "Descripción",
   "Document ID": "Nro. Documento",
@@ -86,6 +82,10 @@
     "REQUIRED": "Campo requerido"
   },
   "Male": "Masculino",
+  "MEETING": {
+    "TITLE": "Skooltrak Meet",
+    "CLOSE": "Cerrar"
+  },
   "Messages": "Mensajes",
   "Middle name": "Segundo nombre",
   "Mother name": "Apellido materno",
@@ -97,9 +97,9 @@
   "PAGINATOR": {
     "SHOWING": "Mostrando <span class=\"font-semibold text-gray-900 dark:text-white\">{{start}}-{{end}}</span> de <span class=\"font-semibold text-gray-900 dark:text-white\">{{count}}</span>"
   },
-  "Plans": {
-    "Details": "Detalles del Plan de estudio",
-    "Title": "Planes de estudio"
+  "PLANS": {
+    "DETAILS": "Detalles del Plan de estudio",
+    "TITLE": "Planes de estudio"
   },
   "PEOPLE": {
     "TITLE": "Personas",
@@ -147,7 +147,8 @@
     "ADDRESS": "Dirección",
     "EMAIL": "Correo electrónico",
     "PHONE": "Telefono de contacto",
-    "MOTTO": "Lema"
+    "MOTTO": "Lema",
+    "SETTINGS": "Ajustes del colegio"
   },
   "SCHOOL_CONNECTOR": {
     "TITLE": "Elija una escuela",
@@ -160,10 +161,10 @@
   "SETTINGS": "Ajustes",
   "Short name": "Nombre corto",
   "Students": "Estudiantes",
-  "Subjects": {
-    "Details": "Detalles de asignatura",
-    "Label": "Asignatura",
-    "Title": "Asignaturas"
+  "SUBJECTS": {
+    "DETAILS": "Detalles de asignatura",
+    "LABEL": "Asignatura",
+    "TITLE": "Asignaturas"
   },
   "Teacher": {
     "Details": "Datos del docente"

@@ -16,23 +16,23 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
   template: `<sk-card>
     <div header>
       <h2
-        class="font-title mb-1 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
+        class="font-title mb-3 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
-        {{ 'School settings' | translate }}
+        {{ 'SCHOOL.SETTINGS' | translate }}
       </h2>
     </div>
     <div>
       <sk-tabs>
-        <sk-tabs-item link="info">{{ 'Info' | translate }}</sk-tabs-item>
-        <sk-tabs-item link="courses">{{ 'Courses' | translate }}</sk-tabs-item>
+        <sk-tabs-item link="info">{{ 'SCHOOL.INFO' | translate }}</sk-tabs-item>
+        <sk-tabs-item link="courses">{{ 'COURSES.TITLE' | translate }}</sk-tabs-item>
         <sk-tabs-item link="plans">{{
-          'Plans.Title' | translate
+          'PLANS.TITLE' | translate
         }}</sk-tabs-item>
         <sk-tabs-item link="subjects">{{
-          'Subjects.Title' | translate
+          'SUBJECTS.TITLE' | translate
         }}</sk-tabs-item>
         <sk-tabs-item link="degrees">{{
-          'Degrees.Title' | translate
+          'DEGREES.TITLE' | translate
         }}</sk-tabs-item>
         <sk-tabs-item link="groups">{{
           'GROUPS.TITLE' | translate

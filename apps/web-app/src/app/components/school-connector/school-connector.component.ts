@@ -1,12 +1,23 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, ConfirmationService } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  ConfirmationService,
+  InputDirective,
+  LabelDirective,
+} from '@skooltrak/ui';
 
 import { SchoolConnectorStore } from './school-connector.store';
 
@@ -19,24 +30,15 @@ import { SchoolConnectorStore } from './school-connector.store';
     TranslateModule,
     ButtonDirective,
     ReactiveFormsModule,
+    LabelDirective,
+    InputDirective,
   ],
   providers: [
     provideComponentStore(SchoolConnectorStore),
     provideIcons({ heroXMark }),
     ConfirmationService,
   ],
-  styles: [
-    `
-      input,
-      select {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
+  styles: `
       quill-editor {
         @apply block p-0;
       }
@@ -45,8 +47,7 @@ import { SchoolConnectorStore } from './school-connector.store';
       ::ng-deep .ql-toolbar.ql-snow {
         @apply border-0;
       }
-    `,
-  ],
+  `,
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -68,17 +69,17 @@ import { SchoolConnectorStore } from './school-connector.store';
       </p>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label for="code">{{ 'CODE' | translate }}</label>
-          <input type="text" formControlName="code" />
+          <label for="code" skLabel>{{ 'CODE' | translate }}</label>
+          <input type="text" formControlName="code" skInput />
           @if(form.get('code')?.hasError('minlength')) {
           <small class="font-mono text-xs text-red-500">{{
-            'Errors.minLength' | translate : { length: 10 }
+            'Errors.minLength' | translate: { length: 10 }
           }}</small>
           }
         </div>
         <div>
-          <label for="role">{{ 'ROLE' | translate }}</label>
-          <select formControlName="role">
+          <label for="role" skLabel>{{ 'ROLE' | translate }}</label>
+          <select formControlName="role" skInput>
             @for(role of roles; track role) {
             <option [value]="role">
               {{ role | translate }}

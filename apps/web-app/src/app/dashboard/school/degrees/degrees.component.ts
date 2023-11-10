@@ -69,7 +69,7 @@ import { SchoolDegreesStore } from './degrees.store';
       </thead>
       <tbody>
         @for(degree of store.DEGREES(); track degree.id) {
-          <tr
+        <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
         >
@@ -80,7 +80,7 @@ import { SchoolDegreesStore } from './degrees.store';
             {{ degree.name }}
           </th>
           <td class="px-6 py-4">{{ degree.level?.name }}</td>
-          <td class="px-6 py-4">{{ degree.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4">{{ degree.created_at | date: 'short' }}</td>
           <td class="flex content-center justify-center gap-2 px-6 py-4">
             <button type="button" (click)="editDegree(degree)">
               <ng-icon
@@ -95,11 +95,10 @@ import { SchoolDegreesStore } from './degrees.store';
           </td>
         </tr>
         }
-
       </tbody>
     </table>
     @if(store.LOADING()) {
-      <div class="mt-2 animate-pulse" >
+    <div class="mt-2 animate-pulse">
       <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
 
       <ul class="mt-5 space-y-3">

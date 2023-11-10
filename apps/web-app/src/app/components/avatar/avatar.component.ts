@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/auth';
 
@@ -12,13 +18,11 @@ import { SupabaseService } from '@skooltrak/auth';
     class="h-full"
     [class.rounded-full]="rounded"
   />`,
-  styles: [
-    `
+  styles: `
       :host {
         display: block;
       }
     `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
@@ -41,7 +45,7 @@ export class AvatarComponent {
 
       if (data instanceof Blob) {
         this._avatarUrl = this.dom.bypassSecurityTrustUrl(
-          URL.createObjectURL(data)
+          URL.createObjectURL(data),
         );
         this.cd.detectChanges();
       }

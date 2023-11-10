@@ -29,7 +29,7 @@ import { CoursesStore } from '../courses.store';
       <h2
         class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
-        {{ 'Courses' | translate }}
+        {{ 'COURSES.TITLE' | translate }}
       </h2>
     </div>
     <div class="relative mt-1 overflow-x-auto">
@@ -93,7 +93,7 @@ import { CoursesStore } from '../courses.store';
             </td>
             <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
             <td class="px-6 py-3.5">
-              {{ course.created_at | date : 'medium' }}
+              {{ course.created_at | date: 'medium' }}
             </td>
             <td class="flex content-center justify-center gap-2 px-6 py-3.5">
               <a

@@ -5,10 +5,25 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssignmentView } from '@skooltrak/models';
 import { ButtonDirective } from '@skooltrak/ui';
-import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
+import {
+  CalendarDateFormatter,
+  CalendarEvent,
+  CalendarModule,
+  CalendarView,
+  DateAdapter,
+} from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK } from 'calendar-utils';
-import { endOfDay, endOfMonth, endOfWeek, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
+import {
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+  isSameDay,
+  isSameMonth,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 
 import { CalendarStore } from './calendar.store';
 
@@ -124,7 +139,8 @@ import { CalendarStore } from './calendar.store';
       </div>
     </div>
     <div class="p-2">
-      @switch (view) { @case(CalendarView.Month) {<mwl-calendar-month-view
+      @switch (view) { @case(CalendarView.Month) {
+      <mwl-calendar-month-view
         [viewDate]="viewDate"
         [events]="this.store.assignments()"
         [locale]="locale"
@@ -231,7 +247,7 @@ export class CalendarComponent implements OnInit {
   }
 
   public eventClicked(
-    event: CalendarEvent<{ assignment: AssignmentView }>
+    event: CalendarEvent<{ assignment: AssignmentView }>,
   ): void {
     this.router.navigate(['app', 'courses', 'assignments', event.id]);
   }

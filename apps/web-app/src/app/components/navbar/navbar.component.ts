@@ -140,8 +140,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
       </div>
     </div>
   </nav>`,
-  styles: [
-    `
+  styles: `
       .menu-item {
         @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white;
       }
@@ -152,7 +151,6 @@ import { AvatarComponent } from '../avatar/avatar.component';
         }
       }
     `,
-  ],
 })
 export class NavbarComponent {
   private auth = inject(authState.AuthStateFacade);

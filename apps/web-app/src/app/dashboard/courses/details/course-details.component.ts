@@ -1,11 +1,23 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroArrowLeftCircle } from '@ng-icons/heroicons/outline';
+import { heroVideoCamera } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  TabsComponent,
+  TabsItemComponent,
+} from '@skooltrak/ui';
 
+import { CourseMeetingComponent } from '../../../components/course-meeting/course-meeting.component';
 import { CoursesStore } from '../courses.store';
 
 @Component({
@@ -20,14 +32,15 @@ import { CoursesStore } from '../courses.store';
     TabsItemComponent,
     RouterOutlet,
     NgIconComponent,
+    ButtonDirective,
   ],
-  providers: [provideIcons({ heroArrowLeftCircle })],
+  providers: [provideIcons({ heroVideoCamera })],
   template: `
     <div>
       <sk-card>
         <div header>
           <div class="justify-between md:flex">
-            <div>
+            <div class="mb-2">
               <h2
                 class="font-title mb-1 text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
               >
@@ -38,15 +51,12 @@ import { CoursesStore } from '../courses.store';
               >
                 {{ SELECTED()?.plan?.name }}
               </h4>
-              <a class="mt-2 flex gap-2 font-bold text-sky-700" routerLink="../"
-                ><ng-icon name="heroArrowLeftCircle" size="24" />
-                {{ 'Go back' | translate }}</a
-              >
             </div>
             <div>
-              <h4 class="font-sans text-lg text-gray-600 dark:text-gray-200">
-                {{ SELECTED()?.period?.name }}
-              </h4>
+              <button skButton color="blue" (click)="showMeeting()">
+                <ng-icon name="heroVideoCamera" size="20" />
+                {{ 'COURSES.OPEN_CLASS' | translate }}
+              </button>
             </div>
           </div>
         </div>
@@ -59,9 +69,9 @@ import { CoursesStore } from '../courses.store';
             'Grades.Title' | translate
           }}</sk-tabs-item>
           <sk-tabs-item link="files">{{ 'File' | translate }}</sk-tabs-item>
-          <sk-tabs-item link="students">{{
-            'Students' | translate
-          }}</sk-tabs-item>
+          <sk-tabs-item link="students">
+            {{ 'Students' | translate }}</sk-tabs-item
+          >
         </sk-tabs>
         <router-outlet />
       </sk-card>
@@ -75,6 +85,7 @@ export class CourseDetailsComponent implements OnInit {
   public COURSES = this.state.COURSES;
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private dialog = inject(Dialog);
 
   public ngOnInit(): void {
     !!this.course_id && this.state.patchState({ SELECTED_ID: this.course_id });
@@ -87,4 +98,12 @@ export class CourseDetailsComponent implements OnInit {
       queryParams: { course_id },
     });
   };
+
+  public showMeeting(): void {
+    this.dialog.open(CourseMeetingComponent, {
+      minWidth: '90%',
+      disableClose: true,
+      data: this.SELECTED(),
+    });
+  }
 }

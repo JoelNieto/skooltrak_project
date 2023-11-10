@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <div
-      class="w-100 rounded-xl bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800"
+      class="w-100 rounded-xl bg-white p-6 drop-shadow-xl dark:border-gray-700 dark:bg-gray-800"
     >
       <ng-content select="[header]" class="mb-3"></ng-content>
       <ng-content></ng-content>

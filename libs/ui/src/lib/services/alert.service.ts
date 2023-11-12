@@ -7,7 +7,7 @@ export class AlertService {
   private translate = inject(TranslateService);
   private toast = Swal.mixin({
     toast: true,
-    position: 'top-end',
+    position: 'top',
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,

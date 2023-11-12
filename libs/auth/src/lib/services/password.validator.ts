@@ -1,7 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 
 export class PasswordValidators {
-  static matchValidator(control: AbstractControl) {
+  public static matchValidator(control: AbstractControl) {
     const password: string = control.get('password')?.value;
     const confirmPassword: string = control.get('confirm_password')?.value;
 

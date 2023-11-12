@@ -1,19 +1,19 @@
-import { Inject, Injectable, signal } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { APP_CONFIG, AppConfig } from '@skooltrak/environments';
-import { SchoolRole, SignUpCredentials } from '@skooltrak/models';
+import { SignUpCredentials } from '@skooltrak/models';
 import {
   AuthChangeEvent,
+  AuthResponse,
+  AuthTokenResponse,
   createClient,
   Session,
   SupabaseClient,
 } from '@supabase/supabase-js';
-import { from, map } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
   public client: SupabaseClient;
-  currentRole = signal<SchoolRole | null>(null);
-  private _CURRENT_SCHOOL_ID?: string;
 
   constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {
     const {
@@ -22,19 +22,19 @@ export class SupabaseService {
     this.client = createClient(url, key);
   }
 
-  get session$() {
+  public get session$(): Observable<Session | null> {
     return from(this.client.auth.getSession()).pipe(
       map(({ data }) => data.session),
     );
   }
 
-  authChanges(
+  private authChanges(
     callback: (event: AuthChangeEvent, session: Session | null) => void,
   ) {
     return this.client.auth.onAuthStateChange(callback);
   }
 
-  signUp(request: SignUpCredentials) {
+  public signUp(request: SignUpCredentials): Promise<AuthResponse> {
     const { email, password, first_name, father_name } = request;
     return this.client.auth.signUp({
       email,
@@ -43,32 +43,39 @@ export class SupabaseService {
     });
   }
 
-  inviteUser(email: string) {
+  public inviteUser(email: string): void {
     this.client.auth.admin.inviteUserByEmail(email, {
       redirectTo: '',
       data: {},
     });
   }
 
-  signInWithEmail(email: string, password: string) {
+  public signInWithEmail(
+    email: string,
+    password: string,
+  ): Promise<AuthTokenResponse> {
     return this.client.auth.signInWithPassword({ email, password });
   }
 
-  signOut() {
+  public resetPassword(email: string) {
+    return this.client.auth.resetPasswordForEmail(email);
+  }
+
+  public signOut() {
     return this.client.auth.signOut();
   }
 
-  downLoadImage(path: string, bucket: 'avatars' | 'crests') {
+  public downLoadImage(path: string, bucket: 'avatars' | 'crests') {
     return this.client.storage.from(bucket).download(path);
   }
 
-  uploadAvatar(file: File) {
+  public uploadAvatar(file: File) {
     const fileExt = file.name.split('.').pop();
     const filePath = `${Math.random()}.${fileExt}`;
     return this.client.storage.from('avatars').upload(filePath, file);
   }
 
-  uploadCrest(file: File) {
+  public uploadCrest(file: File) {
     const fileExt = file.name.split('.').pop();
     const filePath = `${Math.random()}.${fileExt}`;
     return this.client.storage.from('crests').upload(filePath, file);

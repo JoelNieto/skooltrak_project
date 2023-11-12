@@ -25,7 +25,7 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'Subjects.Details' | translate }}
+        {{ 'SUBJECTS.DETAILS' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -41,24 +41,24 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="name" skLabel>{{ 'Name' | translate }}</label>
+        <label for="name" skLabel>{{ 'NAME' | translate }}</label>
         <input type="text" formControlName="name" skInput />
       </div>
       <div>
-        <label for="short_name" skLabel>{{ 'Short name' | translate }}</label>
+        <label for="short_name" skLabel>{{ 'SHORT_NAME' | translate }}</label>
         <input type="text" formControlName="short_name" skInput />
       </div>
       <div>
-        <label for="code" skLabel>{{ 'Code' | translate }}</label>
+        <label for="code" skLabel>{{ 'CODE' | translate }}</label>
         <input type="text" formControlName="code" skInput />
       </div>
       <div>
-        <label for="description" skLabel>{{ 'Description' | translate }}</label>
+        <label for="description" skLabel>{{ 'DESCRIPTION' | translate }}</label>
         <textarea rows="3" formControlName="description" skInput></textarea>
       </div>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
-          {{ 'Save changes' | translate }}
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

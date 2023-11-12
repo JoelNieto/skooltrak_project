@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { ButtonDirective, InputDirective, LabelDirective } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-in',
@@ -17,6 +17,7 @@ import { ButtonDirective, InputDirective, LabelDirective } from '@skooltrak/ui';
     InputDirective,
     ButtonDirective,
     RouterLink,
+    CardComponent,
   ],
   template: `<div class="w-min-screen flex h-screen">
     <section
@@ -38,89 +39,79 @@ import { ButtonDirective, InputDirective, LabelDirective } from '@skooltrak/ui';
             alt="logo"
           />
         </a>
-        <div
-          class="w-full space-y-4 rounded-lg bg-white p-6 dark:border dark:border-gray-700 dark:bg-gray-600 sm:max-w-md sm:p-8 md:mt-0 md:space-y-6"
-        >
-          <h1
-            class="font-title text-xl leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl"
-          >
-            {{ 'SIGN_IN.TITLE' | translate }}
-          </h1>
-          <form
-            class="space-y-4 md:space-y-6"
-            [formGroup]="form"
-            (ngSubmit)="signIn()"
-          >
-            <div>
-              <label for="email" class="label" skLabel>Your email</label>
-              <input
-                formControlName="email"
-                type="email"
-                name="email"
-                id="email"
-                class="input"
-                autocomplete="email"
-                placeholder="name@company.com"
-                required
-                skInput
-              />
-            </div>
-            <div>
-              <label class="label" skLabel>Password</label>
-              <input
-                formControlName="password"
-                autocomplete="current-password"
-                class="input"
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                required=""
-                skInput
-              />
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-start">
-                <div class="flex h-5 items-center">
-                  <input
-                    id="remember"
-                    aria-describedby="remember"
-                    type="checkbox"
-                    class="focus:ring-3 h-4 w-4 rounded border border-gray-300 bg-gray-50 focus:ring-sky-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-sky-600"
-                    required=""
-                  />
-                </div>
-                <div class="ml-3 text-sm">
-                  <label for="remember" class="text-gray-500 dark:text-gray-300"
-                    >Remember me</label
-                  >
-                </div>
-              </div>
-              <a
-                href="#"
-                class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-500"
-                >Forgot password?</a
-              >
-            </div>
-            <button
-              skButton
-              color="sky"
-              type="submit"
-              [disabled]="form.invalid"
-              class="w-full "
+        <sk-card class="w-full">
+          <div header>
+            <h1
+              class="font-title text-xl leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl"
             >
-              Sign in
-            </button>
-            <p class="text-sm font-light text-gray-500 dark:text-gray-300">
-              Don’t have an account yet?
-              <a
-                class="font-medium text-sky-600 hover:underline dark:text-sky-500"
-                routerLink="../sign-up"
-                >Sign up</a
+              {{ 'SIGN_IN.TITLE' | translate }}
+            </h1>
+          </div>
+          <div>
+            <form
+              class="space-y-4 md:space-y-6"
+              [formGroup]="form"
+              (ngSubmit)="signIn()"
+            >
+              <div>
+                <label for="email" class="label" skLabel>{{
+                  'SIGN_IN.EMAIL' | translate
+                }}</label>
+                <input
+                  formControlName="email"
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="input"
+                  autocomplete="email"
+                  placeholder="name@company.com"
+                  required
+                  skInput
+                />
+              </div>
+              <div>
+                <label class="label" skLabel>{{
+                  'SIGN_IN.PASSWORD' | translate
+                }}</label>
+                <input
+                  formControlName="password"
+                  autocomplete="current-password"
+                  class="input"
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  required=""
+                  skInput
+                />
+              </div>
+              <div class="flex items-center justify-between">
+                <a
+                  routerLink="../password-reset"
+                  class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-500"
+                  >{{ 'SIGN_IN.FORGOT_PASSWORD' | translate }}</a
+                >
+              </div>
+              <button
+                skButton
+                color="sky"
+                type="submit"
+                [disabled]="form.invalid"
+                class="w-full "
               >
-            </p>
-          </form>
-        </div>
+                {{ 'SIGN_IN.ENTER' | translate }}
+              </button>
+              <p class="text-sm font-light text-gray-500 dark:text-gray-300">
+                {{ 'SIGN_IN.NOT_ACCOUNT' | translate }}
+                <a
+                  class="font-medium text-sky-600 hover:underline dark:text-sky-500"
+                  routerLink="../sign-up"
+                  >{{ 'SIGN_IN.SIGN_UP' | translate }}</a
+                >
+              </p>
+            </form>
+          </div>
+        </sk-card>
       </div>
     </section>
     <div class="bg grow"></div>

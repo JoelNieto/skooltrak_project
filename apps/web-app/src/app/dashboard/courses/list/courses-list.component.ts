@@ -6,6 +6,8 @@ import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CardComponent,
+  EmptyTableComponent,
+  LoadingComponent,
   PaginatorComponent,
   TabsComponent,
   TabsItemComponent,
@@ -27,6 +29,8 @@ import { CoursesStore } from '../courses.store';
     RouterLink,
     PaginatorComponent,
     DatePipe,
+    LoadingComponent,
+    EmptyTableComponent,
   ],
   providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: ` <sk-card>
@@ -79,7 +83,9 @@ import { CoursesStore } from '../courses.store';
           </tr>
         </thead>
         <tbody>
-          @for(course of store.COURSES(); track course.id) {
+          @if(store.LOADING()) {
+          <tr sk-loading></tr>
+          } @else { @for(course of store.COURSES(); track course.id) {
           <tr
             [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
@@ -109,7 +115,9 @@ import { CoursesStore } from '../courses.store';
               </a>
             </td>
           </tr>
-          }
+          } @empty {
+          <tr sk-empty></tr>
+          } }
         </tbody>
       </table>
       @if(store.LOADING()) {

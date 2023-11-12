@@ -72,11 +72,10 @@ import { SchoolSubjectsStore } from './subjects.store';
         class="bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr class="cursor-pointer">
-          <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'Short name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'Code' | translate }}</th>
-          <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-          <th score="col" class="px-6 py-3">{{ 'Created by' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'NAME' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'SHORT_NAME' | translate }}</th>
+          <th scope="col" class="px-6 py-3">{{ 'CODE' | translate }}</th>
+          <th score="col" class="px-6 py-3">{{ 'CREATED' | translate }}</th>
           <th scope="col" class="px-6 py-3 text-center">
             {{ 'ACTIONS' | translate }}
           </th>
@@ -99,7 +98,6 @@ import { SchoolSubjectsStore } from './subjects.store';
           <td class="px-6 py-4">{{ subject.short_name }}</td>
           <td class="px-6 py-4">{{ subject.code }}</td>
           <td class="px-6 py-4">{{ subject.created_at | date: 'short' }}</td>
-          <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
           <td class="flex content-center justify-center gap-2 px-6 py-4">
             <button type="button" (click)="editSubject(subject)">
               <ng-icon

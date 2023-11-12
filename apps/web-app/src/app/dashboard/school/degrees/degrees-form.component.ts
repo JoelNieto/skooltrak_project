@@ -32,7 +32,7 @@ import { DegreesFormStore } from './degrees-form.store';
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'Degrees.Details' | translate }}
+        {{ 'DEGREES.DETAILS' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -48,11 +48,11 @@ import { DegreesFormStore } from './degrees-form.store';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="name" skLabel>{{ 'Name' | translate }}</label>
+        <label for="name" skLabel>{{ 'NAME' | translate }}</label>
         <input type="text" formControlName="name" skInput />
       </div>
       <div>
-        <label for="level_id" skLabel>{{ 'Level' | translate }}</label>
+        <label for="level_id" skLabel>{{ 'LEVEL' | translate }}</label>
         <sk-select
           [items]="store.LEVELS()"
           label="name"
@@ -61,7 +61,7 @@ import { DegreesFormStore } from './degrees-form.store';
       </div>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
-          {{ 'Save changes' | translate }}
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

@@ -33,7 +33,7 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
   public readonly SELECTED = this.selectSignal((state) =>
     state.SELECTED_ID
       ? state.GROUPS.find((x) => x.id === state.SELECTED_ID)
-      : null
+      : null,
   );
 
   private setCount = this.updater(
@@ -41,7 +41,7 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
       ...state,
       COUNT: count,
       PAGES: this.util.getPages(count, 10),
-    })
+    }),
   );
 
   public setRange = this.updater(
@@ -49,7 +49,7 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
       ...state,
       START: start,
       END: start + (state.PAGE_SIZE - 1),
-    })
+    }),
   );
 
   private readonly fetchGroupsData$ = this.select(
@@ -58,7 +58,7 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
       end: this.end$,
       pageSize: toObservable(this.PAGE_SIZE),
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   private readonly fetchGroups = this.effect<void>((trigger$) => {
@@ -75,10 +75,10 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
               'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
               {
                 count: 'exact',
-              }
+              },
             )
             .range(start, end)
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
@@ -92,17 +92,17 @@ export class GroupsStore extends ComponentStore<State> implements OnStoreInit {
               console.error(error);
               return of([]);
             },
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 
   public ngrxOnStoreInit = (): void => {
     this.setState({
       GROUPS: [],
-      LOADING: true,
+      LOADING: false,
       PAGES: 0,
       COUNT: 0,
       PAGE_SIZE: 5,

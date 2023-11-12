@@ -62,6 +62,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
             }}</a
           >
         </li>
+        @if(IS_ADMIN() || IS_TEACHER()) {
         <li>
           <a routerLink="groups" class="link" routerLinkActive="active"
             ><ng-icon name="heroUserGroup" size="24" />{{
@@ -69,9 +70,10 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
             }}</a
           >
         </li>
+        }
       </ul>
       <div>
-        <ul class="flex text-sm">
+        <ul class="flex text-sm items-center">
           <li>
             <button
               class="flex w-full items-center gap-3 rounded-lg px-4 py-2 font-sans text-sm dark:text-gray-100"
@@ -98,11 +100,11 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
           }
 
           <li>
-            <a href="#" class="link">
+            <button class="link" (click)="auth.signOut()">
               <ng-icon name="heroArrowRightOnRectangle" size="24" />{{
                 'SIGN_OUT' | translate
-              }}</a
-            >
+              }}
+            </button>
           </li>
         </ul>
       </div>
@@ -116,8 +118,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     </main> `,
   styles: [
     `
-      main,
-      aside {
+      main {
         min-height: calc(100vh - 4rem);
       }
 
@@ -132,12 +133,14 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  private auth = inject(authState.AuthStateFacade);
+  public auth = inject(authState.AuthStateFacade);
   private dialog = inject(Dialog);
 
   public USER = this.auth.USER;
   public SCHOOL = this.auth.CURRENT_SCHOOL;
   public IS_ADMIN = this.auth.IS_ADMIN;
+  public IS_STUDENT = this.auth.IS_STUDENT;
+  public IS_TEACHER = this.auth.IS_TEACHER;
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {

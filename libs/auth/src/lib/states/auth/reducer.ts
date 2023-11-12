@@ -29,19 +29,20 @@ export const authFeature = createFeature({
     on(actions.initState, (state): State => ({ ...state, LOADING: true })),
     on(
       actions.setSession,
-      (state, { SESSION }): State => ({ ...state, SESSION })
+      (state, { SESSION }): State => ({ ...state, SESSION }),
     ),
     on(
       actions.setUser,
-      (state, { USER }): State => ({ ...state, USER, LOADING: false })
+      (state, { USER }): State => ({ ...state, USER, LOADING: false }),
     ),
     on(
       actions.setSchoolId,
-      (state, { SCHOOL_ID }): State => ({ ...state, SCHOOL_ID })
+      (state, { SCHOOL_ID }): State => ({ ...state, SCHOOL_ID }),
     ),
     on(
       actions.setProfiles,
-      (state, { PROFILES }): State => ({ ...state, PROFILES })
-    )
+      (state, { PROFILES }): State => ({ ...state, PROFILES }),
+    ),
+    on(actions.signOut, (state): State => ({ ...state, ...initialState })),
   ),
 });

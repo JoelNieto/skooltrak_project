@@ -31,6 +31,10 @@ export class AuthStateFacade {
     );
   }
 
+  public signOut(): void {
+    this.store.dispatch(AuthActions.signOut());
+  }
+
   public signUp(request: SignUpCredentials): void {
     this.store.dispatch(AuthActions.signUp({ REQUEST: request }));
   }

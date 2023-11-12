@@ -86,6 +86,7 @@
     "INVALID": "Campo invalido",
     "REQUIRED": "Campo requerido"
   },
+  "LEVEL": "Nivel",
   "Male": "Masculino",
   "MEETING": {
     "TITLE": "Skooltrak Meet",
@@ -164,7 +165,7 @@
   },
   "Select school": "Elija una escuela",
   "SETTINGS": "Ajustes",
-  "Short name": "Nombre corto",
+  "SHORT_NAME": "Nombre corto",
   "Students": "Estudiantes",
   "SUBJECTS": {
     "DETAILS": "Detalles de asignatura",
@@ -194,7 +195,13 @@
   },
   "SIGN_OUT": "Cerrar sesión",
   "SIGN_IN": {
-    "TITLE": "Inicie sesion"
+    "TITLE": "Inicie sesion",
+    "EMAIL": "Correo electrónico",
+    "PASSWORD": "Contraseña",
+    "FORGOT_PASSWORD": "Olvidé mi contraseña",
+    "ENTER": "Ingresar",
+    "NOT_ACCOUNT": "Aún no tiene una cuenta?",
+    "SIGN_UP": "Registrar mi cuenta"
   },
   "SIGN_UP": {
     "TITLE": "Registrarse",

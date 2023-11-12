@@ -24,21 +24,26 @@ export class DegreesFormStore
       .pipe(
         tap(() => this.patchState({ LOADING: true })),
         exhaustMap(() =>
-          from(this.supabase.client.from(Table.Levels).select('id, name')).pipe(
+          from(
+            this.supabase.client
+              .from(Table.Levels)
+              .select('id, name')
+              .order('sort'),
+          ).pipe(
             map(({ error, data }) => {
               if (error) throw new Error(error.message);
               return data as Level[];
-            })
-          )
-        )
+            }),
+          ),
+        ),
       )
       .pipe(
         tapResponse(
           (LEVELS) => this.patchState({ LEVELS }),
           (error) => console.error(error),
-          () => this.patchState({ LOADING: true })
-        )
-      )
+          () => this.patchState({ LOADING: true }),
+        ),
+      ),
   );
 
   public ngrxOnStoreInit = (): void => {

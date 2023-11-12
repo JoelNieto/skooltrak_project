@@ -30,17 +30,17 @@ export class ProfileFormStore
           tapResponse(
             (GENDERS) => this.patchState({ GENDERS: GENDERS as Gender[] }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
-        )
-      )
+            () => this.patchState({ LOADING: false }),
+          ),
+        ),
+      ),
     );
   });
 
   public readonly uploadAvatar = this.effect((request$: Observable<File>) => {
     return request$.pipe(
       tap(() => this.patchState({ LOADING: true })),
-      map((request) =>
+      switchMap((request) =>
         from(this.supabase.uploadAvatar(request)).pipe(
           map(({ data, error }) => {
             if (error) throw new Error(error.message);
@@ -50,10 +50,10 @@ export class ProfileFormStore
             (avatar_url) =>
               this.auth.updateProfile({ ...this.auth.USER(), avatar_url }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
-        )
-      )
+            () => this.patchState({ LOADING: false }),
+          ),
+        ),
+      ),
     );
   });
 

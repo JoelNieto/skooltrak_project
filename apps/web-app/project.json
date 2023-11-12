@@ -20,6 +20,7 @@
         ],
         "tsConfig": "apps/web-app/tsconfig.app.json",
         "assets": [
+          "apps/web-app/src/_redirects",
           "apps/web-app/src/assets",
           "apps/web-app/src/favicon.ico",
           {

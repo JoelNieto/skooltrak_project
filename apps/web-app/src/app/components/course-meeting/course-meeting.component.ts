@@ -1,10 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 import { Course } from '@skooltrak/models';
@@ -20,7 +15,7 @@ declare let JitsiMeetExternalAPI: any;
   template: `<sk-card>
     <div header>
       <h3
-        class="font-title mb-4 text-xl font-semibold text-gray-700 dark:text-gray-100"
+        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'MEETING.TITLE' | translate }}
       </h3>

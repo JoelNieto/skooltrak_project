@@ -1,12 +1,23 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { Course } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import { Course, User } from '@skooltrak/models';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { UsersSelectorComponent } from '../../../components/users-selector/users-selector.component';
 import { CoursesFormStore } from './courses-form.store';
@@ -33,7 +44,7 @@ import { CoursesFormStore } from './courses-form.store';
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'Course.Details' | translate }}
+        {{ 'COURSES.DETAILS' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -49,7 +60,7 @@ import { CoursesFormStore } from './courses-form.store';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="plan_id" skLabel>{{ 'Plan' | translate }}</label>
+        <label for="plan_id" skLabel>{{ 'COURSES.PLAN' | translate }}</label>
         <sk-select
           label="name"
           [items]="store.PLANS()"
@@ -58,7 +69,7 @@ import { CoursesFormStore } from './courses-form.store';
       </div>
       <div>
         <label for="subject_id" skLabel>{{
-          'Subjects.Label' | translate
+          'COURSES.SUBJECT' | translate
         }}</label>
         <sk-select
           label="name"
@@ -68,17 +79,21 @@ import { CoursesFormStore } from './courses-form.store';
       </div>
       <div>
         <label for="weekly_hours" skLabel>{{
-          'Weekly hours' | translate
+          'COURSES.WEEKLY_HOURS' | translate
         }}</label>
         <input skInput formControlName="weekly_hours" type="number" />
       </div>
       <div>
-        <label for="description" skLabel>{{ 'Description' | translate }}</label>
+        <label skLabel>{{ 'COURSES.TEACHERS' | translate }}</label>
+        <sk-users-selector formControlName="teachers" />
+      </div>
+      <div>
+        <label for="description" skLabel>{{ 'DESCRIPTION' | translate }}</label>
         <textarea skInput formControlName="description"></textarea>
       </div>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
-          {{ 'Save changes' | translate }}
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>
@@ -101,6 +116,7 @@ export class SchoolCoursesFormComponent implements OnInit {
     weekly_hours: new FormControl<number>(0, {
       nonNullable: true,
     }),
+    teachers: new FormControl<Partial<User>[]>([], { nonNullable: true }),
     description: new FormControl<string>('', { nonNullable: true }),
   });
 

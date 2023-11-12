@@ -69,7 +69,7 @@ export class InputDirective implements OnInit {
     }">${this.translate.instant(errorMsg)}</span>`;
     this.elRef.nativeElement.parentElement.insertAdjacentHTML(
       'beforeend',
-      errorMessage
+      errorMessage,
     );
   }
 

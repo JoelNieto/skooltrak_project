@@ -1,10 +1,23 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
-import { Course, Degree, StudyPlan, Table } from '@skooltrak/models';
+import { Course, Degree, StudyPlan, Table, User } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import { orderBy } from 'lodash';
-import { combineLatestWith, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { orderBy, pick } from 'lodash';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -31,11 +44,11 @@ export class SchoolCoursesStore
   public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
   public readonly PLANS = this.selectSignal((state) => state.PLANS);
   public readonly selectedDegree$ = this.select(
-    (state) => state.SELECTED_DEGREE
+    (state) => state.SELECTED_DEGREE,
   );
   public readonly selectedPlan$ = this.select((state) => state.SELECTED_PLAN);
   public readonly selectedPlan = this.selectSignal(
-    (state) => state.SELECTED_PLAN
+    (state) => state.SELECTED_PLAN,
   );
   public readonly COUNT = this.selectSignal((state) => state.COUNT);
   public readonly LOADING = this.selectSignal((state) => state.LOADING);
@@ -49,7 +62,7 @@ export class SchoolCoursesStore
       start: this.start$,
       plan: this.selectedPlan$,
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   private readonly fetchDegrees = this.effect<void>((trigger$) =>
@@ -61,7 +74,7 @@ export class SchoolCoursesStore
           this.supabase.client
             .from(Table.Degrees)
             .select('id, name, level:levels(id, name, sort)')
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
@@ -72,11 +85,11 @@ export class SchoolCoursesStore
           tapResponse(
             (DEGREES) => this.patchState({ DEGREES }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
-        )
-      )
-    )
+            () => this.patchState({ LOADING: false }),
+          ),
+        ),
+      ),
+    ),
   );
 
   private readonly fetchCourses = this.effect(() => {
@@ -92,11 +105,11 @@ export class SchoolCoursesStore
               'id, school_id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
               {
                 count: 'exact',
-              }
+              },
             )
             .eq('school_id', school_id)
             .eq('plan_id', plan)
-            .range(start, this.END())
+            .range(start, this.END()),
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
@@ -110,10 +123,10 @@ export class SchoolCoursesStore
               console.error(error);
               return of([]);
             },
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 
@@ -128,7 +141,7 @@ export class SchoolCoursesStore
               .from(Table.StudyPlans)
               .select('id, name')
               .eq('school_id', school_id)
-              .eq('degree_id', degree_id)
+              .eq('degree_id', degree_id),
           ).pipe(
             map(({ error, data }) => {
               if (error) throw new Error(error.message);
@@ -139,11 +152,11 @@ export class SchoolCoursesStore
               (error) => {
                 console.error(error);
               },
-              () => this.patchState({ SELECTED_PLAN: undefined, COURSES: [] })
-            )
-          )
-        )
-      )
+              () => this.patchState({ SELECTED_PLAN: undefined, COURSES: [] }),
+            ),
+          ),
+        ),
+      ),
   );
 
   public readonly saveCourse = this.effect(
@@ -154,28 +167,66 @@ export class SchoolCoursesStore
             this.supabase.client
               .from(Table.Courses)
               .upsert([
-                { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
+                {
+                  ...pick(request, [
+                    'id',
+                    'description',
+                    'weekly_hours',
+                    'plan_id',
+                    'subject_id',
+                  ]),
+                  school_id: this.auth.CURRENT_SCHOOL_ID(),
+                },
               ])
+              .select('id'),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
             }),
             tapResponse(
-              () =>
+              () => {
+                const { teachers, id } = request;
+                !!teachers?.length &&
+                  this.saveCourseTeachers({
+                    teachers: teachers,
+                    course_id: id!,
+                  });
                 this.alert.showAlert({
                   icon: 'success',
                   message: 'ALERT.SUCCESS',
-                }),
+                });
+              },
               () =>
                 this.alert.showAlert({
                   icon: 'error',
                   message: 'ALERT.FAILURE',
                 }),
-              () => this.patchState({ START: 0 })
-            )
-          )
-        )
-      )
+              () => this.patchState({ START: 0 }),
+            ),
+          ),
+        ),
+      ),
+  );
+
+  private readonly saveCourseTeachers = this.effect(
+    (request$: Observable<{ course_id: string; teachers: Partial<User>[] }>) =>
+      request$.pipe(
+        map((request) =>
+          request.teachers.map((x) => ({
+            user_id: x.id,
+            course_id: request.course_id,
+          })),
+        ),
+        switchMap((items) =>
+          from(
+            this.supabase.client.from(Table.CourseTeachers).upsert(items),
+          ).pipe(
+            map(({ error }) => {
+              if (error) throw new Error(error.message);
+            }),
+          ),
+        ),
+      ),
   );
 
   public ngrxOnStoreInit = (): void => {

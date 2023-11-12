@@ -1,5 +1,5 @@
-import { Injectable, signal } from '@angular/core';
-import { environment } from '@skooltrak/environments';
+import { Inject, Injectable, signal } from '@angular/core';
+import { APP_CONFIG, AppConfig } from '@skooltrak/environments';
 import { SchoolRole, SignUpCredentials } from '@skooltrak/models';
 import {
   AuthChangeEvent,
@@ -15,21 +15,21 @@ export class SupabaseService {
   currentRole = signal<SchoolRole | null>(null);
   private _CURRENT_SCHOOL_ID?: string;
 
-  constructor() {
-    this.client = createClient(
-      environment.supabase.url,
-      environment.supabase.key
-    );
+  constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {
+    const {
+      supabase: { url, key },
+    } = appConfig;
+    this.client = createClient(url, key);
   }
 
   get session$() {
     return from(this.client.auth.getSession()).pipe(
-      map(({ data }) => data.session)
+      map(({ data }) => data.session),
     );
   }
 
   authChanges(
-    callback: (event: AuthChangeEvent, session: Session | null) => void
+    callback: (event: AuthChangeEvent, session: Session | null) => void,
   ) {
     return this.client.auth.onAuthStateChange(callback);
   }

@@ -49,7 +49,6 @@ import { IonicModule } from '@ionic/angular';
           </ion-button>
         </form>
       </ion-card-content>
-      <ion-card-footer></ion-card-footer>
     </ion-card>
   </ion-content>`,
 })

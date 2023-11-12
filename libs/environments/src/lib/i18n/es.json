@@ -47,9 +47,14 @@
   },
   "COURSES": {
     "TITLE": "Cursos",
+    "DETAILS": "Detalles del curso",
     "SELECT_DEGREE": "Seleccione nivel",
     "SELECT_PLAN": "Seleccione plan",
-    "OPEN_CLASS": "Iniciar clase"
+    "OPEN_CLASS": "Iniciar clase",
+    "PLAN": "Plan de estudios",
+    "SUBJECT": "Asignatura",
+    "WEEKLY_HOURS": "Horas semanales",
+    "TEACHERS": "Docentes"
   },
   "Created": "Creado",
   "Created by": "Creado por",

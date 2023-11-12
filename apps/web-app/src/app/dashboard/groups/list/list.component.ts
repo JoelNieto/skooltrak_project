@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonDirective, CardComponent, PaginatorComponent } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { GroupsStore } from '../groups.store';
@@ -21,6 +21,8 @@ import { GroupsStore } from '../groups.store';
     DatePipe,
     UserChipComponent,
     RouterLink,
+    LoadingComponent,
+    EmptyTableComponent,
   ],
   providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: `<sk-card>
@@ -59,25 +61,26 @@ import { GroupsStore } from '../groups.store';
         >
           <tr class="cursor-pointer">
             <th scope="col" class="rounded-tl-xl px-6 py-3">
-              {{ 'Name' | translate }}
+              {{ 'NAME' | translate }}
             </th>
             <th scope="col" class="px-6 py-3">{{ 'Plan' | translate }}</th>
             <th scope="col" class="px-6 py-3">
-              {{ 'Teachers' | translate }}
+              {{ 'TEACHERS' | translate }}
             </th>
             <th scope="col" class="px-6 py-3">
-              {{ 'Degree' | translate }}
+              {{ 'DEGREE' | translate }}
             </th>
-            <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
+            <th score="col" class="px-6 py-3">{{ 'CREATED' | translate }}</th>
             <th scope="col" class="rounded-tr-xl px-6 py-3 text-center">
-              {{ 'Actions' | translate }}
+              {{ 'ACTIONS' | translate }}
             </th>
           </tr>
         </thead>
         <tbody>
-          @for(group of store.GROUPS(); track group.id) {
+          @if(store.LOADING()) {
+          <tr sk-loading></tr>
+          } @else { @for(group of store.GROUPS(); track group.id) {
           <tr
-            [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
             <th
@@ -94,7 +97,7 @@ import { GroupsStore } from '../groups.store';
             </td>
             <td class="px-6 py-2">{{ group.degree.name }}</td>
             <td class="px-6 py-2">
-              {{ group.created_at | date : 'medium' }}
+              {{ group.created_at | date: 'medium' }}
             </td>
             <td class="flex items-center justify-center gap-2 px-6 py-4">
               <a routerLink="../details" [queryParams]="{ group_id: group.id }">
@@ -102,20 +105,11 @@ import { GroupsStore } from '../groups.store';
               </a>
             </td>
           </tr>
-          }
+          } @empty {
+          <tr sk-empty></tr>
+          } }
         </tbody>
       </table>
-      @if(store.LOADING()) {
-      <div class="mt-4 animate-pulse">
-        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-        <ul class="mt-5 space-y-3">
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        </ul>
-      </div>
-      }
 
       <sk-paginator
         [count]="store.COUNT()"

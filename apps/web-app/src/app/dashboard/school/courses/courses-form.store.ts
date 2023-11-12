@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Subject, Table } from '@skooltrak/models';
 import { exhaustMap, from, of } from 'rxjs';
@@ -26,19 +30,19 @@ export class CoursesFormStore
         .from(Table.StudyPlans)
         .select('id,name')
         .eq('school_id', this.auth.CURRENT_SCHOOL_ID())
-        .order('year', { ascending: true })
+        .order('year', { ascending: true }),
     )
       .pipe(
         exhaustMap(({ data, error }) => {
           if (error) throw new Error(error.message);
           return of(data as Partial<StudyPlan>[]);
-        })
+        }),
       )
       .pipe(
         tapResponse(
           (PLANS) => this.patchState({ PLANS }),
-          (error) => console.error(error)
-        )
+          (error) => console.error(error),
+        ),
       );
   });
 
@@ -47,22 +51,22 @@ export class CoursesFormStore
       this.supabase.client
         .from(Table.Subjects)
         .select(
-          'id,name, short_name, code, description, created_at, user:users(full_name)'
+          'id,name, short_name, code, description, created_at, user:users(full_name)',
         )
         .eq('school_id', this.auth.CURRENT_SCHOOL_ID())
-        .order('name', { ascending: true })
+        .order('name', { ascending: true }),
     )
       .pipe(
         exhaustMap(({ data, error }) => {
           if (error) throw new Error(error.message);
           return of(data as unknown as Subject[]);
-        })
+        }),
       )
       .pipe(
         tapResponse(
           (SUBJECTS) => this.patchState({ SUBJECTS }),
-          (error) => console.error(error)
-        )
+          (error) => console.error(error),
+        ),
       );
   });
 

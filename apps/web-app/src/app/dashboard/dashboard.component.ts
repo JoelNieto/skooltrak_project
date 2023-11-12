@@ -47,7 +47,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
   ],
   template: `<sk-navbar />
     <nav
-      class="sticky top-[4rem] z-10 flex w-full items-center justify-between border-b border-gray-200 bg-white px-12 dark:border-gray-500 dark:bg-gray-700"
+      class="sticky top-[4rem] z-10 flex w-full items-center justify-between border-b border-gray-200 bg-white px-12 dark:border-gray-600 dark:bg-gray-700"
     >
       <ul class="flex gap-8">
         <li>

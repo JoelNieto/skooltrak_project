@@ -1,7 +1,23 @@
 import { NgClass } from '@angular/common';
-import { Component, DestroyRef, effect, inject, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, UntypedFormArray, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  UntypedFormArray,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -124,22 +140,24 @@ import { AssignmentFormStore } from './assignment-form.store';
         {{ store.ASSIGNMENT()?.title }}
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
           @for(group of formGroups.controls; track group; let i = $index) {
-            <ng-container>
-              <div [formGroupName]="i">
-                <label [for]="i">{{ groups()[i].name }}</label>
-                <input skInput type="datetime-local" formControlName="start_at" />
-              </div>
-            </ng-container>
+          <ng-container>
+            <div [formGroupName]="i">
+              <label [for]="i">{{ groups()[i].name }}</label>
+              <input skInput type="datetime-local" formControlName="start_at" />
+            </div>
+          </ng-container>
           }
         </div>
       </sk-card>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentFormComponent implements OnInit {
   @Input({ required: true }) public course_id!: string;
   @Input({ required: false }) public id?: string;
   private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
   public store = inject(AssignmentFormStore);
   private state = inject(CoursesStore);
   public groups = this.state.groups;
@@ -181,6 +199,7 @@ export class AssignmentFormComponent implements OnInit {
       const assignment = this.store.ASSIGNMENT();
       if (assignment) {
         this.assignmentForm.patchValue(assignment);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -204,7 +223,7 @@ export class AssignmentFormComponent implements OnInit {
     !!this.course_id && this.setCourse();
     !!this.id &&
       asapScheduler.schedule(() =>
-        this.store.patchState({ SELECTED_ID: this.id })
+        this.store.patchState({ SELECTED_ID: this.id }),
       );
   }
 
@@ -226,7 +245,7 @@ export class AssignmentFormComponent implements OnInit {
           start_at: new FormControl<string | undefined>(undefined, {
             nonNullable: true,
           }),
-        })
+        }),
       );
     });
   }

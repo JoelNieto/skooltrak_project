@@ -3,11 +3,21 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolGroupsFormComponent } from './groups-form.component';
@@ -25,6 +35,8 @@ import { SchoolGroupsStore } from './groups.store';
     DatePipe,
     UserChipComponent,
     DialogModule,
+    LoadingComponent,
+    EmptyTableComponent,
   ],
   providers: [
     provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
@@ -77,8 +89,10 @@ import { SchoolGroupsStore } from './groups.store';
           </tr>
         </thead>
         <tbody>
-          @for(group of store.GROUPS(); track group.id) {
-            <tr
+          @if (store.LOADING()) {
+          <tr sk-loading></tr>
+          } @else { @for(group of store.GROUPS(); track group.id) {
+          <tr
             [class.hidden]="store.LOADING()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
@@ -90,13 +104,13 @@ import { SchoolGroupsStore } from './groups.store';
             </th>
             <td class="px-6 py-2">{{ group.plan?.name }}</td>
             <td class="flex px-6 py-2">
-            @for(teacher of group.teachers; track teacher.id) {
+              @for(teacher of group.teachers; track teacher.id) {
               <sk-user-chip [user]="teacher" />
-            }
+              }
             </td>
             <td class="px-6 py-2">{{ group.degree.name }}</td>
             <td class="px-6 py-2">
-              {{ group.created_at | date : 'medium' }}
+              {{ group.created_at | date: 'medium' }}
             </td>
             <td class="flex items-center justify-center gap-2 px-6 py-4">
               <button type="button" (click)="editGroup(group)">
@@ -111,21 +125,11 @@ import { SchoolGroupsStore } from './groups.store';
               </button>
             </td>
           </tr>
-          }
+          } @empty {
+          <tr sk-empty></tr>
+          } }
         </tbody>
       </table>
-      @if(store.LOADING()) {
-        <div class="mt-4 animate-pulse">
-          <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-          <ul class="mt-5 space-y-3">
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          </ul>
-        </div>
-      }
-
       <sk-paginator
         [count]="store.COUNT()"
         [pageSize]="store.PAGE_SIZE()"
@@ -154,7 +158,7 @@ export class SchoolGroupsComponent {
         minWidth: '36rem',
         maxWidth: '55%',
         disableClose: true,
-      }
+      },
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
@@ -171,7 +175,7 @@ export class SchoolGroupsComponent {
         maxWidth: '55%',
         disableClose: true,
         data: group,
-      }
+      },
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {

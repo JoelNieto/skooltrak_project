@@ -27,19 +27,19 @@ export class SchoolFormStore
       this.supabase.client
         .from(Table.Countries)
         .select('*')
-        .order('name', { ascending: true })
+        .order('name', { ascending: true }),
     )
       .pipe(
         map(({ error, data }) => {
           if (error) throw new Error(error.message);
           return data as Country[];
-        })
+        }),
       )
       .pipe(
         tapResponse(
           (COUNTRIES) => this.patchState({ COUNTRIES }),
-          (error) => console.error(error)
-        )
+          (error) => console.error(error),
+        ),
       );
   });
 
@@ -51,15 +51,15 @@ export class SchoolFormStore
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data.path;
-          })
-        )
+          }),
+        ),
       ),
       tapResponse(
         (crest_url) =>
           this.patchState({ SCHOOL: { ...this.SCHOOL(), crest_url } }),
         (error) => console.error(error),
-        () => this.patchState({ LOADING: false })
-      )
+        () => this.patchState({ LOADING: false }),
+      ),
     );
   });
 
@@ -72,8 +72,8 @@ export class SchoolFormStore
             map(({ error }) => {
               if (error) throw new Error(error.message);
               return EMPTY;
-            })
-          )
+            }),
+          ),
         ),
         tapResponse(
           () =>
@@ -81,15 +81,15 @@ export class SchoolFormStore
               icon: 'success',
               message: 'School created!',
             }),
-          (error: string) =>
-            this.alert.showAlert({ icon: 'error', message: error }),
+          (error: Error) =>
+            this.alert.showAlert({ icon: 'error', message: error.message }),
           () => {
             this.patchState({ LOADING: false });
             this.auth.getProfiles();
-          }
-        )
+          },
+        ),
       );
-    }
+    },
   );
 
   public ngrxOnStoreInit = (): void =>

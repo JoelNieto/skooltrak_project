@@ -7,7 +7,7 @@ import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/hero
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
-import { ButtonDirective } from '@skooltrak/ui';
+import { ButtonDirective, EmptyTableComponent, LoadingComponent } from '@skooltrak/ui';
 
 import { SchoolPeriodsFormComponent } from './periods-form.component';
 import { SchoolPeriodsStore } from './periods.store';
@@ -20,6 +20,8 @@ import { SchoolPeriodsStore } from './periods.store';
     ButtonDirective,
     DatePipe,
     DialogModule,
+    EmptyTableComponent,
+    LoadingComponent,
   ],
   providers: [
     provideComponentStore(SchoolPeriodsStore),
@@ -73,8 +75,10 @@ import { SchoolPeriodsStore } from './periods.store';
         </tr>
       </thead>
       <tbody>
-        @for(period of store.PERIODS(); track period.id) {
-          <tr
+        @if(store.LOADING()) {
+        <tr sk-loading></tr>
+        } @else { @for(period of store.PERIODS(); track period.id) {
+        <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
@@ -86,10 +90,10 @@ import { SchoolPeriodsStore } from './periods.store';
           </th>
           <td class="px-6 py-2.5">{{ period.year }}</td>
           <td class="px-6 py-2.5">
-            {{ period.start_at | date : 'mediumDate' }}
+            {{ period.start_at | date: 'mediumDate' }}
           </td>
-          <td class="px-6 py-2.5">{{ period.end_at | date : 'mediumDate' }}</td>
-          <td class="px-6 py-2.5">{{ period.created_at | date : 'medium' }}</td>
+          <td class="px-6 py-2.5">{{ period.end_at | date: 'mediumDate' }}</td>
+          <td class="px-6 py-2.5">{{ period.created_at | date: 'medium' }}</td>
           <td class="flex content-center justify-center gap-2 px-6 py-2.5">
             <button type="button" (click)="editPeriod(period)">
               <ng-icon
@@ -103,23 +107,11 @@ import { SchoolPeriodsStore } from './periods.store';
             </button>
           </td>
         </tr>
-        }
-
+        } @empty {
+        <tr sk-empty></tr>
+        }}
       </tbody>
     </table>
-    @if(store.LOADING()) {
-      <div class="mt-2 animate-pulse">
-      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-
-      <ul class="mt-5 space-y-3">
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-      </ul>
-    </div>
-    }
-
   </div>`,
 })
 export class SchoolPeriodsComponent {
@@ -134,7 +126,7 @@ export class SchoolPeriodsComponent {
         width: '32rem',
         maxWidth: '90%',
         disableClose: true,
-      }
+      },
     );
 
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
@@ -152,7 +144,7 @@ export class SchoolPeriodsComponent {
         maxWidth: '90%',
         disableClose: true,
         data: period,
-      }
+      },
     );
 
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({

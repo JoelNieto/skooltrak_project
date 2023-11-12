@@ -1,5 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
@@ -33,7 +34,7 @@ import { PlansFormStore } from './plans-form.store';
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
-        {{ 'Plans.Details' | translate }}
+        {{ 'PLANS.DETAILS' | translate }}
       </h3>
       <button (click)="dialogRef.close()">
         <ng-icon
@@ -91,6 +92,7 @@ export class StudyPlansFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<StudyPlan>>);
   private data: StudyPlan | undefined = inject(DIALOG_DATA);
   public store = inject(PlansFormStore);
+  private destroy = inject(DestroyRef);
   public form = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
@@ -112,7 +114,10 @@ export class StudyPlansFormComponent implements OnInit {
   public ngOnInit(): void {
     this.form
       .get('degree_id')
-      ?.valueChanges.pipe(filter((val) => !!val))
+      ?.valueChanges.pipe(
+        takeUntilDestroyed(this.destroy),
+        filter((val) => !!val),
+      )
       .subscribe({
         next: (id) => {
           const value = this.store.DEGREES().find((x) => x.id === id);

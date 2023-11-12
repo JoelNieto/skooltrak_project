@@ -7,7 +7,13 @@ import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/hero
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -22,6 +28,8 @@ import { SchoolDegreesStore } from './degrees.store';
     PaginatorComponent,
     ButtonDirective,
     DialogModule,
+    LoadingComponent,
+    EmptyTableComponent,
   ],
   providers: [
     provideComponentStore(SchoolDegreesStore),
@@ -68,7 +76,9 @@ import { SchoolDegreesStore } from './degrees.store';
         </tr>
       </thead>
       <tbody>
-        @for(degree of store.DEGREES(); track degree.id) {
+        @if(store.LOADING()) {
+        <tr sk-loading></tr>
+        } @else { @for(degree of store.DEGREES(); track degree.id) {
         <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
@@ -94,21 +104,11 @@ import { SchoolDegreesStore } from './degrees.store';
             </button>
           </td>
         </tr>
-        }
+        } @empty {
+        <tr sk-empty></tr>
+        } }
       </tbody>
     </table>
-    @if(store.LOADING()) {
-    <div class="mt-2 animate-pulse">
-      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-
-      <ul class="mt-5 space-y-3">
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-      </ul>
-    </div>
-    }
 
     <sk-paginator
       [count]="store.COUNT()"

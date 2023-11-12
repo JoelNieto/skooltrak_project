@@ -52,7 +52,7 @@ export class AssignmentFormStore
   public readonly DATES = this.selectSignal((state) => state.DATES);
   public readonly COURSES = this.selectSignal((state) => state.COURSES);
   public readonly COURSE$ = this.select((state) =>
-    state.COURSES.find((x) => x.id === state.COURSE_ID)
+    state.COURSES.find((x) => x.id === state.COURSE_ID),
   );
 
   private readonly fetchTypes = this.effect<void>((trigger$) => {
@@ -61,21 +61,21 @@ export class AssignmentFormStore
         from(
           this.supabase.client
             .from(Table.AssignmentTypes)
-            .select('id, name, is_urgent, is_summative')
+            .select('id, name, is_urgent, is_summative'),
         )
           .pipe(
             exhaustMap(({ data, error }) => {
               if (error) throw new Error(error.message);
               return of(data as AssignmentType[]);
-            })
+            }),
           )
           .pipe(
             tapResponse(
               (TYPES) => this.patchState({ TYPES }),
-              (error) => console.error(error)
-            )
-          )
-      )
+              (error) => console.error(error),
+            ),
+          ),
+      ),
     );
   });
 
@@ -88,9 +88,9 @@ export class AssignmentFormStore
           this.supabase.client
             .from(Table.Courses)
             .select(
-              'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at'
+              'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
             )
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         ).pipe(
           map(({ data, error }) => {
             if (error) throw new Error(error.message);
@@ -104,10 +104,10 @@ export class AssignmentFormStore
             (error) => {
               console.error(error);
               return of([]);
-            }
-          )
-        )
-      )
+            },
+          ),
+        ),
+      ),
     );
   });
 
@@ -120,10 +120,16 @@ export class AssignmentFormStore
             this.supabase.client
               .from(Table.Assignments)
               .upsert([
-                pick(request, ['title', 'description', 'course_id', 'type_id']),
+                pick(request, [
+                  'id',
+                  'title',
+                  'description',
+                  'course_id',
+                  'type_id',
+                ]),
               ])
               .select('id')
-              .single()
+              .single(),
           ).pipe(
             map(({ data, error }) => {
               if (error) throw new Error(error.message);
@@ -135,12 +141,12 @@ export class AssignmentFormStore
                   groups: this.DATES(),
                   assignment_id: id,
                 }),
-              (error) => console.error(error)
-            )
+              (error) => console.error(error),
+            ),
           );
-        })
+        }),
       );
-    }
+    },
   );
 
   private readonly saveGroupsDate = this.effect(
@@ -148,7 +154,7 @@ export class AssignmentFormStore
       request$: Observable<{
         groups: GroupAssignment[];
         assignment_id: string;
-      }>
+      }>,
     ) => {
       return request$.pipe(
         switchMap((request) => {
@@ -156,7 +162,7 @@ export class AssignmentFormStore
           const { assignment_id } = request;
           groups = groups.map((x) => ({ ...x, assignment_id }));
           return from(
-            this.supabase.client.from(Table.GroupAssignments).upsert(groups)
+            this.supabase.client.from(Table.GroupAssignments).upsert(groups),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -169,12 +175,12 @@ export class AssignmentFormStore
                   message: 'Saved changes',
                 }),
               (error) => console.error(error),
-              () => this.patchState({ LOADING: false })
-            )
+              () => this.patchState({ LOADING: false }),
+            ),
           );
-        })
+        }),
       );
-    }
+    },
   );
 
   private readonly fetchAssignment = this.effect<void>((trigger$) => {
@@ -188,7 +194,7 @@ export class AssignmentFormStore
             .from(Table.Assignments)
             .select('id,title,course_id,type_id,description,created_at,user_id')
             .eq('id', id)
-            .single()
+            .single(),
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
@@ -197,10 +203,10 @@ export class AssignmentFormStore
           tapResponse(
             (ASSIGNMENT) => this.patchState({ ASSIGNMENT }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 

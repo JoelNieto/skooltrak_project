@@ -4,7 +4,12 @@ import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, PaginatorComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import {
+  CardComponent,
+  PaginatorComponent,
+  TabsComponent,
+  TabsItemComponent,
+} from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
@@ -86,7 +91,7 @@ import { CoursesStore } from '../courses.store';
               {{ course.subject?.name }}
             </th>
             <td class="px-6 py-3.5">{{ course.plan.name }}</td>
-            <td class="flex px-6 py-3.5">
+            <td class="flex gap-1 px-6 py-3.5">
               @for(teacher of course.teachers; track teacher.id) {
               <sk-user-chip [user]="teacher" />
               }

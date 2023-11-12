@@ -2,9 +2,16 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-PA';
-import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  isDevMode,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import {
   provideRouter,
   TitleStrategy,
@@ -18,11 +25,13 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { authState } from '@skooltrak/auth';
+import { APP_CONFIG } from '@skooltrak/environments';
 import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { QuillModule } from 'ngx-quill';
 
+import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
 
 registerLocaleData(localeEs, 'es-PA');
@@ -38,7 +47,7 @@ export const appConfig: ApplicationConfig = {
       appRoutes,
       withEnabledBlockingInitialNavigation(),
       withComponentInputBinding(),
-      withRouterConfig({ onSameUrlNavigation: 'reload' })
+      withRouterConfig({ onSameUrlNavigation: 'reload' }),
     ),
     provideAnimations(),
     provideStore(),
@@ -61,7 +70,8 @@ export const appConfig: ApplicationConfig = {
         provide: DateAdapter,
         useFactory: adapterFactory,
       }),
-      DialogModule
+      DialogModule,
     ),
+    { provide: APP_CONFIG, useValue: environment },
   ],
 };

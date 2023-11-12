@@ -14,7 +14,11 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -61,19 +65,15 @@ import { UsersSelectorStore } from './users-selector.store';
       }"
       [class.text-gray-700]="currentValue()"
     >
-    @for(user of currentValue(); track user.id) {
+      @for(user of currentValue(); track user.id) {
       <sk-user-chip
         [user]="user"
         [removable]="true"
         (remove)="toggleValue(user)"
       />
-    } @empty {
-      <div
-        class="p-1 text-gray-700 dark:text-gray-400"
-      >
-        Pick some users
-      </div>
-    }
+      } @empty {
+      <div class="p-1 text-gray-700 dark:text-gray-400">Pick some users</div>
+      }
     </div>
     <ng-template cdk-portal>
       <div id="options-container" class="w-full">
@@ -99,9 +99,7 @@ import { UsersSelectorStore } from './users-selector.store';
           />
         </div>
         @if(!store.users().length) {
-          <div
-          class="flex items-center bg-white p-4  dark:bg-gray-700"
-        >
+        <div class="flex items-center bg-white p-4  dark:bg-gray-700">
           <p class="font-title font-semibold text-gray-700 dark:text-gray-100 ">
             Users not found!
           </p>
@@ -113,7 +111,7 @@ import { UsersSelectorStore } from './users-selector.store';
         >
           <ul class="py-1" role="none">
             @for(user of store.users(); track user.id) {
-              <li (click)="toggleValue(user)">
+            <li (click)="toggleValue(user)">
               <div
                 class="flex cursor-pointer gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                 role="menuitem"
@@ -122,7 +120,7 @@ import { UsersSelectorStore } from './users-selector.store';
                   <sk-avatar
                     [rounded]="true"
                     class="w-9"
-                    [avatarUrl]="user.avatar_url!"
+                    [avatarUrl]="user.avatar_url ?? 'default_avatar.jpg'"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -138,7 +136,6 @@ import { UsersSelectorStore } from './users-selector.store';
               </div>
             </li>
             }
-
           </ul>
         </div>
       </div>
@@ -212,7 +209,7 @@ export class UsersSelectorComponent implements ControlValueAccessor {
   public toggleValue = (val: Partial<User>): void => {
     this.currentValue().find((x) => x.id === val.id)
       ? this.currentValue.update((value) =>
-          value.filter((x) => x.id !== val.id)
+          value.filter((x) => x.id !== val.id),
         )
       : this.currentValue.update((value) => [...value, val]);
     this.onTouch();

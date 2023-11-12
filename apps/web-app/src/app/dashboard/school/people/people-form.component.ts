@@ -135,7 +135,7 @@ export class SchoolPeopleFormComponent implements OnInit {
       this.IS_STUDENT.set(true);
     }
     this.groupControl.valueChanges
-      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroy))
+      .pipe(takeUntilDestroyed(this.destroy), distinctUntilChanged())
       .subscribe({
         next: (val) => {
           !!val && this.store.saveGroup(val);

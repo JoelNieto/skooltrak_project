@@ -13,3 +13,5 @@ export * from './lib/directives/input/input.directive';
 export * from './lib/directives/label/label.directive';
 export * from './lib/services/alert.service';
 export * from './lib/components/confirmation/confirmation.type';
+export * from './lib/components/loading/loading.component';
+export * from './lib/components/empty-table/empty-table.component';

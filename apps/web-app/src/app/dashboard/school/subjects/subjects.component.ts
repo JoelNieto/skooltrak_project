@@ -8,7 +8,13 @@ import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/hero
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 import { debounceTime } from 'rxjs';
 
 import { SubjectsFormComponent } from './subjects-form.component';
@@ -27,6 +33,8 @@ import { SchoolSubjectsStore } from './subjects.store';
     NgIconComponent,
     TranslateModule,
     ReactiveFormsModule,
+    LoadingComponent,
+    EmptyTableComponent,
   ],
   providers: [
     provideComponentStore(SchoolSubjectsStore),
@@ -75,8 +83,10 @@ import { SchoolSubjectsStore } from './subjects.store';
         </tr>
       </thead>
       <tbody>
-        @for(subject of store.SUBJECTS(); track subject.id) {
-          <tr
+        @if(store.LOADING()) {
+        <tr sk-loading></tr>
+        } @else { @for(subject of store.SUBJECTS(); track subject.id) {
+        <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
@@ -88,7 +98,7 @@ import { SchoolSubjectsStore } from './subjects.store';
           </th>
           <td class="px-6 py-4">{{ subject.short_name }}</td>
           <td class="px-6 py-4">{{ subject.code }}</td>
-          <td class="px-6 py-4">{{ subject.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4">{{ subject.created_at | date: 'short' }}</td>
           <td class="px-6 py-4">{{ subject.user?.full_name }}</td>
           <td class="flex content-center justify-center gap-2 px-6 py-4">
             <button type="button" (click)="editSubject(subject)">
@@ -103,29 +113,11 @@ import { SchoolSubjectsStore } from './subjects.store';
             </button>
           </td>
         </tr>
-        }
-
+        } @empty {
+        <tr sk-empty></tr>
+        } }
       </tbody>
     </table>
-    @if(store.LOADING()) {
-        <div class="mt-2 animate-pulse">
-        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-        <ul class="mt-5 space-y-3">
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        </ul>
-      </div>
-    }
-
-    @if(!store.LOADING() && !store.SUBJECTS().length) {
-      <div
-        class="flex items-center justify-center"
-      >
-        <img src="/assets/images/teacher.svg" alt="" />
-      </div>
-    }
     <sk-paginator
       [count]="store.COUNT()"
       [pageSize]="store.PAGE_SIZE()"
@@ -143,7 +135,7 @@ export class SchoolSubjectsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.textSearch.valueChanges
-      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroy))
+      .pipe(debounceTime(800), takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (text) => this.store.patchState({ TEXT_SEARCH: text }),
       });
@@ -164,7 +156,7 @@ export class SchoolSubjectsComponent implements OnInit {
       {
         minWidth: '36rem',
         disableClose: true,
-      }
+      },
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
@@ -180,7 +172,7 @@ export class SchoolSubjectsComponent implements OnInit {
         minWidth: '36rem',
         disableClose: true,
         data: subject,
-      }
+      },
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {

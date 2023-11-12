@@ -7,7 +7,13 @@ import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/hero
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { ButtonDirective, ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  ConfirmationService,
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './plans-form.component';
 import { SchoolStudyPlansStore } from './plans.store';
@@ -22,6 +28,8 @@ import { SchoolStudyPlansStore } from './plans.store';
     DatePipe,
     DialogModule,
     ButtonDirective,
+    LoadingComponent,
+    EmptyTableComponent,
   ],
   providers: [
     provideComponentStore(SchoolStudyPlansStore),
@@ -69,8 +77,10 @@ import { SchoolStudyPlansStore } from './plans.store';
         </tr>
       </thead>
       <tbody>
-        @for(plan of store.PLANS(); track plan.id) {
-          <tr
+        @if(store.LOADING()) {
+        <tr sk-loading></tr>
+        } @else { @for(plan of store.PLANS(); track plan.id) {
+        <tr
           [class.hidden]="store.LOADING()"
           class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
         >
@@ -82,7 +92,7 @@ import { SchoolStudyPlansStore } from './plans.store';
           </th>
           <td class="px-6 py-2.5">{{ plan.level?.name }}</td>
           <td class="px-6 py-2.5">{{ plan.degree?.name }}</td>
-          <td class="px-6 py-2.5">{{ plan.created_at | date : 'short' }}</td>
+          <td class="px-6 py-2.5">{{ plan.created_at | date: 'short' }}</td>
           <td class="flex content-center justify-center gap-2 px-6 py-2.5">
             <button type="button" (click)="editStudyPlan(plan)">
               <ng-icon
@@ -96,22 +106,11 @@ import { SchoolStudyPlansStore } from './plans.store';
             </button>
           </td>
         </tr>
-        }
-
+        } @empty {
+        <tr sk-empty></tr>
+        } }
       </tbody>
     </table>
-    @if(store.LOADING()) {
-      <div class="mt-2 animate-pulse" >
-      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-      <ul class="mt-5 space-y-3">
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-      </ul>
-    </div>
-    }
-
     <sk-paginator
       [count]="store.COUNT()"
       [pageSize]="store.PAGE_SIZE()"
@@ -140,7 +139,7 @@ export class StudyPlansComponent {
       {
         minWidth: '36rem',
         disableClose: true,
-      }
+      },
     );
 
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
@@ -157,7 +156,7 @@ export class StudyPlansComponent {
         minWidth: '36rem',
         disableClose: true,
         data: plan,
-      }
+      },
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {

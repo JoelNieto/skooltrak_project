@@ -27,6 +27,7 @@ export class InputDirective implements OnInit {
     this.errorId = `${name}-error`;
     this.control.statusChanges?.subscribe({
       next: (status) => {
+        this.removeError();
         if (status === 'INVALID') {
           this.elRef.nativeElement.classList.add('border-red-400');
           this.elRef.nativeElement.classList.add('bg-red-100');

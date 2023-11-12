@@ -4,7 +4,19 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SchoolUser, Table } from '@skooltrak/models';
 import { ConfirmationService } from '@skooltrak/ui';
 import { AlertService } from 'libs/ui/src/lib/services/alert.service';
-import { catchError, EMPTY, exhaustMap, filter, from, iif, map, of, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  exhaustMap,
+  filter,
+  from,
+  iif,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthActions } from './actions';
@@ -130,7 +142,7 @@ export const signIn = createEffect(
   ) => {
     return actions.pipe(
       ofType(AuthActions.signInEmail),
-      exhaustMap(({ EMAIL, PASSWORD }) =>
+      switchMap(({ EMAIL, PASSWORD }) =>
         from(supabase.signInWithEmail(EMAIL, PASSWORD)).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
@@ -138,7 +150,7 @@ export const signIn = createEffect(
           }),
           map(({ session }) => AuthActions.setSession({ SESSION: session })),
           tap(() => router.navigate(['/app'])),
-          catchError((ERROR) => of(AuthActions.signInFailure({ ERROR }))),
+          catchError(() => of(AuthActions.signInFailure({ ERROR: 'SIGN_IN' }))),
         ),
       ),
     );
@@ -161,7 +173,7 @@ export const signOut = createEffect(
             return EMPTY;
           }),
           tap(() => router.navigate(['/'])),
-          catchError((ERROR) => of(AuthActions.signInFailure({ ERROR }))),
+          catchError(() => of(AuthActions.signInFailure({ ERROR: 'OTHER' }))),
         ),
       ),
     );
@@ -248,4 +260,16 @@ export const setDefaultSchool = createEffect(
     );
   },
   { functional: true },
+);
+
+export const signInFailure = createEffect(
+  (actions = inject(Actions), alert = inject(AlertService)) => {
+    return actions.pipe(
+      ofType(AuthActions.signInFailure),
+      map(({ ERROR }) =>
+        alert.showAlert({ icon: 'error', message: `AUTH_FAILURE.${ERROR}` }),
+      ),
+    );
+  },
+  { functional: true, dispatch: false },
 );

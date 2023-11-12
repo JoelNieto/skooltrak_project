@@ -16,6 +16,10 @@
     "WORK": "Trabajo",
     "GRADES": "Calificaciones"
   },
+  "AUTH_FAILURE": {
+    "SIGN_IN": "Correo electrónico o contraseña inválidos.",
+    "OTHER": "Algo salio mal. Intente de nuevo."
+  },
   "Birth date": "Fecha de nacimiento",
   "CALENDAR": {
     "DAY": "Día",

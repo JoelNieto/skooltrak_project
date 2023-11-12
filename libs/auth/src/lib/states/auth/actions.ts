@@ -22,7 +22,7 @@ export const AuthActions = createActionGroup({
     signUpFailure: props<{ ERROR: string }>(),
     signInEmail: props<{ EMAIL: string; PASSWORD: string }>(),
     signInSuccess: props<{ USER: User; SESSION: Session }>(),
-    signInFailure: props<{ ERROR: unknown }>(),
+    signInFailure: props<{ ERROR: 'SIGN_IN' | 'OTHER' }>(),
     signOut: emptyProps(),
     setSchoolId: props<{ SCHOOL_ID: string | undefined }>(),
   },

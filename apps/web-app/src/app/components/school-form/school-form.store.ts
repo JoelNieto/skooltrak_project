@@ -1,5 +1,9 @@
-import { inject } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import { inject, Injectable } from '@angular/core';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Country, School, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
@@ -11,6 +15,8 @@ type State = {
   SCHOOL: Partial<School> | undefined;
   CREST_URL: string | undefined;
 };
+
+@Injectable()
 export class SchoolFormStore
   extends ComponentStore<State>
   implements OnStoreInit

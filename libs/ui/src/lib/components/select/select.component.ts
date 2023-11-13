@@ -1,4 +1,9 @@
-import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayConfig,
+  OverlayModule,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass } from '@angular/common';
 import {
@@ -6,7 +11,6 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
-  effect,
   ElementRef,
   forwardRef,
   HostListener,
@@ -15,7 +19,11 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -55,17 +63,17 @@ import { UtilService } from '../../services/util.service';
         class="block w-full whitespace-nowrap rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400 sm:text-sm"
         [ngClass]="{
           'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
-            isOpen(),
+            IS_OPEN(),
           'cursor-not-allowed opacity-75': isDisabled
         }"
-        [class.text-gray-800]="currentValue()"
-        [class.dark:text-white]="currentValue()"
-        [innerHTML]="innerContent"
+        [class.text-gray-800]="CURRENT_VALUE()"
+        [class.dark:text-white]="CURRENT_VALUE()"
+        [innerHTML]="RENDER()"
       ></div>
       <ng-template cdk-portal>
         <div id="options-container" class="w-full shadow-lg">
           @if(search) {
-            <div class="relative">
+          <div class="relative">
             <div
               class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
@@ -80,38 +88,33 @@ import { UtilService } from '../../services/util.service';
               class="block w-full rounded-tl-lg rounded-tr-lg border-0 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:ring-0 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
               [placeholder]="'SELECT.SEARCH' | translate"
               autocomplete="new-password"
-              [ngModel]="searchText()"
+              [ngModel]="SEARCH_TEXT()"
               (ngModelChange)="onFilterChange($event)"
             />
           </div>
-          }
-         @if(!filteredItems().length) {
-          <div
-            class="flex items-center bg-white p-4  dark:bg-gray-700"
-          >
+          } @if(!FILTERED_ITEMS().length) {
+          <div class="flex items-center bg-white p-4  dark:bg-gray-700">
             <p class="font-sans text-gray-700 dark:text-gray-100 ">
               {{ 'SELECT.NOT_FOUND' | translate }}
             </p>
           </div>
-         }
+          }
           <div
             class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
           >
             <ul class="py-1" role="none">
-              @for(item of filteredItems(); track item[valueId]) {
-                <li (click)="toggleValue(item[valueId])">
+              @for(item of FILTERED_ITEMS(); track item[valueId]) {
+              <li (click)="toggleValue(item[valueId])">
                 <div
                   class="flex cursor-pointer justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                   role="menuitem"
-                  [ngClass]="{ active: currentValue() === item[valueId] }"
+                  [ngClass]="{ active: CURRENT_VALUE() === item[valueId] }"
                 >
-                  <div>{{ item | property : label }}</div>
+                  <div>{{ item | property: label }}</div>
                   @if(secondaryLabel) {
-                    <div
-                      class="text-xs text-gray-500 dark:text-gray-200"
-                    >
-                      {{ item | property : secondaryLabel }}
-                    </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-200">
+                    {{ item | property: secondaryLabel }}
+                  </div>
                   }
                 </div>
               </li>
@@ -141,7 +144,7 @@ export class SelectComponent
   implements ControlValueAccessor, AfterContentChecked
 {
   @Input({ required: true }) set items(items: any[] | undefined) {
-    this.itemList.set(items ?? []);
+    this.ITEM_LIST.set(items ?? []);
   }
   @Input({ required: true }) label!: string;
   @Input({ required: false }) secondaryLabel!: string;
@@ -149,15 +152,34 @@ export class SelectComponent
   @Input() search = true;
   @Input() multiple = false;
   @Input() placeholder = 'SELECT.SELECT_VALUE';
-  private overlayRef!: OverlayRef;
+
   @ViewChild(CdkPortal) public container!: CdkPortal;
   @ViewChild('select') public select!: ElementRef;
+
+  private overlayRef!: OverlayRef;
   public overlay = inject(Overlay);
   private util = inject(UtilService);
   private cdr = inject(ChangeDetectorRef);
   private translate = inject(TranslateService);
 
-  innerContent: string;
+  public INNER_CONTENT = computed(() =>
+    this.ITEM_LIST().find((x) => x[this.valueId] === this.CURRENT_VALUE()),
+  );
+
+  public RENDER = computed(() =>
+    this.INNER_CONTENT()
+      ? this.secondaryLabel
+        ? `${this.util.getProperty(
+            this.INNER_CONTENT(),
+            this.label,
+          )} - ${this.util.getProperty(
+            this.INNER_CONTENT(),
+            this.secondaryLabel,
+          )}`
+        : this.INNER_CONTENT()[this.label]
+      : this.translate.instant(this.placeholder),
+  );
+
   isDisabled!: boolean;
 
   @HostListener('window:resize')
@@ -169,45 +191,27 @@ export class SelectComponent
   onChange = (value: any | any[]): void => {};
   onTouch: any = () => {};
 
-  constructor() {
-    this.innerContent = this.translate.instant(this.placeholder);
-
-    effect(
-      () => {
-        this.onChange(this.currentValue());
-        const value = (this.innerContent = this.itemList().find(
-          (x) => x[this.valueId] === this.currentValue()
-        ));
-        this.innerContent = value
-          ? this.secondaryLabel
-            ? `${this.util.getProperty(
-                value,
-                this.label
-              )} - ${this.util.getProperty(value, this.secondaryLabel)}`
-            : value[this.label]
-          : this.translate.instant(this.placeholder);
-      },
-      { allowSignalWrites: true }
-    );
-  }
-
   ngAfterContentChecked(): void {
     this.cdr.detectChanges();
   }
 
-  itemList = signal<any[]>([]);
-  searchText = signal('');
-  isOpen = signal(false);
-  currentValue = signal<string | string[] | undefined>(undefined);
+  ITEM_LIST = signal<any[]>([]);
+  SEARCH_TEXT = signal('');
+  IS_OPEN = signal(false);
+  CURRENT_VALUE = signal<string | string[] | undefined>(undefined);
 
-  filteredItems = computed(
+  FILTERED_ITEMS = computed(
     () =>
-      this.util.searchFilter(this.itemList(), [this.label], this.searchText()) //TODO - Add preselected option to search
+      this.util.searchFilter(
+        this.ITEM_LIST(),
+        [this.label],
+        this.SEARCH_TEXT(),
+      ), //TODO - Add preselected option to search
   );
 
   writeValue(val: string): void {
     if (val) {
-      asapScheduler.schedule(() => this.currentValue.set(val));
+      asapScheduler.schedule(() => this.CURRENT_VALUE.set(val));
 
       this.onChange(val);
     }
@@ -224,15 +228,15 @@ export class SelectComponent
   }
 
   onFilterChange(value: string) {
-    this.searchText.set(value);
+    this.SEARCH_TEXT.set(value);
   }
 
   toggleValue = (val: any) => {
     if (!this.multiple) {
       //TODO - Add multiple option
-      this.currentValue() === val
-        ? this.currentValue.set(undefined)
-        : this.currentValue.set(val);
+      this.CURRENT_VALUE() === val
+        ? this.CURRENT_VALUE.set(undefined)
+        : this.CURRENT_VALUE.set(val);
       this.onTouch();
       this.hide();
     }
@@ -247,7 +251,7 @@ export class SelectComponent
       next: () => this.hide(),
       error: (error) => console.error(error),
     });
-    this.isOpen.set(true);
+    this.IS_OPEN.set(true);
   }
 
   private getOverlayConfig = (): OverlayConfig =>
@@ -288,7 +292,7 @@ export class SelectComponent
 
   private hide(): void {
     this.overlayRef.detach();
-    this.isOpen.set(false);
-    this.searchText.set('');
+    this.IS_OPEN.set(false);
+    this.SEARCH_TEXT.set('');
   }
 }

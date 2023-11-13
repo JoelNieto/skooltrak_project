@@ -35,7 +35,7 @@ export const dashboardRoutes: Routes = [
         title: 'Profile',
         loadComponent: () =>
           import('../components/profile/profile.component').then(
-            (x) => x.ProfileComponent
+            (x) => x.ProfileComponent,
           ),
       },
       {
@@ -46,7 +46,7 @@ export const dashboardRoutes: Routes = [
       },
       {
         path: 'school',
-        title: 'School Settings',
+        title: 'SCHOOL.SETTINGS',
         loadChildren: () =>
           import('./school/school.routes').then((x) => x.schoolRoutes),
       },

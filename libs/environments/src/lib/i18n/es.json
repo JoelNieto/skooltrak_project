@@ -158,7 +158,14 @@
     "EMAIL": "Correo electrónico",
     "PHONE": "Telefono de contacto",
     "MOTTO": "Lema",
-    "SETTINGS": "Ajustes del colegio"
+    "SETTINGS": "Ajustes del colegio",
+    "TYPE": "Tipo de Escuela"
+  },
+  "SCHOOL_TYPE": {
+    "PRIVATE": "Privado",
+    "PUBLIC": "Oficial",
+    "MIXED": "Mixto",
+    "OTHER": "Otro"
   },
   "SCHOOL_CONNECTOR": {
     "TITLE": "Elija una escuela",

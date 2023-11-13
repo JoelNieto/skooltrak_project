@@ -1,4 +1,4 @@
-import { Country, EntityBase, Level } from '@skooltrak/models';
+import { Country, EntityBase, Level, SchoolTypeEnum } from '@skooltrak/models';
 
 export type School = EntityBase & {
   full_name?: string;
@@ -11,14 +11,8 @@ export type School = EntityBase & {
   contact_phone: string;
   levels: Level[];
   active: boolean;
-  type: SchoolType;
+  type: SchoolTypeEnum;
   country_id: string;
   country: Country;
-  profile?: { full_name: string };
   code?: string;
 };
-
-export enum SchoolType {
-  Private = 'Private',
-  Public = 'Public',
-}

@@ -10,3 +10,10 @@ export enum RoleEnum {
   Parent = 'PARENT',
   Student = 'STUDENT',
 }
+
+export enum SchoolTypeEnum {
+  PRIVATE = 'PRIVATE',
+  PUBLIC = 'PUBLIC',
+  MIXED = 'MIXED',
+  OTHER = 'OTHER',
+}

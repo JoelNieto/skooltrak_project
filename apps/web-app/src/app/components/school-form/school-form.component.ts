@@ -1,12 +1,25 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { School } from '@skooltrak/models';
+import { School, SchoolTypeEnum } from '@skooltrak/models';
 import {
   ButtonDirective,
   CardComponent,
@@ -87,6 +100,14 @@ import { SchoolFormStore } from './school-form.store';
         <input type="text" formControlName="full_name" skInput />
       </div>
       <div>
+        <label for="type" skLabel>{{ 'SCHOOL.TYPE' | translate }}</label>
+        <select formControlName="type" skInput>
+          @for(type of types(); track type) {
+          <option [value]="type">{{ type }}</option>
+          }
+        </select>
+      </div>
+      <div>
         <label for="country_id" skLabel>{{
           'SCHOOL.COUNTRY' | translate
         }}</label>
@@ -100,7 +121,6 @@ import { SchoolFormStore } from './school-form.store';
         <label for="address" skLabel>{{ 'SCHOOL.ADDRESS' | translate }}</label>
         <input type="text" formControlName="address" skInput />
       </div>
-
       <div>
         <label for="contact_email" skLabel>{{
           'SCHOOL.EMAIL' | translate
@@ -129,6 +149,7 @@ import { SchoolFormStore } from './school-form.store';
       </div>
     </form>
   </sk-card> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchoolFormComponent implements OnInit {
   public store = inject(SchoolFormStore);
@@ -137,6 +158,8 @@ export class SchoolFormComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   private data: School | undefined = inject(DIALOG_DATA);
+  public types = signal(Object.values(SchoolTypeEnum));
+
   public form = new FormGroup({
     id: new FormControl<string>('', { nonNullable: true }),
     full_name: new FormControl<string>('', {
@@ -152,6 +175,10 @@ export class SchoolFormComponent implements OnInit {
     contact_email: new FormControl<string>('', {
       validators: [Validators.email],
       nonNullable: true,
+    }),
+    type: new FormControl<SchoolTypeEnum | undefined>(undefined, {
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     contact_phone: new FormControl('', { nonNullable: true }),
     country_id: new FormControl<string>('', {
@@ -187,10 +214,12 @@ export class SchoolFormComponent implements OnInit {
 
   public saveChanges(): void {
     const { value } = this.form;
-    const request = { ...value, ...this.store.SCHOOL() };
+    const request = { ...this.store.SCHOOL(), ...value };
+
     if (!request.id) {
       delete request.id;
     }
+    delete request.country;
     this.store.saveSchool(request);
   }
 }

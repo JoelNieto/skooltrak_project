@@ -1,8 +1,12 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { ClassGroup, Course, Table } from '@skooltrak/models';
-import { EMPTY, exhaustMap, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { EMPTY, filter, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 type State = {
   COURSES: Course[];
@@ -31,14 +35,14 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
   public readonly SELECTED = this.selectSignal((state) =>
     state.SELECTED_ID
       ? state.COURSES.find((x) => x.id === state.SELECTED_ID)
-      : null
+      : null,
   );
 
   public readonly groups = this.selectSignal((state) => state.GROUPS);
   public readonly selected$ = this.select((state) =>
     state.SELECTED_ID
       ? state.COURSES.find((x) => x.id === state.SELECTED_ID)
-      : null
+      : null,
   );
 
   private readonly fetchCourses = this.effect(() => {
@@ -52,9 +56,9 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
               'id, school_id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
               {
                 count: 'exact',
-              }
+              },
             )
-            .range(start, this.END())
+            .range(start, this.END()),
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
@@ -67,10 +71,10 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
               console.error(error);
               return of([]);
             },
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 
@@ -82,21 +86,21 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
           return from(
             this.supabase.client
               .from(Table.Courses)
-              .upsert([{ ...request, school_id: this.school() }])
+              .upsert([{ ...request, school_id: this.school() }]),
           ).pipe(
-            exhaustMap(({ error }) => {
+            map(({ error }) => {
               if (error) throw new Error(error.message);
-              return of(EMPTY);
-            })
+              return EMPTY;
+            }),
           );
         }),
         tapResponse(
           () => this.fetchCourses(),
           (error) => console.error(error),
-          () => this.patchState({ LOADING: false })
-        )
+          () => this.patchState({ LOADING: false }),
+        ),
       );
-    }
+    },
   );
 
   private readonly fetchGroups = this.effect(() => {
@@ -107,23 +111,23 @@ export class CoursesStore extends ComponentStore<State> implements OnStoreInit {
           this.supabase.client
             .from(Table.Groups)
             .select(
-              'id, name, plan:school_plans(*), degree:school_degrees(*), created_at, updated_at'
+              'id, name, plan:school_plans(*), degree:school_degrees(*), created_at, updated_at',
             )
-            .eq('plan_id', course?.plan_id)
+            .eq('plan_id', course?.plan_id),
         )
           .pipe(
             map(({ error, data }) => {
               if (error) throw new Error(error.message);
               return data as Partial<ClassGroup>[];
-            })
+            }),
           )
           .pipe(
             tapResponse(
               (GROUPS) => this.patchState({ GROUPS }),
-              (error) => console.error(error)
-            )
+              (error) => console.error(error),
+            ),
           );
-      })
+      }),
     );
   });
 

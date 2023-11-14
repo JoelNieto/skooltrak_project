@@ -7,7 +7,6 @@ import { AlertService } from 'libs/ui/src/lib/services/alert.service';
 import {
   catchError,
   EMPTY,
-  exhaustMap,
   filter,
   from,
   iif,
@@ -38,7 +37,7 @@ export const getSession = createEffect(
   (actions = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions.pipe(
       ofType(AuthActions.getSession),
-      exhaustMap(() =>
+      switchMap(() =>
         supabase.session$.pipe(
           map((SESSION) => AuthActions.setSession({ SESSION })),
         ),
@@ -52,7 +51,7 @@ export const signUp = createEffect(
   (actions = inject(Actions), supabase = inject(SupabaseService)) => {
     return actions.pipe(
       ofType(AuthActions.signUp),
-      exhaustMap(({ REQUEST }) =>
+      switchMap(({ REQUEST }) =>
         from(supabase.signUp(REQUEST)).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -71,7 +70,7 @@ export const signUpSuccess = createEffect(
   (actions = inject(Actions), confirmation = inject(ConfirmationService)) => {
     return actions.pipe(
       ofType(AuthActions.signUpSuccess),
-      exhaustMap(() =>
+      switchMap(() =>
         confirmation.openDialog({
           title: 'Account created',
           description: 'Please, check your email to confirm',
@@ -94,7 +93,7 @@ export const getUser = createEffect(
     return actions.pipe(
       ofType(AuthActions.getUser),
       filter(() => !!auth.SESSION()),
-      exhaustMap(() =>
+      switchMap(() =>
         from(
           supabase.client
             .from(Table.Users)
@@ -121,7 +120,7 @@ export const setSession = createEffect(
   (actions = inject(Actions)) => {
     return actions.pipe(
       ofType(AuthActions.setSession),
-      exhaustMap(({ SESSION }) =>
+      switchMap(({ SESSION }) =>
         iif(
           () => !!SESSION,
           of(SESSION),
@@ -166,7 +165,7 @@ export const signOut = createEffect(
   ) => {
     return actions.pipe(
       ofType(AuthActions.signOut),
-      exhaustMap(() =>
+      switchMap(() =>
         from(supabase.signOut()).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -189,7 +188,7 @@ export const updateProfile = createEffect(
   ) => {
     return actions.pipe(
       ofType(AuthActions.updateProfile),
-      exhaustMap(({ REQUEST }) =>
+      switchMap(({ REQUEST }) =>
         from(
           supabase.client
             .from(Table.Users)
@@ -229,7 +228,7 @@ export const getUserProfiles = createEffect(
   ) => {
     return actions.pipe(
       ofType(AuthActions.getProfiles),
-      exhaustMap(() =>
+      switchMap(() =>
         from(
           supabase.client
             .from(Table.SchoolUsers)

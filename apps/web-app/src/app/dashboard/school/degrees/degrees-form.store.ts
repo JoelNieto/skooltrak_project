@@ -1,8 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { SupabaseService } from '@skooltrak/auth';
 import { Level, Table } from '@skooltrak/models';
-import { exhaustMap, from, map, tap } from 'rxjs';
+import { from, map, switchMap, tap } from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -23,7 +27,7 @@ export class DegreesFormStore
     trigger$
       .pipe(
         tap(() => this.patchState({ LOADING: true })),
-        exhaustMap(() =>
+        switchMap(() =>
           from(
             this.supabase.client
               .from(Table.Levels)

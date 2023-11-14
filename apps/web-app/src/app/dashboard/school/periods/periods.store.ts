@@ -1,10 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Period, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import { combineLatestWith, exhaustMap, filter, from, map, Observable, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -29,13 +41,13 @@ export class SchoolPeriodsStore
       combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
       filter(([, school_id]) => !!school_id),
       tap(() => this.patchState({ LOADING: true })),
-      exhaustMap(([, school_id]) =>
+      switchMap(([, school_id]) =>
         from(
           this.supabase.client
             .from(Table.Periods)
             .select('*')
             .eq('school_id', school_id)
-            .order('start_at', { ascending: true })
+            .order('start_at', { ascending: true }),
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
@@ -44,11 +56,11 @@ export class SchoolPeriodsStore
           tapResponse(
             (PERIODS) => this.patchState({ PERIODS }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
-        )
-      )
-    )
+            () => this.patchState({ LOADING: false }),
+          ),
+        ),
+      ),
+    ),
   );
 
   public readonly savePeriod = this.effect(
@@ -56,20 +68,20 @@ export class SchoolPeriodsStore
       request$
         .pipe(
           tap(() => this.patchState({ LOADING: true })),
-          exhaustMap((request) =>
+          switchMap((request) =>
             from(
               this.supabase.client
                 .from(Table.Periods)
                 .upsert([
                   { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
-                ])
+                ]),
             ).pipe(
               map(({ error }) => {
                 if (error) throw new Error(error.message);
                 return {};
-              })
-            )
-          )
+              }),
+            ),
+          ),
         )
         .pipe(
           tapResponse(
@@ -87,9 +99,9 @@ export class SchoolPeriodsStore
                 message: this.translate.instant('ALERT.FAILURE'),
               });
               console.error(error);
-            }
-          )
-        )
+            },
+          ),
+        ),
   );
 
   public ngrxOnStoreInit = (): void => {

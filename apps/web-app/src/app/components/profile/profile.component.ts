@@ -1,11 +1,22 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import { ButtonDirective, CardComponent, ImageCropperComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  ImageCropperComponent,
+  InputDirective,
+  LabelDirective,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
@@ -35,13 +46,13 @@ import { ProfileFormStore } from './profile.store';
         </h2>
         <div class="mb-4  flex justify-center">
           @if (this.USER()) {
-          <sk-avatar
-            [avatarUrl]="this.USER()?.avatar_url ?? 'default_avatar.jpg'"
-            bucket="avatars"
-            [rounded]="true"
-            class="h-24 cursor-pointer"
-            (click)="changeAvatar()"
-          />
+            <sk-avatar
+              [avatarUrl]="this.USER()?.avatar_url ?? 'default_avatar.jpg'"
+              bucket="avatars"
+              [rounded]="true"
+              class="h-24 cursor-pointer"
+              (click)="changeAvatar()"
+            />
           }
         </div>
 
@@ -88,10 +99,10 @@ import { ProfileFormStore } from './profile.store';
                 'PROFILE.GENDER' | translate
               }}</label>
               <select skInput formControlName="gender">
-                @for(gender of store.GENDERS(); track gender.id) {
-                <option [value]="gender.id">
-                  {{ gender.name | translate }}
-                </option>
+                @for (gender of store.GENDERS(); track gender.id) {
+                  <option [value]="gender.id">
+                    {{ gender.name | translate }}
+                  </option>
                 }
               </select>
             </div>
@@ -157,15 +168,13 @@ export class ProfileComponent implements OnInit {
     }),
   });
 
-  constructor() {
-    effect(() => {
-      const user = this.USER();
-      !!user && this.form.patchValue(user);
-    });
-  }
-
   public ngOnInit(): void {
     this.form.get('email')?.disable();
+    this.auth.current_user$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => !!user && this.form.patchValue(user),
+      });
   }
 
   public changeAvatar(): void {

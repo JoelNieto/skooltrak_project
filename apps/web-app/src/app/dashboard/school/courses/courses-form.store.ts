@@ -6,7 +6,7 @@ import {
 } from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Subject, Table } from '@skooltrak/models';
-import { exhaustMap, from, of } from 'rxjs';
+import { from, map } from 'rxjs';
 
 type State = {
   SUBJECTS: Subject[];
@@ -33,9 +33,9 @@ export class CoursesFormStore
         .order('year', { ascending: true }),
     )
       .pipe(
-        exhaustMap(({ data, error }) => {
+        map(({ data, error }) => {
           if (error) throw new Error(error.message);
-          return of(data as Partial<StudyPlan>[]);
+          return data as Partial<StudyPlan>[];
         }),
       )
       .pipe(
@@ -57,9 +57,9 @@ export class CoursesFormStore
         .order('name', { ascending: true }),
     )
       .pipe(
-        exhaustMap(({ data, error }) => {
+        map(({ data, error }) => {
           if (error) throw new Error(error.message);
-          return of(data as unknown as Subject[]);
+          return data as unknown as Subject[];
         }),
       )
       .pipe(

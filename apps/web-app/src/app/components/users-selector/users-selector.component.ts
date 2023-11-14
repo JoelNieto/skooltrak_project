@@ -5,24 +5,30 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  effect,
+  DestroyRef,
   ElementRef,
   forwardRef,
   HostListener,
   inject,
   isDevMode,
+  OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
+  FormControl,
   FormsModule,
   NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
+import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
+import { debounceTime } from 'rxjs';
 
 import { AvatarComponent } from '../../../../../../apps/web-app/src/app/components/avatar/avatar.component';
 import { UserChipComponent } from '../user-chip/user-chip.component';
@@ -39,6 +45,8 @@ import { UsersSelectorStore } from './users-selector.store';
     AvatarComponent,
     UserChipComponent,
     NgIconComponent,
+    ReactiveFormsModule,
+    TranslateModule,
   ],
   providers: [
     provideIcons({ heroMagnifyingGlass }),
@@ -61,18 +69,20 @@ import { UsersSelectorStore } from './users-selector.store';
       class="flex max-h-20 w-full flex-wrap gap-2 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
       [ngClass]="{
         'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
-          isOpen()
+          IS_OPEN()
       }"
-      [class.text-gray-700]="currentValue()"
+      [class.text-gray-700]="CURRENT_VALUE()"
     >
-      @for(user of currentValue(); track user.id) {
-      <sk-user-chip
-        [user]="user"
-        [removable]="true"
-        (remove)="toggleValue(user)"
-      />
+      @for (user of CURRENT_VALUE(); track user.id) {
+        <sk-user-chip
+          [user]="user"
+          [removable]="true"
+          (remove)="toggleValue(user)"
+        />
       } @empty {
-      <div class="p-1 text-gray-700 dark:text-gray-400">Pick some users</div>
+        <div class="p-1 text-gray-700 dark:text-gray-400">
+          {{ 'USERS_SELECTOR.PLACEHOLDER' | translate }}
+        </div>
       }
     </div>
     <ng-template cdk-portal>
@@ -90,51 +100,52 @@ import { UsersSelectorStore } from './users-selector.store';
             type="text"
             id="table-search"
             class="block w-full rounded-tl-lg rounded-tr-lg border-0 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:ring-0 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
-            placeholder="Search for users"
+            [placeholder]="'USERS_SELECTOR.SEARCH' | translate"
             autocomplete="nope"
             name="search"
-            [ngModel]="searchText()"
-            (ngModelChange)="onFilterChange($event)"
+            [formControl]="searchText"
             #searchInput
           />
         </div>
-        @if(!store.users().length) {
-        <div class="flex items-center bg-white p-4  dark:bg-gray-700">
-          <p class="font-title font-semibold text-gray-700 dark:text-gray-100 ">
-            Users not found!
-          </p>
-        </div>
+        @if (!store.USERS().length) {
+          <div class="flex items-center bg-white p-4  dark:bg-gray-700">
+            <p
+              class="font-title font-semibold text-gray-700 dark:text-gray-100 "
+            >
+              {{ 'USERS_SELECTOR.NOT_FOUND' | translate }}
+            </p>
+          </div>
         }
 
         <div
           class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
         >
           <ul class="py-1" role="none">
-            @for(user of store.users(); track user.id) {
-            <li (click)="toggleValue(user)">
-              <div
-                class="flex cursor-pointer gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                role="menuitem"
-              >
-                <div class="basis-1/10 block">
-                  <sk-avatar
-                    [rounded]="true"
-                    class="w-9"
-                    [avatarUrl]="user.avatar_url ?? 'default_avatar.jpg'"
-                  />
+            @for (user of store.USERS(); track user.id) {
+              <li (click)="toggleValue(user)">
+                <div
+                  class="flex cursor-pointer gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                  role="menuitem"
+                >
+                  <div class="basis-1/10 block">
+                    <sk-avatar
+                      [rounded]="true"
+                      class="w-9"
+                      [avatarUrl]="user.avatar_url ?? 'default_avatar.jpg'"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <span
+                      class="font-sans text-sm text-gray-700 dark:text-gray-100"
+                      >{{ user.first_name }} {{ user.father_name }}</span
+                    >
+                    <span
+                      class="font-mono text-xs text-gray-400 dark:text-gray-300"
+                      >{{ user.email }}</span
+                    >
+                  </div>
                 </div>
-                <div class="flex flex-col">
-                  <span
-                    class="font-sans text-sm text-gray-700 dark:text-gray-100"
-                    >{{ user.first_name }} {{ user.father_name }}</span
-                  >
-                  <span
-                    class="font-mono text-xs text-gray-400 dark:text-gray-300"
-                    >{{ user.email }}</span
-                  >
-                </div>
-              </div>
-            </li>
+              </li>
             }
           </ul>
         </div>
@@ -142,14 +153,16 @@ import { UsersSelectorStore } from './users-selector.store';
     </ng-template>
   </div>`,
 })
-export class UsersSelectorComponent implements ControlValueAccessor {
-  public currentValue = signal<Partial<User>[]>([]);
+export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
+  public CURRENT_VALUE = signal<Partial<User>[]>([]);
   public overlay = inject(Overlay);
   public store = inject(UsersSelectorStore);
   private overlayRef!: OverlayRef;
   private cdr = inject(ChangeDetectorRef);
+  private destroy = inject(DestroyRef);
 
-  public innerContent: string;
+  public searchText = new FormControl('', { nonNullable: true });
+
   public placeholder = 'Select value';
   @ViewChild(CdkPortal) public container!: CdkPortal;
   @ViewChild('select') public select!: ElementRef;
@@ -163,25 +176,26 @@ export class UsersSelectorComponent implements ControlValueAccessor {
   public onChange = (value: any | any[]): void => {};
   public onTouch: any = () => {};
 
-  constructor() {
-    this.innerContent = this.placeholder;
-    effect(() => this.store.patchState({ queryText: this.searchText() }), {
-      allowSignalWrites: true,
-    });
-
-    effect(() => this.onChange(this.currentValue()));
+  public ngOnInit(): void {
+    this.searchText.valueChanges
+      .pipe(takeUntilDestroyed(this.destroy), debounceTime(500))
+      .subscribe({
+        next: (val) => {
+          this.store.patchState({ QUERY_TEXT: val });
+        },
+      });
   }
 
   public onFilterChange = (value: string): void => {
-    this.searchText.set(value);
+    this.SEARCH_TEXT.set(value);
   };
 
-  public searchText = signal('');
-  public isOpen = signal(false);
-  public isDisabled!: boolean;
+  public SEARCH_TEXT = signal('');
+  public IS_OPEN = signal(false);
+  public IS_DISABLED!: boolean;
 
   public writeValue(obj: Partial<User>[] | undefined): void {
-    !!obj && this.currentValue.set(obj);
+    !!obj && this.CURRENT_VALUE.set(obj);
   }
 
   public registerOnChange = (fn: any): void => {
@@ -193,8 +207,8 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     !!isDevMode && console.info(fn, 'on touch');
   };
 
-  public setDisabledState? = (isDisabled: boolean): void => {
-    this.isDisabled = isDisabled;
+  public setDisabledState? = (IS_DISABLED: boolean): void => {
+    this.IS_DISABLED = IS_DISABLED;
   };
 
   private syncWidth = (): void => {
@@ -207,18 +221,18 @@ export class UsersSelectorComponent implements ControlValueAccessor {
   };
 
   public toggleValue = (val: Partial<User>): void => {
-    this.currentValue().find((x) => x.id === val.id)
-      ? this.currentValue.update((value) =>
+    this.CURRENT_VALUE().find((x) => x.id === val.id)
+      ? this.CURRENT_VALUE.update((value) =>
           value.filter((x) => x.id !== val.id),
         )
-      : this.currentValue.update((value) => [...value, val]);
+      : this.CURRENT_VALUE.update((value) => [...value, val]);
     this.onTouch();
   };
 
   private hide = (): void => {
     this.overlayRef.detach();
-    this.isOpen.set(false);
-    this.searchText.set('');
+    this.IS_OPEN.set(false);
+    this.SEARCH_TEXT.set('');
   };
 
   private getOverlayConfig = (): OverlayConfig =>
@@ -249,7 +263,7 @@ export class UsersSelectorComponent implements ControlValueAccessor {
     });
 
   public showOptions = (): void => {
-    if (this.isDisabled) return;
+    if (this.IS_DISABLED) return;
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.container);
     this.syncWidth();
@@ -260,6 +274,6 @@ export class UsersSelectorComponent implements ControlValueAccessor {
 
     this.cdr.detectChanges();
     this.searchInput.nativeElement.focus();
-    this.isOpen.set(true);
+    this.IS_OPEN.set(true);
   };
 }

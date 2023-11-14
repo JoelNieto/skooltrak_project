@@ -17,7 +17,6 @@ import { orderBy, pick } from 'lodash';
 import {
   combineLatestWith,
   EMPTY,
-  exhaustMap,
   filter,
   from,
   map,
@@ -64,9 +63,9 @@ export class AssignmentFormStore
             .select('id, name, is_urgent, is_summative'),
         )
           .pipe(
-            exhaustMap(({ data, error }) => {
+            map(({ data, error }) => {
               if (error) throw new Error(error.message);
-              return of(data as AssignmentType[]);
+              return data as AssignmentType[];
             }),
           )
           .pipe(

@@ -227,5 +227,10 @@
   },
   "SEARCH_ITEMS": "Buscar elementos",
   "TYPE": "Tipo",
+  "USERS_SELECTOR": {
+    "PLACEHOLDER": "Elegir usuarios",
+    "NOT_FOUND": "Sin usuarios encontrados",
+    "SEARCH": "Buscar usuarios"
+  },
   "YES": "Si"
 }

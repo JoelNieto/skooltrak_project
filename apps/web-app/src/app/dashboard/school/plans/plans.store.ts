@@ -1,9 +1,21 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { StudyPlan, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import { combineLatestWith, exhaustMap, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   PLANS: StudyPlan[];
@@ -36,7 +48,7 @@ export class SchoolStudyPlansStore
       START: this.START$,
       PAGE_SIZE: this.PAGE_SIZE$,
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   private readonly fetchStudyPlans = this.effect<void>((trigger$) => {
@@ -53,11 +65,11 @@ export class SchoolStudyPlansStore
               'id,name, level:levels(*), level_id, degree_id, degree:school_degrees(*), year, created_at',
               {
                 count: 'exact',
-              }
+              },
             )
             .order('year', { ascending: true })
             .range(START, this.END())
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
@@ -67,10 +79,10 @@ export class SchoolStudyPlansStore
           tapResponse(
             ({ PLANS }) => this.patchState({ PLANS }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 
@@ -78,13 +90,13 @@ export class SchoolStudyPlansStore
     (request$: Observable<Partial<StudyPlan>>) => {
       return request$.pipe(
         tap(() => this.patchState({ LOADING: true })),
-        exhaustMap((request) => {
+        switchMap((request) => {
           return from(
             this.supabase.client
               .from(Table.StudyPlans)
               .upsert([
                 { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
-              ])
+              ]),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -96,12 +108,12 @@ export class SchoolStudyPlansStore
                   message: 'ALERT.SUCCESS',
                 }),
               (error) => console.error(error),
-              () => this.fetchStudyPlans()
-            )
+              () => this.fetchStudyPlans(),
+            ),
           );
-        })
+        }),
       );
-    }
+    },
   );
 
   public readonly deletePlan = this.effect((id$: Observable<string>) =>
@@ -109,7 +121,7 @@ export class SchoolStudyPlansStore
       tap(() => this.patchState({ LOADING: false })),
       switchMap((id) =>
         from(
-          this.supabase.client.from(Table.StudyPlans).delete().eq('id', id)
+          this.supabase.client.from(Table.StudyPlans).delete().eq('id', id),
         ).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -124,11 +136,11 @@ export class SchoolStudyPlansStore
               this.alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
               console.error(error);
             },
-            () => this.fetchStudyPlans()
-          )
-        )
-      )
-    )
+            () => this.fetchStudyPlans(),
+          ),
+        ),
+      ),
+    ),
   );
 
   public ngrxOnStoreInit = (): void => {

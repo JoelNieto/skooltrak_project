@@ -6,10 +6,6 @@ import { IonicModule } from '@ionic/angular';
   selector: 'app-sign-in',
   imports: [IonicModule],
   styles: `
-  .background {
-	  --background: url('/assets/images/sign-in-bg.jpg');
-  }
-
   #container{
     text-align: center;
     padding: 2rem;

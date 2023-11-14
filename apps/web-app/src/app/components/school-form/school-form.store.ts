@@ -85,7 +85,7 @@ export class SchoolFormStore
           () =>
             this.alert.showAlert({
               icon: 'success',
-              message: 'School created!',
+              message: 'ALERT.SUCCESS',
             }),
           (error: Error) =>
             this.alert.showAlert({ icon: 'error', message: error.message }),

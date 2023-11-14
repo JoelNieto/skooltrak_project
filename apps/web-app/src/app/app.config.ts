@@ -25,13 +25,12 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { authState } from '@skooltrak/auth';
-import { APP_CONFIG } from '@skooltrak/environments';
+import { APP_CONFIG, environment } from '@skooltrak/environments';
 import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { QuillModule } from 'ngx-quill';
 
-import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
 
 registerLocaleData(localeEs, 'es-PA');

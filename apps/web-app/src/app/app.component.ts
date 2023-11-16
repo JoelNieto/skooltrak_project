@@ -6,7 +6,6 @@ import { authState } from '@skooltrak/auth';
   selector: 'sk-root',
   standalone: true,
   imports: [RouterOutlet],
-  styles: [],
   template: ` <router-outlet /> `,
 })
 export class AppComponent implements OnInit {

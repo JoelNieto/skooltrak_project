@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `<p>grades works!</p>`,
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupsGradesComponent {}

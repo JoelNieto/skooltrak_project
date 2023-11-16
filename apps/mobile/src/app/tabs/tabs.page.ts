@@ -25,7 +25,6 @@ import { IonicModule } from '@ionic/angular';
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs> `,
-  styles: [],
 })
 export class TabsPage {
   constructor() {}

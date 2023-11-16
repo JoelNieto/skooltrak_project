@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `<p>students works!</p>`,
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StudentsComponent {}

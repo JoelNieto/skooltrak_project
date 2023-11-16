@@ -14,7 +14,6 @@ import { TranslateModule } from '@ngx-translate/core';
       </p>
     </div>
   </td>`,
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyTableComponent {}

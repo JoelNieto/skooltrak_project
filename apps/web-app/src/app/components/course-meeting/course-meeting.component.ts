@@ -1,5 +1,10 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
 import { Course } from '@skooltrak/models';
@@ -29,7 +34,6 @@ declare let JitsiMeetExternalAPI: any;
       </button>
     </div>
   </sk-card>`,
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseMeetingComponent implements OnInit {

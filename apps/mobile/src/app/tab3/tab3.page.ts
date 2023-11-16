@@ -24,7 +24,6 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
         name="Tab 3 page"
       ></skooltrak-explore-container>
     </ion-content> `,
-  styles: [],
 })
 export class Tab3Page {
   constructor() {}

@@ -17,4 +17,5 @@ export type Course = EntityBase & {
   period?: Partial<Period>;
   weekly_hours: number;
   teachers: Partial<User>[];
+  picture_url?: string;
 };

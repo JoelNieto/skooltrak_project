@@ -1,13 +1,24 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './plans-form.store';
@@ -50,11 +61,11 @@ import { PlansFormStore } from './plans-form.store';
       (ngSubmit)="saveChanges()"
     >
       <div>
-        <label for="name" skLabel>{{ 'Name' | translate }}</label>
+        <label for="name" skLabel>{{ 'NAME' | translate }}</label>
         <input type="text" formControlName="name" skInput />
       </div>
       <div>
-        <label for="degree_id" skLabel>{{ 'Degree' | translate }}</label>
+        <label for="degree_id" skLabel>{{ 'PLANS.DEGREE' | translate }}</label>
         <sk-select
           [items]="store.DEGREES()"
           label="name"
@@ -62,7 +73,7 @@ import { PlansFormStore } from './plans-form.store';
         />
       </div>
       <div>
-        <label for="year" skLabel>{{ 'Year' | translate }}</label>
+        <label for="year" skLabel>{{ 'PLANS.YEAR' | translate }}</label>
         <select label="name" formControlName="year" skInput>
           <option [value]="-1">Pre-Kinder</option>
           <option [value]="0">Kinder</option>
@@ -82,7 +93,7 @@ import { PlansFormStore } from './plans-form.store';
       </div>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
-          {{ 'Save changes' | translate }}
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

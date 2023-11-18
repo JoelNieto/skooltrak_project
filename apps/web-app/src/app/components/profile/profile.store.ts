@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { authState, SupabaseService } from '@skooltrak/auth';
 import { Gender, Table } from '@skooltrak/models';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
@@ -41,7 +45,7 @@ export class ProfileFormStore
     return request$.pipe(
       tap(() => this.patchState({ LOADING: true })),
       switchMap((request) =>
-        from(this.supabase.uploadAvatar(request)).pipe(
+        from(this.supabase.uploadPicture(request, 'avatars')).pipe(
           map(({ data, error }) => {
             if (error) throw new Error(error.message);
             return data.path;

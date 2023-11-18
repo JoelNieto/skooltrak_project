@@ -1,5 +1,6 @@
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
+import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,15 +11,18 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
+import { SupabaseService } from '@skooltrak/auth';
 import { Course, User } from '@skooltrak/models';
 import {
   ButtonDirective,
   CardComponent,
+  ImageCropperComponent,
   InputDirective,
   LabelDirective,
   SelectComponent,
 } from '@skooltrak/ui';
 
+import { PictureComponent } from '../../../components/picture/picture.component';
 import { UsersSelectorComponent } from '../../../components/users-selector/users-selector.component';
 import { CoursesFormStore } from './courses-form.store';
 
@@ -34,6 +38,8 @@ import { CoursesFormStore } from './courses-form.store';
     UsersSelectorComponent,
     LabelDirective,
     InputDirective,
+    NgOptimizedImage,
+    PictureComponent,
   ],
   providers: [
     provideComponentStore(CoursesFormStore),
@@ -56,9 +62,19 @@ import { CoursesFormStore } from './courses-form.store';
     </div>
     <form
       [formGroup]="form"
-      class="flex flex-col space-y-3"
+      class="grid grid-cols-2 gap-2 gap-y-3"
       (ngSubmit)="saveChanges()"
     >
+      @if (false) {
+        <div class="col-span-2 rounded cursor-pointer hover:opacity-70">
+          <sk-picture
+            [bucket]="bucket()"
+            class="rounded"
+            [pictureURL]="pictureUrl()"
+            (click)="changePicture()"
+          />
+        </div>
+      }
       <div>
         <label for="plan_id" skLabel>{{ 'COURSES.PLAN' | translate }}</label>
         <sk-select
@@ -87,11 +103,11 @@ import { CoursesFormStore } from './courses-form.store';
         <label skLabel>{{ 'COURSES.TEACHERS' | translate }}</label>
         <sk-users-selector formControlName="teachers" />
       </div>
-      <div>
+      <div class="col-span-2">
         <label for="description" skLabel>{{ 'DESCRIPTION' | translate }}</label>
         <textarea skInput formControlName="description"></textarea>
       </div>
-      <div class="flex justify-end">
+      <div class="flex justify-end col-span-2">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'SAVE_CHANGES' | translate }}
         </button>
@@ -101,8 +117,13 @@ import { CoursesFormStore } from './courses-form.store';
 })
 export class SchoolCoursesFormComponent implements OnInit {
   public store = inject(CoursesFormStore);
+  public dialog = inject(Dialog);
   public dialogRef = inject(DialogRef);
-  private data: Course | undefined = inject(DIALOG_DATA);
+  public data: Course | undefined = inject(DIALOG_DATA);
+  public pictureUrl = signal('default_picture.jpg');
+  public bucket = signal('courses');
+
+  private supabase = inject(SupabaseService);
 
   public form = new FormGroup({
     plan_id: new FormControl<string | undefined>(undefined, {
@@ -124,7 +145,27 @@ export class SchoolCoursesFormComponent implements OnInit {
     !!this.data && this.form.patchValue(this.data);
   }
 
+  public changePicture(): void {
+    this.dialog
+      .open<{ imageFile: File | undefined; cropImgPreview: string }>(
+        ImageCropperComponent,
+        {
+          width: '48rem',
+          maxWidth: '90%',
+          data: { fixedRatio: true, ratio: 2.25 },
+        },
+      )
+      .closed.subscribe({
+        next: (res) => {
+          if (!res) return;
+          const { cropImgPreview } = res;
+          this.pictureUrl.set(cropImgPreview);
+          this.bucket.set('');
+        },
+      });
+  }
+
   public saveChanges(): void {
-    this.dialogRef.close(this.form.getRawValue());
+    this.dialogRef.close(this.form.getRawValue(), {});
   }
 }

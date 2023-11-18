@@ -22,7 +22,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
     {{ user.father_name }}
     @if (removable) {
       <button (click)="remove.emit(user)">
-        <ng-icon name="heroXMark" size="4" />
+        <ng-icon name="heroXMark" size="16" />
       </button>
     }
   </div>`,

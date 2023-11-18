@@ -62,14 +62,14 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
             }}</a
           >
         </li>
-        @if(IS_ADMIN() || IS_TEACHER()) {
-        <li>
-          <a routerLink="groups" class="link" routerLinkActive="active"
-            ><ng-icon name="heroUserGroup" size="24" />{{
-              'GROUPS.TITLE' | translate
-            }}</a
-          >
-        </li>
+        @if (IS_ADMIN() || IS_TEACHER()) {
+          <li>
+            <a routerLink="groups" class="link" routerLinkActive="active"
+              ><ng-icon name="heroUserGroup" size="24" />{{
+                'GROUPS.TITLE' | translate
+              }}</a
+            >
+          </li>
         }
       </ul>
       <div>
@@ -79,24 +79,24 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
               class="flex w-full items-center gap-3 rounded-lg px-4 py-2 font-sans text-sm dark:text-gray-100"
               (click)="changeSchool()"
             >
-              @if(SCHOOL()?.crest_url) {
-              <sk-avatar
-                [avatarUrl]="SCHOOL()?.crest_url!"
-                bucket="crests"
-                class="h-8"
-              />
+              @if (SCHOOL()?.crest_url) {
+                <sk-avatar
+                  [avatarUrl]="SCHOOL()?.crest_url!"
+                  bucket="crests"
+                  class="h-8"
+                />
               }
               {{ SCHOOL()?.short_name ?? ('Select school' | translate) }}
             </button>
           </li>
-          @if(IS_ADMIN()) {
-          <li>
-            <a routerLink="school" class="link" routerLinkActive="active"
-              ><ng-icon name="heroBuildingLibrary" size="24" />{{
-                'SCHOOL.TITLE' | translate
-              }}</a
-            >
-          </li>
+          @if (IS_ADMIN()) {
+            <li>
+              <a routerLink="school" class="link" routerLinkActive="active"
+                ><ng-icon name="heroBuildingLibrary" size="24" />{{
+                  'SCHOOL.TITLE' | translate
+                }}</a
+              >
+            </li>
           }
 
           <li>
@@ -125,7 +125,10 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       .link {
         @apply mt-1 flex items-center gap-3 border-b-4 border-white px-4 py-3 font-sans text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
         &.active {
-          @apply border-emerald-600 text-emerald-800 dark:text-emerald-500;
+          @apply border-emerald-600 text-gray-800 dark:text-gray-500;
+          ng-icon {
+            @apply text-emerald-600;
+          }
         }
       }
     `,

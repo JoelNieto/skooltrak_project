@@ -5,11 +5,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroChevronUpDown, heroEye, heroMagnifyingGlass, heroPencilSquare } from '@ng-icons/heroicons/outline';
+import {
+  heroChevronUpDown,
+  heroEye,
+  heroMagnifyingGlass,
+  heroPencilSquare,
+} from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonDirective, PaginatorComponent, SelectComponent, UtilService } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  PaginatorComponent,
+  SelectComponent,
+  UtilService,
+} from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolCoursesFormComponent } from './courses-form.component';
@@ -86,66 +96,68 @@ import { SchoolCoursesStore } from './courses.store';
         </tr>
       </thead>
       <tbody>
-        @for(course of store.COURSES(); track course.id) {
+        @for (course of store.COURSES(); track course.id) {
           <tr
-          [class.hidden]="store.LOADING()"
-          class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-        >
-          <th
-            scope="row"
-            class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
+            [class.hidden]="store.LOADING()"
+            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
-            {{ course.subject?.name }}
-          </th>
-          <td class="px-6 py-3.5">{{ course.plan?.name }}</td>
-          <td class="flex px-6 py-3.5">
-            @for(teacher of course.teachers; track teacher.id) {
-              <sk-user-chip [user]="teacher" />
-            }
-          </td>
-          <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
-          <td class="px-6 py-3.5">
-            {{ course.created_at | date : 'medium' }}
-          </td>
-          <td class="flex content-center justify-center gap-2 px-6 py-3.5">
-            <a
-              routerLink="../../courses/details"
-              [queryParams]="{ course_id: course.id }"
+            <th
+              scope="row"
+              class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
             >
-              <ng-icon name="heroEye" size="24" class="text-sky-500" />
-            </a>
-            <button type="button" (click)="editCourse(course)">
-              <ng-icon
-                name="heroPencilSquare"
-                class="text-green-500"
-                size="24"
-              />
-            </button>
-          </td>
-        </tr>
+              {{ course.subject?.name }}
+            </th>
+            <td class="px-6 py-3.5">{{ course.plan?.name }}</td>
+            <td class="flex px-6 py-3.5">
+              @for (teacher of course.teachers; track teacher.id) {
+                <sk-user-chip [user]="teacher" />
+              }
+            </td>
+            <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
+            <td class="px-6 py-3.5">
+              {{ course.created_at | date: 'medium' }}
+            </td>
+            <td class="flex content-center justify-center gap-2 px-6 py-3.5">
+              <a
+                routerLink="../../courses/details"
+                [queryParams]="{ course_id: course.id }"
+              >
+                <ng-icon name="heroEye" size="24" class="text-sky-500" />
+              </a>
+              <button type="button" (click)="editCourse(course)">
+                <ng-icon
+                  name="heroPencilSquare"
+                  class="text-green-500"
+                  size="24"
+                />
+              </button>
+            </td>
+          </tr>
         }
       </tbody>
     </table>
-    @if(store.LOADING()) {
+    @if (store.LOADING()) {
       <div class="mt-4 animate-pulse">
-      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-      <ul class="mt-8 space-y-8">
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-      </ul>
-    </div>
+        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+        <ul class="mt-8 space-y-8">
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        </ul>
+      </div>
     }
-    @if(!store.LOADING() && !store.COURSES().length) {
-      <div
-      class="flex flex-col items-center justify-center gap-4 py-12"
-    >
-      <img src="/assets/images/books-lineal-colored.svg" class="h-24" alt="" />
-      <p class="font-sans italic text-gray-400">
-        {{ 'NO_ITEMS' | translate }}
-      </p>
-    </div>
+    @if (!store.LOADING() && !store.COURSES().length) {
+      <div class="flex flex-col items-center justify-center gap-4 py-12">
+        <img
+          src="/assets/images/books-lineal-colored.svg"
+          class="h-24"
+          alt=""
+        />
+        <p class="font-sans italic text-gray-400">
+          {{ 'NO_ITEMS' | translate }}
+        </p>
+      </div>
     }
     <sk-paginator
       [count]="store.COUNT()"
@@ -189,36 +201,35 @@ export class SchoolCoursesComponent implements OnInit {
   }
 
   public createCourse(): void {
-    const dialogRef = this.dialog.open<Partial<Course>>(
-      SchoolCoursesFormComponent,
-      {
-        minWidth: '36rem',
+    this.dialog
+      .open<Partial<Course>>(SchoolCoursesFormComponent, {
+        width: '36rem',
+        maxWidth: '75%',
         disableClose: true,
         data: { plan_id: this.store.selectedPlan() },
-      }
-    );
-
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveCourse(request);
-      },
-    });
+      })
+      .closed.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (request) => {
+          !!request && this.store.saveCourse(request);
+        },
+      });
   }
 
   public editCourse(course: Partial<Course>): void {
-    const dialogRef = this.dialog.open<Partial<Course>>(
-      SchoolCoursesFormComponent,
-      {
-        minWidth: '36rem',
+    this.dialog
+      .open<Partial<Course>>(SchoolCoursesFormComponent, {
+        width: '36rem',
+        maxWidth: '75%',
         disableClose: true,
         data: course,
-      }
-    );
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveCourse({ ...request, id: course.id });
-      },
-    });
+      })
+      .closed.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (request) => {
+          !!request && this.store.saveCourse({ ...request, id: course.id });
+        },
+      });
   }
 
   public deleteCourse(course: Course): void {

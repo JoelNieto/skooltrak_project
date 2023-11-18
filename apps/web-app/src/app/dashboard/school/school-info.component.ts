@@ -49,11 +49,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
         class="mt-2 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4"
       >
         <div>
-          <<<<<<< HEAD
           <div class="label">{{ 'SCHOOL.SHORT_NAME' | translate }}</div>
-          =======
-          <div class="label">{{ 'SHORT_NAME' | translate }}</div>
-          >>>>>>> fed8e64adf3b4eea35eef0960d043600de6dda84
           <div class="value">{{ school()?.short_name }}</div>
         </div>
         <div>
@@ -79,12 +75,6 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
           <div class="value">{{ school()?.contact_phone }}</div>
         </div>
         <div>
-          <<<<<<< HEAD
-          <div class="label">{{ 'SCHOOL.MOTTO' | translate }}</div>
-          <div class="value">{{ school()?.motto }}</div>
-        </div>
-        <div>
-          ======= >>>>>>> fed8e64adf3b4eea35eef0960d043600de6dda84
           <div class="label">{{ 'CODE' | translate }}</div>
           <div class="value">{{ school()?.code }}</div>
         </div>

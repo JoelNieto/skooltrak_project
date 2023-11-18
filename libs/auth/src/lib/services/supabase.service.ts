@@ -65,19 +65,17 @@ export class SupabaseService {
     return this.client.auth.signOut();
   }
 
-  public downLoadImage(path: string, bucket: 'avatars' | 'crests') {
+  public downLoadImage(path: string, bucket: string) {
     return this.client.storage.from(bucket).download(path);
   }
 
-  public uploadAvatar(file: File) {
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${Math.random()}.${fileExt}`;
-    return this.client.storage.from('avatars').upload(filePath, file);
+  public deleteImage(bucket: string, path: string) {
+    this.client.storage.from(bucket).remove([path]);
   }
 
-  public uploadCrest(file: File) {
+  public uploadPicture(file: File, bucket: string) {
     const fileExt = file.name.split('.').pop();
     const filePath = `${Math.random()}.${fileExt}`;
-    return this.client.storage.from('crests').upload(filePath, file);
+    return this.client.storage.from(bucket).upload(filePath, file);
   }
 }

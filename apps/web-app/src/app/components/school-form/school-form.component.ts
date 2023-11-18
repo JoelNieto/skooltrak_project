@@ -67,19 +67,19 @@ import { SchoolFormStore } from './school-form.store';
     </div>
     <div class="flex flex-col items-center justify-center space-y-4">
       @if (store.SCHOOL()?.crest_url) {
-      <sk-avatar
-        [avatarUrl]="store.SCHOOL()?.crest_url!"
-        (click)="uploadCrest()"
-        bucket="crests"
-        class="h-24 rounded-md"
-      />
+        <sk-avatar
+          [avatarUrl]="store.SCHOOL()?.crest_url!"
+          (click)="uploadCrest()"
+          bucket="crests"
+          class="h-24 rounded-md"
+        />
       } @else {
-      <img
-        (click)="uploadCrest()"
-        src="assets/images/skooltrak-logo.svg"
-        class="h-24"
-        alt="Skooltrak Logo"
-      />
+        <img
+          (click)="uploadCrest()"
+          src="assets/images/skooltrak-logo.svg"
+          class="h-24"
+          alt="Skooltrak Logo"
+        />
       }
     </div>
     <form
@@ -102,8 +102,10 @@ import { SchoolFormStore } from './school-form.store';
       <div>
         <label for="type" skLabel>{{ 'SCHOOL.TYPE' | translate }}</label>
         <select formControlName="type" skInput>
-          @for(type of types(); track type) {
-          <option [value]="type">{{ type }}</option>
+          @for (type of types(); track type) {
+            <option [value]="type">
+              {{ 'SCHOOL_TYPE.' + type | translate }}
+            </option>
           }
         </select>
       </div>

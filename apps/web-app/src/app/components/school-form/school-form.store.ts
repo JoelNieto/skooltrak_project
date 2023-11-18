@@ -53,7 +53,7 @@ export class SchoolFormStore
     return request$.pipe(
       tap(() => this.patchState({ LOADING: true })),
       switchMap((request) =>
-        from(this.supabase.uploadCrest(request)).pipe(
+        from(this.supabase.uploadPicture(request, 'crest')).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data.path;

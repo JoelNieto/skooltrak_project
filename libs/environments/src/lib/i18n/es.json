@@ -61,7 +61,8 @@
     "TEACHERS": "Docentes"
   },
   "Created": "Creado",
-  "Created by": "Creado por",
+  "CREATED_AT": "Creado",
+  "CREATED_BY": "Creado por",
   "DEGREES": {
     "DETAILS": "Detalles del certificado",
     "TITLE": "Certificados"
@@ -86,6 +87,12 @@
   },
   "Home": "Inicio",
   "HOME": "Inicio",
+  "IMAGE_CROPPER": {
+    "TITLE": "Ajustador de imagen",
+    "CHOOSE_PICTURE": "Elegir imagen",
+    "CONFIRM": "Confirmar",
+    "PREVIEW": "Vista previa"
+  },
   "INPUT": {
     "INVALID": "Campo invalido",
     "REQUIRED": "Campo requerido"
@@ -109,7 +116,9 @@
   },
   "PLANS": {
     "DETAILS": "Detalles del Plan de estudio",
-    "TITLE": "Planes de estudio"
+    "TITLE": "Planes de estudio",
+    "DEGREE": "Certificado",
+    "YEAR": "Año"
   },
   "PEOPLE": {
     "TITLE": "Personas",

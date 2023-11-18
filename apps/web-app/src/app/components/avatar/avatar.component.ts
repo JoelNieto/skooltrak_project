@@ -29,7 +29,7 @@ export class AvatarComponent {
   @Input() public bucket: 'avatars' | 'crests' = 'avatars';
   @Input() public rounded!: boolean;
   @Input({ required: true })
-  public set avatarUrl(url: string | null) {
+  public set avatarUrl(url: string) {
     if (url) {
       this.downloadImage(url);
     }

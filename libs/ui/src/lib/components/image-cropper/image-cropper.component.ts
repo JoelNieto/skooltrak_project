@@ -4,6 +4,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
+import { TranslateModule } from '@ngx-translate/core';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
@@ -19,6 +20,7 @@ import { CardComponent } from '../card/card.component';
     NgIconComponent,
     CardComponent,
     NgStyle,
+    TranslateModule,
   ],
   providers: [provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -26,7 +28,7 @@ import { CardComponent } from '../card/card.component';
         <h3
           class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
         >
-          Image cropper
+          {{ 'IMAGE_CROPPER.TITLE' | translate }}
         </h3>
         <button (click)="dialogRef.close()">
           <ng-icon
@@ -37,7 +39,7 @@ import { CardComponent } from '../card/card.component';
         </button>
       </div>
       <button skButton color="green" (click)="fileInput.click()">
-        Choose picture
+        {{ 'IMAGE_CROPPER.CHOOSE_PICTURE' | translate }}
       </button>
       <div class="space-4 mt-2 flex flex-col">
         <image-cropper
@@ -52,19 +54,21 @@ import { CardComponent } from '../card/card.component';
           (cropperReady)="initCropper()"
           (loadImageFailed)="imgFailed()"
         />
-        <div class="my-4 flex ">
-          <div>
-            <span class="font-sans font-semibold text-gray-600"
-              >Image preview</span
-            >
-            <br />
-            <img
-              [src]="cropImgPreview"
-              class="border border-gray-400"
-              [style.max-height]="'75px'"
-            />
+        @if (cropImgPreview) {
+          <div class="my-4 flex ">
+            <div>
+              <span class="font-sans font-semibold text-gray-600">{{
+                'IMAGE_CROPPER.PREVIEW' | translate
+              }}</span>
+              <br />
+              <img
+                [src]="cropImgPreview"
+                class="border border-gray-400"
+                [style.max-height]="'75px'"
+              />
+            </div>
           </div>
-        </div>
+        }
       </div>
       <div class="flex justify-end" footer>
         <button
@@ -74,7 +78,7 @@ import { CardComponent } from '../card/card.component';
           [disabled]="!imageFile"
           (click)="dialogRef.close({ imageFile, cropImgPreview })"
         >
-          Save
+          {{ 'IMAGE_CROPPER.CONFIRM' | translate }}
         </button>
       </div>
     </sk-card>
@@ -89,7 +93,6 @@ import { CardComponent } from '../card/card.component';
     `
       :host {
         display: block;
-        @apply sm:max-w-lg;
       }
     `,
   ],

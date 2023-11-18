@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  effect,
   ElementRef,
   forwardRef,
   HostListener,
@@ -66,12 +67,11 @@ import { UsersSelectorStore } from './users-selector.store';
       #select
       (click)="showOptions()"
       role="listbox"
-      class="flex max-h-20 w-full flex-wrap gap-2 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
+      class="flex max-h-20 w-full flex-wrap p-1  gap-2 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
       [ngClass]="{
         'border-sky-600 ring-1 ring-sky-600 dark:border-sky-500 dark:ring-sky-500':
           IS_OPEN()
       }"
-      [class.text-gray-700]="CURRENT_VALUE()"
     >
       @for (user of CURRENT_VALUE(); track user.id) {
         <sk-user-chip
@@ -80,7 +80,7 @@ import { UsersSelectorStore } from './users-selector.store';
           (remove)="toggleValue(user)"
         />
       } @empty {
-        <div class="p-1 text-gray-700 dark:text-gray-400">
+        <div class="p-1.5 text-gray-700 dark:text-gray-400">
           {{ 'USERS_SELECTOR.PLACEHOLDER' | translate }}
         </div>
       }
@@ -175,6 +175,12 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public onChange = (value: any | any[]): void => {};
   public onTouch: any = () => {};
+
+  constructor() {
+    effect(() => this.onChange(this.CURRENT_VALUE()), {
+      allowSignalWrites: true,
+    });
+  }
 
   public ngOnInit(): void {
     this.searchText.valueChanges

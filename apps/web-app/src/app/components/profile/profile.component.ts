@@ -55,7 +55,6 @@ import { ProfileFormStore } from './profile.store';
             />
           }
         </div>
-
         <form [formGroup]="form" (ngSubmit)="saveChanges()">
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <div>
@@ -178,20 +177,22 @@ export class ProfileComponent implements OnInit {
   }
 
   public changeAvatar(): void {
-    const dialogRef = this.dialog.open<{
-      imageFile: File | undefined;
-      cropImgPreview: string;
-    }>(ImageCropperComponent, {
-      minWidth: '28rem',
-      data: { fixedRatio: true, ratio: 4 / 4 },
-    });
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (result) => {
-        if (!result) return;
-        const { imageFile } = result;
-        if (imageFile) this.store.uploadAvatar(imageFile);
-      },
-    });
+    this.dialog
+      .open<{
+        imageFile: File | undefined;
+        cropImgPreview: string;
+      }>(ImageCropperComponent, {
+        minWidth: '28rem',
+        data: { fixedRatio: true, ratio: 4 / 4 },
+      })
+      .closed.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          if (!result) return;
+          const { imageFile } = result;
+          if (imageFile) this.store.uploadAvatar(imageFile);
+        },
+      });
   }
 
   public saveChanges(): void {

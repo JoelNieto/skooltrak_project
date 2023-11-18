@@ -6,6 +6,6 @@ import { Directive, HostBinding } from '@angular/core';
 })
 export class LabelDirective {
   @HostBinding('class') get classes() {
-    return `mb-1.5 block font-sans text-sm text-gray-500 dark:text-white`;
+    return `mb-1.5 block font-title text-sm text-gray-700 dark:text-white`;
   }
 }

@@ -19,8 +19,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
     DialogModule,
     SchoolFormComponent,
   ],
-  styles: [
-    `
+  styles: `
       .label {
         @apply block font-mono text-sm text-gray-500 dark:text-gray-400;
       }
@@ -28,7 +27,6 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
         @apply block font-sans text-gray-700 dark:text-gray-200;
       }
     `,
-  ],
   template: `
     <div class="flex flex-col items-center justify-center space-y-3">
       @if (school()?.crest_url) {
@@ -43,18 +41,30 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
         {{ school()?.full_name }}
       </h4>
       <div>
-        <button skButton color="green" (click)="editInfo()">Edit</button>
+        <button skButton color="green" (click)="editInfo()">
+          {{ 'EDIT' | translate }}
+        </button>
       </div>
       <div
         class="mt-2 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4"
       >
         <div>
+          <<<<<<< HEAD
           <div class="label">{{ 'SCHOOL.SHORT_NAME' | translate }}</div>
+          =======
+          <div class="label">{{ 'SHORT_NAME' | translate }}</div>
+          >>>>>>> fed8e64adf3b4eea35eef0960d043600de6dda84
           <div class="value">{{ school()?.short_name }}</div>
         </div>
         <div>
           <div class="label">{{ 'SCHOOL.COUNTRY' | translate }}</div>
           <div class="value">{{ school()?.country?.name }}</div>
+        </div>
+        <div>
+          <div class="label">{{ 'SCHOOL.TYPE' | translate }}</div>
+          <div class="value">
+            {{ 'SCHOOL_TYPE.' + school()?.type! | translate }}
+          </div>
         </div>
         <div>
           <div class="label">{{ 'SCHOOL.ADDRESS' | translate }}</div>
@@ -69,10 +79,12 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
           <div class="value">{{ school()?.contact_phone }}</div>
         </div>
         <div>
+          <<<<<<< HEAD
           <div class="label">{{ 'SCHOOL.MOTTO' | translate }}</div>
           <div class="value">{{ school()?.motto }}</div>
         </div>
         <div>
+          ======= >>>>>>> fed8e64adf3b4eea35eef0960d043600de6dda84
           <div class="label">{{ 'CODE' | translate }}</div>
           <div class="value">{{ school()?.code }}</div>
         </div>
@@ -81,6 +93,10 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
           <div class="value">
             {{ school()?.created_at | date: 'mediumDate' }}
           </div>
+        </div>
+        <div class="cols-2">
+          <div class="label">{{ 'SCHOOL.MOTTO' | translate }}</div>
+          <div class="value">{{ school()?.motto }}</div>
         </div>
       </div>
     </div>

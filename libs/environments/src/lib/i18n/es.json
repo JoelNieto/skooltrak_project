@@ -60,7 +60,6 @@
     "WEEKLY_HOURS": "Horas semanales",
     "TEACHERS": "Docentes"
   },
-  "Created": "Creado",
   "CREATED_AT": "Creado",
   "CREATED_BY": "Creado por",
   "DEGREES": {
@@ -69,6 +68,7 @@
   },
   "DESCRIPTION": "Descripción",
   "Document ID": "Nro. Documento",
+  "EDIT": "Editar",
   "Father name": "Apellido paterno",
   "Female": "Femenino",
   "Files": "Archivos",

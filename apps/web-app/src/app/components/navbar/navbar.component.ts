@@ -8,6 +8,7 @@ import {
   heroBell,
   heroBookmarkSquare,
   heroCalendarDays,
+  heroChatBubbleLeftRight,
   heroClipboardDocument,
   heroCog6Tooth,
   heroHome,
@@ -38,6 +39,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
       heroCalendarDays,
       heroCog6Tooth,
       heroBell,
+      heroChatBubbleLeftRight,
     }),
   ],
   template: `<nav
@@ -74,6 +76,13 @@ import { AvatarComponent } from '../avatar/avatar.component';
           </a>
         </div>
         <div class="flex flex-1 items-center justify-end gap-3">
+          <button routerLink="messaging">
+            <ng-icon
+              name="heroChatBubbleLeftRight"
+              class="text-white"
+              size="24"
+            />
+          </button>
           <button>
             <ng-icon name="heroCog6Tooth" class="text-white" size="24" />
           </button>

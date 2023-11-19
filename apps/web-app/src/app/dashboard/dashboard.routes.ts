@@ -39,6 +39,12 @@ export const dashboardRoutes: Routes = [
           ),
       },
       {
+        path: 'messaging',
+        title: 'MESSAGING.TITLE',
+        loadChildren: () =>
+          import('./messaging/messaging.routes').then((x) => x.messagingRoutes),
+      },
+      {
         path: 'settings',
         title: 'Settings',
         loadChildren: () =>

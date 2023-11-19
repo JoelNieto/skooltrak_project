@@ -75,7 +75,7 @@ export class SupabaseService {
 
   public uploadPicture(file: File, bucket: string) {
     const fileExt = file.name.split('.').pop();
-    const filePath = `${Math.random()}.${fileExt}`;
+    const filePath = `${Math.random() * 10}.${fileExt}`;
     return this.client.storage.from(bucket).upload(filePath, file);
   }
 }

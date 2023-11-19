@@ -104,6 +104,11 @@
     "CLOSE": "Cerrar"
   },
   "Messages": "Mensajes",
+  "MESSAGING": {
+    "TITLE": "Mensajes",
+    "INBOX": "Buzón",
+    "ARCHIVED": "Archivado"
+  },
   "Middle name": "Segundo nombre",
   "Mother name": "Apellido materno",
   "NAME": "Nombre",

@@ -119,7 +119,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
   styles: [
     `
       main {
-        min-height: calc(100vh - 4rem);
+        min-height: calc(100vh - 8rem);
       }
 
       .link {

@@ -3,6 +3,7 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { NgClass } from '@angular/common';
 import {
+  booleanAttribute,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -11,19 +12,14 @@ import {
   forwardRef,
   HostListener,
   inject,
+  Input,
   isDevMode,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  ControlValueAccessor,
-  FormControl,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -76,8 +72,8 @@ import { UsersSelectorStore } from './users-selector.store';
       @for (user of CURRENT_VALUE(); track user.id) {
         <sk-user-chip
           [user]="user"
-          [removable]="true"
-          (remove)="toggleValue(user)"
+          [removable]="!single"
+          (remove)="removeValue(user)"
         />
       } @empty {
         <div class="p-1.5 text-gray-700 dark:text-gray-400">
@@ -154,6 +150,8 @@ import { UsersSelectorStore } from './users-selector.store';
   </div>`,
 })
 export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
+  @Input({ required: false, transform: booleanAttribute })
+  public single: boolean = false;
   public CURRENT_VALUE = signal<Partial<User>[]>([]);
   public overlay = inject(Overlay);
   public store = inject(UsersSelectorStore);
@@ -227,12 +225,18 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
   };
 
   public toggleValue = (val: Partial<User>): void => {
-    this.CURRENT_VALUE().find((x) => x.id === val.id)
-      ? this.CURRENT_VALUE.update((value) =>
-          value.filter((x) => x.id !== val.id),
-        )
-      : this.CURRENT_VALUE.update((value) => [...value, val]);
+    if (this.single) {
+      this.CURRENT_VALUE.set([val]);
+      this.hide();
+    } else {
+      this.CURRENT_VALUE.update((value) => [...value, val]);
+    }
+
     this.onTouch();
+  };
+
+  public removeValue = (val: Partial<User>): void => {
+    this.CURRENT_VALUE.update((value) => value.filter((x) => x.id !== val.id));
   };
 
   private hide = (): void => {

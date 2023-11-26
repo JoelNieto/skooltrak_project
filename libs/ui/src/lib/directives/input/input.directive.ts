@@ -1,8 +1,10 @@
 import {
+  booleanAttribute,
   Directive,
   ElementRef,
   HostBinding,
   inject,
+  Input,
   OnInit,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -13,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
   standalone: true,
 })
 export class InputDirective implements OnInit {
+  @Input({ transform: booleanAttribute }) validation: boolean = false;
   private control = inject(NgControl);
   private elRef = inject(ElementRef);
   private translate = inject(TranslateService);
@@ -23,40 +26,44 @@ export class InputDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    const { name } = this.control;
-    this.errorId = `${name}-error`;
-    this.control.statusChanges?.subscribe({
-      next: (status) => {
-        this.removeError();
-        if (status === 'INVALID') {
-          this.elRef.nativeElement.classList.add('border-red-400');
-          this.elRef.nativeElement.classList.add('bg-red-100');
-          this.elRef.nativeElement.classList.add('text-red-800');
-          this.elRef.nativeElement.classList.add('focus:border-red-600');
-          this.elRef.nativeElement.classList.add('focus:ring-red-600');
-          this.elRef.nativeElement.classList.add('dark:bg-red-300');
-          this.elRef.nativeElement.classList.add('dark:border-red-800');
-          this.elRef.nativeElement.classList.add('dark:focus:border-red-700');
-          this.elRef.nativeElement.classList.add('dark:focus:ring-red-700');
-          this.elRef.nativeElement.classList.remove('focus:ring-sky-600');
-          this.elRef.nativeElement.classList.remove('focus:border-sky-600');
-          this.getError();
-          return;
-        }
-        this.elRef.nativeElement.classList.remove('border-red-400');
-        this.elRef.nativeElement.classList.remove('bg-red-100');
-        this.elRef.nativeElement.classList.remove('text-red-800');
-        this.elRef.nativeElement.classList.remove('focus:border-red-600');
-        this.elRef.nativeElement.classList.remove('focus:ring-red-600');
-        this.elRef.nativeElement.classList.remove('dark:border-red-300');
-        this.elRef.nativeElement.classList.remove('dark:focus:border-red-800');
-        this.elRef.nativeElement.classList.remove('dark:focus:ring-red-700');
-        this.elRef.nativeElement.classList.remove('dark:bg-red-300');
-        this.elRef.nativeElement.classList.add('focus:ring-sky-600');
-        this.elRef.nativeElement.classList.add('focus:border-sky-600');
-        this.removeError();
-      },
-    });
+    if (this.validation) {
+      const { name } = this.control;
+      this.errorId = `${name}-error`;
+      this.control.statusChanges?.subscribe({
+        next: (status) => {
+          this.removeError();
+          if (status === 'INVALID') {
+            this.elRef.nativeElement.classList.add('border-red-400');
+            this.elRef.nativeElement.classList.add('bg-red-100');
+            this.elRef.nativeElement.classList.add('text-red-800');
+            this.elRef.nativeElement.classList.add('focus:border-red-600');
+            this.elRef.nativeElement.classList.add('focus:ring-red-600');
+            this.elRef.nativeElement.classList.add('dark:bg-red-300');
+            this.elRef.nativeElement.classList.add('dark:border-red-800');
+            this.elRef.nativeElement.classList.add('dark:focus:border-red-700');
+            this.elRef.nativeElement.classList.add('dark:focus:ring-red-700');
+            this.elRef.nativeElement.classList.remove('focus:ring-sky-600');
+            this.elRef.nativeElement.classList.remove('focus:border-sky-600');
+            this.getError();
+            return;
+          }
+          this.elRef.nativeElement.classList.remove('border-red-400');
+          this.elRef.nativeElement.classList.remove('bg-red-100');
+          this.elRef.nativeElement.classList.remove('text-red-800');
+          this.elRef.nativeElement.classList.remove('focus:border-red-600');
+          this.elRef.nativeElement.classList.remove('focus:ring-red-600');
+          this.elRef.nativeElement.classList.remove('dark:border-red-300');
+          this.elRef.nativeElement.classList.remove(
+            'dark:focus:border-red-800',
+          );
+          this.elRef.nativeElement.classList.remove('dark:focus:ring-red-700');
+          this.elRef.nativeElement.classList.remove('dark:bg-red-300');
+          this.elRef.nativeElement.classList.add('focus:ring-sky-600');
+          this.elRef.nativeElement.classList.add('focus:border-sky-600');
+          this.removeError();
+        },
+      });
+    }
   }
 
   getError() {

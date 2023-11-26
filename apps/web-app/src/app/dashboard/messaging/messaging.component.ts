@@ -4,36 +4,36 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
+import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
 import { MessagingStore } from './messaging.store';
 
 @Component({
   selector: 'sk-messaging',
   standalone: true,
-  imports: [
-    TranslateModule,
-    TabsItemComponent,
-    TabsComponent,
-    CardComponent,
-    RouterOutlet,
-  ],
   providers: [provideComponentStore(MessagingStore)],
   template: `<h2
       class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
     >
       {{ 'MESSAGING.TITLE' | translate }}
     </h2>
-    <sk-tabs center>
-      <sk-tabs-item link="inbox">{{
-        'MESSAGING.INBOX' | translate
-      }}</sk-tabs-item>
-      <sk-tabs-item link="archived">{{
-        'MESSAGING.ARCHIVED' | translate
-      }}</sk-tabs-item>
-    </sk-tabs>
-    <router-outlet />`,
+    <div class="mt-2">
+      @if (store.LOADING()) {
+        <sk-chats-loading />
+      } @else {
+        <router-outlet />
+      }
+    </div> `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    TranslateModule,
+    TabsItemComponent,
+    TabsComponent,
+    CardComponent,
+    RouterOutlet,
+    ChatsLoadingComponent,
+  ],
 })
 export class MessagingComponent {
-  private readonly store = inject(MessagingStore);
+  public readonly store = inject(MessagingStore);
 }

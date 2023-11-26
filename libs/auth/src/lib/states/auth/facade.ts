@@ -10,7 +10,8 @@ export class AuthStateFacade {
   private store = inject(Store);
 
   public USER = this.store.selectSignal(selectors.selectUser);
-  public current_user$ = this.store.select(selectors.selectUser);
+  public USER_ID = this.store.selectSignal(selectors.selectUserId);
+  public currentUser$ = this.store.select(selectors.selectUser);
   public LOADING = this.store.selectSignal(selectors.selectLoading);
   public SESSION = this.store.selectSignal(selectors.selectSession);
   public CURRENT_SCHOOL_ID = this.store.selectSignal(selectors.selectSchoolId);

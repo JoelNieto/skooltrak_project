@@ -1,5 +1,5 @@
-import { NgClass } from '@angular/common';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -12,7 +12,7 @@ import { SupabaseService } from '@skooltrak/auth';
 @Component({
   selector: 'sk-avatar',
   standalone: true,
-  imports: [NgClass],
+  imports: [],
   template: `<img
     [attr.src]="_avatarUrl"
     class="h-full"
@@ -27,7 +27,7 @@ import { SupabaseService } from '@skooltrak/auth';
 })
 export class AvatarComponent {
   @Input() public bucket: 'avatars' | 'crests' = 'avatars';
-  @Input() public rounded!: boolean;
+  @Input({ transform: booleanAttribute }) public rounded: boolean = false;
   @Input({ required: true })
   public set avatarUrl(url: string) {
     if (url) {

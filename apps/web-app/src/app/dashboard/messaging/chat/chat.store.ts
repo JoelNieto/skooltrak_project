@@ -4,11 +4,9 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, messagingState, SupabaseService } from '@skooltrak/auth';
 import { Message, Table } from '@skooltrak/models';
 import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
-
-import { MessagingStore } from '../messaging.store';
 
 type State = {
   LOADING: boolean;
@@ -18,8 +16,8 @@ type State = {
 @Injectable()
 export class ChatStore extends ComponentStore<State> implements OnStoreInit {
   private readonly supabase = inject(SupabaseService);
-  private readonly messaging = inject(MessagingStore);
   private auth = inject(authState.AuthStateFacade);
+  private readonly store = inject(messagingState.MessagingStateFacade);
   public readonly MESSAGES = this.selectSignal((state) => state.MESSAGES);
   public LOADING = this.selectSignal((state) => state.LOADING);
 
@@ -59,7 +57,7 @@ export class ChatStore extends ComponentStore<State> implements OnStoreInit {
         from(
           this.supabase.client
             .from(Table.Messages)
-            .insert([{ chat_id: this.messaging.CHAT_ID(), text }])
+            .insert([{ chat_id: this.store.SELECTED_ID(), text }])
             .select('id, user_id, text, user:users(*), sent_at')
             .single(),
         ).pipe(
@@ -82,6 +80,6 @@ export class ChatStore extends ComponentStore<State> implements OnStoreInit {
 
   public ngrxOnStoreInit = (): void => {
     this.setState({ LOADING: false, MESSAGES: [] });
-    this.fetchMessages(this.messaging.chat_id$);
+    this.fetchMessages(this.store.selected_id$);
   };
 }

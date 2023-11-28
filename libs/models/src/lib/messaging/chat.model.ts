@@ -2,9 +2,11 @@ import { User } from '../auth';
 import { EntityBase } from '../entity';
 
 export type Chat = EntityBase & {
+  id: string;
   description: string;
   user_id: string;
   members: ChatMember[];
+  last_message: Date;
 };
 
 export type ChatMember = {

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
+import { messagingState } from '@skooltrak/auth';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
@@ -35,5 +36,5 @@ import { MessagingStore } from './messaging.store';
   ],
 })
 export class MessagingComponent {
-  public readonly store = inject(MessagingStore);
+  public readonly store = inject(messagingState.MessagingStateFacade);
 }

@@ -1,17 +1,24 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroPaperAirplaneSolid } from '@ng-icons/heroicons/solid';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
+import { messagingState } from '@skooltrak/auth';
 import { InputDirective } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { ChatsLoadingComponent } from '../chats-loading/chats-loading.component';
-import { MessagingStore } from '../messaging.store';
 import { ChatStore } from './chat.store';
 
 @Component({
@@ -69,7 +76,8 @@ import { ChatStore } from './chat.store';
             [formControl]="messageControl"
             [modules]="modules"
             theme="snow"
-            [styles]="{ height: '4rem' }"
+            [placeholder]="'MESSAGING.SEND_PLACEHOLDER' | translate"
+            [styles]="{ height: '3rem' }"
             class="block w-full rounded-lg border border-gray-300 bg-white p-1.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
           />
           <button
@@ -94,7 +102,12 @@ import { ChatStore } from './chat.store';
       ::ng-deep .ql-container.ql-snow,
       ::ng-deep .ql-editor,
       ::ng-deep .ql-toolbar.ql-snow {
-        @apply border-0 p-0;
+        @apply border-0 px-2 py-0.5;
+      }
+
+      ::ng-deep .ql-container {
+        resize: vertical;
+        overflow-y: scroll;
       }
 
       .chat-item {
@@ -125,7 +138,7 @@ export class ChatComponent implements OnInit {
   @ViewChild('chatContainer')
   private chatContainer!: ElementRef<HTMLDivElement>;
   public readonly store = inject(ChatStore);
-  public readonly messagingStore = inject(MessagingStore);
+  public readonly state = inject(messagingState.MessagingStateFacade);
   private route = inject(ActivatedRoute);
   public messageControl = new FormControl('', {
     nonNullable: true,
@@ -143,8 +156,10 @@ export class ChatComponent implements OnInit {
 
   public ngOnInit(): void {
     this.route.queryParams.subscribe({
-      next: ({ chat_id }) =>
-        this.messagingStore.patchState({ CHAT_ID: chat_id }),
+      next: ({ chat_id }) => {
+        this.state.setCurrentChat(chat_id);
+        this.messageControl.reset();
+      },
     });
   }
 

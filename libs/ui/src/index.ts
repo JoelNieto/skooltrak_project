@@ -7,7 +7,7 @@ export * from './lib/components/confirmation/confirmation.service';
 export * from './lib/components/select/select.component';
 export * from './lib/components/tabs/tabs.component';
 export * from './lib/components/tabs-item/tabs-item.component';
-export * from './lib/services/pipes';
+export * from './lib/pipes';
 export * from './lib/services/title.resolver';
 export * from './lib/directives/input/input.directive';
 export * from './lib/directives/label/label.directive';

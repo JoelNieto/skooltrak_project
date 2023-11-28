@@ -52,7 +52,7 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState(authState.authFeature),
     provideEffects(authState.effects),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), trace: true }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), trace: true , connectInZone: true}),
     importProvidersFrom(
       QuillModule.forRoot(),
       BrowserModule,

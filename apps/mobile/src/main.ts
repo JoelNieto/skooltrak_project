@@ -28,7 +28,7 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideState(authState.authFeature),
     provideEffects(authState.effects),
-    provideStoreDevtools(),
+    provideStoreDevtools({connectInZone: true}),
     importProvidersFrom(
       BrowserModule,
       IonicModule.forRoot(),

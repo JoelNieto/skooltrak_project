@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Table } from '@skooltrak/models';
-import { from, map, switchMap, tap } from 'rxjs';
+import { from, iif, map, of, switchMap, tap } from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthStateFacade } from '../auth';
@@ -55,30 +55,34 @@ export const newChat = createEffect(
             (x) => x.members.length === 1 && ids.includes(x.members[0].user_id),
           ),
       })),
-      map(({ ids, chat }) => {
-        if (chat) {
-          return MessageActions.newChatSuccess({ id: chat.id });
-        } else {
-          return from(supabase.client.rpc('new_chat', { user_ids: ids })).pipe(
-            tap(() => console.log('Enter')),
+      switchMap(({ ids, chat }) => {
+        return iif(
+          () => !!chat,
+          of(MessageActions.newChatSuccess({ id: chat?.id ?? '' })),
+          from(supabase.client.rpc('new_chat', { user_ids: ids })).pipe(
             map(({ error, data }) => {
               if (error) throw new Error();
               return data as string;
             }),
-            tap(() => MessageActions.getChats()),
+            tap(() => state.getMessages()),
             map((id) => MessageActions.newChatSuccess({ id })),
-          );
-        }
+          ),
+        );
       }),
     );
   },
-  { functional: true, dispatch: false },
+  { functional: true },
 );
 
 export const newChatSuccess = createEffect(
-  (actions = inject(Actions), router = inject(Router)) => {
+  (
+    actions = inject(Actions),
+
+    router = inject(Router),
+  ) => {
     return actions.pipe(
       ofType(MessageActions.newChatSuccess),
+
       map(({ id }) =>
         router.navigate(['/app/messaging/inbox/chat'], {
           queryParams: { chat_id: id },

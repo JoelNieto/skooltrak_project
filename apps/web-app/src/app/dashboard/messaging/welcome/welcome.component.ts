@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChatBubbleLeft } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
+import { messagingState } from '@skooltrak/auth';
 import { User } from '@skooltrak/models';
 import { ButtonDirective } from '@skooltrak/ui';
 
-import { MessagingStore } from '../messaging.store';
 import { NewChatComponent } from '../new-chat/new-chat.component';
 
 @Component({
@@ -46,14 +46,14 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
 })
 export class WelcomeComponent {
   private dialog = inject(Dialog);
-  private store = inject(MessagingStore);
+  private store = inject(messagingState.MessagingStateFacade);
 
   public newChat(): void {
     this.dialog
       .open<User[]>(NewChatComponent, { width: '24rem', maxWidth: '90%' })
       .closed.subscribe({
         next: (request) => {
-          !!request && this.store.validateNewChat(request.map((x) => x.id!));
+          !!request && this.store.newChat(request.map((x) => x.id!));
         },
       });
   }

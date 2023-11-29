@@ -64,7 +64,7 @@ import { CardComponent } from '../card/card.component';
               <img
                 [src]="cropImgPreview"
                 class="border border-gray-400"
-                [style.max-height]="'75px'"
+                [style.max-height]="'6rem'"
               />
             </div>
           </div>

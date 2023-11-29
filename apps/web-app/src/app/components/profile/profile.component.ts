@@ -1,22 +1,11 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { authState } from '@skooltrak/auth';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ImageCropperComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
@@ -169,11 +158,9 @@ export class ProfileComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form.get('email')?.disable();
-    this.auth.current_user$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (user) => !!user && this.form.patchValue(user),
-      });
+    this.auth.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (user) => !!user && this.form.patchValue(user),
+    });
   }
 
   public changeAvatar(): void {

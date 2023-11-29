@@ -104,6 +104,15 @@
     "CLOSE": "Cerrar"
   },
   "Messages": "Mensajes",
+  "MESSAGING": {
+    "TITLE": "Mensajes",
+    "INBOX": "Buzón",
+    "ARCHIVED": "Archivado",
+    "SEND_PLACEHOLDER": "Tu mensaje...",
+    "NEW_CHAT": "Nuevo chat",
+    "WELCOME": "Bienvenido a Skooltrak Messages",
+    "WELCOME_MESSAGE": "Seleccione una conversacion o inicie una nueva."
+  },
   "Middle name": "Segundo nombre",
   "Mother name": "Apellido materno",
   "NAME": "Nombre",

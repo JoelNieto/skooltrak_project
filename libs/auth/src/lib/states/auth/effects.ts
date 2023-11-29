@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { messagingState } from '@skooltrak/auth';
 import { SchoolUser, Table } from '@skooltrak/models';
 import { ConfirmationService } from '@skooltrak/ui';
 import { AlertService } from 'libs/ui/src/lib/services/alert.service';
@@ -127,6 +128,7 @@ export const setSession = createEffect(
           throwError(() => new Error('no session')),
         ),
       ),
+
       map(() => AuthActions.getUser()),
     );
   },
@@ -211,10 +213,14 @@ export const updateProfile = createEffect(
 );
 
 export const getProfiles = createEffect(
-  (actions = inject(Actions)) => {
+  (
+    actions = inject(Actions),
+    messaging = inject(messagingState.MessagingStateFacade),
+  ) => {
     return actions.pipe(
       ofType(AuthActions.setUser),
       map(() => AuthActions.getProfiles()),
+      tap(() => messaging.getMessages()),
     );
   },
   { functional: true },

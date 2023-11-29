@@ -6,3 +6,4 @@ export * from './lib/people';
 export * from './lib/tables';
 export * from './lib/image.options';
 export * from './lib/enums';
+export * from './lib/messaging';

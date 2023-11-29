@@ -17,3 +17,13 @@ export enum SchoolTypeEnum {
   MIXED = 'MIXED',
   OTHER = 'OTHER',
 }
+
+export enum ChannelTypeEnum {
+  DIRECT_MESSAGE = 'DIRECT_MESSAGE',
+  PUBLIC = 'PUBLIC',
+}
+
+export enum ChannelPermissionEnum {
+  READ = 'READ',
+  WRITE = 'WRITE',
+}

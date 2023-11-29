@@ -1,10 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
+import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/auth';
 import { Table, User } from '@skooltrak/models';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 
@@ -21,6 +17,7 @@ export class UsersSelectorStore
   implements OnStoreInit
 {
   private readonly supabase = inject(SupabaseService);
+  private auth = inject(authState.AuthStateFacade);
   public readonly USERS = this.selectSignal((state) => state.FILTERED_USERS);
   public readonly LOADING = this.selectSignal((state) => state.LOADING);
   private readonly query$ = this.select((state) => state.QUERY_TEXT, {
@@ -35,6 +32,8 @@ export class UsersSelectorStore
           this.supabase.client
             .from(Table.Users)
             .select('id, first_name, father_name, email, avatar_url')
+            .neq('id', this.auth.USER_ID())
+            .limit(10)
             .order('first_name', { ascending: true })
             .order('father_name', { ascending: true })
             .ilike('users_query', `%${query}%`),

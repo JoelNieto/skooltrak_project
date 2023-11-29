@@ -30,7 +30,7 @@ import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { asapScheduler } from 'rxjs';
 
-import { PropertyPipe } from '../../services/pipes';
+import { PropertyPipe } from '../../pipes';
 import { UtilService } from '../../services/util.service';
 
 /* eslint-disable @typescript-eslint/no-empty-function */

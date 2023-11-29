@@ -21,4 +21,7 @@ export enum Table {
   SchoolUsers = 'school_users',
   Levels = 'levels',
   GroupStudents = 'group_students',
+  Chats = 'chats',
+  Messages = 'messages',
+  ChatMembers = 'chat_members',
 }

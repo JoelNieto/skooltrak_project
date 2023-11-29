@@ -5,8 +5,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
-import { ButtonDirective, CardComponent, ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
+import { authState } from '@skooltrak/store';
+import {
+  ButtonDirective,
+  CardComponent,
+  ConfirmationService,
+  defaultConfirmationOptions,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -45,42 +50,42 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
     </div>
     <div>
       <div class="flex flex-col gap-2">
-        @for(school of schools(); track school.id) {
-        <div
-          (click)="setSchool(school.id!)"
-          class="flex cursor-pointer rounded-xl border border-gray-200 px-6 py-3"
-          [ngClass]="{
-            'border-2 border-sky-700 dark:border-0 dark:bg-gray-600':
-              school.id === selected()
-          }"
-        >
-          <div class="flex flex-1 items-center justify-center">
-            @if (school?.crest_url) {
-            <sk-avatar
-              [avatarUrl]="school.crest_url!"
-              bucket="crests"
-              class="h-16"
-            />
-            } @else {
-            <img
-              src="assets/images/skooltrak-logo.svg"
-              class="h-16"
-              alt="Skooltrak Logo"
-            />
-            }
+        @for (school of schools(); track school.id) {
+          <div
+            (click)="setSchool(school.id!)"
+            class="flex cursor-pointer rounded-xl border border-gray-200 px-6 py-3"
+            [ngClass]="{
+              'border-2 border-sky-700 dark:border-0 dark:bg-gray-600':
+                school.id === selected()
+            }"
+          >
+            <div class="flex flex-1 items-center justify-center">
+              @if (school?.crest_url) {
+                <sk-avatar
+                  [avatarUrl]="school.crest_url!"
+                  bucket="crests"
+                  class="h-16"
+                />
+              } @else {
+                <img
+                  src="assets/images/skooltrak-logo.svg"
+                  class="h-16"
+                  alt="Skooltrak Logo"
+                />
+              }
+            </div>
+            <div class="gap flex flex-1 flex-col justify-center">
+              <p
+                class="font-title text-gray-700 dark:text-gray-200"
+                [ngClass]="{ 'font-semibold': school.id === selected() }"
+              >
+                {{ school.full_name }}
+              </p>
+              <p class="font-sans text-sm italic text-gray-400">
+                {{ school.motto }}
+              </p>
+            </div>
           </div>
-          <div class="gap flex flex-1 flex-col justify-center">
-            <p
-              class="font-title text-gray-700 dark:text-gray-200"
-              [ngClass]="{ 'font-semibold': school.id === selected() }"
-            >
-              {{ school.full_name }}
-            </p>
-            <p class="font-sans text-sm italic text-gray-400">
-              {{ school.motto }}
-            </p>
-          </div>
-        </div>
         }
       </div>
     </div>

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 import {
   ButtonDirective,
   CardComponent,

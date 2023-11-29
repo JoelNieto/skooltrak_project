@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { ClassGroup, SchoolProfile, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import {
@@ -35,7 +35,7 @@ export class SchoolPeopleFormStore
   public readonly GROUPS = this.selectSignal((state) => state.GROUPS);
   public readonly LOADING = this.selectSignal((state) => state.LOADING);
   public readonly GROUP_ID = this.selectSignal(
-    (state) => state.CURRENT_GROUP_ID
+    (state) => state.CURRENT_GROUP_ID,
   );
   public readonly GROUP_ID$ = this.select((state) => state.CURRENT_GROUP_ID);
   public readonly USER_ID$ = this.select((state) => state.USER_ID);
@@ -50,9 +50,9 @@ export class SchoolPeopleFormStore
           this.supabase.client
             .from(Table.Groups)
             .select(
-              'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at'
+              'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
             )
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
@@ -60,10 +60,10 @@ export class SchoolPeopleFormStore
           }),
           tapResponse(
             (GROUPS) => this.patchState({ GROUPS }),
-            (error) => console.error(error)
-          )
-        )
-      )
+            (error) => console.error(error),
+          ),
+        ),
+      ),
     );
   });
 
@@ -76,7 +76,7 @@ export class SchoolPeopleFormStore
               .from(Table.SchoolUsers)
               .update({ status, role })
               .eq('user_id', user_id)
-              .eq('school_id', this.auth.CURRENT_SCHOOL_ID())
+              .eq('school_id', this.auth.CURRENT_SCHOOL_ID()),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -93,11 +93,11 @@ export class SchoolPeopleFormStore
                   icon: 'error',
                   message: 'ALERT_FAILURE',
                 });
-              }
-            )
-          )
-        )
-      )
+              },
+            ),
+          ),
+        ),
+      ),
   );
 
   public readonly fetchStudentGroup = this.effect((trigger$) => {
@@ -110,7 +110,7 @@ export class SchoolPeopleFormStore
             .from(Table.GroupStudents)
             .select('group_id, user_id, created_at')
             .eq('school_id', school_id)
-            .eq('user_id', user_id)
+            .eq('user_id', user_id),
         ).pipe(
           map(({ data, error }) => {
             if (error) throw new Error(error.message);
@@ -118,10 +118,10 @@ export class SchoolPeopleFormStore
           }),
           tapResponse(
             (data) => this.patchState({ CURRENT_GROUP_ID: data[0]?.group_id }),
-            (error) => console.error(error)
-          )
+            (error) => console.error(error),
+          ),
         );
-      })
+      }),
     );
   });
 
@@ -132,7 +132,7 @@ export class SchoolPeopleFormStore
         return from(
           this.supabase.client
             .from(Table.GroupStudents)
-            .upsert([{ group_id, school_id, user_id: this.USER_ID() }])
+            .upsert([{ group_id, school_id, user_id: this.USER_ID() }]),
         ).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -141,10 +141,10 @@ export class SchoolPeopleFormStore
             () => {
               this.patchState({ CURRENT_GROUP_ID: group_id });
             },
-            (error) => console.error(error)
-          )
+            (error) => console.error(error),
+          ),
         );
-      })
+      }),
     );
   });
 

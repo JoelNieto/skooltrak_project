@@ -11,7 +11,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { SupabaseService } from '@skooltrak/auth';
+import { SupabaseService } from '@skooltrak/store';
 import { Course, User } from '@skooltrak/models';
 import {
   ButtonDirective,

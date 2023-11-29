@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import {
   Assignment,
   AssignmentType,

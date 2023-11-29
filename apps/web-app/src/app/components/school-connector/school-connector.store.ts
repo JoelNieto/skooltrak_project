@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { RoleEnum, School, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService } from '@skooltrak/ui';
 import {
@@ -45,7 +45,7 @@ export class SchoolConnectorStore
               .from(Table.Schools)
               .select('id,short_name, full_name, crest_url')
               .eq('code', code)
-              .single()
+              .single(),
           ).pipe(
             map(({ error, data }) => {
               if (error || !data) throw new Error(error.message);
@@ -64,8 +64,8 @@ export class SchoolConnectorStore
                 })
                 .pipe(
                   filter((response) => !!response),
-                  map(() => this.addSchoolConnection(school))
-                )
+                  map(() => this.addSchoolConnection(school)),
+                ),
             ),
             catchError(() =>
               this.confirmation.openDialog({
@@ -76,12 +76,12 @@ export class SchoolConnectorStore
                 showCancelButton: false,
                 confirmButtonText: 'OK',
                 color: 'red',
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       );
-    }
+    },
   );
 
   private readonly addSchoolConnection = this.effect(
@@ -93,12 +93,12 @@ export class SchoolConnectorStore
           from(
             this.supabase.client
               .from(Table.SchoolUsers)
-              .insert([{ role: ROLE, school_id: request.id }])
+              .insert([{ role: ROLE, school_id: request.id }]),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
-            })
-          )
+            }),
+          ),
         ),
         tapResponse(
           () => {
@@ -115,10 +115,10 @@ export class SchoolConnectorStore
               message: 'ALERT.FAILURE',
             });
           },
-          () => this.patchState({ LOADING: false })
-        )
+          () => this.patchState({ LOADING: false }),
+        ),
       );
-    }
+    },
   );
 
   public ngrxOnStoreInit = (): void =>

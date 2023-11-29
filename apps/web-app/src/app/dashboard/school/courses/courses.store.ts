@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Course, Degree, StudyPlan, Table, User } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import { orderBy, pick } from 'lodash';

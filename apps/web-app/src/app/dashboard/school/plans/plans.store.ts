@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { StudyPlan, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import {

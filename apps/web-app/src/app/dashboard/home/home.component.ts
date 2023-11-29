@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 @Component({
@@ -19,7 +19,7 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
       <h2
         class="font-title mb-2 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
-        {{ 'Welcome' | translate : { name: auth.USER()?.first_name } }}
+        {{ 'Welcome' | translate: { name: auth.USER()?.first_name } }}
       </h2>
     </div>
     <sk-tabs>

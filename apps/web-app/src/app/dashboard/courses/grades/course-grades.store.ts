@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { SupabaseService } from '@skooltrak/store';
 import { GradeObject, Period, Table } from '@skooltrak/models';
 import { filter, from, map, switchMap, tap } from 'rxjs';
 
@@ -26,7 +30,7 @@ export class CourseGradesStore
   public readonly PERIODS = this.selectSignal((state) => state.PERIODS);
   public readonly PERIOD = this.selectSignal((state) => state.SELECTED_PERIOD);
   private readonly SELECTED_PERIOD$ = this.select(
-    (state) => state.SELECTED_PERIOD
+    (state) => state.SELECTED_PERIOD,
   );
 
   private readonly fetchGrades = this.effect(() => {
@@ -38,25 +42,25 @@ export class CourseGradesStore
           this.supabase.client
             .from(Table.Grades)
             .select(
-              'id, title, period:periods(id, name), bucket:grade_buckets(*), start_at, items:grade_items(*)'
+              'id, title, period:periods(id, name), bucket:grade_buckets(*), start_at, items:grade_items(*)',
             )
             .eq('course_id', this.COURSE()?.id)
-            .eq('period_id', period_id)
+            .eq('period_id', period_id),
         )
           .pipe(
             map(({ data, error }) => {
               if (error) throw new Error(error.message);
               return data as Partial<GradeObject>[];
-            })
+            }),
           )
           .pipe(
             tapResponse(
               (GRADES) => this.patchState({ GRADES }),
               (error) => console.error(error),
-              () => this.patchState({ LOADING: false })
-            )
+              () => this.patchState({ LOADING: false }),
+            ),
           );
-      })
+      }),
     );
   });
 
@@ -67,13 +71,13 @@ export class CourseGradesStore
         this.supabase.client
           .from(Table.Periods)
           .select('id, name, year, start_at, end_at, school_id')
-          .eq('school_id', this.COURSE()?.school_id)
+          .eq('school_id', this.COURSE()?.school_id),
       )
         .pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
             return data;
-          })
+          }),
         )
         .pipe(
           tapResponse(
@@ -81,8 +85,8 @@ export class CourseGradesStore
             (error) => {
               console.error(error);
             },
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         )
     );
   });

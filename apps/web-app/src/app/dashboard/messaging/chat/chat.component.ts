@@ -13,7 +13,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroPaperAirplaneSolid } from '@ng-icons/heroicons/solid';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/auth';
+import { messagingState } from '@skooltrak/store';
 import { InputDirective } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 

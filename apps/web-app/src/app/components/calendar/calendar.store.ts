@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { SupabaseService } from '@skooltrak/store';
 import { Table } from '@skooltrak/models';
 import { CalendarEvent } from 'calendar-utils';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
@@ -35,7 +39,7 @@ export class CalendarStore
       query_item: this.query_item$,
       query_value: this.query_value$,
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   private readonly fetchAssignments = this.effect(
@@ -45,7 +49,7 @@ export class CalendarStore
         end_date: Date;
         query_item: QueryItem | undefined;
         query_value: string | undefined;
-      }>
+      }>,
     ) => {
       return query$.pipe(
         tap(() => this.patchState({ loading: true })),
@@ -55,12 +59,12 @@ export class CalendarStore
             this.supabase.client
               .from(Table.AssignmentsView)
               .select(
-                'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id'
+                'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id',
               )
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               .eq(query_item!, query_value)
               .gte('start_at', format(start_date, 'yyyy-MM-dd HH:mm:ss'))
-              .lte('start_at', format(end_date, 'yyyy-MM-dd HH:mm:ss'))
+              .lte('start_at', format(end_date, 'yyyy-MM-dd HH:mm:ss')),
           ).pipe(
             map(({ data, error }) => {
               if (error) throw new Error(error.message);
@@ -76,12 +80,12 @@ export class CalendarStore
               (error) => {
                 console.error(error);
               },
-              () => this.patchState({ loading: false })
-            )
+              () => this.patchState({ loading: false }),
+            ),
           );
-        })
+        }),
       );
-    }
+    },
   );
 
   public ngrxOnStoreInit = (): void => {

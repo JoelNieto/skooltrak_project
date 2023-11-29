@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Degree, Table } from '@skooltrak/models';
 import { from, map, switchMap } from 'rxjs';
 
@@ -28,22 +28,22 @@ export class PlansFormStore
           this.supabase.client
             .from(Table.Degrees)
             .select('id, name, level_id')
-            .eq('school_id', this.auth.CURRENT_SCHOOL_ID())
+            .eq('school_id', this.auth.CURRENT_SCHOOL_ID()),
         )
           .pipe(
             map(({ data, error }) => {
               if (error) throw new Error(error.message);
               return data as Degree[];
-            })
+            }),
           )
           .pipe(
             tapResponse(
               (DEGREES) => this.patchState({ DEGREES }),
-              (error) => console.error(error)
-            )
-          )
-      )
-    )
+              (error) => console.error(error),
+            ),
+          ),
+      ),
+    ),
   );
 
   public ngrxOnStoreInit = (): void => {

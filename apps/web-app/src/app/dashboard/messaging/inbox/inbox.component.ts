@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChatBubbleLeft } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/auth';
+import { messagingState } from '@skooltrak/store';
 import { User } from '@skooltrak/models';
 import { ButtonDirective, DateAgoPipe } from '@skooltrak/ui';
 

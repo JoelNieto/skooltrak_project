@@ -1,7 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { ClassGroup, Table } from '@skooltrak/models';
 import { UtilService } from '@skooltrak/ui';
 import { combineLatestWith, filter, from, map, of, switchMap, tap } from 'rxjs';

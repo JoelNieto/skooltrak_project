@@ -13,7 +13,7 @@ import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
 
 import { AppComponent } from './app/app.component';
@@ -28,7 +28,7 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideState(authState.authFeature),
     provideEffects(authState.effects),
-    provideStoreDevtools({connectInZone: true}),
+    provideStoreDevtools({ connectInZone: true }),
     importProvidersFrom(
       BrowserModule,
       IonicModule.forRoot(),

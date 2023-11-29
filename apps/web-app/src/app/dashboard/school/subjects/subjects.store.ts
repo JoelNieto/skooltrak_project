@@ -1,10 +1,22 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Subject, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   SUBJECTS: Subject[];
@@ -42,7 +54,7 @@ export class SchoolSubjectsStore
       TEXT_SEARCH: this.TEXT_SEARCH$,
       PAGE_SIZE: this.PAGE_SIZE$,
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   private readonly fetchSubjects = this.effect<void>((trigger$) => {
@@ -59,14 +71,14 @@ export class SchoolSubjectsStore
               'id,name, short_name, code, description, created_at, user:users(full_name)',
               {
                 count: 'exact',
-              }
+              },
             )
             .order('name', { ascending: true })
             .range(START, this.END())
             .eq('school_id', school_id)
             .or(
-              `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`
-            )
+              `name.ilike.%${TEXT_SEARCH}%, short_name.ilike.%${TEXT_SEARCH}%, code.ilike.%${TEXT_SEARCH}%, description.ilike.%${TEXT_SEARCH}%`,
+            ),
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
@@ -77,10 +89,10 @@ export class SchoolSubjectsStore
             ({ SUBJECTS }) =>
               this.patchState({ SUBJECTS: SUBJECTS as unknown as Subject[] }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 
@@ -94,7 +106,7 @@ export class SchoolSubjectsStore
               .from(Table.Subjects)
               .upsert([
                 { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
-              ])
+              ]),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -111,12 +123,12 @@ export class SchoolSubjectsStore
                   message: this.translate.instant('ALERT.FAILURE'),
                 });
               },
-              () => this.fetchSubjects()
-            )
+              () => this.fetchSubjects(),
+            ),
           );
-        })
+        }),
       );
-    }
+    },
   );
 
   public readonly deleteSubject = this.effect((id$: Observable<string>) => {
@@ -124,7 +136,7 @@ export class SchoolSubjectsStore
       tap(() => this.patchState({ LOADING: true })),
       switchMap((id) =>
         from(
-          this.supabase.client.from(Table.Subjects).delete().eq('id', id)
+          this.supabase.client.from(Table.Subjects).delete().eq('id', id),
         ).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -142,10 +154,10 @@ export class SchoolSubjectsStore
               }),
             () => {
               this.fetchSubjects();
-            }
-          )
-        )
-      )
+            },
+          ),
+        ),
+      ),
     );
   });
 

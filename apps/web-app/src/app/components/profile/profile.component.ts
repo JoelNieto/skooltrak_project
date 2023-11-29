@@ -1,11 +1,22 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
-import { ButtonDirective, CardComponent, ImageCropperComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
+import { authState } from '@skooltrak/store';
+import {
+  ButtonDirective,
+  CardComponent,
+  ImageCropperComponent,
+  InputDirective,
+  LabelDirective,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';

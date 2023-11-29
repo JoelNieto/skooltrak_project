@@ -10,30 +10,16 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@skooltrak/auth": [
-        "libs/auth/src/index.ts"
-      ],
-      "@skooltrak/environments": [
-        "libs/environments/src/index.ts"
-      ],
-      "@skooltrak/models": [
-        "libs/models/src/index.ts"
-      ],
-      "@skooltrak/ui": [
-        "libs/ui/src/index.ts"
-      ]
+      "@skooltrak/environments": ["libs/environments/src/index.ts"],
+      "@skooltrak/models": ["libs/models/src/index.ts"],
+      "@skooltrak/store": ["libs/store/src/index.ts"],
+      "@skooltrak/ui": ["libs/ui/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

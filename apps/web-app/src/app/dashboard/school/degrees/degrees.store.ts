@@ -5,7 +5,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Degree, Table } from '@skooltrak/models';
 import { AlertService, ConfirmationService, UtilService } from '@skooltrak/ui';
 import {
@@ -51,7 +51,7 @@ export class SchoolDegreesStore
       ...state,
       COUNT: count,
       PAGES: this.util.getPages(count, 10),
-    })
+    }),
   );
 
   public setRange = this.updater(
@@ -59,7 +59,7 @@ export class SchoolDegreesStore
       ...state,
       START: start,
       END: start + (state.PAGE_SIZE - 1),
-    })
+    }),
   );
 
   private readonly fetchDegreesData$ = this.select(
@@ -68,7 +68,7 @@ export class SchoolDegreesStore
       end: this.end$,
       pageSize: toObservable(this.PAGE_SIZE),
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   private readonly fetchDegrees = this.effect<void>((trigger$) => {
@@ -86,7 +86,7 @@ export class SchoolDegreesStore
             })
             .order('name', { ascending: true })
             .range(start, end)
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         ).pipe(
           map(({ data, error, count }) => {
             if (error) throw new Error(error.message);
@@ -99,10 +99,10 @@ export class SchoolDegreesStore
             (error) => {
               console.error(error);
             },
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
+      }),
     );
   });
 
@@ -116,7 +116,7 @@ export class SchoolDegreesStore
               .from(Table.Degrees)
               .upsert([
                 { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
-              ])
+              ]),
           ).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
@@ -135,12 +135,12 @@ export class SchoolDegreesStore
                 }),
               () => {
                 this.fetchDegrees();
-              }
-            )
+              },
+            ),
           );
-        })
+        }),
       );
-    }
+    },
   );
 
   public readonly deleteDegree = this.effect((id$: Observable<string>) => {
@@ -148,7 +148,7 @@ export class SchoolDegreesStore
       tap(() => this.patchState({ LOADING: true })),
       switchMap((id) =>
         from(
-          this.supabase.client.from(Table.Degrees).delete().eq('id', id)
+          this.supabase.client.from(Table.Degrees).delete().eq('id', id),
         ).pipe(
           map(({ error }) => {
             if (error) throw new Error(error.message);
@@ -166,10 +166,10 @@ export class SchoolDegreesStore
               }),
             () => {
               this.fetchDegrees();
-            }
-          )
-        )
-      )
+            },
+          ),
+        ),
+      ),
     );
   });
 

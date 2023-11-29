@@ -1,9 +1,21 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Degree, StudyPlan, Table } from '@skooltrak/models';
 import { orderBy } from 'lodash';
-import { combineLatestWith, filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatestWith,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 type State = {
   LOADING: boolean;
@@ -24,7 +36,7 @@ export class GroupsFormStore
   public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
   public readonly PLANS = this.selectSignal((state) => state.PLANS);
   public readonly SELECTED_DEGREE_ID$ = this.select(
-    (state) => state.SELECTED_DEGREE_ID
+    (state) => state.SELECTED_DEGREE_ID,
   );
 
   private readonly fetchDegrees = this.effect<void>((trigger$) =>
@@ -37,23 +49,23 @@ export class GroupsFormStore
           this.supabase.client
             .from(Table.Degrees)
             .select('id, name, level:levels(id, name, sort)')
-            .eq('school_id', school_id)
+            .eq('school_id', school_id),
         )
           .pipe(
             map(({ error, data }) => {
               if (error) throw new Error(error.message);
               return orderBy(data, ['level.sort']) as unknown as Degree[];
-            })
+            }),
           )
           .pipe(
             tapResponse(
               (DEGREES) => this.patchState({ DEGREES }),
               (error) => console.error(error),
-              () => this.patchState({ LOADING: true })
-            )
-          )
-      )
-    )
+              () => this.patchState({ LOADING: true }),
+            ),
+          ),
+      ),
+    ),
   );
 
   private readonly fetchPlans = this.effect(
@@ -67,23 +79,23 @@ export class GroupsFormStore
               this.supabase.client
                 .from(Table.StudyPlans)
                 .select('id,name')
-                .eq('degree_id', degree)
+                .eq('degree_id', degree),
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
                 return data;
-              })
-            )
-          )
+              }),
+            ),
+          ),
         )
         .pipe(
           tapResponse(
             (PLANS) => this.patchState({ PLANS }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-    }
+    },
   );
 
   public ngrxOnStoreInit = (): void => {

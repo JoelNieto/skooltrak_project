@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { messagingState } from '@skooltrak/auth';
+import { messagingState } from '@skooltrak/store';
 import { SchoolUser, Table } from '@skooltrak/models';
 import { ConfirmationService } from '@skooltrak/ui';
 import { AlertService } from 'libs/ui/src/lib/services/alert.service';

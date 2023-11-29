@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'auth',
+  displayName: '@skooltrak/store',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/auth',
+  coverageDirectory: '../../coverage/libs/store',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

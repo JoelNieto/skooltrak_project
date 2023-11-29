@@ -14,7 +14,7 @@ import {
   heroHome,
 } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 

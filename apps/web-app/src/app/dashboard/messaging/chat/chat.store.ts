@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, messagingState, SupabaseService } from '@skooltrak/auth';
+import { authState, messagingState, SupabaseService } from '@skooltrak/store';
 import { Message, Table } from '@skooltrak/models';
 import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
 

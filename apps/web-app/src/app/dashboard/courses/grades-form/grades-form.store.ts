@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { SupabaseService } from '@skooltrak/store';
 import { Grade, GradeBucket, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import { EMPTY, filter, from, map, Observable, switchMap, tap } from 'rxjs';
@@ -34,24 +38,24 @@ export class GradesFormStore
             this.supabase.client
               .from(Table.GradeBuckets)
               .select('id, course_id, name, weighing')
-              .eq('course_id', id)
+              .eq('course_id', id),
           )
             .pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
                 return data;
-              })
+              }),
             )
             .pipe(
               tapResponse(
                 (BUCKETS) => this.patchState({ BUCKETS }),
                 (error) => console.error(error),
-                () => this.patchState({ LOADING: false })
-              )
+                () => this.patchState({ LOADING: false }),
+              ),
             );
-        })
+        }),
       );
-    }
+    },
   );
 
   public readonly fetchGrade = this.effect(
@@ -63,27 +67,27 @@ export class GradesFormStore
             this.supabase.client
               .from(Table.Grades)
               .select(
-                'id, course_id, start_at, bucket_id, period_id, published'
+                'id, course_id, start_at, bucket_id, period_id, published',
               )
               .eq('id', id)
-              .single()
+              .single(),
           )
             .pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
                 return data;
-              })
+              }),
             )
             .pipe(
               tapResponse(
                 (GRADE) => this.patchState({ GRADE }),
                 (error) => console.error(error),
-                () => this.patchState({ LOADING: false })
-              )
-            )
-        )
+                () => this.patchState({ LOADING: false }),
+              ),
+            ),
+        ),
       );
-    }
+    },
   );
 
   public readonly createGrade = this.effect(
@@ -96,19 +100,19 @@ export class GradesFormStore
               map(({ error }) => {
                 if (error) throw new Error(error.message);
                 return EMPTY;
-              })
+              }),
             )
             .pipe(
               tapResponse(
                 () =>
                   this.alert.showAlert({ icon: 'success', message: 'Created' }),
                 (error) => console.error(error),
-                () => this.patchState({ LOADING: false })
-              )
+                () => this.patchState({ LOADING: false }),
+              ),
             );
-        })
+        }),
       );
-    }
+    },
   );
 
   public ngrxOnStoreInit = (): void => {

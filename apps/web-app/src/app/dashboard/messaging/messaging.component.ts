@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/auth';
+import { messagingState } from '@skooltrak/store';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';

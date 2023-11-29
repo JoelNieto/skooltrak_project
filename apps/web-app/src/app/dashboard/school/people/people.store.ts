@@ -4,7 +4,7 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import { combineLatestWith, filter, from, map, switchMap, tap } from 'rxjs';
@@ -27,7 +27,7 @@ export class SchoolPeopleStore
 
   private readonly SELECTED_ROLE$ = this.select((state) => state.SELECTED_ROLE);
   private readonly SELECTED_STATUS$ = this.select(
-    (state) => state.SELECTED_STATUS
+    (state) => state.SELECTED_STATUS,
   );
   public readonly PEOPLE = this.selectSignal((state) => state.PEOPLE);
   public readonly LOADING = this.selectSignal((state) => state.LOADING);
@@ -37,7 +37,7 @@ export class SchoolPeopleStore
       role: this.SELECTED_ROLE$,
       status: this.SELECTED_STATUS$,
     },
-    { debounce: true }
+    { debounce: true },
   );
 
   public readonly fetchPeople = this.effect<void>((trigger$) =>
@@ -50,7 +50,7 @@ export class SchoolPeopleStore
         let query = this.supabase.client
           .from(Table.SchoolUsers)
           .select(
-            'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)'
+            'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
           )
           .eq('school_id', school_id);
         query = data.role !== 'all' ? query.eq('role', data.role) : query;
@@ -63,11 +63,11 @@ export class SchoolPeopleStore
           tapResponse(
             (PEOPLE) => this.patchState({ PEOPLE }),
             (error) => console.error(error),
-            () => this.patchState({ LOADING: false })
-          )
+            () => this.patchState({ LOADING: false }),
+          ),
         );
-      })
-    )
+      }),
+    ),
   );
 
   public ngrxOnStoreInit = (): void => {

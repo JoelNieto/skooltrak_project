@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { SupabaseService } from '@skooltrak/auth';
+import { SupabaseService } from '@skooltrak/store';
 import { map } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

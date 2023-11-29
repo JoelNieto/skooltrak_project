@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import {
+  ComponentStore,
+  OnStoreInit,
+  tapResponse,
+} from '@ngrx/component-store';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Table, User } from '@skooltrak/models';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 

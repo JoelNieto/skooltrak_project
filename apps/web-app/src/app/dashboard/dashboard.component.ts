@@ -14,7 +14,7 @@ import {
   heroUserGroup,
 } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 
 import { AvatarComponent } from '../components/avatar/avatar.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';

@@ -7,7 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { SupabaseService } from '@skooltrak/auth';
+import { SupabaseService } from '@skooltrak/store';
 
 @Component({
   selector: 'sk-avatar',

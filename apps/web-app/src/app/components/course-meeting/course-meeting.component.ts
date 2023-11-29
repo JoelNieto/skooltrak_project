@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 import { Course } from '@skooltrak/models';
 import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 

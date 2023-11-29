@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { authState } from '@skooltrak/auth';
+import { authState } from '@skooltrak/store';
 
 @Component({
   selector: 'sk-root',

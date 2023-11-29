@@ -2,7 +2,7 @@
   "folders": [
     { "path": "apps/web-app", "name": "web-app" },
     { "path": "apps/mobile", "name": "mobile" },
-    { "path": "libs/auth", "name": "auth" },
+    { "path": "libs/store", "name": "store" },
     { "path": "libs/models", "name": "models" },
     { "path": "libs/ui", "name": "ui" },
     { "path": "libs/environments", "name": "envs" },

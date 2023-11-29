@@ -5,7 +5,7 @@ import {
   tapResponse,
 } from '@ngrx/component-store';
 import { TranslateService } from '@ngx-translate/core';
-import { authState, SupabaseService } from '@skooltrak/auth';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { Period, Table } from '@skooltrak/models';
 import { AlertService } from '@skooltrak/ui';
 import {

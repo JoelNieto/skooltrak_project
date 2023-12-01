@@ -1,38 +1,37 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { RoleEnum, School, SchoolUser, User } from '@skooltrak/models';
+import { RoleEnum, School, SchoolUser } from '@skooltrak/models';
 
-import { authFeature, State } from './reducer';
+import { mobileAuthFeature, State } from './reducer';
 
-export const selectAuthState = createFeatureSelector<State>(authFeature.name);
+export const selectAuthState = createFeatureSelector<State>(
+  mobileAuthFeature.name,
+);
 
 export const selectSession = createSelector(
   selectAuthState,
-  (state: State) => state.SESSION,
+  (state) => state.session,
 );
 
 export const selectLoading = createSelector(
   selectAuthState,
-  (state: State) => state.LOADING,
+  (state) => state.loading,
 );
 
 export const selectUser = createSelector(
   selectAuthState,
-  (state: State) => state.USER,
+  (state) => state.user,
 );
 
-export const selectUserId = createSelector(
-  selectUser,
-  (state: User | undefined) => state?.id,
-);
+export const selectUserId = createSelector(selectUser, (state) => state?.id);
 
 export const selectSchoolId = createSelector(
   selectAuthState,
-  (state) => state.SCHOOL_ID,
+  (state) => state.schoolId,
 );
 
 export const selectProfiles = createSelector(
   selectAuthState,
-  (state) => state.PROFILES,
+  (state) => state.profiles,
 );
 
 export const selectSchools = createSelector(selectProfiles, (state) => [

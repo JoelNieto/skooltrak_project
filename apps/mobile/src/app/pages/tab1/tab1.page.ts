@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
-
 @Component({
   selector: 'skooltrak-tab1',
   standalone: true,
-  imports: [IonicModule, ExploreContainerComponent],
+  imports: [IonicModule],
   template: `
     <ion-header [translucent]="true">
       <ion-toolbar>
@@ -20,10 +18,6 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
           <ion-title size="large">Tab 1</ion-title>
         </ion-toolbar>
       </ion-header>
-
-      <skooltrak-explore-container
-        name="Tab 1 page"
-      ></skooltrak-explore-container>
     </ion-content>
   `,
 })

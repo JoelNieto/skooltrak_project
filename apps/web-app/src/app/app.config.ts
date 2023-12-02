@@ -18,14 +18,15 @@ import {
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
   withRouterConfig,
+  withViewTransitions,
 } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { authState, messagingState } from '@skooltrak/store';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
+import { authState, messagingState } from '@skooltrak/store';
 import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -47,6 +48,7 @@ export const appConfig: ApplicationConfig = {
       withEnabledBlockingInitialNavigation(),
       withComponentInputBinding(),
       withRouterConfig({ onSameUrlNavigation: 'reload' }),
+      withViewTransitions(),
     ),
     provideAnimations(),
     provideStore(),

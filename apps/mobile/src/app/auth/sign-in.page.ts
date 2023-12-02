@@ -1,51 +1,93 @@
-import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, effect, inject } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { IonicModule, ModalController } from '@ionic/angular';
+import { TranslateModule } from '@ngx-translate/core';
+import { mobileAuthState } from '@skooltrak/store';
 
 @Component({
   standalone: true,
-  selector: 'app-sign-in',
-  imports: [IonicModule],
+  selector: 'skooltrak-sign-in',
+  imports: [
+    IonicModule,
+    TranslateModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
+  ],
   styles: `
-  #container{
-    text-align: center;
-    padding: 2rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  .logo {
-    height: 60px;
-  }
+
   `,
-  template: `<ion-content class="ion-padding background" fullscreen="true">
-    <ion-card>
-      <ion-card-header
-        ><img src="assets/images/skooltrak.svg" alt="logo" class="logo"
-      /></ion-card-header>
-      <ion-card-content>
-        <form>
-          <ion-list>
-            <ion-item>
-              <ion-label
-                >Usuario <ion-text color="danger">*</ion-text></ion-label
-              >
-              <ion-input required type="email"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label
-                >Contraseña <ion-text color="danger">*</ion-text></ion-label
-              >
-              <ion-input required type="password"></ion-input>
-            </ion-item>
-          </ion-list>
-          <ion-button expand="block" color="primary" type="submit">
-            Iniciar sesión
-          </ion-button>
-        </form>
-      </ion-card-content>
-    </ion-card>
-  </ion-content>`,
+  template: `<ion-header class="ion-no-border" [translucent]="true">
+      <ion-toolbar>
+        <ion-title>{{ 'SIGN_IN.TITLE' | translate }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content [fullscreen]="true">
+      <ion-header collapse="condense">
+        <ion-toolbar>
+          <ion-title size="large">{{ 'SIGN_IN.TITLE' | translate }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <form [formGroup]="form">
+        <ion-list lines="inset">
+          <ion-item>
+            <ion-input
+              type="email"
+              labelPlacement="floating"
+              [label]="'SIGN_IN.EMAIL' | translate"
+              placeholder="name@company.com"
+              formControlName="email"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              type="password"
+              labelPlacement="floating"
+              [label]="'SIGN_IN.PASSWORD' | translate"
+              placeholder="********"
+              formControlName="password"
+            ></ion-input>
+          </ion-item>
+        </ion-list>
+      </form>
+    </ion-content>
+    <ion-footer class="ion-no-border">
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button fill="solid" (click)="signIn()">{{
+            'SIGN_IN.ENTER' | translate
+          }}</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer> `,
 })
-export class SignInPage {}
+export class SignInPage {
+  private readonly modalCtrl = inject(ModalController);
+  private readonly auth = inject(mobileAuthState.MobileAuthFacade);
+  public form = new FormGroup({
+    email: new FormControl<string>('', {
+      validators: [Validators.required, Validators.email],
+      nonNullable: true,
+    }),
+    password: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(6)],
+      nonNullable: true,
+    }),
+  });
+
+  constructor() {
+    effect(() => {
+      !!this.auth.USER() && this.modalCtrl.dismiss();
+    });
+  }
+
+  public signIn(): void {
+    const { email, password } = this.form.getRawValue();
+    this.auth.signIn(email, password);
+  }
+}

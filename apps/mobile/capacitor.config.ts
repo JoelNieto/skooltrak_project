@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'mobile',
+  appName: 'Skooltrak',
   webDir: '../../dist/apps/mobile',
   bundledWebRuntime: false,
   server: {

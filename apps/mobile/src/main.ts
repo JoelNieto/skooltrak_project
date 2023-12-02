@@ -13,21 +13,22 @@ import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { authState } from '@skooltrak/store';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
+import { mobileAuthState, mobileMessagingState } from '@skooltrak/store';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 
 const translateLoader = (http: HttpClient): TranslateLoader =>
-  new TranslateHttpLoader(http, '/assets/i18n/', 'json');
+  new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(),
     provideStore(),
-    provideState(authState.authFeature),
-    provideEffects(authState.effects),
+    provideState(mobileAuthState.mobileAuthFeature),
+    provideState(mobileMessagingState.messageFeature),
+    provideEffects(mobileAuthState.effects, mobileMessagingState.effects),
     provideStoreDevtools({ connectInZone: true }),
     importProvidersFrom(
       BrowserModule,

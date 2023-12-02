@@ -5,7 +5,8 @@
   "scripts": {
     "web": "nx serve web-app",
     "mobile": "nx serve mobile",
-    "start": "nx run-many --parallel --target=serve --projects=web-app,mobile"
+    "start": "nx run-many --parallel --target=serve --projects=web-app,mobile",
+    "mobile:build:dev": "./apps/mobile npx nx run mobile:build --configuration=development"
   },
   "private": true,
   "dependencies": {

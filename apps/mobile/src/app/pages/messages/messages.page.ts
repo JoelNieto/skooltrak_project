@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { messagingState } from '@skooltrak/store';
 import { DateAgoPipe } from '@skooltrak/ui';
 
 import { PictureComponent } from '../../components/picture/picture.component';
+import { UsersModalComponent } from '../../components/users-modal/users-modal.component';
 
 @Component({
   selector: 'skooltrak-messages',
@@ -31,12 +32,17 @@ import { PictureComponent } from '../../components/picture/picture.component';
       }
     `,
   ],
-  template: `<ion-header [translucent]="true">
+  template: `<div #ion_page>
+    <ion-header [translucent]="true">
       <ion-toolbar>
         <ion-title> {{ 'MESSAGING.TITLE' | translate }} </ion-title>
         <ion-buttons slot="end">
-          <ion-button>
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+          <ion-button (click)="searchUser()">
+            <ion-icon
+              slot="icon-only"
+              name="add-circle"
+              size="large"
+            ></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -80,13 +86,25 @@ import { PictureComponent } from '../../components/picture/picture.component';
           </ion-item>
         }
       </ion-list>
-    </ion-content>`,
+    </ion-content>
+  </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessagesPage {
   public messagesStore = inject(messagingState.MessagingStateFacade);
+  private modalCtrl = inject(ModalController);
+  @ViewChild('ion_page', { static: true })
+  private ionPage!: ElementRef;
 
   public ionViewWillEnter() {
     this.messagesStore.getMessages();
+  }
+
+  public async searchUser(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: UsersModalComponent,
+      presentingElement: this.ionPage.nativeElement,
+    });
+    modal.present();
   }
 }

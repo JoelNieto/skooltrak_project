@@ -120,7 +120,7 @@ export class ChatPage implements OnInit {
       !this.store.LOADING() &&
         setTimeout(() => {
           this.loading?.dismiss();
-        }, 1000);
+        }, 500);
     });
   }
 

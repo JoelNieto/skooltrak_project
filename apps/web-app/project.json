@@ -7,14 +7,14 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@angular-devkit/build-angular:application",
       "outputs": [
         "{options.outputPath}"
       ],
       "options": {
         "outputPath": "dist/apps/web-app",
         "index": "apps/web-app/src/index.html",
-        "main": "apps/web-app/src/main.ts",
+        "browser": "apps/web-app/src/main.ts",
         "polyfills": [
           "zone.js"
         ],
@@ -36,6 +36,8 @@
         ],
         "styles": [
           "./node_modules/angular-calendar/css/angular-calendar.css",
+          "./node_modules/quill/dist/quill.bubble.css",
+          "./node_modules/quill/dist/quill.core.css",
           "apps/web-app/src/styles.scss"
         ],
         "scripts": [
@@ -60,12 +62,9 @@
           "outputHashing": "all"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
-          "namedChunks": true,
           "fileReplacements": [
             {
               "replace": "libs/environments/src/lib/environments/environment.ts",

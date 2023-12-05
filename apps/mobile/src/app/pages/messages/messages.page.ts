@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -47,7 +53,6 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
     <ion-content [fullscreen]="true">
       <ion-header collapse="condense">
         <ion-toolbar>
@@ -62,7 +67,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
       <ion-list>
         @for (chat of messagesStore.SORTED_CHARTS(); track chat.id) {
           <ion-item
-            [routerLink]="'../chat'"
+            [routerLink]="'../../chat'"
             [queryParams]="{ chat_id: chat.id }"
           >
             @for (member of chat.members; track member.user_id) {

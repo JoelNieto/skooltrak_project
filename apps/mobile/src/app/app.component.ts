@@ -9,7 +9,7 @@ import { SignInPage } from './auth/sign-in.page';
   standalone: true,
   imports: [IonicModule],
   template: `<ion-app>
-    <ion-router-outlet></ion-router-outlet>
+    <ion-router-outlet />
   </ion-app>`,
 })
 export class AppComponent implements OnInit {

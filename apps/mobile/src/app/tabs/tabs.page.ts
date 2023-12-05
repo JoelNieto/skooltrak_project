@@ -5,19 +5,24 @@ import { IonicModule } from '@ionic/angular';
   selector: 'skooltrak-tabs',
   standalone: true,
   imports: [IonicModule],
-  template: `<ion-tabs>
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button tab="tab1">
-        <ion-icon aria-hidden="true" name="home-outline" />
+  styles: [],
+  template: `<ion-tabs class="ion-no-border">
+    <ion-tab-bar slot="bottom ion-no-border">
+      <ion-tab-button tab="home">
+        <ion-icon aria-hidden="true" name="home" />
         Home
       </ion-tab-button>
       <ion-tab-button tab="messages">
-        <ion-icon aria-hidden="true" name="chatbubbles-outline" />
+        <ion-icon aria-hidden="true" name="chatbubbles" />
         Messages
       </ion-tab-button>
-      <ion-tab-button tab="tab3">
-        <ion-icon aria-hidden="true" name="build-outline" />
-        Setting
+      <ion-tab-button tab="schedule">
+        <ion-icon aria-hidden="true" name="calendar" />
+        Settings
+      </ion-tab-button>
+      <ion-tab-button tab="notifications">
+        <ion-icon aria-hidden="true" name="notifications" />
+        Settings
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs> `,

@@ -2,36 +2,34 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     loadComponent: () => import('./tabs.page').then((x) => x.TabsPage),
     children: [
       {
-        path: 'tab1',
+        path: 'home',
         loadComponent: () =>
-          import('../pages/tab1/tab1.page').then((m) => m.Tab1Page),
+          import('../pages/home.page').then((m) => m.HomePage),
       },
       {
         path: 'messages',
-        loadChildren: () =>
-          import('../pages/messages/messages.routes').then(
-            (m) => m.messagesRoutes,
-          ),
+        loadComponent: () =>
+          import('../pages/messages/messages.page').then((m) => m.MessagesPage),
       },
       {
-        path: 'tab3',
+        path: 'chat',
         loadComponent: () =>
-          import('../pages/tab3/tab3.page').then((m) => m.Tab3Page),
+          import('../pages/messages/chat/chat.page').then((x) => x.ChatPage),
+      },
+      {
+        path: 'schedule',
+        loadComponent: () =>
+          import('../pages/schedule/schedule.page').then((m) => m.SchedulePage),
       },
       {
         path: '',
-        redirectTo: 'tab1',
+        redirectTo: 'home',
         pathMatch: 'full',
       },
     ],
-  },
-  {
-    path: '',
-    redirectTo: 'tabs',
-    pathMatch: 'full',
   },
 ];

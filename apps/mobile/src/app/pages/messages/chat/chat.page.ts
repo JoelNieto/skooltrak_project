@@ -124,6 +124,20 @@ export class ChatPage implements OnInit {
     });
   }
 
+  public ionViewWillEnter(): void {
+    const tabBar = document.getElementById('app-tab-bar');
+    if (tabBar !== null) {
+      tabBar.style.display = 'none';
+    }
+  }
+
+  public ionViewWillLeave(): void {
+    const tabBar = document.getElementById('app-tab-bar');
+    if (tabBar !== null) {
+      tabBar.style.display = 'flex';
+    }
+  }
+
   public ngOnInit(): void {
     this.showLoading();
     this.route.queryParams.subscribe({

@@ -1,22 +1,28 @@
-import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { IonicModule, NavController } from '@ionic/angular';
 
 @Component({
   standalone: true,
   selector: 'skooltrak-home',
-  imports: [IonicModule],
-  template: `<ion-header [translucent]="true">
+  imports: [IonicModule, RouterLink],
+  template: `<ion-header class="ion-no-border">
       <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button (click)="goToMessages()">
+            <ion-icon slot="icon-only" name="chatbubbles-outline" size="large"
+          /></ion-button>
+        </ion-buttons>
         <ion-title> Inicio </ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content [fullscreen]="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Inicio</ion-title>
-        </ion-toolbar>
-      </ion-header>
-    </ion-content> `,
+    <ion-content [fullscreen]="true"> </ion-content> `,
 })
-export class HomePage {}
+export class HomePage {
+  private readonly nav = inject(NavController);
+
+  public goToMessages(): void {
+    this.nav.navigateForward('/messages');
+  }
+}

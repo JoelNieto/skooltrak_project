@@ -12,8 +12,10 @@ export const routes: Routes = [
       },
       {
         path: 'messages',
-        loadComponent: () =>
-          import('../pages/messages/messages.page').then((m) => m.MessagesPage),
+        loadChildren: () =>
+          import('../pages/messages/messages.routes').then(
+            (m) => m.messagesRoutes,
+          ),
       },
       {
         path: 'chat',

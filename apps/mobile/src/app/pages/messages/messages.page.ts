@@ -46,7 +46,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
           <ion-button (click)="searchUser()">
             <ion-icon
               slot="icon-only"
-              name="add-circle"
+              name="chatbubbles"
               size="large"
             ></ion-icon>
           </ion-button>
@@ -66,10 +66,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
       </ion-header>
       <ion-list>
         @for (chat of messagesStore.SORTED_CHARTS(); track chat.id) {
-          <ion-item
-            [routerLink]="'../../chat'"
-            [queryParams]="{ chat_id: chat.id }"
-          >
+          <ion-item [routerLink]="'chat'" [queryParams]="{ chat_id: chat.id }">
             @for (member of chat.members; track member.user_id) {
               <ion-avatar aria-hidden="true" slot="start">
                 <skooltrak-picture

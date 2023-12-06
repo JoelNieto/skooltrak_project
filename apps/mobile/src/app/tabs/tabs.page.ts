@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule],
   styles: [],
   template: `<ion-tabs class="ion-no-border">
-    <ion-tab-bar slot="bottom ion-no-border">
+    <ion-tab-bar id="app-tab-bar" slot="bottom ion-no-border">
       <ion-tab-button tab="home">
         <ion-icon aria-hidden="true" name="home" />
         Home

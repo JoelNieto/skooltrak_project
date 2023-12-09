@@ -3,8 +3,12 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
 import {
@@ -32,7 +36,7 @@ import { SchoolDegreesStore } from './degrees.store';
     EmptyTableComponent,
   ],
   providers: [
-    provideComponentStore(SchoolDegreesStore),
+    SchoolDegreesStore,
     provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
     ConfirmationService,
   ],
@@ -76,43 +80,45 @@ import { SchoolDegreesStore } from './degrees.store';
         </tr>
       </thead>
       <tbody>
-        @if(store.LOADING()) {
-        <tr sk-loading></tr>
-        } @else { @for(degree of store.DEGREES(); track degree.id) {
-        <tr
-          [class.hidden]="store.LOADING()"
-          class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-        >
-          <th
-            scope="row"
-            class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-          >
-            {{ degree.name }}
-          </th>
-          <td class="px-6 py-4">{{ degree.level?.name }}</td>
-          <td class="px-6 py-4">{{ degree.created_at | date: 'short' }}</td>
-          <td class="flex content-center justify-center gap-2 px-6 py-4">
-            <button type="button" (click)="editDegree(degree)">
-              <ng-icon
-                name="heroPencilSquare"
-                class="text-green-500"
-                size="24"
-              />
-            </button>
-            <button type="button" (click)="deleteDegree(degree)">
-              <ng-icon name="heroTrash" class="text-red-600" size="24" />
-            </button>
-          </td>
-        </tr>
-        } @empty {
-        <tr sk-empty></tr>
-        } }
+        @if (store.loading()) {
+          <tr sk-loading></tr>
+        } @else {
+          @for (degree of store.degrees(); track degree.id) {
+            <tr
+              [class.hidden]="store.loading()"
+              class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
+            >
+              <th
+                scope="row"
+                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+              >
+                {{ degree.name }}
+              </th>
+              <td class="px-6 py-4">{{ degree.level?.name }}</td>
+              <td class="px-6 py-4">{{ degree.created_at | date: 'short' }}</td>
+              <td class="flex content-center justify-center gap-2 px-6 py-4">
+                <button type="button" (click)="editDegree(degree)">
+                  <ng-icon
+                    name="heroPencilSquare"
+                    class="text-green-500"
+                    size="24"
+                  />
+                </button>
+                <button type="button" (click)="deleteDegree(degree)">
+                  <ng-icon name="heroTrash" class="text-red-600" size="24" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr sk-empty></tr>
+          }
+        }
       </tbody>
     </table>
 
     <sk-paginator
-      [count]="store.COUNT()"
-      [pageSize]="store.PAGE_SIZE()"
+      [count]="store.count()"
+      [pageSize]="store.pageSize()"
       (paginate)="getCurrentPage($event)"
     />
   </div>`,
@@ -123,12 +129,9 @@ export class SchoolDegreesComponent {
   private confirmation = inject(ConfirmationService);
   private destroyRef = inject(DestroyRef);
 
-  public getCurrentPage(pagination: {
-    currentPage: number;
-    start: number;
-  }): void {
-    const { start } = pagination;
-    this.store.setRange(start);
+  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
+    const { start, pageSize } = pagination;
+    patchState(this.store, { start, pageSize });
   }
 
   public newDegree(): void {

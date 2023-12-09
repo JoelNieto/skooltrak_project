@@ -1,13 +1,30 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import { CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import {
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 import { distinctUntilChanged } from 'rxjs';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
@@ -25,10 +42,7 @@ import { SchoolPeopleFormStore } from './people-form.store';
     LabelDirective,
     SelectComponent,
   ],
-  providers: [
-    provideIcons({ heroXMark }),
-    provideComponentStore(SchoolPeopleFormStore),
-  ],
+  providers: [provideIcons({ heroXMark }), SchoolPeopleFormStore],
   template: `<sk-card
     ><div class="flex items-start justify-between" header>
       <h3
@@ -60,32 +74,32 @@ import { SchoolPeopleFormStore } from './people-form.store';
       <div>
         <label for="role" skLabel>{{ 'PEOPLE.ROLE' | translate }}</label>
         <select formControlName="role" skInput>
-          @for(role of roles; track role) {
-          <option [value]="role">
-            {{ 'PEOPLE.' + role | translate }}
-          </option>
+          @for (role of roles; track role) {
+            <option [value]="role">
+              {{ 'PEOPLE.' + role | translate }}
+            </option>
           }
         </select>
       </div>
       <div>
         <label for="status" skLabel>{{ 'PEOPLE.STATUS' | translate }}</label>
         <select formControlName="status" skInput>
-          @for(status of statuses; track status) {
-          <option [value]="status">
-            {{ 'PEOPLE.' + status | translate }}
-          </option>
+          @for (status of statuses; track status) {
+            <option [value]="status">
+              {{ 'PEOPLE.' + status | translate }}
+            </option>
           }
         </select>
       </div>
-      @if(IS_STUDENT()) {
-      <div>
-        <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
-        <sk-select
-          label="name"
-          [formControl]="groupControl"
-          [items]="store.GROUPS()"
-        />
-      </div>
+      @if (IS_STUDENT()) {
+        <div>
+          <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
+          <sk-select
+            label="name"
+            [formControl]="groupControl"
+            [items]="store.groups()"
+          />
+        </div>
       }
     </form>
   </sk-card> `,
@@ -116,7 +130,7 @@ export class SchoolPeopleFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const group = this.store.GROUP_ID();
+      const group = this.store.currentGroupId();
       if (!group) return;
 
       this.groupControl.disable();
@@ -127,7 +141,7 @@ export class SchoolPeopleFormComponent implements OnInit {
 
   public ngOnInit(): void {
     const { status, role, user_id } = this.data;
-    this.store.patchState({ USER_ID: user_id });
+    patchState(this.store, { userId: user_id });
     this.form.patchValue({ status, role });
     if (role === 'STUDENT') {
       this.store.fetchGroups();

@@ -1,85 +1,87 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { authState, messagingState, SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Message, Table } from '@skooltrak/models';
-import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import { authState, messagingState, SupabaseService } from '@skooltrak/store';
+import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
-  LOADING: boolean;
-  MESSAGES: Message[];
+  loading: boolean;
+  messages: Message[];
 };
 
-@Injectable()
-export class ChatStore extends ComponentStore<State> implements OnStoreInit {
-  private readonly supabase = inject(SupabaseService);
-  private auth = inject(authState.AuthStateFacade);
-  private readonly store = inject(messagingState.MessagingStateFacade);
-  public readonly MESSAGES = this.selectSignal((state) => state.MESSAGES);
-  public LOADING = this.selectSignal((state) => state.LOADING);
-
-  private readonly fetchMessages = this.effect(
-    (chat_id$: Observable<string | undefined>) =>
-      chat_id$.pipe(
-        filter((chat_id) => !!chat_id),
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap((chat_id) =>
-          from(
-            this.supabase.client
-              .from(Table.Messages)
-              .select('id, user_id, text, user:users(*), sent_at')
-              .order('sent_at', { ascending: false })
-              .eq('chat_id', chat_id),
-          ).pipe(
-            map(({ error, data }) => {
-              if (error) throw new Error(error.message);
-              return data.map((x) => ({
-                ...x,
-                mine: x.user_id === this.auth.USER_ID(),
-              })) as Message[];
-            }),
-            tapResponse(
-              (messages) => this.patchState({ MESSAGES: messages }),
-              (error) => console.error(error),
-              () => this.patchState({ LOADING: false }),
+export const ChatStore = signalStore(
+  withState({ loading: false, messages: [] } as State),
+  withComputed(
+    (
+      _,
+      auth = inject(authState.AuthStateFacade),
+      messaging = inject(messagingState.MessagingStateFacade),
+    ) => ({
+      userId: computed(() => auth.USER_ID()),
+      chatId: computed(() => messaging.SELECTED_ID()),
+    }),
+  ),
+  withMethods(
+    (
+      { chatId, userId, messages, ...state },
+      supabase = inject(SupabaseService),
+    ) => ({
+      fetchMessages: rxMethod<string | undefined>(
+        pipe(
+          filter(() => !!chatId()),
+          tap(() => patchState(state, { loading: true })),
+          switchMap(() =>
+            from(
+              supabase.client
+                .from(Table.Messages)
+                .select('id, user_id, text, user:users(*), sent_at')
+                .order('sent_at', { ascending: false })
+                .eq('chat_id', chatId()),
+            ).pipe(
+              map(({ error, data }) => {
+                if (error) throw new Error(error.message);
+                return data.map((x) => ({
+                  ...x,
+                  mine: x.user_id === userId(),
+                })) as Message[];
+              }),
+              tapResponse({
+                next: (messages) => patchState(state, { messages }),
+                error: (error) => console.error(error),
+                finalize: () => patchState(state, { loading: false }),
+              }),
             ),
           ),
         ),
       ),
-  );
-
-  public readonly sendMessage = this.effect((text$: Observable<string>) =>
-    text$.pipe(
-      switchMap((text) =>
-        from(
-          this.supabase.client
-            .from(Table.Messages)
-            .insert([{ chat_id: this.store.SELECTED_ID(), text }])
-            .select('id, user_id, text, user:users(*), sent_at')
-            .single(),
-        ).pipe(
-          map(({ error, data }) => {
-            if (error) throw new Error(error.message);
-            return data as Message;
-          }),
-          tapResponse(
-            (message) =>
-              this.patchState({
-                MESSAGES: [{ mine: true, ...message }, ...this.MESSAGES()],
-              }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({ LOADING: false, MESSAGES: [] });
-    this.fetchMessages(this.store.selected_id$);
-  };
-}
+      async sendMessage(text: string): Promise<void> {
+        const { error, data } = await supabase.client
+          .from(Table.Messages)
+          .insert([{ chat_id: chatId(), text }])
+          .select('id, user_id, text, user:users(*), sent_at')
+          .single();
+        if (error) {
+          console.error(error);
+          return;
+        }
+        patchState(state, {
+          messages: [{ mine: true, ...(data as Message) }, ...messages()],
+        });
+      },
+    }),
+  ),
+  withHooks({
+    onInit({ fetchMessages, chatId }) {
+      fetchMessages(chatId);
+    },
+  }),
+);

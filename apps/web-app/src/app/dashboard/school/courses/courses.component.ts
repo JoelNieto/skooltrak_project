@@ -11,7 +11,7 @@ import {
   heroMagnifyingGlass,
   heroPencilSquare,
 } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
 import {
@@ -41,7 +41,7 @@ import { SchoolCoursesStore } from './courses.store';
   ],
   providers: [
     UtilService,
-    provideComponentStore(SchoolCoursesStore),
+    SchoolCoursesStore,
     provideIcons({
       heroMagnifyingGlass,
       heroEye,
@@ -54,7 +54,7 @@ import { SchoolCoursesStore } from './courses.store';
       <div class="flex-1">
         <sk-select
           label="name"
-          [items]="store.DEGREES()"
+          [items]="store.degrees()"
           [formControl]="degreeControl"
           placeholder="COURSES.SELECT_DEGREE"
         />
@@ -62,7 +62,7 @@ import { SchoolCoursesStore } from './courses.store';
       <div class="flex-1">
         <sk-select
           label="name"
-          [items]="store.PLANS()"
+          [items]="store.plans()"
           [formControl]="planControl"
           placeholder="COURSES.SELECT_PLAN"
         />
@@ -96,9 +96,9 @@ import { SchoolCoursesStore } from './courses.store';
         </tr>
       </thead>
       <tbody>
-        @for (course of store.COURSES(); track course.id) {
+        @for (course of store.courses(); track course.id) {
           <tr
-            [class.hidden]="store.LOADING()"
+            [class.hidden]="store.loading()"
             class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
             <th
@@ -136,7 +136,7 @@ import { SchoolCoursesStore } from './courses.store';
         }
       </tbody>
     </table>
-    @if (store.LOADING()) {
+    @if (store.loading()) {
       <div class="mt-4 animate-pulse">
         <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
         <ul class="mt-8 space-y-8">
@@ -147,7 +147,7 @@ import { SchoolCoursesStore } from './courses.store';
         </ul>
       </div>
     }
-    @if (!store.LOADING() && !store.COURSES().length) {
+    @if (!store.loading() && !store.courses().length) {
       <div class="flex flex-col items-center justify-center gap-4 py-12">
         <img
           src="/assets/images/books-lineal-colored.svg"
@@ -160,8 +160,8 @@ import { SchoolCoursesStore } from './courses.store';
       </div>
     }
     <sk-paginator
-      [count]="store.COUNT()"
-      [pageSize]="store.PAGE_SIZE()"
+      [count]="store.count()"
+      [pageSize]="store.pageSize()"
       (paginate)="getCurrentPage($event)"
     />
   </div>`,
@@ -183,21 +183,18 @@ export class SchoolCoursesComponent implements OnInit {
     this.degreeControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (degree) => this.store.patchState({ SELECTED_DEGREE: degree }),
+        next: (degreeId) => patchState(this.store, { degreeId }),
       });
     this.planControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (plan) => this.store.patchState({ SELECTED_PLAN: plan }),
+        next: (planId) => patchState(this.store, { planId }),
       });
   }
 
-  public getCurrentPage(pagination: {
-    currentPage: number;
-    start: number;
-  }): void {
-    const { start } = pagination;
-    this.store.patchState({ START: start });
+  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
+    const { start, pageSize } = pagination;
+    patchState(this.store, { start, pageSize });
   }
 
   public createCourse(): void {
@@ -206,7 +203,7 @@ export class SchoolCoursesComponent implements OnInit {
         width: '36rem',
         maxWidth: '75%',
         disableClose: true,
-        data: { plan_id: this.store.selectedPlan() },
+        data: { plan_id: this.store.planId() },
       })
       .closed.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

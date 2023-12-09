@@ -1,82 +1,89 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
-import { AlertService } from '@skooltrak/ui';
-import { combineLatestWith, filter, from, map, switchMap, tap } from 'rxjs';
+import { authState, SupabaseService } from '@skooltrak/store';
+import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
-  LOADING: boolean;
-  PEOPLE: SchoolProfile[];
-  SELECTED_STATUS: StatusEnum | 'all';
-  SELECTED_ROLE: RoleEnum | 'all';
+  loading: boolean;
+  people: SchoolProfile[];
+  selectedStatus: StatusEnum | 'all';
+  selectedRole: RoleEnum | 'all';
 };
 
-@Injectable()
-export class SchoolPeopleStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly supabase = inject(SupabaseService);
-  private readonly auth = inject(authState.AuthStateFacade);
-  private readonly alert = inject(AlertService);
+const initialState: State = {
+  loading: false,
+  people: [],
+  selectedStatus: 'all',
+  selectedRole: 'all',
+};
 
-  private readonly SELECTED_ROLE$ = this.select((state) => state.SELECTED_ROLE);
-  private readonly SELECTED_STATUS$ = this.select(
-    (state) => state.SELECTED_STATUS,
-  );
-  public readonly PEOPLE = this.selectSignal((state) => state.PEOPLE);
-  public readonly LOADING = this.selectSignal((state) => state.LOADING);
-
-  private readonly fetchData$ = this.select(
-    {
-      role: this.SELECTED_ROLE$,
-      status: this.SELECTED_STATUS$,
-    },
-    { debounce: true },
-  );
-
-  public readonly fetchPeople = this.effect<void>((trigger$) =>
-    trigger$.pipe(
-      switchMap(() => this.fetchData$),
-      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-      filter(([, school_id]) => !!school_id),
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap(([data, school_id]) => {
-        let query = this.supabase.client
-          .from(Table.SchoolUsers)
-          .select(
-            'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
-          )
-          .eq('school_id', school_id);
-        query = data.role !== 'all' ? query.eq('role', data.role) : query;
-        query = data.status !== 'all' ? query.eq('status', data.status) : query;
-        return from(query).pipe(
-          map(({ error, data }) => {
-            if (error) throw new Error(error.message);
-            return data as unknown as SchoolProfile[];
+export const SchoolPeopleStore = signalStore(
+  withState(initialState),
+  withComputed(
+    (
+      { selectedRole, selectedStatus },
+      auth = inject(authState.AuthStateFacade),
+    ) => ({
+      fetchData: computed(() => ({
+        role: selectedRole(),
+        status: selectedStatus(),
+        school_id: auth.CURRENT_SCHOOL_ID(),
+      })),
+    }),
+  ),
+  withMethods(
+    (
+      { fetchData, selectedRole, selectedStatus, ...state },
+      supabase = inject(SupabaseService),
+    ) => ({
+      fetchPeople: rxMethod<typeof fetchData>(
+        pipe(
+          filter(() => !!fetchData().school_id),
+          tap(() => patchState(state, { loading: true })),
+          switchMap(() => {
+            let query = supabase.client
+              .from(Table.SchoolUsers)
+              .select(
+                'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
+              )
+              .eq('school_id', fetchData().school_id);
+            query =
+              selectedRole() !== 'all'
+                ? query.eq('role', selectedRole())
+                : query;
+            query =
+              selectedStatus() !== 'all'
+                ? query.eq('status', selectedStatus())
+                : query;
+            return from(query).pipe(
+              map(({ error, data }) => {
+                if (error) throw new Error(error.message);
+                return data as unknown as SchoolProfile[];
+              }),
+              tapResponse({
+                next: (people) => patchState(state, { people }),
+                error: console.error,
+                finalize: () => patchState(state, { loading: false }),
+              }),
+            );
           }),
-          tapResponse(
-            (PEOPLE) => this.patchState({ PEOPLE }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
-          ),
-        );
-      }),
-    ),
-  );
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({
-      LOADING: false,
-      PEOPLE: [],
-      SELECTED_ROLE: 'all',
-      SELECTED_STATUS: 'all',
-    });
-    this.fetchPeople();
-  };
-}
+        ),
+      ),
+    }),
+  ),
+  withHooks({
+    onInit({ fetchData, fetchPeople }) {
+      fetchPeople(fetchData);
+    },
+  }),
+);

@@ -3,11 +3,18 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
-import { ButtonDirective, EmptyTableComponent, LoadingComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  EmptyTableComponent,
+  LoadingComponent,
+} from '@skooltrak/ui';
 
 import { SchoolPeriodsFormComponent } from './periods-form.component';
 import { SchoolPeriodsStore } from './periods.store';
@@ -24,7 +31,7 @@ import { SchoolPeriodsStore } from './periods.store';
     LoadingComponent,
   ],
   providers: [
-    provideComponentStore(SchoolPeriodsStore),
+    SchoolPeriodsStore,
     provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
   ],
   template: `<div class="relative overflow-x-auto">
@@ -75,41 +82,47 @@ import { SchoolPeriodsStore } from './periods.store';
         </tr>
       </thead>
       <tbody>
-        @if(store.LOADING()) {
-        <tr sk-loading></tr>
-        } @else { @for(period of store.PERIODS(); track period.id) {
-        <tr
-          [class.hidden]="store.LOADING()"
-          class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
-        >
-          <th
-            scope="row"
-            class="whitespace-nowrap px-6 py-2.5 font-medium text-gray-900 dark:text-white"
-          >
-            {{ period.name }}
-          </th>
-          <td class="px-6 py-2.5">{{ period.year }}</td>
-          <td class="px-6 py-2.5">
-            {{ period.start_at | date: 'mediumDate' }}
-          </td>
-          <td class="px-6 py-2.5">{{ period.end_at | date: 'mediumDate' }}</td>
-          <td class="px-6 py-2.5">{{ period.created_at | date: 'medium' }}</td>
-          <td class="flex content-center justify-center gap-2 px-6 py-2.5">
-            <button type="button" (click)="editPeriod(period)">
-              <ng-icon
-                name="heroPencilSquare"
-                class="text-green-500"
-                size="24"
-              />
-            </button>
-            <button type="button">
-              <ng-icon name="heroTrash" class="text-red-600" size="24" />
-            </button>
-          </td>
-        </tr>
-        } @empty {
-        <tr sk-empty></tr>
-        }}
+        @if (store.loading()) {
+          <tr sk-loading></tr>
+        } @else {
+          @for (period of store.periods(); track period.id) {
+            <tr
+              [class.hidden]="store.loading()"
+              class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
+              <th
+                scope="row"
+                class="whitespace-nowrap px-6 py-2.5 font-medium text-gray-900 dark:text-white"
+              >
+                {{ period.name }}
+              </th>
+              <td class="px-6 py-2.5">{{ period.year }}</td>
+              <td class="px-6 py-2.5">
+                {{ period.start_at | date: 'mediumDate' }}
+              </td>
+              <td class="px-6 py-2.5">
+                {{ period.end_at | date: 'mediumDate' }}
+              </td>
+              <td class="px-6 py-2.5">
+                {{ period.created_at | date: 'medium' }}
+              </td>
+              <td class="flex content-center justify-center gap-2 px-6 py-2.5">
+                <button type="button" (click)="editPeriod(period)">
+                  <ng-icon
+                    name="heroPencilSquare"
+                    class="text-green-500"
+                    size="24"
+                  />
+                </button>
+                <button type="button">
+                  <ng-icon name="heroTrash" class="text-red-600" size="24" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr sk-empty></tr>
+          }
+        }
       </tbody>
     </table>
   </div>`,

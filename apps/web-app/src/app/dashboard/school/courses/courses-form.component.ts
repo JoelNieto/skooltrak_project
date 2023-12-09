@@ -9,10 +9,9 @@ import {
 } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
-import { SupabaseService } from '@skooltrak/store';
 import { Course, User } from '@skooltrak/models';
+import { SupabaseService } from '@skooltrak/store';
 import {
   ButtonDirective,
   CardComponent,
@@ -41,10 +40,7 @@ import { CoursesFormStore } from './courses-form.store';
     NgOptimizedImage,
     PictureComponent,
   ],
-  providers: [
-    provideComponentStore(CoursesFormStore),
-    provideIcons({ heroXMark }),
-  ],
+  providers: [CoursesFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -79,7 +75,7 @@ import { CoursesFormStore } from './courses-form.store';
         <label for="plan_id" skLabel>{{ 'COURSES.PLAN' | translate }}</label>
         <sk-select
           label="name"
-          [items]="store.PLANS()"
+          [items]="store.plans()"
           formControlName="plan_id"
         />
       </div>
@@ -89,7 +85,7 @@ import { CoursesFormStore } from './courses-form.store';
         }}</label>
         <sk-select
           label="name"
-          [items]="store.SUBJECTS()"
+          [items]="store.subjects()"
           formControlName="subject_id"
         />
       </div>

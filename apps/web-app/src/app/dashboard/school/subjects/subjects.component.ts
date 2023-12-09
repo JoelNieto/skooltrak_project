@@ -4,8 +4,12 @@ import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+  heroTrash,
+} from '@ng-icons/heroicons/outline';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
 import {
@@ -37,8 +41,8 @@ import { SchoolSubjectsStore } from './subjects.store';
     EmptyTableComponent,
   ],
   providers: [
-    provideComponentStore(SchoolSubjectsStore),
     provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
+    SchoolSubjectsStore,
     ConfirmationService,
   ],
   template: `<div class="relative overflow-x-auto">
@@ -82,43 +86,47 @@ import { SchoolSubjectsStore } from './subjects.store';
         </tr>
       </thead>
       <tbody>
-        @if(store.LOADING()) {
-        <tr sk-loading></tr>
-        } @else { @for(subject of store.SUBJECTS(); track subject.id) {
-        <tr
-          [class.hidden]="store.LOADING()"
-          class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
-        >
-          <th
-            scope="row"
-            class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-          >
-            {{ subject.name }}
-          </th>
-          <td class="px-6 py-4">{{ subject.short_name }}</td>
-          <td class="px-6 py-4">{{ subject.code }}</td>
-          <td class="px-6 py-4">{{ subject.created_at | date: 'short' }}</td>
-          <td class="flex content-center justify-center gap-2 px-6 py-4">
-            <button type="button" (click)="editSubject(subject)">
-              <ng-icon
-                name="heroPencilSquare"
-                class="text-green-500"
-                size="24"
-              />
-            </button>
-            <button type="button" (click)="deleteSubject(subject)">
-              <ng-icon name="heroTrash" class="text-red-600" size="24" />
-            </button>
-          </td>
-        </tr>
-        } @empty {
-        <tr sk-empty></tr>
-        } }
+        @if (store.loading()) {
+          <tr sk-loading></tr>
+        } @else {
+          @for (subject of store.subjects(); track subject.id) {
+            <tr
+              [class.hidden]="store.loading()"
+              class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
+              <th
+                scope="row"
+                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+              >
+                {{ subject.name }}
+              </th>
+              <td class="px-6 py-4">{{ subject.short_name }}</td>
+              <td class="px-6 py-4">{{ subject.code }}</td>
+              <td class="px-6 py-4">
+                {{ subject.created_at | date: 'short' }}
+              </td>
+              <td class="flex content-center justify-center gap-2 px-6 py-4">
+                <button type="button" (click)="editSubject(subject)">
+                  <ng-icon
+                    name="heroPencilSquare"
+                    class="text-green-500"
+                    size="24"
+                  />
+                </button>
+                <button type="button" (click)="deleteSubject(subject)">
+                  <ng-icon name="heroTrash" class="text-red-600" size="24" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr sk-empty></tr>
+          }
+        }
       </tbody>
     </table>
     <sk-paginator
-      [count]="store.COUNT()"
-      [pageSize]="store.PAGE_SIZE()"
+      [count]="store.count()"
+      [pageSize]="store.pageSize()"
       (paginate)="getCurrentPage($event)"
     />
   </div>`,
@@ -135,7 +143,7 @@ export class SchoolSubjectsComponent implements OnInit {
     this.textSearch.valueChanges
       .pipe(debounceTime(800), takeUntilDestroyed(this.destroy))
       .subscribe({
-        next: (text) => this.store.patchState({ TEXT_SEARCH: text }),
+        next: (queryText) => patchState(this.store, { queryText }),
       });
   }
 
@@ -145,7 +153,7 @@ export class SchoolSubjectsComponent implements OnInit {
     pageSize: number;
   }): void {
     const { start, pageSize } = pagination;
-    this.store.patchState({ START: start, PAGE_SIZE: pageSize });
+    patchState(this.store, { start, pageSize });
   }
 
   public newSubject(): void {

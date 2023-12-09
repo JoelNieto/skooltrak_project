@@ -5,8 +5,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import {
+  heroMagnifyingGlass,
+  heroPencilSquare,
+} from '@ng-icons/heroicons/outline';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
 import { PaginatorComponent } from '@skooltrak/ui';
@@ -31,7 +34,7 @@ import { SchoolPeopleStore } from './people.store';
     AvatarComponent,
   ],
   providers: [
-    provideComponentStore(SchoolPeopleStore),
+    SchoolPeopleStore,
     provideIcons({ heroMagnifyingGlass, heroPencilSquare }),
   ],
   styles: [
@@ -55,7 +58,7 @@ import { SchoolPeopleStore } from './people.store';
       <div class="flex-1">
         <select [formControl]="roleControl">
           <option value="all">{{ 'PEOPLE.ALL_ROLES' | translate }}</option>
-          @for(role of roles; track role) {
+          @for (role of roles; track role) {
             <option [value]="role">
               {{ 'PEOPLE.' + role | translate }}
             </option>
@@ -65,10 +68,10 @@ import { SchoolPeopleStore } from './people.store';
       <div class="flex-1">
         <select [formControl]="statusControl">
           <option value="all">{{ 'PEOPLE.ALL_STATUS' | translate }}</option>
-          @for(status of statuses; track status) {
+          @for (status of statuses; track status) {
             <option [value]="status">
-            {{ 'PEOPLE.' + status | translate }}
-          </option>
+              {{ 'PEOPLE.' + status | translate }}
+            </option>
           }
         </select>
       </div>
@@ -116,69 +119,66 @@ import { SchoolPeopleStore } from './people.store';
         </tr>
       </thead>
       <tbody>
-        @for(person of store.PEOPLE(); track person.user_id) {
+        @for (person of store.people(); track person.user_id) {
           <tr
-          [class.hidden]="store.LOADING()"
-          class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-        >
-          <th
-            scope="row"
-            class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
+            [class.hidden]="store.loading()"
+            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
           >
-            <div class="flex items-center gap-2">
-              <sk-avatar
-                [avatarUrl]="person.user.avatar_url ?? 'default_avatar.jpg'"
-                class="h-10"
-                [rounded]="true"
-              />
-              <div class="flex flex-col">
-                <div class="text-base text-gray-700 dark:text-gray-200">
-                  {{ person.user.first_name }} {{ person.user.father_name }}
-                </div>
-                <div class="font-mono text-sm text-gray-400">
-                  {{ person.user.email }}
+            <th
+              scope="row"
+              class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
+            >
+              <div class="flex items-center gap-2">
+                <sk-avatar
+                  [avatarUrl]="person.user.avatar_url ?? 'default_avatar.jpg'"
+                  class="h-10"
+                  [rounded]="true"
+                />
+                <div class="flex flex-col">
+                  <div class="text-base text-gray-700 dark:text-gray-200">
+                    {{ person.user.first_name }} {{ person.user.father_name }}
+                  </div>
+                  <div class="font-mono text-sm text-gray-400">
+                    {{ person.user.email }}
+                  </div>
                 </div>
               </div>
-            </div>
-          </th>
-          <td class="px-6 py-3.5">{{ person.user.document_id }}</td>
-          <td class="px-6 py-3.5">{{ person.role | translate }}</td>
-          <td class="px-6 py-3.5">{{ person.status | translate }}</td>
-          <td class="px-6 py-3.5">
-            {{ person.created_at | date : 'medium' }}
-          </td>
-          <td class="flex content-center justify-center gap-2 px-6 py-3.5">
-            <button type="button" (click)="editPeople(person)">
-              <ng-icon
-                name="heroPencilSquare"
-                class="text-green-500"
-                size="24"
-              />
-            </button>
-          </td>
-        </tr>
+            </th>
+            <td class="px-6 py-3.5">{{ person.user.document_id }}</td>
+            <td class="px-6 py-3.5">{{ person.role | translate }}</td>
+            <td class="px-6 py-3.5">{{ person.status | translate }}</td>
+            <td class="px-6 py-3.5">
+              {{ person.created_at | date: 'medium' }}
+            </td>
+            <td class="flex content-center justify-center gap-2 px-6 py-3.5">
+              <button type="button" (click)="editPeople(person)">
+                <ng-icon
+                  name="heroPencilSquare"
+                  class="text-green-500"
+                  size="24"
+                />
+              </button>
+            </td>
+          </tr>
         }
       </tbody>
     </table>
-    @if(store.LOADING()) {
+    @if (store.loading()) {
       <div class="mt-4 animate-pulse">
-      <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-      <ul class="mt-8 space-y-8">
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-      </ul>
-    </div>
+        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+        <ul class="mt-8 space-y-8">
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+        </ul>
+      </div>
     }
-    @if(!store.LOADING() && !store.PEOPLE().length){
-      <div
-      class="flex items-center justify-center"
-      >
-      <img src="/assets/images/teacher.svg" alt="" />
-    </div>
+    @if (!store.loading() && !store.people().length) {
+      <div class="flex items-center justify-center">
+        <img src="/assets/images/teacher.svg" alt="" />
+      </div>
     }
-
   </div>`,
 })
 export class SchoolPeopleComponent implements OnInit {
@@ -200,7 +200,7 @@ export class SchoolPeopleComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (role) => {
-          this.store.patchState({ SELECTED_ROLE: role });
+          patchState(this.store, { selectedRole: role });
         },
       });
 
@@ -208,7 +208,7 @@ export class SchoolPeopleComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (status) => {
-          this.store.patchState({ SELECTED_STATUS: status });
+          patchState(this.store, { selectedStatus: status });
         },
       });
   }
@@ -221,6 +221,6 @@ export class SchoolPeopleComponent implements OnInit {
     });
     dialogRef.closed
       .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({ next: () => this.store.fetchPeople() });
+      .subscribe({ next: () => this.store.fetchPeople(this.store.fetchData) });
   }
 }

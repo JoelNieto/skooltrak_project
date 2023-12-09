@@ -9,7 +9,6 @@ import {
 } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
 import {
@@ -36,10 +35,7 @@ import { PlansFormStore } from './plans-form.store';
     LabelDirective,
     InputDirective,
   ],
-  providers: [
-    provideComponentStore(PlansFormStore),
-    provideIcons({ heroXMark }),
-  ],
+  providers: [PlansFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -67,7 +63,7 @@ import { PlansFormStore } from './plans-form.store';
       <div>
         <label for="degree_id" skLabel>{{ 'PLANS.DEGREE' | translate }}</label>
         <sk-select
-          [items]="store.DEGREES()"
+          [items]="store.degrees()"
           label="name"
           formControlName="degree_id"
         />
@@ -131,7 +127,7 @@ export class StudyPlansFormComponent implements OnInit {
       )
       .subscribe({
         next: (id) => {
-          const value = this.store.DEGREES().find((x) => x.id === id);
+          const value = this.store.degrees().find((x) => x.id === id);
           !!value && this.form.get('level_id')?.setValue(value.level_id);
         },
       });

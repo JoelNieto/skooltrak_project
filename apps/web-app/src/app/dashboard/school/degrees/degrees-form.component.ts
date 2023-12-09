@@ -1,12 +1,22 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { DegreesFormStore } from './degrees-form.store';
 
@@ -23,10 +33,7 @@ import { DegreesFormStore } from './degrees-form.store';
     LabelDirective,
     InputDirective,
   ],
-  providers: [
-    provideComponentStore(DegreesFormStore),
-    provideIcons({ heroXMark }),
-  ],
+  providers: [DegreesFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -54,7 +61,7 @@ import { DegreesFormStore } from './degrees-form.store';
       <div>
         <label for="level_id" skLabel>{{ 'LEVEL' | translate }}</label>
         <sk-select
-          [items]="store.LEVELS()"
+          [items]="store.levels()"
           label="name"
           formControlName="level_id"
         />

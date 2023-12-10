@@ -1,171 +1,115 @@
-import { inject, Injectable } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { computed, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { TranslateService } from '@ngx-translate/core';
-import { authState, SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ClassGroup, Table } from '@skooltrak/models';
-import { AlertService, UtilService } from '@skooltrak/ui';
-import {
-  combineLatestWith,
-  filter,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { authState, SupabaseService } from '@skooltrak/store';
+import { AlertService } from '@skooltrak/ui';
+import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
-  GROUPS: ClassGroup[];
-  SELECTED_ID?: string;
-  COUNT: number;
-  PAGES: number;
-  PAGE_SIZE: number;
-  START: number;
-  END: number;
-  LOADING: boolean;
+  groups: ClassGroup[];
+  count: number;
+  pageSize: number;
+  start: number;
+  loading: boolean;
 };
 
-@Injectable()
-export class SchoolGroupsStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly auth = inject(authState.AuthStateFacade);
-  private readonly supabase = inject(SupabaseService);
-  private readonly util = inject(UtilService);
-  private readonly alert = inject(AlertService);
-  private readonly translate = inject(TranslateService);
+const initialState: State = {
+  groups: [],
+  loading: true,
+  count: 0,
+  pageSize: 5,
+  start: 0,
+};
 
-  public readonly GROUPS = this.selectSignal((state) => state.GROUPS);
-  public readonly COUNT = this.selectSignal((state) => state.COUNT);
-  public readonly LOADING = this.selectSignal((state) => state.LOADING);
-  public readonly PAGE_SIZE = this.selectSignal((state) => state.PAGE_SIZE);
-  public readonly start$ = this.select((state) => state.START);
-  public readonly end$ = this.select((state) => state.END);
-  public readonly SELECTED_ID = this.selectSignal((state) => state.SELECTED_ID);
-  public readonly SELECTED = this.selectSignal((state) =>
-    state.SELECTED_ID
-      ? state.GROUPS.find((x) => x.id === state.SELECTED_ID)
-      : null,
-  );
-
-  private setCount = this.updater(
-    (state, count: number): State => ({
-      ...state,
-      COUNT: count,
-      PAGES: this.util.getPages(count, 10),
-    }),
-  );
-
-  public setRange = this.updater(
-    (state, start: number): State => ({
-      ...state,
-      START: start,
-      END: start + (state.PAGE_SIZE - 1),
-    }),
-  );
-
-  private readonly fetchGroupsData$ = this.select(
-    {
-      start: this.start$,
-      end: this.end$,
-      pageSize: toObservable(this.PAGE_SIZE),
-    },
-    { debounce: true },
-  );
-
-  private readonly fetchGroups = this.effect<void>((trigger$) => {
-    return trigger$.pipe(
-      switchMap(() => this.fetchGroupsData$),
-      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-      filter(([{ end }, school_id]) => end > 0 && !!school_id),
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap(([{ end, start }, school_id]) => {
-        return from(
-          this.supabase.client
-            .from(Table.Groups)
-            .select(
-              'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
-              {
-                count: 'exact',
-              },
-            )
-            .range(start, end)
-            .eq('school_id', school_id),
-        ).pipe(
-          map(({ data, error, count }) => {
-            if (error) throw new Error(error.message);
-            return { groups: data, count };
+export const SchoolGroupsStore = signalStore(
+  withState(initialState),
+  withComputed(({ start, pageSize }) => ({
+    end: computed(() => start() + (pageSize() - 1)),
+  })),
+  withMethods(
+    (
+      { start, end, ...store },
+      auth = inject(authState.AuthStateFacade),
+      supabase = inject(SupabaseService),
+      alert = inject(AlertService),
+    ) => ({
+      fetchGroups: rxMethod<number>(
+        pipe(
+          switchMap(() => auth.CURRENT_SCHOOL_ID$),
+          filter((school_id) => !!school_id),
+          tap(() => patchState(store, { loading: true })),
+          switchMap((school_id) => {
+            return from(
+              supabase.client
+                .from(Table.Groups)
+                .select(
+                  'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
+                  {
+                    count: 'exact',
+                  },
+                )
+                .range(start(), end())
+                .eq('school_id', school_id),
+            ).pipe(
+              map(({ data, error, count }) => {
+                if (error) throw new Error(error.message);
+                return { groups: data as unknown as ClassGroup[], count };
+              }),
+              tap(({ count }) => !!count && patchState(store, { count })),
+              tapResponse(
+                ({ groups }) => patchState(store, { groups }),
+                (error) => console.error(error),
+                () => patchState(store, { loading: false }),
+              ),
+            );
           }),
-          tap(({ count }) => !!count && this.setCount(count)),
-          tapResponse(
-            ({ groups }) =>
-              this.patchState({ GROUPS: groups as unknown as ClassGroup[] }),
-            (error) => {
-              console.error(error);
-              return of([]);
-            },
-            () => this.patchState({ LOADING: false }),
-          ),
-        );
-      }),
-    );
-  });
-
-  public readonly saveClassGroup = this.effect(
-    (request$: Observable<Partial<ClassGroup>>) => {
-      return request$.pipe(
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap((request) => {
-          return from(
-            this.supabase.client
-              .from(Table.Groups)
-              .upsert([
-                { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
-              ]),
-          ).pipe(
-            map(({ error }) => {
-              if (error) throw new Error(error.message);
-            }),
-          );
-        }),
-        tapResponse(
-          () => {
-            this.alert.showAlert({
-              icon: 'success',
-              message: this.translate.instant('ALERT.SUCCESS'),
-            });
-            this.fetchGroups();
-          },
-          (error) => {
-            this.alert.showAlert({
-              icon: 'error',
-              message: this.translate.instant('ALERT.FAILURE'),
-            });
-            console.error(error);
-          },
-          () => this.patchState({ LOADING: false }),
         ),
-      );
-    },
-  );
+      ),
+      async saveGroup(request: Partial<ClassGroup>): Promise<void> {
+        const { error } = await supabase.client
+          .from(Table.Groups)
+          .upsert([{ ...request, school_id: auth.CURRENT_SCHOOL_ID() }]);
+        if (error) {
+          console.error(error);
+          return;
+        }
+        alert.showAlert({
+          icon: 'success',
+          message: 'ALERT.SUCCESS',
+        });
+        this.fetchGroups(start());
+      },
+      async deleteGroup(id: string): Promise<void> {
+        const { error } = await supabase.client
+          .from(Table.Groups)
+          .delete()
+          .eq('id', id);
+        if (error) {
+          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          console.error(error);
+          return;
+        }
 
-  public ngrxOnStoreInit = (): void => {
-    this.setState({
-      GROUPS: [],
-      LOADING: true,
-      PAGES: 0,
-      COUNT: 0,
-      PAGE_SIZE: 5,
-      START: 0,
-      END: 4,
-    });
-    this.fetchGroups();
-  };
-}
+        alert.showAlert({
+          icon: 'success',
+          message: 'ALERT.SUCCESS',
+        });
+        this.fetchGroups(start);
+      },
+    }),
+  ),
+  withHooks({
+    onInit({ fetchGroups, end }) {
+      fetchGroups(end);
+    },
+  }),
+);

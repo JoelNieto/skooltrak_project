@@ -1,13 +1,24 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { GroupsFormStore } from './groups-form.store';
 
@@ -24,10 +35,7 @@ import { GroupsFormStore } from './groups-form.store';
     LabelDirective,
     InputDirective,
   ],
-  providers: [
-    provideComponentStore(GroupsFormStore),
-    provideIcons({ heroXMark }),
-  ],
+  providers: [GroupsFormStore, provideIcons({ heroXMark })],
 
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
@@ -56,7 +64,7 @@ import { GroupsFormStore } from './groups-form.store';
       <div>
         <label for="degree_id" skLabel>{{ 'Degree' | translate }}</label>
         <sk-select
-          [items]="store.DEGREES()"
+          [items]="store.degrees()"
           label="name"
           formControlName="degree_id"
         />
@@ -64,7 +72,7 @@ import { GroupsFormStore } from './groups-form.store';
       <div>
         <label for="degree_id" skLabel>{{ 'Plan' | translate }}</label>
         <sk-select
-          [items]="store.PLANS()"
+          [items]="store.plans()"
           label="name"
           formControlName="plan_id"
         />
@@ -104,7 +112,7 @@ export class SchoolGroupsFormComponent implements OnInit {
       .get('degree_id')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (degree) => this.store.patchState({ SELECTED_DEGREE_ID: degree }),
+        next: (degreeId) => patchState(this.store, { degreeId }),
       });
   }
 

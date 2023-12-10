@@ -11,7 +11,6 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroPaperAirplaneSolid } from '@ng-icons/heroicons/solid';
-import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { messagingState } from '@skooltrak/store';
 import { InputDirective } from '@skooltrak/ui';
@@ -25,14 +24,14 @@ import { ChatStore } from './chat.store';
   selector: 'sk-chat',
   standalone: true,
   template: `<div class="flex flex-col h-[32rem]">
-    @if (store.LOADING()) {
+    @if (store.loading()) {
       <sk-chats-loading />
     } @else {
       <div
         class="flex grow flex-col-reverse py-6 px-12 gap-6 overflow-y-scroll scroll-smooth"
         #chatContainer
       >
-        @for (message of store.MESSAGES(); track message.id) {
+        @for (message of store.messages(); track message.id) {
           <div class="flex" [ngClass]="{ 'justify-end': message.mine }">
             <div class="flex-col">
               @if (!message.mine) {
@@ -117,10 +116,7 @@ import { ChatStore } from './chat.store';
       }
     `,
   ],
-  providers: [
-    provideComponentStore(ChatStore),
-    provideIcons({ heroPaperAirplaneSolid }),
-  ],
+  providers: [ChatStore, provideIcons({ heroPaperAirplaneSolid })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgIcon,

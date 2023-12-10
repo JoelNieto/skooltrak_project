@@ -18,6 +18,9 @@ type State = {
   people: SchoolProfile[];
   selectedStatus: StatusEnum | 'all';
   selectedRole: RoleEnum | 'all';
+  count: number;
+  pageSize: number;
+  start: number;
 };
 
 const initialState: State = {
@@ -25,25 +28,29 @@ const initialState: State = {
   people: [],
   selectedStatus: 'all',
   selectedRole: 'all',
+  count: 0,
+  pageSize: 5,
+  start: 0,
 };
 
 export const SchoolPeopleStore = signalStore(
   withState(initialState),
   withComputed(
     (
-      { selectedRole, selectedStatus },
+      { selectedRole, selectedStatus, start, pageSize },
       auth = inject(authState.AuthStateFacade),
     ) => ({
       fetchData: computed(() => ({
         role: selectedRole(),
         status: selectedStatus(),
         school_id: auth.CURRENT_SCHOOL_ID(),
+        end: start() + (pageSize() - 1),
       })),
     }),
   ),
   withMethods(
     (
-      { fetchData, selectedRole, selectedStatus, ...state },
+      { fetchData, selectedRole, selectedStatus, start, ...state },
       supabase = inject(SupabaseService),
     ) => ({
       fetchPeople: rxMethod<typeof fetchData>(
@@ -55,7 +62,11 @@ export const SchoolPeopleStore = signalStore(
               .from(Table.SchoolUsers)
               .select(
                 'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
+                {
+                  count: 'exact',
+                },
               )
+              .range(start(), fetchData().end)
               .eq('school_id', fetchData().school_id);
             query =
               selectedRole() !== 'all'
@@ -66,12 +77,16 @@ export const SchoolPeopleStore = signalStore(
                 ? query.eq('status', selectedStatus())
                 : query;
             return from(query).pipe(
-              map(({ error, data }) => {
+              map(({ error, data, count }) => {
                 if (error) throw new Error(error.message);
-                return data as unknown as SchoolProfile[];
+                return {
+                  people: data as unknown as SchoolProfile[],
+                  count: count ?? 0,
+                };
               }),
               tapResponse({
-                next: (people) => patchState(state, { people }),
+                next: ({ people, count }) =>
+                  patchState(state, { people, count }),
                 error: console.error,
                 finalize: () => patchState(state, { loading: false }),
               }),

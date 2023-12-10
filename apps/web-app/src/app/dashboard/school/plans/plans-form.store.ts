@@ -1,53 +1,44 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { Degree, Table } from '@skooltrak/models';
-import { from, map, switchMap } from 'rxjs';
+import { authState, SupabaseService } from '@skooltrak/store';
 
 type State = {
-  DEGREES: Degree[];
+  degrees: Degree[];
 };
 
-@Injectable()
-export class PlansFormStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly auth = inject(authState.AuthStateFacade);
-  private readonly supabase = inject(SupabaseService);
-  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
+const initialState: State = { degrees: [] };
 
-  private readonly fetchDegrees = this.effect<void>((trigger$) =>
-    trigger$.pipe(
-      switchMap(() =>
-        from(
-          this.supabase.client
-            .from(Table.Degrees)
-            .select('id, name, level_id')
-            .eq('school_id', this.auth.CURRENT_SCHOOL_ID()),
-        )
-          .pipe(
-            map(({ data, error }) => {
-              if (error) throw new Error(error.message);
-              return data as Degree[];
-            }),
-          )
-          .pipe(
-            tapResponse(
-              (DEGREES) => this.patchState({ DEGREES }),
-              (error) => console.error(error),
-            ),
-          ),
-      ),
-    ),
-  );
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({ DEGREES: [] });
-    this.fetchDegrees();
-  };
-}
+export const PlansFormStore = signalStore(
+  withState(initialState),
+  withComputed((_, auth = inject(authState.AuthStateFacade)) => ({
+    school_id: computed(() => auth.CURRENT_SCHOOL_ID()),
+  })),
+  withMethods(
+    ({ school_id, ...state }, supabase = inject(SupabaseService)) => ({
+      async fetchDegrees(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Degrees)
+          .select('id, name, level_id')
+          .eq('school_id', school_id());
+        if (error) {
+          console.error(error);
+          return;
+        }
+        patchState(state, { degrees: data });
+      },
+    }),
+  ),
+  withHooks({
+    onInit({ fetchDegrees }) {
+      fetchDegrees();
+    },
+  }),
+);

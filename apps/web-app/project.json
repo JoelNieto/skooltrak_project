@@ -37,7 +37,6 @@
         ],
         "styles": [
           "./node_modules/angular-calendar/css/angular-calendar.css",
-          "./node_modules/quill/dist/quill.bubble.css",
           "./node_modules/quill/dist/quill.core.css",
           "apps/web-app/src/styles.scss"
         ],

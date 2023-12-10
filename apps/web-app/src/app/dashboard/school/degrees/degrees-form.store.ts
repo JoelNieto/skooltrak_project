@@ -1,60 +1,44 @@
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { Level, Table } from '@skooltrak/models';
-import { from, map, switchMap, tap } from 'rxjs';
+import { SupabaseService } from '@skooltrak/store';
 
 type State = {
-  LOADING: boolean;
-  LEVELS: Partial<Level>[];
+  loading: boolean;
+  levels: Partial<Level>[];
 };
 
-@Injectable()
-export class DegreesFormStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly supabase = inject(SupabaseService);
+const initialState: State = {
+  loading: false,
+  levels: [],
+};
 
-  public readonly LOADING = this.selectSignal((state) => state.LOADING);
-  public readonly LEVELS = this.selectSignal((state) => state.LEVELS);
+export const DegreesFormStore = signalStore(
+  withState(initialState),
+  withMethods((state, supabase = inject(SupabaseService)) => ({
+    async fetchLevels(): Promise<void> {
+      patchState(state, { loading: true });
+      const { data, error } = await supabase.client
+        .from(Table.Levels)
+        .select('id, name')
+        .order('sort');
 
-  private readonly fetchLevels = this.effect<void>((trigger$) =>
-    trigger$
-      .pipe(
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap(() =>
-          from(
-            this.supabase.client
-              .from(Table.Levels)
-              .select('id, name')
-              .order('sort'),
-          ).pipe(
-            map(({ error, data }) => {
-              if (error) throw new Error(error.message);
-              return data as Level[];
-            }),
-          ),
-        ),
-      )
-      .pipe(
-        tapResponse(
-          (LEVELS) => this.patchState({ LEVELS }),
-          (error) => console.error(error),
-          () => this.patchState({ LOADING: true }),
-        ),
-      ),
-  );
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({
-      LOADING: false,
-      LEVELS: [],
-    });
-    this.fetchLevels();
-  };
-}
+      if (error) {
+        console.error(error);
+        return;
+      }
+      patchState(state, { levels: data });
+    },
+  })),
+  withHooks({
+    onInit({ fetchLevels }) {
+      fetchLevels();
+    },
+  }),
+);

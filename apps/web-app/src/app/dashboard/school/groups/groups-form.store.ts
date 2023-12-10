@@ -1,111 +1,82 @@
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Degree, StudyPlan, Table } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { orderBy } from 'lodash';
-import {
-  combineLatestWith,
-  filter,
-  from,
-  map,
-  Observable,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { filter, from, map, pipe, switchMap } from 'rxjs';
 
 type State = {
-  LOADING: boolean;
-  DEGREES: Degree[];
-  SELECTED_DEGREE_ID: string | undefined;
-  PLANS: Partial<StudyPlan>[];
+  loading: boolean;
+  degrees: Degree[];
+  degreeId: string | undefined;
+  plans: Partial<StudyPlan>[];
 };
 
-@Injectable()
-export class GroupsFormStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly supabase = inject(SupabaseService);
-  private readonly auth = inject(authState.AuthStateFacade);
+const initialState: State = {
+  loading: false,
+  degreeId: undefined,
+  degrees: [],
+  plans: [],
+};
 
-  public readonly LOADING = this.selectSignal((state) => state.LOADING);
-  public readonly DEGREES = this.selectSignal((state) => state.DEGREES);
-  public readonly PLANS = this.selectSignal((state) => state.PLANS);
-  public readonly SELECTED_DEGREE_ID$ = this.select(
-    (state) => state.SELECTED_DEGREE_ID,
-  );
-
-  private readonly fetchDegrees = this.effect<void>((trigger$) =>
-    trigger$.pipe(
-      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-      filter(([, school_id]) => !!school_id),
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap(([, school_id]) =>
-        from(
-          this.supabase.client
-            .from(Table.Degrees)
-            .select('id, name, level:levels(id, name, sort)')
-            .eq('school_id', school_id),
-        )
-          .pipe(
-            map(({ error, data }) => {
-              if (error) throw new Error(error.message);
-              return orderBy(data, ['level.sort']) as unknown as Degree[];
-            }),
-          )
-          .pipe(
-            tapResponse(
-              (DEGREES) => this.patchState({ DEGREES }),
-              (error) => console.error(error),
-              () => this.patchState({ LOADING: true }),
-            ),
-          ),
-      ),
-    ),
-  );
-
-  private readonly fetchPlans = this.effect(
-    (degree$: Observable<string | undefined>) => {
-      return degree$
-        .pipe(
-          filter((degree) => !!degree),
-          tap(() => this.patchState({ LOADING: false })),
-          switchMap((degree) =>
+export const GroupsFormStore = signalStore(
+  withState(initialState),
+  withMethods(
+    (
+      { degreeId, ...state },
+      supabase = inject(SupabaseService),
+      auth = inject(authState.AuthStateFacade),
+    ) => ({
+      async fetchDegrees(): Promise<void> {
+        patchState(state, { loading: true });
+        const { data, error } = await supabase.client
+          .from(Table.Degrees)
+          .select('id, name, level:levels(id, name, sort)')
+          .eq('school_id', auth.CURRENT_SCHOOL_ID());
+        if (error) {
+          console.error(error);
+        }
+        patchState(state, {
+          degrees: orderBy(data, ['level.sort']) as unknown as Degree[],
+        });
+        patchState(state, { loading: false });
+      },
+      fetchPlans: rxMethod<string | undefined>(
+        pipe(
+          filter(() => !!degreeId),
+          switchMap(() =>
             from(
-              this.supabase.client
+              supabase.client
                 .from(Table.StudyPlans)
                 .select('id,name')
-                .eq('degree_id', degree),
+                .eq('degree_id', degreeId()),
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
                 return data;
               }),
+              tapResponse({
+                next: (plans) => patchState(state, { plans }),
+                error: console.error,
+              }),
             ),
           ),
-        )
-        .pipe(
-          tapResponse(
-            (PLANS) => this.patchState({ PLANS }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
-          ),
-        );
+        ),
+      ),
+    }),
+  ),
+  withHooks({
+    onInit({ fetchPlans, fetchDegrees, degreeId }) {
+      fetchDegrees();
+      fetchPlans(degreeId);
     },
-  );
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({
-      LOADING: false,
-      DEGREES: [],
-      SELECTED_DEGREE_ID: undefined,
-      PLANS: [],
-    });
-    this.fetchDegrees();
-    this.fetchPlans(this.SELECTED_DEGREE_ID$);
-  };
-}
+  }),
+);

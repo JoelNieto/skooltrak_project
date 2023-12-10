@@ -8,7 +8,7 @@ import {
   heroPencilSquare,
   heroTrash,
 } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import {
@@ -40,7 +40,7 @@ import { SchoolGroupsStore } from './groups.store';
   ],
   providers: [
     provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
-    provideComponentStore(SchoolGroupsStore),
+    SchoolGroupsStore,
   ],
   template: `
     <div class="relative overflow-x-auto">
@@ -89,50 +89,52 @@ import { SchoolGroupsStore } from './groups.store';
           </tr>
         </thead>
         <tbody>
-          @if (store.LOADING()) {
-          <tr sk-loading></tr>
-          } @else { @for(group of store.GROUPS(); track group.id) {
-          <tr
-            [class.hidden]="store.LOADING()"
-            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-          >
-            <th
-              scope="row"
-              class="whitespace-nowrap px-6 py-2 font-medium text-gray-900 dark:text-white"
-            >
-              {{ group.name }}
-            </th>
-            <td class="px-6 py-2">{{ group.plan?.name }}</td>
-            <td class="flex px-6 py-2">
-              @for(teacher of group.teachers; track teacher.id) {
-              <sk-user-chip [user]="teacher" />
-              }
-            </td>
-            <td class="px-6 py-2">{{ group.degree.name }}</td>
-            <td class="px-6 py-2">
-              {{ group.created_at | date: 'medium' }}
-            </td>
-            <td class="flex items-center justify-center gap-2 px-6 py-4">
-              <button type="button" (click)="editGroup(group)">
-                <ng-icon
-                  name="heroPencilSquare"
-                  class="text-green-500"
-                  size="24"
-                />
-              </button>
-              <button type="button">
-                <ng-icon name="heroTrash" class="text-red-600" size="24" />
-              </button>
-            </td>
-          </tr>
-          } @empty {
-          <tr sk-empty></tr>
-          } }
+          @if (store.loading()) {
+            <tr sk-loading></tr>
+          } @else {
+            @for (group of store.groups(); track group.id) {
+              <tr
+                [class.hidden]="store.loading()"
+                class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
+              >
+                <th
+                  scope="row"
+                  class="whitespace-nowrap px-6 py-2 font-medium text-gray-900 dark:text-white"
+                >
+                  {{ group.name }}
+                </th>
+                <td class="px-6 py-2">{{ group.plan?.name }}</td>
+                <td class="flex px-6 py-2">
+                  @for (teacher of group.teachers; track teacher.id) {
+                    <sk-user-chip [user]="teacher" />
+                  }
+                </td>
+                <td class="px-6 py-2">{{ group.degree.name }}</td>
+                <td class="px-6 py-2">
+                  {{ group.created_at | date: 'medium' }}
+                </td>
+                <td class="flex items-center justify-center gap-2 px-6 py-4">
+                  <button type="button" (click)="editGroup(group)">
+                    <ng-icon
+                      name="heroPencilSquare"
+                      class="text-green-500"
+                      size="24"
+                    />
+                  </button>
+                  <button type="button">
+                    <ng-icon name="heroTrash" class="text-red-600" size="24" />
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr sk-empty></tr>
+            }
+          }
         </tbody>
       </table>
       <sk-paginator
-        [count]="store.COUNT()"
-        [pageSize]="store.PAGE_SIZE()"
+        [count]="store.count()"
+        [pageSize]="store.pageSize()"
         (paginate)="getCurrentPage($event)"
       />
     </div>
@@ -143,12 +145,9 @@ export class SchoolGroupsComponent {
   private dialog = inject(Dialog);
   private destroy = inject(DestroyRef);
 
-  public getCurrentPage(pagination: {
-    currentPage: number;
-    start: number;
-  }): void {
-    const { start } = pagination;
-    this.store.setRange(start);
+  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
+    const { start, pageSize } = pagination;
+    patchState(this.store, { pageSize, start });
   }
 
   public newGroup(): void {
@@ -162,7 +161,7 @@ export class SchoolGroupsComponent {
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
-        !!request && this.store.saveClassGroup(request);
+        !!request && this.store.saveGroup(request);
       },
     });
   }
@@ -179,7 +178,7 @@ export class SchoolGroupsComponent {
     );
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (request) => {
-        !!request && this.store.saveClassGroup({ ...request, id: group.id });
+        !!request && this.store.saveGroup({ ...request, id: group.id });
       },
     });
   }

@@ -1,111 +1,92 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
 import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
-import { TranslateService } from '@ngx-translate/core';
-import { authState, SupabaseService } from '@skooltrak/store';
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Period, Table } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
-import {
-  combineLatestWith,
-  filter,
-  from,
-  map,
-  Observable,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
-  LOADING: boolean;
-  PERIODS: Period[];
+  loading: boolean;
+  periods: Period[];
 };
 
-@Injectable()
-export class SchoolPeriodsStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly auth = inject(authState.AuthStateFacade);
-  private readonly supabase = inject(SupabaseService);
-  private readonly alert = inject(AlertService);
-  private readonly translate = inject(TranslateService);
+const initialState: State = {
+  loading: false,
+  periods: [],
+};
 
-  public readonly LOADING = this.selectSignal((state) => state.LOADING);
-  public readonly PERIODS = this.selectSignal((state) => state.PERIODS);
-
-  private readonly fetchPeriods = this.effect<void>((trigger$) =>
-    trigger$.pipe(
-      combineLatestWith(this.auth.CURRENT_SCHOOL_ID$),
-      filter(([, school_id]) => !!school_id),
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap(([, school_id]) =>
-        from(
-          this.supabase.client
-            .from(Table.Periods)
-            .select('*')
-            .eq('school_id', school_id)
-            .order('start_at', { ascending: true }),
-        ).pipe(
-          map(({ error, data }) => {
-            if (error) throw new Error(error.message);
-            return data as Period[];
-          }),
-          tapResponse(
-            (PERIODS) => this.patchState({ PERIODS }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  public readonly savePeriod = this.effect(
-    (request$: Observable<Partial<Period>>) =>
-      request$
-        .pipe(
-          tap(() => this.patchState({ LOADING: true })),
-          switchMap((request) =>
+export const SchoolPeriodsStore = signalStore(
+  withState(initialState),
+  withComputed((_, auth = inject(authState.AuthStateFacade)) => ({
+    school_id: computed(() => auth.CURRENT_SCHOOL_ID()),
+  })),
+  withMethods(
+    (
+      { school_id, ...state },
+      supabase = inject(SupabaseService),
+      alert = inject(AlertService),
+    ) => ({
+      fetchPeriods: rxMethod<string | undefined>(
+        pipe(
+          filter(() => !!school_id),
+          tap(() => patchState(state, { loading: true })),
+          switchMap(() =>
             from(
-              this.supabase.client
+              supabase.client
                 .from(Table.Periods)
-                .upsert([
-                  { ...request, school_id: this.auth.CURRENT_SCHOOL_ID() },
-                ]),
+                .select('*')
+                .eq('school_id', school_id())
+                .order('start_at', { ascending: true }),
             ).pipe(
-              map(({ error }) => {
+              map(({ error, data }) => {
                 if (error) throw new Error(error.message);
-                return {};
+                return data as Period[];
+              }),
+              tapResponse({
+                next: (periods) => patchState(state, { periods }),
+                error: console.error,
+                finalize: () => patchState(state, { loading: false }),
               }),
             ),
           ),
-        )
-        .pipe(
-          tapResponse(
-            () => {
-              this.alert.showAlert({
-                icon: 'success',
-                message: this.translate.instant('ALERT.SUCCESS'),
-              });
-              this.patchState({ LOADING: false });
-              this.fetchPeriods();
-            },
-            (error) => {
-              this.alert.showAlert({
-                icon: 'error',
-                message: this.translate.instant('ALERT.FAILURE'),
-              });
-              console.error(error);
-            },
-          ),
         ),
-  );
+      ),
+      async savePeriod(request: Partial<Period>): Promise<void> {
+        patchState(state, { loading: true });
+        const { error } = await supabase.client
+          .from(Table.Periods)
+          .upsert([{ ...request, school_id: school_id() }]);
 
-  public ngrxOnStoreInit = (): void => {
-    this.setState({ LOADING: false, PERIODS: [] });
-    this.fetchPeriods();
-  };
-}
+        if (error) {
+          alert.showAlert({
+            icon: 'error',
+            message: 'ALERT.FAILURE',
+          });
+          console.error(error);
+          patchState(state, { loading: false });
+          return;
+        }
+        alert.showAlert({
+          icon: 'success',
+          message: 'ALERT.SUCCESS',
+        });
+        patchState(state, { loading: false });
+        this.fetchPeriods(school_id);
+      },
+    }),
+  ),
+  withHooks({
+    onInit({ fetchPeriods, school_id }) {
+      fetchPeriods(school_id);
+    },
+  }),
+);

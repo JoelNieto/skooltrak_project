@@ -7,15 +7,21 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IonContent, IonicModule, LoadingController } from '@ionic/angular';
-import { provideComponentStore } from '@ngrx/component-store';
-import { mobileMessagingState } from '@skooltrak/store';
+import { patchState } from '@ngrx/signals';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { PictureComponent } from '../../../components/picture/picture.component';
+import { PictureComponent } from '../../components/picture/picture.component';
 import { ChatStore } from './chat.store';
 
 @Component({
   standalone: true,
-  providers: [provideComponentStore(ChatStore)],
+  providers: [ChatStore],
+  imports: [
+    IonicModule,
+    PictureComponent,
+    ReactiveFormsModule,
+    TranslateModule,
+  ],
   styles: `
      ::ng-deep p {
       margin: 0;
@@ -53,25 +59,40 @@ import { ChatStore } from './chat.store';
   template: `<ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-back-button
+            [text]="'MESSAGING.TITLE' | translate"
+          ></ion-back-button>
         </ion-buttons>
         <ion-title>
-          @for (member of state.SELECTED()?.members; track member.user_id) {
-            <ion-avatar aria-hidden="true" slot="start">
-              <skooltrak-picture
-                bucket="avatars"
-                [pictureURL]="member.user.avatar_url ?? 'default_avatar.jpg'"
-              />
-            </ion-avatar>
-            {{ member.user.first_name }}
-            {{ member.user.father_name }}
+          @for (member of store.currentChat()?.members; track member.user_id) {
+            <ion-chip color="primary">
+              <ion-avatar aria-hidden="true">
+                <skooltrak-picture
+                  bucket="avatars"
+                  [pictureURL]="member.user.avatar_url ?? 'default_avatar.jpg'"
+                />
+              </ion-avatar>
+              <ion-label
+                >{{ member.user.first_name }}
+                {{ member.user.father_name }}</ion-label
+              >
+            </ion-chip>
           }
         </ion-title>
+        <ion-buttons slot="end">
+          <ion-button>
+            <ion-icon
+              slot="icon-only"
+              name="search-outline"
+              size="large"
+            ></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding flex">
       <ion-list>
-        @for (chat of store.MESSAGES(); track chat) {
+        @for (chat of store.messages(); track chat) {
           <ion-item lines="none">
             <div
               [slot]="chat.mine ? 'end' : 'start'"
@@ -99,12 +120,10 @@ import { ChatStore } from './chat.store';
         </ion-toolbar>
       </form>
     </ion-footer>`,
-  imports: [IonicModule, PictureComponent, ReactiveFormsModule],
 })
 export class ChatPage implements OnInit {
   private route = inject(ActivatedRoute);
   public store = inject(ChatStore);
-  public state = inject(mobileMessagingState.MessagingStateFacade);
   private loadingCtrl = inject(LoadingController);
   private loading?: HTMLIonLoadingElement;
   public sendForm = new FormGroup({
@@ -117,18 +136,32 @@ export class ChatPage implements OnInit {
 
   constructor() {
     effect(() => {
-      !this.store.LOADING() &&
+      !this.store.loading() &&
         setTimeout(() => {
           this.loading?.dismiss();
         }, 500);
     });
   }
 
+  public ionViewWillEnter(): void {
+    const tabBar = document.getElementById('app-tab-bar');
+    if (tabBar !== null) {
+      tabBar.style.display = 'none';
+    }
+  }
+
+  public ionViewWillLeave(): void {
+    const tabBar = document.getElementById('app-tab-bar');
+    if (tabBar !== null) {
+      tabBar.style.display = 'flex';
+    }
+  }
+
   public ngOnInit(): void {
     this.showLoading();
     this.route.queryParams.subscribe({
       next: ({ chat_id }) => {
-        this.state.setCurrentChat(chat_id);
+        patchState(this.store, { chatId: chat_id });
       },
     });
     setTimeout(() => {

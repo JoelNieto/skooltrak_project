@@ -14,7 +14,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
-import { mobileAuthState, mobileMessagingState } from '@skooltrak/store';
+import { mobileAuthState } from '@skooltrak/store';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
@@ -27,8 +27,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideStore(),
     provideState(mobileAuthState.mobileAuthFeature),
-    provideState(mobileMessagingState.messageFeature),
-    provideEffects(mobileAuthState.effects, mobileMessagingState.effects),
+    provideEffects(mobileAuthState.effects),
     provideStoreDevtools({ connectInZone: true }),
     importProvidersFrom(
       BrowserModule,

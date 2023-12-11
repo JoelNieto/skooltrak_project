@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'mobile',
+  displayName: 'Skooltrak Mobile',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/mobile',

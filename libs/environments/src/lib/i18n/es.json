@@ -30,6 +30,12 @@
     "TODAY": "Hoy",
     "WEEK": "Semana"
   },
+  "CHAT": {
+    "NEW_CHAT": "Nuevo chat",
+    "CANCEL": "Cancelar",
+    "SEARCH": "Buscar nombre o email",
+    "NO_ITEMS": "Sin  elementos"
+  },
   "Classes": "Clases",
   "CODE": "Codigo",
   "Collection": "Cobros",

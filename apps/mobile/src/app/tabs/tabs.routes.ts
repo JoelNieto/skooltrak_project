@@ -20,7 +20,7 @@ export const routes: Routes = [
       {
         path: 'chat',
         loadComponent: () =>
-          import('../pages/messages/chat/chat.page').then((x) => x.ChatPage),
+          import('../pages/messages/chat.page').then((x) => x.ChatPage),
       },
       {
         path: 'schedule',

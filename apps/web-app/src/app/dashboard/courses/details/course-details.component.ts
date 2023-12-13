@@ -1,14 +1,10 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterOutlet,
-} from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroVideoCamera } from '@ng-icons/heroicons/outline';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   ButtonDirective,
@@ -44,12 +40,12 @@ import { CoursesStore } from '../courses.store';
               <h2
                 class="font-title mb-1 text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
               >
-                {{ SELECTED()?.subject?.name }}
+                {{ store.selected()?.subject?.name }}
               </h2>
               <h4
                 class="flex font-sans text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-gray-300"
               >
-                {{ SELECTED()?.plan?.name }}
+                {{ store.selected()?.plan?.name }}
               </h4>
             </div>
             <div>
@@ -80,30 +76,19 @@ import { CoursesStore } from '../courses.store';
 })
 export class CourseDetailsComponent implements OnInit {
   @Input() private course_id?: string;
-  private state = inject(CoursesStore);
-  public SELECTED = this.state.SELECTED;
-  public COURSES = this.state.COURSES;
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  public store = inject(CoursesStore);
+
   private dialog = inject(Dialog);
 
   public ngOnInit(): void {
-    !!this.course_id && this.state.patchState({ SELECTED_ID: this.course_id });
+    !!this.course_id && patchState(this.store, { selectedId: this.course_id });
   }
-
-  public setSelectedId = (course_id: string): void => {
-    this.state.patchState({ SELECTED_ID: course_id });
-    this.router.navigate(['../details'], {
-      relativeTo: this.route,
-      queryParams: { course_id },
-    });
-  };
 
   public showMeeting(): void {
     this.dialog.open(CourseMeetingComponent, {
       minWidth: '90%',
       disableClose: true,
-      data: this.SELECTED(),
+      data: this.store.selected(),
     });
   }
 }

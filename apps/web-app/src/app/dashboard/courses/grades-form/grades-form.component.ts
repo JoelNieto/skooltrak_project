@@ -1,12 +1,23 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Grade } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective, SelectComponent } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { GradesFormStore } from './grades-form.store';
 
@@ -76,19 +87,19 @@ import { GradesFormStore } from './grades-form.store';
         </div>
         <h4 class="font-title mt-4">{{ 'Students' | translate }}</h4>
         <div class="mt-2 flex max-h-80 flex-col overflow-auto pb-4 pt-2">
-          @for(student of students; track student) {
-          <div
-            class="flex items-center justify-between border-b border-gray-200 px-4 py-2"
-          >
-            Joel Nieto
-            <div class="w-24">
-              <input
-                type="number"
-                name="title"
-                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
-              />
+          @for (student of students; track student) {
+            <div
+              class="flex items-center justify-between border-b border-gray-200 px-4 py-2"
+            >
+              Joel Nieto
+              <div class="w-24">
+                <input
+                  type="number"
+                  name="title"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm"
+                />
+              </div>
             </div>
-          </div>
           }
         </div>
       </div>

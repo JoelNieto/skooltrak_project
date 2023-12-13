@@ -3,7 +3,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
 import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
@@ -34,16 +33,13 @@ import { CourseGradesStore } from './course-grades.store';
       }
     `,
   ],
-  providers: [
-    provideComponentStore(CourseGradesStore),
-    provideIcons({ heroPencil }),
-  ],
+  providers: [CourseGradesStore, provideIcons({ heroPencil })],
   template: `
     <div class="mb-4 mt-2 flex justify-between">
       <div class="w-64">
         <sk-select
           [formControl]="periodControl"
-          [items]="store.PERIODS()"
+          [items]="store.periods()"
           label="name"
           [search]="false"
         />
@@ -64,55 +60,52 @@ import { CourseGradesStore } from './course-grades.store';
             >
               {{ 'Student' | translate }}
             </th>
-            @for(grade of grades; track grade) {
+            @for (grade of grades; track grade) {
               <th
-              scope="col"
-              class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
-            >
-              <div class="flex">
-                <div class="overflow-hidden text-ellipsis whitespace-nowrap">
-                  Tarea de Ciencias {{ grade }}
+                scope="col"
+                class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
+              >
+                <div class="flex">
+                  <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                    Tarea de Ciencias {{ grade }}
+                  </div>
+                  <button>
+                    <ng-icon
+                      name="heroPencil"
+                      size="16"
+                      class="text-transparent hover:text-green-600"
+                    />
+                  </button>
                 </div>
-                <button>
-                  <ng-icon
-                    name="heroPencil"
-                    size="16"
-                    class="text-transparent hover:text-green-600"
-                  />
-                </button>
-              </div>
-            </th>
+              </th>
             }
           </tr>
         </thead>
         <tbody>
-          @for(student of students; track student) {
+          @for (student of students; track student) {
             <tr
-            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-          >
-            <th
-              scope="row"
-              class="sticky left-0 whitespace-nowrap  bg-white px-3 py-2.5 font-medium text-gray-900 dark:text-white"
+              class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
             >
-              Joel Nieto
-            </th>
-            @for(grade of grades; track grade) {
-              <td
-              class="border px-2 py-2.5 text-center"
-            >
-              4.0
-              <button>
-                <ng-icon
-                  name="heroPencil"
-                  size="16"
-                  class="text-transparent hover:text-green-600"
-                />
-              </button>
-            </td>
-            }
-          </tr>
+              <th
+                scope="row"
+                class="sticky left-0 whitespace-nowrap  bg-white px-3 py-2.5 font-medium text-gray-900 dark:text-white"
+              >
+                Joel Nieto
+              </th>
+              @for (grade of grades; track grade) {
+                <td class="border px-2 py-2.5 text-center">
+                  4.0
+                  <button>
+                    <ng-icon
+                      name="heroPencil"
+                      size="16"
+                      class="text-transparent hover:text-green-600"
+                    />
+                  </button>
+                </td>
+              }
+            </tr>
           }
-
         </tbody>
       </table>
     </div>
@@ -126,21 +119,21 @@ export class CourseGradesComponent implements OnInit {
   public store = inject(CourseGradesStore);
 
   public periodControl = new FormControl<string | undefined>(
-    this.store.COURSE()?.period_id,
+    this.store.course()?.period_id,
     {
       nonNullable: true,
-    }
+    },
   );
 
   public ngOnInit(): void {
-    this.periodControl.setValue(this.store.PERIOD());
+    this.periodControl.setValue(this.store.periodId());
   }
 
   public newGrade(): void {
     this.dialog.open<Partial<Grade>>(GradesFormComponent, {
       minWidth: '42rem',
       disableClose: true,
-      data: { course: this.courseStore.SELECTED() },
+      data: { course: this.courseStore.selected() },
     });
   }
 }

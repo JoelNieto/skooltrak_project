@@ -57,8 +57,7 @@ export const messagesStore = signalStore(
           return;
         }
 
-        patchState(state, { chats: data });
-        patchState(state, { loading: false });
+        patchState(state, { chats: data, loading: false });
       },
 
       async newChat(ids: string[]): Promise<void> {

@@ -42,16 +42,6 @@ import { messagesStore } from './messages.store';
     <ion-header [translucent]="true">
       <ion-toolbar>
         <ion-title> {{ 'MESSAGING.TITLE' | translate }} </ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="searchUser()">
-            <ion-icon
-              slot="icon-only"
-              name="add-circle"
-              size="large"
-              color="primary"
-            ></ion-icon>
-          </ion-button>
-        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content [fullscreen]="true">
@@ -62,9 +52,14 @@ import { messagesStore } from './messages.store';
           >
         </ion-toolbar>
         <ion-toolbar>
-          <ion-searchbar></ion-searchbar>
+          <ion-searchbar inputmode="search"></ion-searchbar>
         </ion-toolbar>
       </ion-header>
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="searchUser()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <ion-list>
         @if (store.loading()) {
           <ion-item>
@@ -126,31 +121,38 @@ import { messagesStore } from './messages.store';
           </ion-item>
         } @else {
           @for (chat of store.sortedChats(); track chat.id) {
-            <ion-item
-              [routerLink]="'chat'"
-              [queryParams]="{ chat_id: chat.id }"
-            >
-              @for (member of chat.members; track member.user_id) {
-                <ion-avatar aria-hidden="true" slot="start">
-                  <skooltrak-picture
-                    bucket="avatars"
-                    [pictureURL]="
-                      member.user.avatar_url ?? 'default_avatar.jpg'
-                    "
-                  />
-                </ion-avatar>
-                <ion-label
-                  ><strong
-                    >{{ member.user.first_name }}
-                    {{ member.user.father_name }}</strong
+            <ion-item-sliding>
+              <ion-item
+                [routerLink]="'chat'"
+                [queryParams]="{ chat_id: chat.id }"
+              >
+                @for (member of chat.members; track member.user_id) {
+                  <ion-avatar aria-hidden="true" slot="start">
+                    <skooltrak-picture
+                      bucket="avatars"
+                      [pictureURL]="
+                        member.user.avatar_url ?? 'default_avatar.jpg'
+                      "
+                    />
+                  </ion-avatar>
+                  <ion-label
+                    ><strong
+                      >{{ member.user.first_name }}
+                      {{ member.user.father_name }}</strong
+                    >
+                    <ion-text>{{ member.user.email }}</ion-text
+                    ><ion-note color="medium">
+                      {{ chat.last_message | dateAgo }}</ion-note
+                    ></ion-label
                   >
-                  <ion-text>{{ member.user.email }}</ion-text
-                  ><ion-note color="medium">
-                    {{ chat.last_message | dateAgo }}</ion-note
-                  ></ion-label
-                >
-              }
-            </ion-item>
+                }
+              </ion-item>
+              <ion-item-options>
+                <ion-item-option color="danger"
+                  ><ion-icon slot="icon-only" name="trash"
+                /></ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
           } @empty {
             <ion-text class="ion-text-center"
               ><h2>{{ 'CHAT.NO_ITEMS' | translate }}</h2>

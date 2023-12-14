@@ -37,6 +37,7 @@ import { UsersModalStore } from './users-modal.store';
       </ion-toolbar>
       <ion-toolbar>
         <ion-searchbar
+          inputmode="search"
           [formControl]="searchControl"
           [placeholder]="'CHAT.SEARCH' | translate"
         />

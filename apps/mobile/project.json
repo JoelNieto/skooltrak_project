@@ -7,13 +7,17 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
+        "browser": "apps/mobile/src/main.ts",
         "outputPath": "dist/apps/mobile",
         "index": "apps/mobile/src/index.html",
-        "main": "apps/mobile/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/mobile/tsconfig.app.json",
         "assets": [
           "apps/mobile/src/assets",
@@ -58,12 +62,9 @@
           "outputHashing": "all"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
-          "namedChunks": true,
           "fileReplacements": [
             {
               "replace": "libs/environments/src/lib/environments/environment.ts",
@@ -97,11 +98,15 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/mobile/jest.config.ts"
       }

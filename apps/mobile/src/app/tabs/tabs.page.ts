@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonIcon, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { calendarOutline, chatbubblesOutline, homeOutline, notificationsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'skooltrak-tabs',
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon],
   styles: [],
   template: `<ion-tabs class="ion-no-border">
     <ion-tab-bar id="app-tab-bar" slot="bottom ion-no-border">
@@ -28,4 +30,13 @@ import { IonicModule } from '@ionic/angular';
     </ion-tab-bar>
   </ion-tabs> `,
 })
-export class TabsPage {}
+export class TabsPage {
+  constructor() {
+    addIcons({
+      homeOutline,
+      calendarOutline,
+      notificationsOutline,
+      chatbubblesOutline,
+    });
+  }
+}

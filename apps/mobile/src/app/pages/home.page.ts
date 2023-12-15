@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 @Component({
   standalone: true,
   selector: 'skooltrak-home',
-  imports: [IonicModule, RouterLink],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
   template: `<ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title> Inicio </ion-title>

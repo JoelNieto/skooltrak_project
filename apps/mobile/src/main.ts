@@ -1,13 +1,8 @@
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import {
-  PreloadAllModules,
-  provideRouter,
-  RouteReuseStrategy,
-  withPreloading,
-} from '@angular/router';
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { provideRouter, RouteReuseStrategy, withComponentInputBinding } from '@angular/router';
+import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -31,7 +26,6 @@ bootstrapApplication(AppComponent, {
     provideStoreDevtools({ connectInZone: true }),
     importProvidersFrom(
       BrowserModule,
-      IonicModule.forRoot(),
       TranslateModule.forRoot({
         defaultLanguage: 'es',
         loader: {
@@ -42,7 +36,8 @@ bootstrapApplication(AppComponent, {
       }),
     ),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideIonicAngular(),
+    provideRouter(routes, withComponentInputBinding()),
     { provide: APP_CONFIG, useValue: environment },
   ],
 });

@@ -1,7 +1,23 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import {
+  IonAvatar,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonSearchbar,
+  IonSkeletonText,
+  IonText,
+  IonThumbnail,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -10,9 +26,22 @@ import { UsersModalStore } from './users-modal.store';
 
 @Component({
   standalone: true,
-  providers: [UsersModalStore],
+  providers: [UsersModalStore, ModalController],
   imports: [
-    IonicModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonContent,
+    IonSearchbar,
+    IonList,
+    IonItem,
+    IonThumbnail,
+    IonSkeletonText,
+    IonLabel,
+    IonAvatar,
+    IonText,
     TranslateModule,
     PictureComponent,
     ReactiveFormsModule,

@@ -1,26 +1,54 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent, IonicModule, LoadingController } from '@ionic/angular';
+import {
+  IonAvatar,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonChip,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonTitle,
+  IonToolbar,
+  LoadingController,
+} from '@ionic/angular/standalone';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
+import { addIcons } from 'ionicons';
+import { searchOutline, send } from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
 import { ChatStore } from './chat.store';
 
 @Component({
   standalone: true,
-  providers: [ChatStore],
+  providers: [ChatStore, LoadingController],
   imports: [
-    IonicModule,
     PictureComponent,
     ReactiveFormsModule,
     TranslateModule,
+    IonHeader,
+    IonToolbar,
+    IonChip,
+    IonBackButton,
+    IonButtons,
+    IonTitle,
+    IonAvatar,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonLabel,
+    IonList,
+    IonFooter,
+    IonItem,
+    IonInput,
   ],
   styles: `
      ::ng-deep p {
@@ -141,6 +169,7 @@ export class ChatPage implements OnInit {
           this.loading?.dismiss();
         }, 500);
     });
+    addIcons({ send, searchOutline });
   }
 
   public ionViewWillEnter(): void {
@@ -166,7 +195,7 @@ export class ChatPage implements OnInit {
     });
     setTimeout(() => {
       this.ionContent.scrollToBottom(300);
-    }, 2000);
+    }, 400);
   }
 
   private async showLoading(): Promise<void> {

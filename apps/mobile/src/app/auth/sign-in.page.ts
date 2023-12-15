@@ -1,20 +1,36 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+  IonButton,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonList,
+  IonTitle,
+  IonToolbar,
+  ModalController,
+} from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { mobileAuthState } from '@skooltrak/store';
 
 @Component({
   standalone: true,
   selector: 'skooltrak-sign-in',
+  providers: [ModalController],
   imports: [
-    IonicModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonInput,
+    IonFooter,
+    IonToolbar,
+    IonButton,
     TranslateModule,
     NgOptimizedImage,
     ReactiveFormsModule,
@@ -58,11 +74,9 @@ import { mobileAuthState } from '@skooltrak/store';
     </ion-content>
     <ion-footer class="ion-no-border">
       <ion-toolbar>
-        <ion-buttons slot="end">
-          <ion-button fill="solid" (click)="signIn()">{{
-            'SIGN_IN.ENTER' | translate
-          }}</ion-button>
-        </ion-buttons>
+        <ion-button fill="solid" expand="block" (click)="signIn()">{{
+          'SIGN_IN.ENTER' | translate
+        }}</ion-button>
       </ion-toolbar>
     </ion-footer> `,
 })

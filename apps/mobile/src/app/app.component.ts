@@ -1,5 +1,6 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { mobileAuthState } from '@skooltrak/store';
 
 import { SignInPage } from './auth/sign-in.page';
@@ -7,7 +8,8 @@ import { SignInPage } from './auth/sign-in.page';
 @Component({
   selector: 'skooltrak-root',
   standalone: true,
-  imports: [IonicModule],
+  providers: [ModalController],
+  imports: [IonApp, IonRouterOutlet],
   template: `<ion-app>
     <ion-router-outlet />
   </ion-app>`,
@@ -26,7 +28,7 @@ export class AppComponent implements OnInit {
     this.store.init();
   }
 
-  public async openModal() {
+  public async openModal(): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: SignInPage,
     });

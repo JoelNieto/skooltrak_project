@@ -1,9 +1,33 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonicModule, IonRouterOutlet, ModalController } from '@ionic/angular';
+import {
+  IonAvatar,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonRouterOutlet,
+  IonSearchbar,
+  IonSkeletonText,
+  IonText,
+  IonThumbnail,
+  IonTitle,
+  IonToolbar,
+  ModalController,
+} from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
 import { DateAgoPipe } from '@skooltrak/ui';
+import { addIcons } from 'ionicons';
+import { add, trash } from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
 import { UsersModalComponent } from '../../components/users-modal/users-modal.component';
@@ -14,12 +38,30 @@ import { messagesStore } from './messages.store';
   standalone: true,
   imports: [
     TranslateModule,
-    IonicModule,
     DateAgoPipe,
     RouterLink,
     PictureComponent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonSearchbar,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    IonList,
+    IonItem,
+    IonThumbnail,
+    IonSkeletonText,
+    IonLabel,
+    IonItemSliding,
+    IonText,
+    IonAvatar,
+    IonItemOption,
+    IonNote,
+    IonItemOptions,
   ],
-  providers: [],
+  providers: [IonRouterOutlet, ModalController],
   styles: [
     `
       ion-avatar {
@@ -168,6 +210,9 @@ export class MessagesPage {
   public store = inject(messagesStore);
   private modalCtrl = inject(ModalController);
   private ionRouterOutlet = inject(IonRouterOutlet);
+  constructor() {
+    addIcons({ trash, add });
+  }
 
   public ionViewWillEnter(): void {
     this.store.fetchChats();

@@ -15,7 +15,7 @@ import {
 } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
-import { CoursesStore } from '../courses.store';
+import { CoursesListStore } from './courses-list.store';
 
 @Component({
   standalone: true,
@@ -33,7 +33,7 @@ import { CoursesStore } from '../courses.store';
     LoadingComponent,
     EmptyTableComponent,
   ],
-  providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
+  providers: [provideIcons({ heroMagnifyingGlass, heroEye }), CoursesListStore],
   template: ` <sk-card>
     <div header>
       <h2
@@ -145,7 +145,7 @@ import { CoursesStore } from '../courses.store';
   </sk-card>`,
 })
 export class CoursesListComponent {
-  public store = inject(CoursesStore);
+  public store = inject(CoursesListStore);
 
   public getCurrentPage(pagination: {
     currentPage: number;

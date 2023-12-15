@@ -4,8 +4,8 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
 import { RoleEnum, School, Table } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { AlertService, ConfirmationService } from '@skooltrak/ui';
 import {
   catchError,
@@ -49,6 +49,7 @@ export class SchoolConnectorStore
           ).pipe(
             map(({ error, data }) => {
               if (error || !data) throw new Error(error.message);
+
               return data;
             }),
             switchMap((school) =>

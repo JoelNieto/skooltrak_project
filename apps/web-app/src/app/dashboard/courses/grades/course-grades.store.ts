@@ -10,10 +10,10 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { GradeObject, Period, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
-import { CoursesStore } from '../courses.store';
+import { CourseDetailsStore } from '../details/course-details.store';
 
 type State = {
   periods: Period[];
@@ -35,14 +35,15 @@ export const CourseGradesStore = signalStore(
     (
       { periodId },
       auth = inject(authState.AuthStateFacade),
-      courses = inject(CoursesStore),
+      course = inject(CourseDetailsStore),
     ) => ({
-      courseId: computed(() => courses.selectedId()),
-      course: computed(() => courses.selected()),
+      courseId: computed(() => course.courseId()),
+      course: computed(() => course.course()),
       query: computed(() => ({
         periodId: periodId(),
-        courseId: courses.selectedId(),
+        courseId: course.courseId(),
       })),
+      students: computed(() => course.students()),
       schoolId: computed(() => auth.CURRENT_SCHOOL_ID()),
     }),
   ),
@@ -51,19 +52,29 @@ export const CourseGradesStore = signalStore(
       { schoolId, query, periodId, courseId, ...state },
       supabase = inject(SupabaseService),
     ) => ({
-      async fetchPeriods(): Promise<void> {
-        const { data, error } = await supabase.client
-          .from(Table.Periods)
-          .select('id, name, year, start_at, end_at, school_id')
-          .eq('school_id', schoolId());
+      fetchPeriods: rxMethod<string | undefined>(
+        pipe(
+          filter(() => !!schoolId()),
+          switchMap(() =>
+            from(
+              supabase.client
+                .from(Table.Periods)
+                .select('id, name, year, start_at, end_at, school_id')
+                .eq('school_id', schoolId()),
+            ).pipe(
+              map(({ error, data }) => {
+                if (error) throw new Error(error.message);
 
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        patchState(state, { periods: data });
-      },
+                return data as Period[];
+              }),
+              tapResponse({
+                next: (periods) => patchState(state, { periods }),
+                error: console.error,
+              }),
+            ),
+          ),
+        ),
+      ),
       fetchGrades: rxMethod<typeof query>(
         pipe(
           filter(() => !!periodId() && !!courseId()),
@@ -73,13 +84,14 @@ export const CourseGradesStore = signalStore(
               supabase.client
                 .from(Table.Grades)
                 .select(
-                  'id, title, period:periods(id, name), bucket:grade_buckets(*), start_at, items:grade_items(*)',
+                  'id, title, period:periods(id, name), bucket:grade_buckets(*), bucket_id, start_at, items:grade_items(*)',
                 )
                 .eq('course_id', courseId())
                 .eq('period_id', periodId()),
             ).pipe(
               map(({ data, error }) => {
                 if (error) throw new Error(error.message);
+
                 return data as Partial<GradeObject>[];
               }),
               tapResponse({
@@ -91,11 +103,14 @@ export const CourseGradesStore = signalStore(
           ),
         ),
       ),
+      refresh(): void {
+        this.fetchGrades(query);
+      },
     }),
   ),
   withHooks({
-    onInit({ fetchGrades, fetchPeriods, query }) {
-      fetchPeriods();
+    onInit({ fetchGrades, fetchPeriods, query, schoolId }) {
+      fetchPeriods(schoolId);
       fetchGrades(query);
     },
   }),

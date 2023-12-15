@@ -17,7 +17,7 @@ import {
   GroupAssignment,
   Table,
 } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 import { orderBy, pick } from 'lodash';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -60,6 +60,7 @@ export const AssignmentFormStore = signalStore(
           .select('id, name, is_urgent, is_summative');
         if (error) {
           console.error(error);
+
           return;
         }
 
@@ -79,6 +80,7 @@ export const AssignmentFormStore = signalStore(
             ).pipe(
               map(({ data, error }) => {
                 if (error) throw new Error(error.message);
+
                 return orderBy(data, [
                   'subject.name',
                   'plan.year',
@@ -104,6 +106,7 @@ export const AssignmentFormStore = signalStore(
 
         if (error) {
           console.error(error);
+
           return;
         }
 
@@ -128,6 +131,7 @@ export const AssignmentFormStore = signalStore(
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
+
           return;
         }
         this.saveGroupsDate(data.id);
@@ -158,6 +162,7 @@ export const AssignmentFormStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return data as Partial<ClassGroup>[];
               }),
               tapResponse({

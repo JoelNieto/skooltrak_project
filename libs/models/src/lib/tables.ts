@@ -24,4 +24,5 @@ export enum Table {
   Chats = 'chats',
   Messages = 'messages',
   ChatMembers = 'chat_members',
+  Students = 'active_students',
 }

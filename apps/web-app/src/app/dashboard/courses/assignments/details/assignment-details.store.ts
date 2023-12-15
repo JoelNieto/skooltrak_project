@@ -28,6 +28,7 @@ export const AssignmentDetailsStore = signalStore(
       if (error) {
         console.error(error);
         patchState(state, { loading: false });
+
         return;
       }
       patchState(state, {

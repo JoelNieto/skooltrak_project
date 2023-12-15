@@ -4,8 +4,8 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
 import { Table, User } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -44,6 +44,7 @@ export class UsersSelectorStore
         ).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
+
             return data as Partial<User>[];
           }),
           tapResponse(

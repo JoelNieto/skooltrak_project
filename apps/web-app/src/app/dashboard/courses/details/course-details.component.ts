@@ -4,7 +4,6 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroVideoCamera } from '@ng-icons/heroicons/outline';
-import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   ButtonDirective,
@@ -14,7 +13,7 @@ import {
 } from '@skooltrak/ui';
 
 import { CourseMeetingComponent } from '../../../components/course-meeting/course-meeting.component';
-import { CoursesStore } from '../courses.store';
+import { CourseDetailsStore } from './course-details.store';
 
 @Component({
   standalone: true,
@@ -30,7 +29,7 @@ import { CoursesStore } from '../courses.store';
     NgIconComponent,
     ButtonDirective,
   ],
-  providers: [provideIcons({ heroVideoCamera })],
+  providers: [provideIcons({ heroVideoCamera }), CourseDetailsStore],
   template: `
     <div>
       <sk-card>
@@ -40,12 +39,12 @@ import { CoursesStore } from '../courses.store';
               <h2
                 class="font-title mb-1 text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
               >
-                {{ store.selected()?.subject?.name }}
+                {{ store.course()?.subject?.name }}
               </h2>
               <h4
                 class="flex font-sans text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-gray-300"
               >
-                {{ store.selected()?.plan?.name }}
+                {{ store.course()?.plan?.name }}
               </h4>
             </div>
             <div>
@@ -62,7 +61,7 @@ import { CoursesStore } from '../courses.store';
             'Schedule' | translate
           }}</sk-tabs-item>
           <sk-tabs-item link="grades">{{
-            'Grades.Title' | translate
+            'GRADES.TITLE' | translate
           }}</sk-tabs-item>
           <sk-tabs-item link="files">{{ 'File' | translate }}</sk-tabs-item>
           <sk-tabs-item link="students">
@@ -76,19 +75,19 @@ import { CoursesStore } from '../courses.store';
 })
 export class CourseDetailsComponent implements OnInit {
   @Input() private course_id?: string;
-  public store = inject(CoursesStore);
+  public store = inject(CourseDetailsStore);
 
   private dialog = inject(Dialog);
 
   public ngOnInit(): void {
-    !!this.course_id && patchState(this.store, { selectedId: this.course_id });
+    !!this.course_id && this.store.fetchCourse(this.course_id);
   }
 
   public showMeeting(): void {
     this.dialog.open(CourseMeetingComponent, {
       minWidth: '90%',
       disableClose: true,
-      data: this.store.selected(),
+      data: this.store.course(),
     });
   }
 }

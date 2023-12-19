@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
-import { CoursesStore } from '../courses.store';
+import { CourseDetailsStore } from '../details/course-details.store';
 
 @Component({
   standalone: true,
@@ -12,7 +12,7 @@ import { CoursesStore } from '../courses.store';
     <div class="mb-4 mt-2 flex justify-between">
       <div class="w-64">
         <sk-select
-          [items]="groups()"
+          [items]="course.groups()"
           label="name"
           [placeholder]="'Select group' | translate"
           [search]="false"
@@ -23,6 +23,5 @@ import { CoursesStore } from '../courses.store';
   `,
 })
 export class CoursesComponent {
-  private store = inject(CoursesStore);
-  public groups = this.store.groups;
+  public course = inject(CourseDetailsStore);
 }

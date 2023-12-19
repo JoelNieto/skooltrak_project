@@ -12,6 +12,17 @@
     "errorLens.onSave": true,
     "editor.formatOnSave": true,
     "typescriptHero.imports.organizeOnSave": true,
-    "cSpell.words": ["subapase", "Supabase", "Swal", "tailwindcss", "typeorm"]
+    "cSpell.words": [
+      "Jitsi",
+      "subapase",
+      "Supabase",
+      "Swal",
+      "tailwindcss",
+      "typeorm"
+    ],
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
   }
 }

@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CardComponent,
@@ -14,7 +15,7 @@ import {
 } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
-import { CoursesStore } from '../courses.store';
+import { CoursesListStore } from './courses-list.store';
 
 @Component({
   standalone: true,
@@ -32,7 +33,7 @@ import { CoursesStore } from '../courses.store';
     LoadingComponent,
     EmptyTableComponent,
   ],
-  providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
+  providers: [provideIcons({ heroMagnifyingGlass, heroEye }), CoursesListStore],
   template: ` <sk-card>
     <div header>
       <h2
@@ -83,64 +84,68 @@ import { CoursesStore } from '../courses.store';
           </tr>
         </thead>
         <tbody>
-          @if(store.LOADING()) {
-          <tr sk-loading></tr>
-          } @else { @for(course of store.COURSES(); track course.id) {
-          <tr
-            [class.hidden]="store.LOADING()"
-            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-          >
-            <th
-              scope="row"
-              class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
-            >
-              {{ course.subject?.name }}
-            </th>
-            <td class="px-6 py-3.5">{{ course.plan.name }}</td>
-            <td class="flex gap-1 px-6 py-3.5">
-              @for(teacher of course.teachers; track teacher.id) {
-              <sk-user-chip [user]="teacher" />
-              }
-            </td>
-            <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
-            <td class="px-6 py-3.5">
-              {{ course.created_at | date: 'medium' }}
-            </td>
-            <td class="flex content-center justify-center gap-2 px-6 py-3.5">
-              <a
-                routerLink="../details"
-                [queryParams]="{ course_id: course.id }"
+          @if (store.loading()) {
+            <tr sk-loading></tr>
+          } @else {
+            @for (course of store.courses(); track course.id) {
+              <tr
+                [class.hidden]="store.loading()"
+                class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
               >
-                <ng-icon name="heroEye" size="24" class="text-sky-500" />
-              </a>
-            </td>
-          </tr>
-          } @empty {
-          <tr sk-empty></tr>
-          } }
+                <th
+                  scope="row"
+                  class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
+                >
+                  {{ course.subject?.name }}
+                </th>
+                <td class="px-6 py-3.5">{{ course.plan.name }}</td>
+                <td class="flex gap-1 px-6 py-3.5">
+                  @for (teacher of course.teachers; track teacher.id) {
+                    <sk-user-chip [user]="teacher" />
+                  }
+                </td>
+                <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
+                <td class="px-6 py-3.5">
+                  {{ course.created_at | date: 'medium' }}
+                </td>
+                <td
+                  class="flex content-center justify-center gap-2 px-6 py-3.5"
+                >
+                  <a
+                    routerLink="../details"
+                    [queryParams]="{ course_id: course.id }"
+                  >
+                    <ng-icon name="heroEye" size="24" class="text-sky-500" />
+                  </a>
+                </td>
+              </tr>
+            } @empty {
+              <tr sk-empty></tr>
+            }
+          }
         </tbody>
       </table>
-      @if(store.LOADING()) {
-      <div class="mt-4 animate-pulse">
-        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-        <ul class="mt-5 space-y-3">
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        </ul>
-      </div>
+      @if (store.loading()) {
+        <div class="mt-4 animate-pulse">
+          <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
+          <ul class="mt-5 space-y-3">
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
+          </ul>
+        </div>
       }
       <sk-paginator
-        [count]="store.COUNT()"
-        [pageSize]="store.PAGE_SIZE()"
+        [count]="store.count()"
+        [pageSize]="store.pageSize()"
         (paginate)="getCurrentPage($event)"
       />
     </div>
   </sk-card>`,
 })
 export class CoursesListComponent {
-  public store = inject(CoursesStore);
+  public store = inject(CoursesListStore);
 
   public getCurrentPage(pagination: {
     currentPage: number;
@@ -148,6 +153,6 @@ export class CoursesListComponent {
     pageSize: number;
   }): void {
     const { start, pageSize } = pagination;
-    this.store.patchState({ START: start, PAGE_SIZE: pageSize });
+    patchState(this.store, { start, pageSize });
   }
 }

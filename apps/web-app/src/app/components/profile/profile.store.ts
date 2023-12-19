@@ -4,8 +4,8 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
 import { Gender, Table } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -29,6 +29,7 @@ export class ProfileFormStore
         from(this.supabase.client.from(Table.Genders).select('id, name')).pipe(
           map(({ data, error }) => {
             if (error) throw new Error(error.message);
+
             return data;
           }),
           tapResponse(
@@ -48,6 +49,7 @@ export class ProfileFormStore
         from(this.supabase.uploadPicture(request, 'avatars')).pipe(
           map(({ data, error }) => {
             if (error) throw new Error(error.message);
+
             return data.path;
           }),
           tapResponse(

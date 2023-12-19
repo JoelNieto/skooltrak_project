@@ -2,12 +2,12 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   OnInit,
+  inject,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
 import { Course } from '@skooltrak/models';
+import { authState } from '@skooltrak/store';
 import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

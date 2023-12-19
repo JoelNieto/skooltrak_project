@@ -42,6 +42,14 @@
             "prefix": "sk",
             "style": "kebab-case"
           }
+        ],
+        "padding-line-between-statements": [
+          "error",
+          {
+            "blankLine": "always",
+            "prev": "*",
+            "next": "return"
+          }
         ]
       }
     },

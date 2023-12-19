@@ -4,8 +4,8 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { SupabaseService } from '@skooltrak/store';
 import { Table } from '@skooltrak/models';
+import { SupabaseService } from '@skooltrak/store';
 import { CalendarEvent } from 'calendar-utils';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
@@ -68,6 +68,7 @@ export class CalendarStore
           ).pipe(
             map(({ data, error }) => {
               if (error) throw new Error(error.message);
+
               return data.map((assignment) => ({
                 id: assignment.id,
                 title: `${assignment.subject_name} (${assignment.group_name}): ${assignment.title}`,

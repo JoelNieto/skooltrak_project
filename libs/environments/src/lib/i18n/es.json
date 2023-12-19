@@ -1,25 +1,26 @@
 {
   "ACTIONS": "Acciones",
+  "ADMIN": "Administrador",
+  "ALERT": {
+    "FAILURE": "Algo salio mal!",
+    "SUCCESS": "Cambios realizados exitosamente",
+    "TRY_AGAIN": "Por favor, intente nuevamente"
+  },
+  "ASSIGNMENTS": {
+    "EDIT": "Datos de la asignación",
+    "GRADES": "Calificaciones",
+    "INSTRUCTIONS": "Instrucciones",
+    "NEW": "Nueva asignación",
+    "WORK": "Trabajo"
+  },
+  "AUTH_FAILURE": {
+    "OTHER": "Algo salio mal. Intente de nuevo.",
+    "SIGN_IN": "Correo electrónico o contraseña inválidos."
+  },
   "Administrators": {
     "Title": "Administradores"
   },
-  "ALERT": {
-    "SUCCESS": "Cambios realizados exitosamente",
-    "FAILURE": "Algo salio mal!",
-    "TRY_AGAIN": "Por favor, intente nuevamente"
-  },
   "App title": "Skooltrak",
-  "ASSIGNMENTS": {
-    "EDIT": "Datos de la asignación",
-    "NEW": "Nueva asignación",
-    "INSTRUCTIONS": "Instrucciones",
-    "WORK": "Trabajo",
-    "GRADES": "Calificaciones"
-  },
-  "AUTH_FAILURE": {
-    "SIGN_IN": "Correo electrónico o contraseña inválidos.",
-    "OTHER": "Algo salio mal. Intente de nuevo."
-  },
   "Birth date": "Fecha de nacimiento",
   "CALENDAR": {
     "DAY": "Día",
@@ -31,13 +32,34 @@
     "WEEK": "Semana"
   },
   "CHAT": {
-    "NEW_CHAT": "Nuevo chat",
     "CANCEL": "Cancelar",
-    "SEARCH": "Buscar nombre o email",
-    "NO_ITEMS": "Sin  elementos"
+    "NEW_CHAT": "Nuevo chat",
+    "NO_ITEMS": "Sin  elementos",
+    "SEARCH": "Buscar nombre o email"
   },
-  "Classes": "Clases",
   "CODE": "Codigo",
+  "CONFIRMATION": {
+    "DELETE": {
+      "CANCEL": "Cancelar",
+      "CONFIRM": "Si, borrar",
+      "TEXT": "Este cambio no podra ser reversado",
+      "TITLE": "Desea borrar esto?"
+    }
+  },
+  "COURSES": {
+    "DETAILS": "Detalles del curso",
+    "OPEN_CLASS": "Iniciar clase",
+    "PLAN": "Plan de estudios",
+    "SELECT_DEGREE": "Seleccione nivel",
+    "SELECT_PLAN": "Seleccione plan",
+    "SUBJECT": "Asignatura",
+    "TEACHERS": "Docentes",
+    "TITLE": "Cursos",
+    "WEEKLY_HOURS": "Horas semanales"
+  },
+  "CREATED_AT": "Creado",
+  "CREATED_BY": "Creado por",
+  "Classes": "Clases",
   "Collection": "Cobros",
   "Confirmation": {
     "Cancel": "Cancelar",
@@ -47,27 +69,6 @@
       "Title": "Desea borrar esto?"
     }
   },
-  "CONFIRMATION": {
-    "DELETE": {
-      "TITLE": "Desea borrar esto?",
-      "TEXT": "Este cambio no podra ser reversado",
-      "CONFIRM": "Si, borrar",
-      "CANCEL": "Cancelar"
-    }
-  },
-  "COURSES": {
-    "TITLE": "Cursos",
-    "DETAILS": "Detalles del curso",
-    "SELECT_DEGREE": "Seleccione nivel",
-    "SELECT_PLAN": "Seleccione plan",
-    "OPEN_CLASS": "Iniciar clase",
-    "PLAN": "Plan de estudios",
-    "SUBJECT": "Asignatura",
-    "WEEKLY_HOURS": "Horas semanales",
-    "TEACHERS": "Docentes"
-  },
-  "CREATED_AT": "Creado",
-  "CREATED_BY": "Creado por",
   "DEGREES": {
     "DETAILS": "Detalles del certificado",
     "TITLE": "Certificados"
@@ -75,186 +76,194 @@
   "DESCRIPTION": "Descripción",
   "Document ID": "Nro. Documento",
   "EDIT": "Editar",
+  "Errors": {
+    "minLength": "Se necesitan al menos {{ length }} caracteres",
+    "required": "Campo requerido"
+  },
   "Father name": "Apellido paterno",
   "Female": "Femenino",
   "Files": "Archivos",
   "First name": "Nombre",
   "Full name": "Nombre completo",
-  "Gender": "Genero",
-  "Go back": "Volver",
-  "Grades": {
-    "Title": "Calificaciones",
-    "Details": "Datos de la calificacion"
+  "GRADES": {
+    "DATE": "Fecha",
+    "DESCRIPTION": "Descripción",
+    "DESCRIPTION_PLACEHOLDER": "Descripción de la calificacion...",
+    "DETAILS": "Datos de la calificacion",
+    "NAME": "Nombre",
+    "NAME_PLACEHOLDER": "Nombre calificacion",
+    "PUBLISH": "Publicar",
+    "SAVE_CHANGES": "Guardar cambios",
+    "SELECT_TYPE": "Elija tipo",
+    "TITLE": "Calificaciones",
+    "TYPE": "Tipo de calificacion"
   },
   "GROUPS": {
-    "TITLE": "Grupos",
+    "DETAILS": "Detalles del grupo",
     "NAME": "Grupo",
-    "DETAILS": "Detalles del grupo"
+    "TITLE": "Grupos"
   },
-  "Home": "Inicio",
+  "Gender": "Genero",
+  "Go back": "Volver",
   "HOME": "Inicio",
+  "Home": "Inicio",
   "IMAGE_CROPPER": {
-    "TITLE": "Ajustador de imagen",
     "CHOOSE_PICTURE": "Elegir imagen",
     "CONFIRM": "Confirmar",
-    "PREVIEW": "Vista previa"
+    "PREVIEW": "Vista previa",
+    "TITLE": "Ajustador de imagen"
   },
   "INPUT": {
     "INVALID": "Campo invalido",
     "REQUIRED": "Campo requerido"
   },
   "LEVEL": "Nivel",
-  "Male": "Masculino",
   "MEETING": {
-    "TITLE": "Skooltrak Meet",
-    "CLOSE": "Cerrar"
+    "CLOSE": "Cerrar",
+    "TITLE": "Skooltrak Meet"
   },
-  "Messages": "Mensajes",
   "MESSAGING": {
-    "TITLE": "Mensajes",
-    "INBOX": "Buzón",
     "ARCHIVED": "Archivado",
-    "SEND_PLACEHOLDER": "Tu mensaje...",
+    "INBOX": "Buzón",
     "NEW_CHAT": "Nuevo chat",
+    "SEND_PLACEHOLDER": "Tu mensaje...",
+    "TITLE": "Mensajes",
     "WELCOME": "Bienvenido a Skooltrak Messages",
     "WELCOME_MESSAGE": "Seleccione una conversacion o inicie una nueva."
   },
+  "Male": "Masculino",
+  "Messages": "Mensajes",
   "Middle name": "Segundo nombre",
   "Mother name": "Apellido materno",
   "NAME": "Nombre",
   "NEW": "Nuevo",
-  "News": "Novedades",
   "NO_ITEMS": "Sin  elementos para este filtro",
+  "News": "Novedades",
   "Other": "Otro",
   "PAGINATOR": {
     "SHOWING": "Mostrando <span class=\"font-semibold text-gray-900 dark:text-white\">{{start}}-{{end}}</span> de <span class=\"font-semibold text-gray-900 dark:text-white\">{{count}}</span>"
   },
-  "PLANS": {
-    "DETAILS": "Detalles del Plan de estudio",
-    "TITLE": "Planes de estudio",
-    "DEGREE": "Certificado",
-    "YEAR": "Año"
-  },
+  "PARENT": "Acudiente",
   "PEOPLE": {
-    "TITLE": "Personas",
+    "ADMIN": "Administrativo",
     "ALL_ROLES": "--Cualquier rol--",
     "ALL_STATUS": "--Cualquier estatus--",
-    "ADMIN": "Administrativo",
-    "EDIT": "Editar usuario",
-    "TEACHER": "Docente",
-    "STUDENT": "Estudiante",
     "APPROVED": "Aprobado",
+    "EDIT": "Editar usuario",
+    "PARENT": "Acudiente",
     "PENDING": "Pendiente",
     "REJECTED": "Rechazado",
     "ROLE": "Rol",
-    "PARENT": "Acudiente",
-    "STATUS": "Estatus"
+    "STATUS": "Estatus",
+    "STUDENT": "Estudiante",
+    "TEACHER": "Docente",
+    "TITLE": "Personas"
   },
   "PERIODS": {
-    "TITLE": "Periodos",
     "DETAILS": "Datos del periodo",
-    "YEAR": "Año",
+    "END_AT": "Fecha final",
     "START_AT": "Fecha inicio",
-    "END_AT": "Fecha final"
+    "TITLE": "Periodos",
+    "YEAR": "Año"
+  },
+  "PLANS": {
+    "DEGREE": "Certificado",
+    "DETAILS": "Detalles del Plan de estudio",
+    "TITLE": "Planes de estudio",
+    "YEAR": "Año"
+  },
+  "PROFILE": {
+    "BIRTH_DATE": "Fecha de nacimiento",
+    "DOCUMENT_ID": "Nro. Documento",
+    "EMAIL": "Correo electrónico",
+    "FATHER_NAME": "Apellido",
+    "FIRST_NAME": "Primer nombre",
+    "GENDER": "Genero",
+    "MIDDLE_NAME": "Segundo nombre",
+    "MOTHER_NAME": "Apellido materno",
+    "TITLE": "Datos personales"
   },
   "Polls": "Encuestas",
-  "PROFILE": {
-    "TITLE": "Datos personales",
-    "FIRST_NAME": "Primer nombre",
-    "MIDDLE_NAME": "Segundo nombre",
-    "FATHER_NAME": "Apellido",
-    "MOTHER_NAME": "Apellido materno",
-    "DOCUMENT_ID": "Nro. Documento",
-    "BIRTH_DATE": "Fecha de nacimiento",
-    "GENDER": "Genero",
-    "EMAIL": "Correo electrónico"
-  },
   "ROLE": "Rol",
   "SAVE_CHANGES": "Guardar cambios",
-  "Schedule": "Agenda",
   "SCHOOL": {
-    "TITLE": "Escuela",
-    "INFO": "Datos de la escuela",
-    "SHORT_NAME": "Nombre corto",
-    "FULL_NAME": "Nombre completo",
-    "COUNTRY": "Pais",
     "ADDRESS": "Dirección",
+    "COUNTRY": "Pais",
     "EMAIL": "Correo electrónico",
-    "PHONE": "Telefono de contacto",
+    "FULL_NAME": "Nombre completo",
+    "INFO": "Datos de la escuela",
     "MOTTO": "Lema",
+    "PHONE": "Telefono de contacto",
     "SETTINGS": "Ajustes del colegio",
+    "SHORT_NAME": "Nombre corto",
+    "TITLE": "Escuela",
     "TYPE": "Tipo de Escuela"
   },
-  "SCHOOL_TYPE": {
-    "PRIVATE": "Privado",
-    "PUBLIC": "Oficial",
-    "MIXED": "Mixto",
-    "OTHER": "Otro"
-  },
   "SCHOOL_CONNECTOR": {
-    "TITLE": "Elija una escuela",
     "CONNECT": "Conectar con escuela",
     "CREATE": "Crear nueva escuela",
+    "CREATE_MESSAGE": "Esto es gratuito. Mas tarde puede actualizar a una escuela de pago",
     "CREATE_TITLE": "Desea crear una nueva escuela?",
-    "CREATE_MESSAGE": "Esto es gratuito. Mas tarde puede actualizar a una escuela de pago"
+    "TITLE": "Elija una escuela"
   },
-  "Select school": "Elija una escuela",
+  "SCHOOL_TYPE": {
+    "MIXED": "Mixto",
+    "OTHER": "Otro",
+    "PRIVATE": "Privado",
+    "PUBLIC": "Oficial"
+  },
+  "SEARCH_ITEMS": "Buscar elementos",
+  "SELECT": {
+    "NOT_FOUND": "Sin elementos encontrados",
+    "SEARCH": "Buscar items",
+    "SELECT_VALUE": "--Elegir valor--"
+  },
   "SETTINGS": "Ajustes",
   "SHORT_NAME": "Nombre corto",
-  "Students": "Estudiantes",
+  "SIGN_IN": {
+    "EMAIL": "Correo electrónico",
+    "ENTER": "Ingresar",
+    "FORGOT_PASSWORD": "Olvidé mi contraseña",
+    "NOT_ACCOUNT": "Aún no tiene una cuenta?",
+    "PASSWORD": "Contraseña",
+    "SIGN_UP": "Registrar mi cuenta",
+    "TITLE": "Inicie sesion"
+  },
+  "SIGN_OUT": "Cerrar sesión",
+  "SIGN_UP": {
+    "CREATE_ACCOUNT": "Crear cuenta",
+    "EMAIL": "Correo electrónico",
+    "EXISTING_ACCOUNT": "Ya tiene una cuenta?",
+    "FATHER_NAME": "Apellido",
+    "FIRST_NAME": "Nombre",
+    "PASSWORD": "Contraseña",
+    "PROVIDE_INFO": "Introduzca su información personal",
+    "SIGN_IN": "Iniciar sesión",
+    "TITLE": "Registrarse"
+  },
+  "STUDENT": "Estudiante",
   "SUBJECTS": {
     "DETAILS": "Detalles de asignatura",
     "LABEL": "Asignatura",
     "TITLE": "Asignaturas"
   },
+  "Schedule": "Agenda",
+  "School Connector": {
+    "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
+  },
+  "Select school": "Elija una escuela",
+  "Students": "Estudiantes",
+  "TEACHER": "Docente",
+  "TYPE": "Tipo",
   "Teacher": {
     "Details": "Datos del docente"
   },
   "Teachers": "Docentes",
-  "Welcome": "Bienvenido, {{ name }} 👋",
-  "ADMIN": "Administrador",
-  "PARENT": "Acudiente",
-  "TEACHER": "Docente",
-  "STUDENT": "Estudiante",
-  "Errors": {
-    "minLength": "Se necesitan al menos {{ length }} caracteres",
-    "required": "Campo requerido"
-  },
-  "School Connector": {
-    "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
-  },
-  "SELECT": {
-    "SELECT_VALUE": "--Elegir valor--",
-    "SEARCH": "Buscar items",
-    "NOT_FOUND": "Sin elementos encontrados"
-  },
-  "SIGN_OUT": "Cerrar sesión",
-  "SIGN_IN": {
-    "TITLE": "Inicie sesion",
-    "EMAIL": "Correo electrónico",
-    "PASSWORD": "Contraseña",
-    "FORGOT_PASSWORD": "Olvidé mi contraseña",
-    "ENTER": "Ingresar",
-    "NOT_ACCOUNT": "Aún no tiene una cuenta?",
-    "SIGN_UP": "Registrar mi cuenta"
-  },
-  "SIGN_UP": {
-    "TITLE": "Registrarse",
-    "PROVIDE_INFO": "Introduzca su información personal",
-    "FIRST_NAME": "Nombre",
-    "FATHER_NAME": "Apellido",
-    "EMAIL": "Correo electrónico",
-    "PASSWORD": "Contraseña",
-    "CREATE_ACCOUNT": "Crear cuenta",
-    "EXISTING_ACCOUNT": "Ya tiene una cuenta?",
-    "SIGN_IN": "Iniciar sesión"
-  },
-  "SEARCH_ITEMS": "Buscar elementos",
-  "TYPE": "Tipo",
   "USERS_SELECTOR": {
-    "PLACEHOLDER": "Elegir usuarios",
     "NOT_FOUND": "Sin usuarios encontrados",
+    "PLACEHOLDER": "Elegir usuarios",
     "SEARCH": "Buscar usuarios"
   },
+  "Welcome": "Bienvenido, {{ name }} 👋",
   "YES": "Si"
 }

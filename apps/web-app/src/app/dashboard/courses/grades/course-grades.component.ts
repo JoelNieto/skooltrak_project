@@ -1,14 +1,15 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
 import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
-import { CoursesStore } from '../courses.store';
+import { CourseDetailsStore } from '../details/course-details.store';
+import { GradeItemFormComponent } from '../grade-item-form/grade-item-form.component';
 import { GradesFormComponent } from '../grades-form/grades-form.component';
 import { CourseGradesStore } from './course-grades.store';
 
@@ -22,28 +23,26 @@ import { CourseGradesStore } from './course-grades.store';
     ButtonDirective,
     DialogModule,
     ReactiveFormsModule,
+    GradeItemFormComponent,
   ],
   styles: [
     `
       th {
-        max-width: 5.5rem;
+        width: 5.5rem;
       }
 
       tr > th:first-child {
-        max-width: 7rem;
+        width: 8rem;
       }
     `,
   ],
-  providers: [
-    provideComponentStore(CourseGradesStore),
-    provideIcons({ heroPencil }),
-  ],
+  providers: [CourseGradesStore, provideIcons({ heroPencil })],
   template: `
     <div class="mb-4 mt-2 flex justify-between">
       <div class="w-64">
         <sk-select
           [formControl]="periodControl"
-          [items]="store.PERIODS()"
+          [items]="store.periods()"
           label="name"
           [search]="false"
         />
@@ -64,83 +63,90 @@ import { CourseGradesStore } from './course-grades.store';
             >
               {{ 'Student' | translate }}
             </th>
-            @for(grade of grades; track grade) {
+            @for (grade of store.grades(); track grade.id) {
               <th
-              scope="col"
-              class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
-            >
-              <div class="flex">
-                <div class="overflow-hidden text-ellipsis whitespace-nowrap">
-                  Tarea de Ciencias {{ grade }}
+                scope="col"
+                class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
+                (click)="editGrade(grade)"
+              >
+                <div class="flex justify-between">
+                  <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                    {{ grade.title }}
+                  </div>
+                  <button>
+                    <ng-icon
+                      name="heroPencil"
+                      size="16"
+                      class="text-green-600"
+                    />
+                  </button>
                 </div>
-                <button>
-                  <ng-icon
-                    name="heroPencil"
-                    size="16"
-                    class="text-transparent hover:text-green-600"
-                  />
-                </button>
-              </div>
-            </th>
+              </th>
             }
           </tr>
         </thead>
         <tbody>
-          @for(student of students; track student) {
+          @for (student of store.students(); track student) {
             <tr
-            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-          >
-            <th
-              scope="row"
-              class="sticky left-0 whitespace-nowrap  bg-white px-3 py-2.5 font-medium text-gray-900 dark:text-white"
+              class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
             >
-              Joel Nieto
-            </th>
-            @for(grade of grades; track grade) {
-              <td
-              class="border px-2 py-2.5 text-center"
-            >
-              4.0
-              <button>
-                <ng-icon
-                  name="heroPencil"
-                  size="16"
-                  class="text-transparent hover:text-green-600"
-                />
-              </button>
-            </td>
-            }
-          </tr>
+              <th
+                scope="row"
+                class="sticky left-0 whitespace-nowrap  bg-white px-3 py-2.5 font-medium text-gray-900 dark:text-white"
+              >
+                {{ student.first_name }} {{ student.father_name }}
+              </th>
+              @for (grade of store.grades(); track grade) {
+                <td class="border px-2 py-1 text-center">
+                  <sk-grade-item-form
+                    [gradeId]="grade.id!"
+                    [studentId]="student.id!"
+                  />
+                </td>
+              }
+            </tr>
           }
-
         </tbody>
       </table>
     </div>
   `,
 })
 export class CourseGradesComponent implements OnInit {
-  public students = Array.from(Array(20).keys());
-  public grades = Array.from(Array(15).keys());
-  private courseStore = inject(CoursesStore);
+  private courseStore = inject(CourseDetailsStore);
   private dialog = inject(Dialog);
   public store = inject(CourseGradesStore);
 
   public periodControl = new FormControl<string | undefined>(
-    this.store.COURSE()?.period_id,
+    this.store.course()?.period_id,
     {
       nonNullable: true,
-    }
+    },
   );
 
   public ngOnInit(): void {
-    this.periodControl.setValue(this.store.PERIOD());
+    setTimeout(() => {
+      this.periodControl.valueChanges.subscribe({
+        next: (periodId) => patchState(this.store, { periodId }),
+      });
+      this.periodControl.setValue(this.courseStore.course()?.period_id);
+    }, 1000);
   }
 
   public newGrade(): void {
-    this.dialog.open<Partial<Grade>>(GradesFormComponent, {
+    this.dialog
+      .open(GradesFormComponent, {
+        minWidth: '42rem',
+        disableClose: true,
+        data: { course: this.courseStore.course() },
+      })
+      .closed.subscribe({ next: () => this.store.refresh() });
+  }
+
+  public editGrade(grade: Partial<Grade>): void {
+    this.dialog.open(GradesFormComponent, {
       minWidth: '42rem',
       disableClose: true,
-      data: { course: this.courseStore.SELECTED() },
+      data: { course: this.courseStore.course(), grade },
     });
   }
 }

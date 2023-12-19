@@ -4,8 +4,8 @@ import {
   OnStoreInit,
   tapResponse,
 } from '@ngrx/component-store';
-import { authState, SupabaseService } from '@skooltrak/store';
 import { Country, School, Table } from '@skooltrak/models';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { EMPTY, from, map, Observable, switchMap, tap } from 'rxjs';
 
@@ -38,6 +38,7 @@ export class SchoolFormStore
       .pipe(
         map(({ error, data }) => {
           if (error) throw new Error(error.message);
+
           return data as Country[];
         }),
       )
@@ -56,6 +57,7 @@ export class SchoolFormStore
         from(this.supabase.uploadPicture(request, 'crest')).pipe(
           map(({ error, data }) => {
             if (error) throw new Error(error.message);
+
             return data.path;
           }),
         ),
@@ -77,6 +79,7 @@ export class SchoolFormStore
           from(this.supabase.client.from(Table.Schools).upsert([request])).pipe(
             map(({ error }) => {
               if (error) throw new Error(error.message);
+
               return EMPTY;
             }),
           ),

@@ -15,7 +15,6 @@ import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
   courses: Course[];
-  selectedId: string | undefined;
   count: number;
   pageSize: number;
   start: number;
@@ -24,23 +23,18 @@ type State = {
 
 const initialState: State = {
   courses: [],
-  selectedId: undefined,
   count: 0,
   pageSize: 5,
   start: 0,
   loading: false,
 };
 
-export const CoursesStore = signalStore(
+export const CoursesListStore = signalStore(
   withState(initialState),
   withComputed(
-    (
-      { start, pageSize, courses, selectedId },
-      auth = inject(authState.AuthStateFacade),
-    ) => ({
+    ({ start, pageSize }, auth = inject(authState.AuthStateFacade)) => ({
       schoolId: computed(() => auth.CURRENT_SCHOOL_ID()),
       end: computed(() => start() + (pageSize() - 1)),
-      selected: computed(() => courses().find((x) => x.id === selectedId())),
       query: computed(() => ({
         start: start(),
         pageSize: pageSize(),

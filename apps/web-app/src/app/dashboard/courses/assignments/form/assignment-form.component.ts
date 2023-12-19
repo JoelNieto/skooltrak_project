@@ -19,7 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import {
@@ -34,7 +34,6 @@ import {
 import { QuillModule } from 'ngx-quill';
 import { asapScheduler } from 'rxjs';
 
-import { CoursesStore } from '../../courses.store';
 import { AssignmentFormStore } from './assignment-form.store';
 
 @Component({
@@ -66,7 +65,7 @@ import { AssignmentFormStore } from './assignment-form.store';
       }
     `,
   ],
-  providers: [provideComponentStore(AssignmentFormStore)],
+  providers: [AssignmentFormStore],
   template: `
     <form
       class="flex gap-4"
@@ -91,7 +90,7 @@ import { AssignmentFormStore } from './assignment-form.store';
               'COURSES.TITLE' | translate
             }}</label>
             <sk-select
-              [items]="store.COURSES()"
+              [items]="store.courses()"
               label="subject.name"
               secondaryLabel="plan.name"
               formControlName="course_id"
@@ -100,7 +99,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           <div>
             <label for="type" skLabel>{{ 'TYPE' | translate }}</label>
             <sk-select
-              [items]="store.TYPES()"
+              [items]="store.types()"
               label="name"
               formControlName="type_id"
             />
@@ -137,15 +136,19 @@ import { AssignmentFormStore } from './assignment-form.store';
             {{ 'GROUPS.TITLE' | translate }}
           </h2>
         </div>
-        {{ store.ASSIGNMENT()?.title }}
+        {{ store.assignment()?.title }}
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
-          @for(group of formGroups.controls; track group; let i = $index) {
-          <ng-container>
-            <div [formGroupName]="i">
-              <label [for]="i">{{ groups()[i].name }}</label>
-              <input skInput type="datetime-local" formControlName="start_at" />
-            </div>
-          </ng-container>
+          @for (group of formGroups.controls; track group; let i = $index) {
+            <ng-container>
+              <div [formGroupName]="i">
+                <label [for]="i">{{ store.groups()[i].name }}</label>
+                <input
+                  skInput
+                  type="datetime-local"
+                  formControlName="start_at"
+                />
+              </div>
+            </ng-container>
           }
         </div>
       </sk-card>
@@ -159,8 +162,6 @@ export class AssignmentFormComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
   public store = inject(AssignmentFormStore);
-  private state = inject(CoursesStore);
-  public groups = this.state.groups;
 
   public assignmentForm = new FormGroup({
     title: new FormControl<string>('', {
@@ -192,11 +193,12 @@ export class AssignmentFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const groups = this.state.groups();
+      const groups = this.store.groups();
       !!groups && this.setGroups(groups);
+      this.cdr.detectChanges();
     });
     effect(() => {
-      const assignment = this.store.ASSIGNMENT();
+      const assignment = this.store.assignment();
       if (assignment) {
         this.assignmentForm.patchValue(assignment);
         this.cdr.detectChanges();
@@ -209,22 +211,19 @@ export class AssignmentFormComponent implements OnInit {
       .get('course_id')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (COURSE_ID) =>
-          asapScheduler.schedule(() => this.store.patchState({ COURSE_ID })),
+        next: (courseId) =>
+          asapScheduler.schedule(() => patchState(this.store, { courseId })),
       });
 
     this.assignmentForm
       .get('groups')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (value) =>
-          asapScheduler.schedule(() => this.store.patchState({ DATES: value })),
+        next: (dates) =>
+          asapScheduler.schedule(() => patchState(this.store, { dates })),
       });
     !!this.course_id && this.setCourse();
-    !!this.id &&
-      asapScheduler.schedule(() =>
-        this.store.patchState({ SELECTED_ID: this.id }),
-      );
+    !!this.id && this.store.fetchAssignment(this.id);
   }
 
   get formGroups(): FormArray {
@@ -238,6 +237,7 @@ export class AssignmentFormComponent implements OnInit {
 
   private setGroups(groups: Partial<ClassGroup>[]): void {
     const control = this.assignmentForm.controls.groups;
+    control.clear();
     groups.forEach((group) => {
       control.push(
         new FormGroup({

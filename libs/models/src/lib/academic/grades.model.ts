@@ -17,6 +17,7 @@ export type GradeObject = Readonly<
     bucket: Partial<GradeBucket>;
     user: Partial<User>;
     period: Partial<Period>;
+    items?: GradeItem[];
   }
 >;
 

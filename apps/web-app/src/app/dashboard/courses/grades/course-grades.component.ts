@@ -9,6 +9,7 @@ import { Grade } from '@skooltrak/models';
 import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
 import { CourseDetailsStore } from '../details/course-details.store';
+import { GradeItemFormComponent } from '../grade-item-form/grade-item-form.component';
 import { GradesFormComponent } from '../grades-form/grades-form.component';
 import { CourseGradesStore } from './course-grades.store';
 
@@ -22,15 +23,16 @@ import { CourseGradesStore } from './course-grades.store';
     ButtonDirective,
     DialogModule,
     ReactiveFormsModule,
+    GradeItemFormComponent,
   ],
   styles: [
     `
       th {
-        max-width: 5.5rem;
+        width: 5.5rem;
       }
 
       tr > th:first-child {
-        max-width: 7rem;
+        width: 8rem;
       }
     `,
   ],
@@ -67,7 +69,7 @@ import { CourseGradesStore } from './course-grades.store';
                 class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
                 (click)="editGrade(grade)"
               >
-                <div class="flex">
+                <div class="flex justify-between">
                   <div class="overflow-hidden text-ellipsis whitespace-nowrap">
                     {{ grade.title }}
                   </div>
@@ -75,7 +77,7 @@ import { CourseGradesStore } from './course-grades.store';
                     <ng-icon
                       name="heroPencil"
                       size="16"
-                      class="text-transparent hover:text-green-600"
+                      class="text-green-600"
                     />
                   </button>
                 </div>
@@ -95,15 +97,11 @@ import { CourseGradesStore } from './course-grades.store';
                 {{ student.first_name }} {{ student.father_name }}
               </th>
               @for (grade of store.grades(); track grade) {
-                <td class="border px-2 py-2.5 text-center">
-                  4.0
-                  <button>
-                    <ng-icon
-                      name="heroPencil"
-                      size="16"
-                      class="text-transparent hover:text-green-600"
-                    />
-                  </button>
+                <td class="border px-2 py-1 text-center">
+                  <sk-grade-item-form
+                    [gradeId]="grade.id!"
+                    [studentId]="student.id!"
+                  />
                 </td>
               }
             </tr>
@@ -127,10 +125,10 @@ export class CourseGradesComponent implements OnInit {
 
   public ngOnInit(): void {
     setTimeout(() => {
-      this.periodControl.setValue(this.courseStore.course()?.period_id);
       this.periodControl.valueChanges.subscribe({
         next: (periodId) => patchState(this.store, { periodId }),
       });
+      this.periodControl.setValue(this.courseStore.course()?.period_id);
     }, 1000);
   }
 

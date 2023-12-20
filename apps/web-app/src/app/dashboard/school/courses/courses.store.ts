@@ -10,7 +10,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, Degree, StudyPlan, Table, User } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { orderBy, pick } from 'lodash';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
@@ -75,6 +75,7 @@ export const SchoolCoursesStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return orderBy(data, [
                   'level.sort',
                 ]) as unknown as Partial<Degree>[];
@@ -100,6 +101,7 @@ export const SchoolCoursesStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return data as Partial<StudyPlan>[];
               }),
               tapResponse({
@@ -118,7 +120,7 @@ export const SchoolCoursesStore = signalStore(
             let request = supabase.client
               .from(Table.Courses)
               .select(
-                'id, school_id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
+                'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
                 {
                   count: 'exact',
                 },
@@ -131,6 +133,7 @@ export const SchoolCoursesStore = signalStore(
             return from(request).pipe(
               map(({ error, data, count }) => {
                 if (error) throw new Error(error.message);
+
                 return {
                   courses: data as unknown as Partial<Course>[],
                   count: count ?? 0,
@@ -168,6 +171,7 @@ export const SchoolCoursesStore = signalStore(
 
           patchState(state, { loading: false });
           console.error(error);
+
           return;
         }
 

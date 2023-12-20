@@ -10,7 +10,7 @@ import {
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { Course, User } from '@skooltrak/models';
+import { Course, Table, User } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 import {
   ButtonDirective,
@@ -61,7 +61,7 @@ import { CoursesFormStore } from './courses-form.store';
       class="grid grid-cols-2 gap-2 gap-y-3"
       (ngSubmit)="saveChanges()"
     >
-      @if (false) {
+      @if (data) {
         <div class="col-span-2 rounded cursor-pointer hover:opacity-70">
           <sk-picture
             [bucket]="bucket()"
@@ -116,7 +116,7 @@ export class SchoolCoursesFormComponent implements OnInit {
   public dialog = inject(Dialog);
   public dialogRef = inject(DialogRef);
   public data: Course | undefined = inject(DIALOG_DATA);
-  public pictureUrl = signal('default_picture.jpg');
+  public pictureUrl = signal('default_picture.jpeg');
   public bucket = signal('courses');
 
   private supabase = inject(SupabaseService);
@@ -138,7 +138,11 @@ export class SchoolCoursesFormComponent implements OnInit {
   });
 
   public ngOnInit(): void {
-    !!this.data && this.form.patchValue(this.data);
+    if (this.data) {
+      this.form.patchValue(this.data);
+      const { picture_url } = this.data;
+      !!picture_url && this.pictureUrl.set(picture_url);
+    }
   }
 
   public changePicture(): void {
@@ -148,15 +152,36 @@ export class SchoolCoursesFormComponent implements OnInit {
         {
           width: '48rem',
           maxWidth: '90%',
-          data: { fixedRatio: true, ratio: 2.25 },
+          data: { fixedRatio: true, ratio: 2, format: 'jpeg' },
         },
       )
       .closed.subscribe({
-        next: (res) => {
+        next: async (res) => {
           if (!res) return;
-          const { cropImgPreview } = res;
+          const { cropImgPreview, imageFile } = res;
           this.pictureUrl.set(cropImgPreview);
-          this.bucket.set('');
+          if (!imageFile) {
+            return;
+          }
+          const { data, error: uploadError } =
+            await this.supabase.uploadPicture(imageFile, 'courses');
+          if (uploadError) {
+            console.error('upload', uploadError);
+
+            return;
+          }
+          this.pictureUrl.set(data.path);
+          if (data.path) {
+            const { error } = await this.supabase.client
+              .from(Table.Courses)
+              .update({ picture_url: data.path })
+              .eq('id', this.data?.id);
+            if (error) {
+              console.error(error);
+
+              return;
+            }
+          }
         },
       });
   }

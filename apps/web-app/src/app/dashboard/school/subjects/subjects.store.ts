@@ -10,7 +10,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Subject, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -80,6 +80,7 @@ export const SchoolSubjectsStore = signalStore(
             ).pipe(
               map(({ error, data, count }) => {
                 if (error) throw new Error(error.message);
+
                 return {
                   subjects: data as unknown as Subject[],
                   count: count ?? 0,
@@ -107,6 +108,7 @@ export const SchoolSubjectsStore = signalStore(
           });
           console.error(error);
           patchState(store, { loading: false });
+
           return;
         }
         alert.showAlert({
@@ -128,6 +130,7 @@ export const SchoolSubjectsStore = signalStore(
           });
           console.error(error);
           patchState(store, { loading: false });
+
           return;
         }
         alert.showAlert({

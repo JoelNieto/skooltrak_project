@@ -1,5 +1,10 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   IonAvatar,
@@ -97,6 +102,7 @@ import { ChatStore } from './chat.store';
               <ion-avatar aria-hidden="true">
                 <skooltrak-picture
                   bucket="avatars"
+                  rounded
                   [pictureURL]="member.user.avatar_url ?? 'default_avatar.jpg'"
                 />
               </ion-avatar>

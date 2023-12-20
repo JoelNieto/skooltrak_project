@@ -172,6 +172,7 @@ import { messagesStore } from './messages.store';
                   <ion-avatar aria-hidden="true" slot="start">
                     <skooltrak-picture
                       bucket="avatars"
+                      rounded
                       [pictureURL]="
                         member.user.avatar_url ?? 'default_avatar.jpg'
                       "

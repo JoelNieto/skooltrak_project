@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
@@ -46,9 +46,10 @@ import { CardComponent } from '../card/card.component';
           [imageChangedEvent]="imgChangeEvt"
           [maintainAspectRatio]="options.fixedRatio"
           [containWithinAspectRatio]="true"
+          [imageQuality]="100"
           [aspectRatio]="options.ratio"
           [resizeToHeight]="256"
-          format="png"
+          [format]="options.format"
           (imageCropped)="cropImg($event)"
           (imageLoaded)="imgLoad()"
           (cropperReady)="initCropper()"
@@ -101,6 +102,7 @@ export class ImageCropperComponent implements OnInit {
   options: ImageCropperOptions = {
     fixedRatio: false,
     ratio: 4 / 4,
+    format: 'jpeg',
   };
 
   public dialogRef = inject(
@@ -120,7 +122,7 @@ export class ImageCropperComponent implements OnInit {
   imageFile: File | undefined;
 
   ngOnInit(): void {
-    !!this.data && (this.options = this.data);
+    !!this.data && (this.options = { ...this.options, ...this.data });
   }
 
   onFileChange(event: unknown) {
@@ -132,7 +134,9 @@ export class ImageCropperComponent implements OnInit {
     !!objectUrl &&
       (this.cropImgPreview = this.sanitizer.bypassSecurityTrustUrl(objectUrl));
     !!blob &&
-      (this.imageFile = new File([blob], 'avatar.png', { type: 'image/png' }));
+      (this.imageFile = new File([blob], `avatar.${this.options.format}`, {
+        type: `image/${this.options.format}`,
+      }));
   }
 
   imgLoad() {

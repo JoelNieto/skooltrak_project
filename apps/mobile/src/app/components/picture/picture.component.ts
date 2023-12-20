@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   effect,
@@ -12,13 +13,13 @@ import { SupabaseService } from '@skooltrak/store';
 @Component({
   selector: 'skooltrak-picture',
   standalone: true,
-  template: `<img [attr.src]="src()" />`,
+  template: `<img [class.rounded]="rounded" [attr.src]="src()" />`,
   styles: `
       :host {
         display: block;
       }
 
-      img { border-radius: 50%; }
+      img.rounded { border-radius: 50%; }
     `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +33,8 @@ export class PictureComponent {
   @Input({ required: true }) set pictureURL(src: string) {
     this.path.set(src);
   }
+
+  @Input({ transform: booleanAttribute }) public rounded: boolean = false;
 
   private path = signal('');
 

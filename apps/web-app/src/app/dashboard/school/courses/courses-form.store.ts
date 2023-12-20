@@ -7,7 +7,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { StudyPlan, Subject, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 
 type State = {
   subjects: Subject[];
@@ -33,7 +33,9 @@ export const CoursesFormStore = signalStore(
           .select('id,name')
           .eq('school_id', auth.CURRENT_SCHOOL_ID())
           .order('year', { ascending: true });
-        if (error) console.error;
+        if (error) {
+          console.error(error);
+        }
         patchState(state, { plans: data as Partial<StudyPlan>[] });
       },
       async fetchSubjects(): Promise<void> {
@@ -44,7 +46,9 @@ export const CoursesFormStore = signalStore(
           )
           .eq('school_id', auth.CURRENT_SCHOOL_ID())
           .order('name', { ascending: true });
-        if (error) console.error;
+        if (error) {
+          console.error(error);
+        }
         patchState(state, { subjects: data as unknown as Subject[] });
       },
     }),

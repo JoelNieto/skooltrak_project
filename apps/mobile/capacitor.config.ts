@@ -3,8 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'Skooltrak',
-  webDir: '../../dist/apps/mobile',
-  bundledWebRuntime: false,
+  webDir: '../../dist/apps/mobile/browser',
   server: {
     androidScheme: 'https',
   },

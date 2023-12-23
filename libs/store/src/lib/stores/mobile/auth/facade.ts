@@ -16,6 +16,8 @@ export class MobileAuthFacade {
   public IS_ADMIN = this.store.selectSignal(selectors.selectIsAdmin);
   public IS_TEACHER = this.store.selectSignal(selectors.selectIsTeacher);
   public IS_STUDENT = this.store.selectSignal(selectors.selectIsStudent);
+  public SCHOOLS = this.store.selectSignal(selectors.selectSchools);
+  public SCHOOL = this.store.selectSignal(selectors.selectSchool);
   public SESSION = this.store.selectSignal(selectors.selectSession);
   public CURRENT_SCHOOL_ID = this.store.selectSignal(selectors.selectSchoolId);
   public init(): void {

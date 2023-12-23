@@ -1,5 +1,5 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil } from '@ng-icons/heroicons/outline';
@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
 import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
-import { CourseDetailsStore } from '../details/course-details.store';
+import { CourseDetailsStore } from '../../courses/details/course-details.store';
 import { GradeItemFormComponent } from '../grade-item-form/grade-item-form.component';
 import { GradesFormComponent } from '../grades-form/grades-form.component';
 import { CourseGradesStore } from './course-grades.store';

@@ -31,9 +31,11 @@ export const DegreesFormStore = signalStore(
 
       if (error) {
         console.error(error);
+        patchState(state, { loading: false });
+
         return;
       }
-      patchState(state, { levels: data });
+      patchState(state, { levels: data, loading: false });
     },
   })),
   withHooks({

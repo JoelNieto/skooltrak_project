@@ -10,10 +10,10 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { GradeObject, Period, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { authState, SupabaseService } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
-import { CourseDetailsStore } from '../details/course-details.store';
+import { CourseDetailsStore } from '../../courses/details/course-details.store';
 
 type State = {
   periods: Period[];

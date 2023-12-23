@@ -4,8 +4,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
   heroArrowRightOnRectangle,
-  heroBookmarkSquare,
   heroBookOpen,
+  heroBookmarkSquare,
   heroBuildingLibrary,
   heroCalendarDays,
   heroClipboardDocument,
@@ -62,15 +62,6 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
             }}</a
           >
         </li>
-        @if (IS_ADMIN() || IS_TEACHER()) {
-          <li>
-            <a routerLink="groups" class="link" routerLinkActive="active"
-              ><ng-icon name="heroUserGroup" size="24" />{{
-                'GROUPS.TITLE' | translate
-              }}</a
-            >
-          </li>
-        }
       </ul>
       <div>
         <ul class="flex text-sm items-center">

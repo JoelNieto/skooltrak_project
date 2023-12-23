@@ -10,7 +10,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Period, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -49,6 +49,7 @@ export const SchoolPeriodsStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return data as Period[];
               }),
               tapResponse({
@@ -73,6 +74,7 @@ export const SchoolPeriodsStore = signalStore(
           });
           console.error(error);
           patchState(state, { loading: false });
+
           return;
         }
         alert.showAlert({

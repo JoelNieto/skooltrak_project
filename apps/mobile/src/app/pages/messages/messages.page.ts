@@ -104,63 +104,27 @@ import { messagesStore } from './messages.store';
       </ion-fab>
       <ion-list>
         @if (store.loading()) {
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
+          @for (item of loadingItems; track item) {
+            <ion-item>
+              <ion-thumbnail slot="start">
+                <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+              </ion-thumbnail>
+              <ion-label>
+                <h3>
+                  <ion-skeleton-text
+                    [animated]="true"
+                    style="width: 80%;"
+                  ></ion-skeleton-text>
+                </h3>
+                <p>
+                  <ion-skeleton-text
+                    [animated]="true"
+                    style="width: 60%;"
+                  ></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item>
+          }
         } @else {
           @for (chat of store.sortedChats(); track chat.id) {
             <ion-item-sliding>
@@ -211,6 +175,8 @@ export class MessagesPage {
   public store = inject(messagesStore);
   private modalCtrl = inject(ModalController);
   private ionRouterOutlet = inject(IonRouterOutlet);
+
+  public loadingItems = new Array(10);
   constructor() {
     addIcons({ trash, add });
   }

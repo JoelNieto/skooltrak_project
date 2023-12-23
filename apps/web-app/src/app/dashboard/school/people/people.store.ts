@@ -10,7 +10,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, authState } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -76,9 +76,11 @@ export const SchoolPeopleStore = signalStore(
               selectedStatus() !== 'all'
                 ? query.eq('status', selectedStatus())
                 : query;
+
             return from(query).pipe(
               map(({ error, data, count }) => {
                 if (error) throw new Error(error.message);
+
                 return {
                   people: data as unknown as SchoolProfile[],
                   count: count ?? 0,

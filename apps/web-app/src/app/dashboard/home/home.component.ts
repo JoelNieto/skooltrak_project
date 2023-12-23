@@ -22,12 +22,6 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
         {{ 'Welcome' | translate: { name: auth.USER()?.first_name } }}
       </h2>
     </div>
-    <sk-tabs>
-      <sk-tabs-item link="schedule">{{ 'Schedule' | translate }}</sk-tabs-item>
-      <sk-tabs-item link="grades">
-        {{ 'Grades.Title' | translate }}</sk-tabs-item
-      >
-    </sk-tabs>
     <router-outlet />
   </sk-card>`,
 })

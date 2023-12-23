@@ -6,7 +6,9 @@ export const coursesRoutes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./courses/courses.component').then((x) => x.CoursesComponent),
+      import('./admin/courses/courses.component').then(
+        (x) => x.CoursesComponent,
+      ),
     children: [
       {
         canMatch: [(): boolean => inject(authState.AuthStateFacade).IS_ADMIN()],
@@ -19,21 +21,21 @@ export const coursesRoutes: Routes = [
       {
         path: 'assignments',
         loadChildren: () =>
-          import('./courses/assignments/assignments.routes').then(
+          import('./admin/courses/assignments/assignments.routes').then(
             (x) => x.assignmentsRoutes,
           ),
       },
       {
         path: 'details',
         loadComponent: () =>
-          import('./courses/details/course-details.component').then(
+          import('./admin/courses/details/course-details.component').then(
             (x) => x.CourseDetailsComponent,
           ),
         children: [
           {
             path: 'news',
             loadComponent: () =>
-              import('./courses/news/course-news.component').then(
+              import('./admin/courses/news/course-news.component').then(
                 (x) => x.CourseNewsComponent,
               ),
           },
@@ -47,7 +49,7 @@ export const coursesRoutes: Routes = [
           {
             path: 'schedule',
             loadComponent: () =>
-              import('./courses/schedule/course-schedule.component').then(
+              import('./admin/courses/schedule/course-schedule.component').then(
                 (x) => x.CourseScheduleComponent,
               ),
           },
@@ -61,7 +63,7 @@ export const coursesRoutes: Routes = [
           {
             path: 'files',
             loadComponent: () =>
-              import('./courses/files/course-files.component').then(
+              import('./admin/courses/files/course-files.component').then(
                 (x) => x.CourseFilesComponent,
               ),
           },

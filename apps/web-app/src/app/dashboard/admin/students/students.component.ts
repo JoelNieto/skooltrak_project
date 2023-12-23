@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
 
-import { CourseDetailsStore } from '../../courses/details/course-details.store';
+import { CourseDetailsStore } from '../courses/details/course-details.store';
 
 @Component({
   standalone: true,

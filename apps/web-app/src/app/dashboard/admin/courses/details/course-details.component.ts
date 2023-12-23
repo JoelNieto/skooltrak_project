@@ -12,7 +12,7 @@ import {
   TabsItemComponent,
 } from '@skooltrak/ui';
 
-import { CourseMeetingComponent } from '../../../components/course-meeting/course-meeting.component';
+import { CourseMeetingComponent } from '../../../../components/course-meeting/course-meeting.component';
 import { CourseDetailsStore } from './course-details.store';
 
 @Component({

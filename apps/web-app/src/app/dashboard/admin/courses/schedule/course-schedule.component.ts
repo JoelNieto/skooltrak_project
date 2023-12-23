@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { CalendarComponent } from '../../../components/calendar/calendar.component';
+import { CalendarComponent } from '../../../../components/calendar/calendar.component';
 
 @Component({
   standalone: true,

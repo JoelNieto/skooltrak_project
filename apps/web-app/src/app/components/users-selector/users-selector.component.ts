@@ -22,10 +22,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
-import { debounceTime } from 'rxjs';
 
 import { AvatarComponent } from '../../../../../../apps/web-app/src/app/components/avatar/avatar.component';
 import { UserChipComponent } from '../user-chip/user-chip.component';
@@ -52,7 +51,7 @@ import { UsersSelectorStore } from './users-selector.store';
       useExisting: forwardRef(() => UsersSelectorComponent),
       multi: true,
     },
-    provideComponentStore(UsersSelectorStore),
+    UsersSelectorStore,
   ],
   // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
@@ -103,7 +102,7 @@ import { UsersSelectorStore } from './users-selector.store';
             #searchInput
           />
         </div>
-        @if (!store.USERS().length) {
+        @if (!store.filteredUsers().length) {
           <div class="flex items-center bg-white p-4  dark:bg-gray-700">
             <p
               class="font-title font-semibold text-gray-700 dark:text-gray-100 "
@@ -117,7 +116,7 @@ import { UsersSelectorStore } from './users-selector.store';
           class="max-h-64 w-full overflow-y-scroll bg-white dark:divide-gray-600 dark:bg-gray-700"
         >
           <ul class="py-1" role="none">
-            @for (user of store.USERS(); track user.id) {
+            @for (user of store.filteredUsers(); track user.id) {
               <li (click)="toggleValue(user)">
                 <div
                   class="flex cursor-pointer gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -182,10 +181,10 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
 
   public ngOnInit(): void {
     this.searchText.valueChanges
-      .pipe(takeUntilDestroyed(this.destroy), debounceTime(500))
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
-        next: (val) => {
-          this.store.patchState({ QUERY_TEXT: val });
+        next: (queryText) => {
+          patchState(this.store, { queryText });
         },
       });
   }

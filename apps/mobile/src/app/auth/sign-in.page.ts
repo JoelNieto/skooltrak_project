@@ -8,13 +8,15 @@ import {
   IonHeader,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
+  IonSpinner,
   IonTitle,
   IonToolbar,
   ModalController,
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
-import { mobileAuthState } from '@skooltrak/store';
+import { mobileStore } from '@skooltrak/store';
 
 @Component({
   standalone: true,
@@ -26,11 +28,13 @@ import { mobileAuthState } from '@skooltrak/store';
     IonTitle,
     IonContent,
     IonList,
+    IonLabel,
     IonItem,
     IonInput,
     IonFooter,
     IonToolbar,
     IonButton,
+    IonSpinner,
     TranslateModule,
     NgOptimizedImage,
     ReactiveFormsModule,
@@ -74,15 +78,24 @@ import { mobileAuthState } from '@skooltrak/store';
     </ion-content>
     <ion-footer class="ion-no-border">
       <ion-toolbar>
-        <ion-button fill="solid" expand="block" (click)="signIn()">{{
-          'SIGN_IN.ENTER' | translate
-        }}</ion-button>
+        <ion-button
+          fill="solid"
+          expand="block"
+          [disabled]="form.invalid"
+          (click)="signIn()"
+        >
+          @if (auth.loading()) {
+            <ion-spinner name="crescent" />
+          } @else {
+            <ion-label>{{ 'SIGN_IN.ENTER' | translate }}</ion-label>
+          }
+        </ion-button>
       </ion-toolbar>
     </ion-footer> `,
 })
 export class SignInPage {
   private readonly modalCtrl = inject(ModalController);
-  private readonly auth = inject(mobileAuthState.MobileAuthFacade);
+  public readonly auth = inject(mobileStore.AuthStore);
   public form = new FormGroup({
     email: new FormControl<string>('', {
       validators: [Validators.required, Validators.email],
@@ -96,12 +109,14 @@ export class SignInPage {
 
   constructor() {
     effect(() => {
-      !!this.auth.USER() && this.modalCtrl.dismiss();
+      if (this.auth.user()) {
+        this.modalCtrl.dismiss();
+      }
     });
   }
 
   public signIn(): void {
     const { email, password } = this.form.getRawValue();
-    this.auth.signIn(email, password);
+    this.auth.signIn({ email, password });
   }
 }

@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   IonAvatar,
   IonButton,
@@ -15,11 +16,14 @@ import {
   IonList,
   IonMenu,
   IonMenuButton,
+  IonRadio,
+  IonRadioGroup,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { mobileAuthState } from '@skooltrak/store';
+import { mobileStore } from '@skooltrak/store';
 
 import { PictureComponent } from '../components/picture/picture.component';
 import { HomeStore } from './home.store';
@@ -45,41 +49,30 @@ import { HomeStore } from './home.store';
     IonLabel,
     IonAvatar,
     IonItem,
+    IonRadioGroup,
+    IonRadio,
     IonMenuButton,
     PictureComponent,
     TranslateModule,
+    FormsModule,
   ],
   template: `
-    <ion-menu contentId="main-content">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Menu Content</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-list>
-          @for (school of auth.SCHOOLS(); track school.id) {
-            <ion-item lines="full">
-              <ion-avatar aria-hidden="true" slot="start">
-                <skooltrak-picture
-                  bucket="crests"
-                  [pictureURL]="school.crest_url ?? 'default_avatar.jpg'"
-                /> </ion-avatar
-              ><ion-label>{{ school.short_name }}</ion-label></ion-item
-            >
-          }
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-    <ion-header>
+    <ion-header [translucent]="true">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title> {{ auth.SCHOOL()?.short_name }}</ion-title>
+        <ion-title> {{ auth.selectedSchool()?.short_name }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content id="main-content">
+    <ion-content id="main-content" [fullscreen]="true">
+      <ion-header collapse="condense">
+        <ion-toolbar>
+          <ion-title size="large">
+            {{ auth.selectedSchool()?.short_name }}</ion-title
+          >
+        </ion-toolbar>
+      </ion-header>
       @for (course of store.courses(); track course.id) {
         <ion-card>
           <skooltrak-picture
@@ -93,9 +86,41 @@ import { HomeStore } from './home.store';
         </ion-card>
       }
     </ion-content>
+    <ion-menu contentId="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'SCHOOL_CONNECTOR.TITLE' | translate }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding-vertical">
+        <ion-list>
+          <ion-radio-group
+            [ngModel]="auth.schoolId()"
+            (ionChange)="changeSchool($event.target.value)"
+          >
+            @for (school of auth.schools(); track school.id) {
+              <ion-item lines="full">
+                <ion-avatar aria-hidden="true" slot="start">
+                  <skooltrak-picture
+                    bucket="crests"
+                    [pictureURL]="school.crest_url ?? 'default_avatar.jpg'"
+                  /> </ion-avatar
+                ><ion-radio [value]="school.id">{{
+                  school.short_name
+                }}</ion-radio></ion-item
+              >
+            }
+          </ion-radio-group>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
   `,
 })
 export class HomePage {
   public store = inject(HomeStore);
-  public auth = inject(mobileAuthState.MobileAuthFacade);
+  public auth = inject(mobileStore.AuthStore);
+
+  public changeSchool(schoolId: string): void {
+    patchState(this.auth, { schoolId });
+  }
 }

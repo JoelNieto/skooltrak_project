@@ -1,18 +1,12 @@
 import { DatePipe, NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroPaperAirplaneSolid } from '@ng-icons/heroicons/solid';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 import { InputDirective } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 
@@ -134,7 +128,7 @@ export class ChatComponent implements OnInit {
   @ViewChild('chatContainer')
   private chatContainer!: ElementRef<HTMLDivElement>;
   public readonly store = inject(ChatStore);
-  public readonly state = inject(messagingState.MessagingStateFacade);
+  public readonly state = inject(webStore.MessagesStore);
   private route = inject(ActivatedRoute);
   public messageControl = new FormControl('', {
     nonNullable: true,
@@ -153,7 +147,7 @@ export class ChatComponent implements OnInit {
   public ngOnInit(): void {
     this.route.queryParams.subscribe({
       next: ({ chat_id }) => {
-        this.state.setCurrentChat(chat_id);
+        patchState(this.state, { selectedId: chat_id });
         this.messageControl.reset();
       },
     });

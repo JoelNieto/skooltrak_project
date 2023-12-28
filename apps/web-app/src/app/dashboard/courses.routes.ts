@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { authState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 
 export const coursesRoutes: Routes = [
   {
@@ -11,7 +11,7 @@ export const coursesRoutes: Routes = [
       ),
     children: [
       {
-        canMatch: [(): boolean => inject(authState.AuthStateFacade).IS_ADMIN()],
+        canMatch: [(): boolean => inject(webStore.AuthStore).isAdmin()],
         path: 'my-courses',
         loadComponent: () =>
           import('./admin/list/courses-list.component').then(

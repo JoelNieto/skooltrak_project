@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonAvatar,
+  IonButton,
+  IonButtons,
   IonContent,
-  IonFab,
-  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
@@ -25,13 +25,13 @@ import {
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '@skooltrak/models';
+import { mobileStore } from '@skooltrak/store';
 import { DateAgoPipe } from '@skooltrak/ui';
 import { addIcons } from 'ionicons';
-import { add, trash } from 'ionicons/icons';
+import { add, addCircle, trash } from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
 import { UsersModalComponent } from '../../components/users-modal/users-modal.component';
-import { messagesStore } from './messages.store';
 
 @Component({
   selector: 'skooltrak-messages',
@@ -46,8 +46,6 @@ import { messagesStore } from './messages.store';
     IonTitle,
     IonContent,
     IonSearchbar,
-    IonFab,
-    IonFabButton,
     IonIcon,
     IonList,
     IonItem,
@@ -59,6 +57,8 @@ import { messagesStore } from './messages.store';
     IonAvatar,
     IonItemOption,
     IonNote,
+    IonButtons,
+    IonButton,
     IonItemOptions,
   ],
   providers: [IonRouterOutlet, ModalController],
@@ -84,6 +84,11 @@ import { messagesStore } from './messages.store';
     <ion-header [translucent]="true">
       <ion-toolbar>
         <ion-title> {{ 'MESSAGING.TITLE' | translate }} </ion-title>
+        <ion-buttons slot="primary">
+          <ion-button slot="icon-only" (click)="searchUser()">
+            <ion-icon name="add-circle" size="large" />
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content [fullscreen]="true">
@@ -97,11 +102,6 @@ import { messagesStore } from './messages.store';
           <ion-searchbar inputmode="search"></ion-searchbar>
         </ion-toolbar>
       </ion-header>
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="searchUser()">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
       <ion-list>
         @if (store.loading()) {
           @for (item of loadingItems; track item) {
@@ -172,13 +172,13 @@ import { messagesStore } from './messages.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessagesPage {
-  public store = inject(messagesStore);
+  public store = inject(mobileStore.MessagesStore);
   private modalCtrl = inject(ModalController);
   private ionRouterOutlet = inject(IonRouterOutlet);
 
   public loadingItems = new Array(10);
   constructor() {
-    addIcons({ trash, add });
+    addIcons({ trash, add, addCircle });
   }
 
   public ionViewWillEnter(): void {

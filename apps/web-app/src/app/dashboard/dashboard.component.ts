@@ -4,8 +4,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
   heroArrowRightOnRectangle,
-  heroBookOpen,
   heroBookmarkSquare,
+  heroBookOpen,
   heroBuildingLibrary,
   heroCalendarDays,
   heroClipboardDocument,
@@ -14,7 +14,7 @@ import {
   heroUserGroup,
 } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 
 import { AvatarComponent } from '../components/avatar/avatar.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';
@@ -70,17 +70,20 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
               class="flex w-full items-center gap-3 rounded-lg px-4 py-2 font-sans text-sm dark:text-gray-100"
               (click)="changeSchool()"
             >
-              @if (SCHOOL()?.crest_url) {
+              @if (auth.currentSchool()?.crest_url) {
                 <sk-avatar
-                  [avatarUrl]="SCHOOL()?.crest_url!"
+                  [avatarUrl]="auth.currentSchool()?.crest_url!"
                   bucket="crests"
                   class="h-8"
                 />
               }
-              {{ SCHOOL()?.short_name ?? ('Select school' | translate) }}
+              {{
+                auth.currentSchool()?.short_name ??
+                  ('Select school' | translate)
+              }}
             </button>
           </li>
-          @if (IS_ADMIN()) {
+          @if (auth.isAdmin()) {
             <li>
               <a routerLink="school" class="link" routerLinkActive="active"
                 ><ng-icon name="heroBuildingLibrary" size="24" />{{
@@ -93,7 +96,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
           <li>
             <button class="link" (click)="auth.signOut()">
               <ng-icon name="heroArrowRightOnRectangle" size="24" />{{
-                'SIGN_OUT' | translate
+                'SIGN_OUT.TITLE' | translate
               }}
             </button>
           </li>
@@ -127,14 +130,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  public auth = inject(authState.AuthStateFacade);
+  public auth = inject(webStore.AuthStore);
   private dialog = inject(Dialog);
-
-  public USER = this.auth.USER;
-  public SCHOOL = this.auth.CURRENT_SCHOOL;
-  public IS_ADMIN = this.auth.IS_ADMIN;
-  public IS_STUDENT = this.auth.IS_STUDENT;
-  public IS_TEACHER = this.auth.IS_TEACHER;
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {

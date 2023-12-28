@@ -1,13 +1,8 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { authState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +36,7 @@ export class CourseMeetingComponent implements OnInit {
   private api: unknown;
   public dialogRef = inject(DialogRef);
   private data: Course = inject(DIALOG_DATA);
-  private auth = inject(authState.AuthStateFacade);
+  private auth = inject(webStore.AuthStore);
 
   public ngOnInit(): void {
     this.options = {
@@ -49,8 +44,8 @@ export class CourseMeetingComponent implements OnInit {
       width: 1000,
       height: 600,
       userInfo: {
-        email: this.auth.USER()?.email,
-        displayName: `${this.auth.USER()?.first_name}  ${this.auth.USER()
+        email: this.auth.user()?.email,
+        displayName: `${this.auth.user()?.first_name}  ${this.auth.user()
           ?.father_name}`,
       },
       parentNode: document.querySelector('#meet'),

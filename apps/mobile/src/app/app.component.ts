@@ -1,7 +1,7 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { mobileAuthState } from '@skooltrak/store';
+import { mobileStore } from '@skooltrak/store';
 
 import { SignInPage } from './auth/sign-in.page';
 
@@ -15,17 +15,23 @@ import { SignInPage } from './auth/sign-in.page';
   </ion-app>`,
 })
 export class AppComponent implements OnInit {
-  private readonly store = inject(mobileAuthState.MobileAuthFacade);
+  private readonly auth = inject(mobileStore.AuthStore);
+  private readonly messages = inject(mobileStore.MessagesStore);
   private readonly modalCtrl = inject(ModalController);
+  private readonly signInOpen = signal(false);
 
   constructor() {
     effect(() => {
-      !this.store.LOADING() && !this.store.USER() && this.openModal();
+      !this.auth.loading() &&
+        !this.auth.user() &&
+        !this.signInOpen() &&
+        this.openModal();
     });
   }
 
   public ngOnInit(): void {
-    this.store.init();
+    this.messages.fetchChats();
+    !this.auth.loading() && !this.auth.user() && this.openModal();
   }
 
   public async openModal(): Promise<void> {
@@ -33,5 +39,8 @@ export class AppComponent implements OnInit {
       component: SignInPage,
     });
     modal.present();
+    this.signInOpen.set(true);
+    await modal.onWillDismiss();
+    this.signInOpen.set(false);
   }
 }

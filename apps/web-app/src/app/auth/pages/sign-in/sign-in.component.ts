@@ -1,20 +1,10 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { webStore } from '@skooltrak/store';
+import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-in',
@@ -137,7 +127,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignInComponent {
-  private auth = inject(authState.AuthStateFacade);
+  private auth = inject(webStore.AuthStore);
 
   public form = new FormGroup({
     email: new FormControl<string>('', {

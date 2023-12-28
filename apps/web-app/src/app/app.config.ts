@@ -2,16 +2,9 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-PA';
-import {
-  ApplicationConfig,
-  importProvidersFrom,
-  isDevMode,
-} from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  BrowserAnimationsModule,
-  provideAnimations,
-} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideRouter,
   TitleStrategy,
@@ -20,13 +13,9 @@ import {
   withRouterConfig,
   withViewTransitions,
 } from '@angular/router';
-import { provideEffects } from '@ngrx/effects';
-import { provideState, provideStore } from '@ngrx/store';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
-import { authState, messagingState } from '@skooltrak/store';
 import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -51,16 +40,6 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideAnimations(),
-    provideStore(),
-    provideState(authState.authFeature),
-    provideState(messagingState.messageFeature),
-    provideEffects(authState.effects, messagingState.effects),
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-      trace: true,
-      connectInZone: true,
-    }),
     importProvidersFrom(
       QuillModule.forRoot(),
       BrowserModule,

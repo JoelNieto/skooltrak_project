@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum } from '@skooltrak/models';
 import { ButtonDirective, CardComponent, ConfirmationService, InputDirective, LabelDirective } from '@skooltrak/ui';
@@ -23,7 +23,7 @@ import { SchoolConnectorStore } from './school-connector.store';
     InputDirective,
   ],
   providers: [
-    provideComponentStore(SchoolConnectorStore),
+    SchoolConnectorStore,
     provideIcons({ heroXMark }),
     ConfirmationService,
   ],
@@ -60,19 +60,19 @@ import { SchoolConnectorStore } from './school-connector.store';
         <div>
           <label for="code" skLabel>{{ 'CODE' | translate }}</label>
           <input type="text" formControlName="code" skInput />
-          @if(form.get('code')?.hasError('minlength')) {
-          <small class="font-mono text-xs text-red-500">{{
-            'Errors.minLength' | translate: { length: 10 }
-          }}</small>
+          @if (form.get('code')?.hasError('minlength')) {
+            <small class="font-mono text-xs text-red-500">{{
+              'Errors.minLength' | translate: { length: 10 }
+            }}</small>
           }
         </div>
         <div>
           <label for="role" skLabel>{{ 'ROLE' | translate }}</label>
           <select formControlName="role" skInput>
-            @for(role of roles; track role) {
-            <option [value]="role">
-              {{ role | translate }}
-            </option>
+            @for (role of roles; track role) {
+              <option [value]="role">
+                {{ role | translate }}
+              </option>
             }
           </select>
         </div>
@@ -109,7 +109,7 @@ export class SchoolConnectorComponent {
 
   public validateCode(): void {
     const { code, role } = this.form.getRawValue();
-    this.store.patchState({ ROLE: role });
+    patchState(this.store, { role });
     this.store.fetchSchoolByCode(code);
   }
 }

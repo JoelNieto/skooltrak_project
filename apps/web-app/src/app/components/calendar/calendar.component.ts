@@ -1,29 +1,14 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssignmentView } from '@skooltrak/models';
 import { ButtonDirective } from '@skooltrak/ui';
-import {
-  CalendarDateFormatter,
-  CalendarEvent,
-  CalendarModule,
-  CalendarView,
-  DateAdapter,
-} from 'angular-calendar';
+import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK } from 'calendar-utils';
-import {
-  endOfDay,
-  endOfMonth,
-  endOfWeek,
-  isSameDay,
-  isSameMonth,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
+import { endOfDay, endOfMonth, endOfWeek, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
 
 import { CalendarStore } from './calendar.store';
 
@@ -40,14 +25,14 @@ import { CalendarStore } from './calendar.store';
   providers: [
     { provide: DateAdapter, useFactory: adapterFactory },
     CalendarDateFormatter,
-    provideComponentStore(CalendarStore),
+    CalendarStore,
   ],
   template: ` <a
       skButton
       color="green"
       class="fixed bottom-12 right-12 z-50"
       routerLink="/app/courses/assignments"
-      [queryParams]="{ course_id: query_value }"
+      [queryParams]="{ course_id: queryValue }"
     >
       {{ 'CALENDAR.NEW_ASSIGNMENT' | translate }}
     </a>
@@ -139,42 +124,47 @@ import { CalendarStore } from './calendar.store';
       </div>
     </div>
     <div class="p-2">
-      @switch (view) { @case(CalendarView.Month) {
-      <mwl-calendar-month-view
-        [viewDate]="viewDate"
-        [events]="this.store.assignments()"
-        [locale]="locale"
-        (dayClicked)="dayClicked($event.day)"
-        [activeDayIsOpen]="activeDayIsOpen"
-        [weekStartsOn]="weekStartOn"
-        [weekendDays]="weekendDays"
-        (eventClicked)="eventClicked($event.event)"
-      />} @case(CalendarView.Week) {
-      <mwl-calendar-week-view
-        [viewDate]="viewDate"
-        [events]="this.store.assignments()"
-        [locale]="locale"
-        [dayStartHour]="7"
-        [dayEndHour]="17"
-        [weekStartsOn]="weekStartOn"
-        [weekendDays]="weekendDays"
-        (eventClicked)="eventClicked($event.event)"
-      />
-      } @case (CalendarView.Day) {
-      <mwl-calendar-day-view
-        [viewDate]="viewDate"
-        [dayStartHour]="7"
-        [dayEndHour]="17"
-        [events]="this.store.assignments()"
-        [locale]="locale"
-        (eventClicked)="eventClicked($event.event)"
-      />
-      } }
+      @switch (view) {
+        @case (CalendarView.Month) {
+          <mwl-calendar-month-view
+            [viewDate]="viewDate"
+            [events]="this.store.assignments()"
+            [locale]="locale"
+            (dayClicked)="dayClicked($event.day)"
+            [activeDayIsOpen]="activeDayIsOpen"
+            [weekStartsOn]="weekStartOn"
+            [weekendDays]="weekendDays"
+            (eventClicked)="eventClicked($event.event)"
+          />
+        }
+        @case (CalendarView.Week) {
+          <mwl-calendar-week-view
+            [viewDate]="viewDate"
+            [events]="this.store.assignments()"
+            [locale]="locale"
+            [dayStartHour]="7"
+            [dayEndHour]="17"
+            [weekStartsOn]="weekStartOn"
+            [weekendDays]="weekendDays"
+            (eventClicked)="eventClicked($event.event)"
+          />
+        }
+        @case (CalendarView.Day) {
+          <mwl-calendar-day-view
+            [viewDate]="viewDate"
+            [dayStartHour]="7"
+            [dayEndHour]="17"
+            [events]="this.store.assignments()"
+            [locale]="locale"
+            (eventClicked)="eventClicked($event.event)"
+          />
+        }
+      }
     </div>`,
 })
 export class CalendarComponent implements OnInit {
-  @Input() public query_value?: string;
-  @Input() public query_item: 'course_id' | 'group_id' = 'course_id';
+  @Input() public queryValue?: string;
+  @Input() public queryItem: 'course_id' | 'group_id' = 'course_id';
   public store = inject(CalendarStore);
   private router = inject(Router);
   public assignments = this.store.assignments;
@@ -191,9 +181,9 @@ export class CalendarComponent implements OnInit {
   public activeDayIsOpen = true;
 
   public ngOnInit(): void {
-    this.store.patchState({
-      query_item: this.query_item,
-      query_value: this.query_value,
+    patchState(this.store, {
+      queryItem: this.queryItem,
+      queryValue: this.queryValue,
     });
   }
 
@@ -211,9 +201,9 @@ export class CalendarComponent implements OnInit {
       day: endOfDay,
     }[this.view];
 
-    this.store.patchState({
-      start_date: getStart(this.viewDate),
-      end_date: getEnd(this.viewDate),
+    patchState(this.store, {
+      startDate: getStart(this.viewDate),
+      endDate: getEnd(this.viewDate),
     });
   }
 

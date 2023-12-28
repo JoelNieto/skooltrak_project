@@ -1,23 +1,10 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { provideComponentStore } from '@ngrx/component-store';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { School, SchoolTypeEnum } from '@skooltrak/models';
 import {
@@ -46,10 +33,7 @@ import { SchoolFormStore } from './school-form.store';
     LabelDirective,
     InputDirective,
   ],
-  providers: [
-    provideComponentStore(SchoolFormStore),
-    provideIcons({ heroXMark }),
-  ],
+  providers: [SchoolFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
     <div class="flex items-start justify-between" header>
       <h3
@@ -66,9 +50,9 @@ import { SchoolFormStore } from './school-form.store';
       </button>
     </div>
     <div class="flex flex-col items-center justify-center space-y-4">
-      @if (store.SCHOOL()?.crest_url) {
+      @if (store.school()?.crest_url) {
         <sk-avatar
-          [avatarUrl]="store.SCHOOL()?.crest_url!"
+          [avatarUrl]="store.school()?.crest_url!"
           (click)="uploadCrest()"
           bucket="crests"
           class="h-24 rounded-md"
@@ -115,7 +99,7 @@ import { SchoolFormStore } from './school-form.store';
         }}</label>
         <sk-select
           formControlName="country_id"
-          [items]="store.COUNTRIES()"
+          [items]="store.countries()"
           label="name"
         />
       </div>
@@ -191,13 +175,13 @@ export class SchoolFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const school = this.store.SCHOOL();
+      const school = this.store.school();
       !!school && this.form.patchValue(school);
     });
   }
 
   public ngOnInit(): void {
-    !!this.data && this.store.patchState({ SCHOOL: this.data });
+    !!this.data && patchState(this.store, { school: this.data });
   }
 
   public uploadCrest(): void {
@@ -216,7 +200,7 @@ export class SchoolFormComponent implements OnInit {
 
   public saveChanges(): void {
     const { value } = this.form;
-    const request = { ...this.store.SCHOOL(), ...value };
+    const request = { ...this.store.school(), ...value };
 
     if (!request.id) {
       delete request.id;

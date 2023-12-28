@@ -1,10 +1,5 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   IonAvatar,
@@ -94,6 +89,7 @@ import { ChatStore } from './chat.store';
         <ion-buttons slot="start">
           <ion-back-button
             [text]="'MESSAGING.TITLE' | translate"
+            defaultHref="/tabs/messages"
           ></ion-back-button>
         </ion-buttons>
         <ion-title>

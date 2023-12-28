@@ -1,69 +1,68 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Table, User } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
-import { from, map, Observable, switchMap, tap } from 'rxjs';
+import { SupabaseService, webStore } from '@skooltrak/store';
+import { debounceTime, filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
-  FILTERED_USERS: Partial<User>[];
-  SELECTED_USERS: Partial<User>[];
-  QUERY_TEXT: string;
-  LOADING: boolean;
+  filteredUsers: Partial<User>[];
+  selectedUsers: Partial<User>[];
+  queryText: string;
+  loading: boolean;
 };
 
-@Injectable()
-export class UsersSelectorStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly supabase = inject(SupabaseService);
-  private auth = inject(authState.AuthStateFacade);
-  public readonly USERS = this.selectSignal((state) => state.FILTERED_USERS);
-  public readonly LOADING = this.selectSignal((state) => state.LOADING);
-  private readonly query$ = this.select((state) => state.QUERY_TEXT, {
-    debounce: true,
-  });
+const initialState: State = {
+  filteredUsers: [],
+  selectedUsers: [],
+  queryText: '',
+  loading: false,
+};
 
-  private readonly fetchUsers = this.effect((query$: Observable<string>) => {
-    return query$.pipe(
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap((query) => {
-        return from(
-          this.supabase.client
-            .from(Table.Users)
-            .select('id, first_name, father_name, email, avatar_url')
-            .neq('id', this.auth.USER_ID())
-            .limit(10)
-            .order('first_name', { ascending: true })
-            .order('father_name', { ascending: true })
-            .ilike('users_query', `%${query}%`),
-        ).pipe(
-          map(({ error, data }) => {
-            if (error) throw new Error(error.message);
+export const UsersSelectorStore = signalStore(
+  withState(initialState),
+  withMethods(
+    (
+      { queryText, ...state },
+      auth = inject(webStore.AuthStore),
+      supabase = inject(SupabaseService),
+    ) => ({
+      fetchUsers: rxMethod<string>(
+        pipe(
+          filter(() => queryText().length > 2),
+          tap(() => patchState(state, { loading: true })),
+          debounceTime(1000),
+          switchMap(() =>
+            from(
+              supabase.client
+                .from(Table.Users)
+                .select('id, first_name, father_name, email, avatar_url')
+                .neq('id', auth.userId)
+                .limit(10)
+                .order('first_name', { ascending: true })
+                .order('father_name', { ascending: true })
+                .ilike('users_query', `%${queryText()}%`),
+            ).pipe(
+              map(({ error, data }) => {
+                if (error) throw new Error(error.message);
 
-            return data as Partial<User>[];
-          }),
-          tapResponse(
-            (users) => this.patchState({ FILTERED_USERS: users }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
+                return data as Partial<User>[];
+              }),
+              tapResponse({
+                next: (users) => patchState(state, { filteredUsers: users }),
+                error: console.error,
+                finalize: () => patchState(state, { loading: false }),
+              }),
+            ),
           ),
-        );
-      }),
-    );
-  });
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({
-      FILTERED_USERS: [],
-      SELECTED_USERS: [],
-      QUERY_TEXT: '',
-      LOADING: false,
-    });
-    this.fetchUsers(this.query$);
-  };
-}
+        ),
+      ),
+    }),
+  ),
+  withHooks({
+    onInit({ fetchUsers, queryText }) {
+      fetchUsers(queryText);
+    },
+  }),
+);

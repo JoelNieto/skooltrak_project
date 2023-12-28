@@ -1,103 +1,81 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { computed, inject } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 import { CalendarEvent } from 'calendar-utils';
-import { endOfMonth, format, startOfMonth } from 'date-fns';
-import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import { format } from 'date-fns';
+import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type QueryItem = 'course_id' | 'group_id';
 type State = {
-  start_date: Date;
-  end_date: Date;
-  query_item: QueryItem | undefined;
-  query_value: string | undefined;
+  startDate: Date;
+  endDate: Date;
+  queryItem: QueryItem | undefined;
+  queryValue: string | undefined;
   loading: boolean;
   assignments: CalendarEvent[];
 };
+const initialState: State = {
+  startDate: new Date(),
+  endDate: new Date(),
+  queryItem: undefined,
+  queryValue: undefined,
+  loading: false,
+  assignments: [],
+};
 
-@Injectable()
-export class CalendarStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly supabase = inject(SupabaseService);
-  public readonly start$ = this.select((state) => state.start_date);
-  public readonly end$ = this.select((state) => state.end_date);
-  public readonly query_item$ = this.select((state) => state.query_item);
-  public readonly query_value$ = this.select((state) => state.query_value);
-  public readonly assignments = this.selectSignal((state) => state.assignments);
-
-  private readonly queryData$ = this.select(
-    {
-      start_date: this.start$,
-      end_date: this.end$,
-      query_item: this.query_item$,
-      query_value: this.query_value$,
-    },
-    { debounce: true },
-  );
-
-  private readonly fetchAssignments = this.effect(
+export const CalendarStore = signalStore(
+  withState(initialState),
+  withComputed(({ startDate, endDate, queryItem, queryValue }) => ({
+    queryData: computed(() => ({ startDate, endDate, queryItem, queryValue })),
+  })),
+  withMethods(
     (
-      query$: Observable<{
-        start_date: Date;
-        end_date: Date;
-        query_item: QueryItem | undefined;
-        query_value: string | undefined;
-      }>,
-    ) => {
-      return query$.pipe(
-        tap(() => this.patchState({ loading: true })),
-        filter(({ query_item, query_value }) => !!query_item && !!query_value),
-        switchMap(({ query_item, query_value, start_date, end_date }) => {
-          return from(
-            this.supabase.client
-              .from(Table.AssignmentsView)
-              .select(
-                'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id',
-              )
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              .eq(query_item!, query_value)
-              .gte('start_at', format(start_date, 'yyyy-MM-dd HH:mm:ss'))
-              .lte('start_at', format(end_date, 'yyyy-MM-dd HH:mm:ss')),
-          ).pipe(
-            map(({ data, error }) => {
-              if (error) throw new Error(error.message);
+      { queryData, startDate, endDate, queryItem, queryValue, ...state },
+      supabase = inject(SupabaseService),
+    ) => ({
+      fetchAssignments: rxMethod<typeof queryData>(
+        pipe(
+          tap(() => patchState(state, { loading: true })),
+          filter(() => !!queryItem() && !!queryValue()),
+          switchMap(() =>
+            from(
+              supabase.client
+                .from(Table.AssignmentsView)
+                .select(
+                  'id, title, description, user_email, user_name, user_avatar, course_id, subject_name, plan_id, plan_name, group_id, group_name, start_at, type, type_id',
+                )
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                .eq(queryItem()!, queryValue())
+                .gte('start_at', format(startDate(), 'yyyy-MM-dd HH:mm:ss'))
+                .lte('start_at', format(endDate(), 'yyyy-MM-dd HH:mm:ss')),
+            ).pipe(
+              map(({ data, error }) => {
+                if (error) throw new Error(error.message);
 
-              return data.map((assignment) => ({
-                id: assignment.id,
-                title: `${assignment.subject_name} (${assignment.group_name}): ${assignment.title}`,
-                start: new Date(assignment.start_at),
-                meta: { assignment },
-              }));
-            }),
-            tapResponse(
-              (assignments) => this.patchState({ assignments }),
-              (error) => {
-                console.error(error);
-              },
-              () => this.patchState({ loading: false }),
+                return data.map((assignment) => ({
+                  id: assignment.id,
+                  title: `${assignment.subject_name} (${assignment.group_name}): ${assignment.title}`,
+                  start: new Date(assignment.start_at),
+                  meta: { assignment },
+                }));
+              }),
+              tapResponse({
+                next: (assignments) => patchState(state, { assignments }),
+                error: console.error,
+                finalize: () => patchState(state, { loading: false }),
+              }),
             ),
-          );
-        }),
-      );
+          ),
+        ),
+      ),
+    }),
+  ),
+  withHooks({
+    onInit({ fetchAssignments, queryData }) {
+      fetchAssignments(queryData);
     },
-  );
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({
-      start_date: startOfMonth(new Date()),
-      end_date: endOfMonth(new Date()),
-      query_item: undefined,
-      query_value: undefined,
-      loading: false,
-      assignments: [],
-    });
-    this.fetchAssignments(this.queryData$);
-  };
-}
+  }),
+);

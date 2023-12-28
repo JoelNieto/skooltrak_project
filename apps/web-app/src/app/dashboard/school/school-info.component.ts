@@ -2,7 +2,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 import { ButtonDirective } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../components/avatar/avatar.component';
@@ -93,8 +93,8 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
   `,
 })
 export class SchoolInfoComponent {
-  private auth = inject(authState.AuthStateFacade);
-  public school = this.auth.CURRENT_SCHOOL;
+  private auth = inject(webStore.AuthStore);
+  public school = this.auth.currentSchool;
   private dialog = inject(Dialog);
 
   public editInfo(): void {

@@ -4,8 +4,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChatBubbleLeft } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/store';
 import { User } from '@skooltrak/models';
+import { webStore } from '@skooltrak/store';
 import { ButtonDirective, DateAgoPipe } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
@@ -36,7 +36,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
         </button>
       </div>
       <ul class="pb-4 flex flex-col overflow-y-scroll">
-        @for (chat of state.CHATS(); track chat.id) {
+        @for (chat of store.sortedChats(); track chat.id) {
           <li
             class="border-b last:border-b-0  border-gray-200 dark:border-gray-700"
           >
@@ -73,7 +73,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
     </div>
     <div class="flex-1 flex flex-col">
       <div class="w-full px-8 py-3 border-b border-gray-200 flex gap-2">
-        @for (member of state.SELECTED()?.members; track member.user_id) {
+        @for (member of store.currentChat()?.members; track member.user_id) {
           <sk-avatar
             [avatarUrl]="member.user.avatar_url ?? 'default_avatar.jpg'"
             class="h-8"
@@ -95,7 +95,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InboxComponent {
-  public state = inject(messagingState.MessagingStateFacade);
+  public store = inject(webStore.MessagesStore);
   private dialog = inject(Dialog);
 
   public newChat(): void {
@@ -105,7 +105,7 @@ export class InboxComponent {
         maxWidth: '90%',
       })
       .closed.subscribe({
-        next: (val) => !!val && this.state.newChat(val.map((x) => x.id!)),
+        next: (val) => !!val && this.store.newChat(val.map((x) => x.id!)),
       });
   }
 }

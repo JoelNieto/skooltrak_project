@@ -1,111 +1,78 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { inject } from '@angular/core';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { Country, School, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
-import { EMPTY, from, map, Observable, switchMap, tap } from 'rxjs';
 
 type State = {
-  LOADING: boolean;
-  COUNTRIES: Country[];
-  SCHOOL: Partial<School> | undefined;
-  CREST_URL: string | undefined;
+  loading: boolean;
+  countries: Country[];
+  school: Partial<School> | undefined;
+  crestUrl: string | undefined;
 };
 
-@Injectable()
-export class SchoolFormStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private readonly supabase = inject(SupabaseService);
-  private readonly alert = inject(AlertService);
-  private readonly auth = inject(authState.AuthStateFacade);
+const initialState: State = {
+  loading: false,
+  countries: [],
+  school: undefined,
+  crestUrl: undefined,
+};
 
-  public readonly SCHOOL = this.selectSignal((state) => state.SCHOOL);
-  public readonly COUNTRIES = this.selectSignal((state) => state.COUNTRIES);
+export const SchoolFormStore = signalStore(
+  withState(initialState),
+  withMethods(
+    (
+      { school, ...state },
+      supabase = inject(SupabaseService),
+      alert = inject(AlertService),
+    ) => ({
+      async fetchCountries(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Countries)
+          .select('*')
+          .order('name', { ascending: true });
+        if (error) {
+          console.error(error);
 
-  private readonly fetchCountries = this.effect(() => {
-    return from(
-      this.supabase.client
-        .from(Table.Countries)
-        .select('*')
-        .order('name', { ascending: true }),
-    )
-      .pipe(
-        map(({ error, data }) => {
-          if (error) throw new Error(error.message);
+          return;
+        }
 
-          return data as Country[];
-        }),
-      )
-      .pipe(
-        tapResponse(
-          (COUNTRIES) => this.patchState({ COUNTRIES }),
-          (error) => console.error(error),
-        ),
-      );
-  });
+        patchState(state, { countries: data });
+      },
+      async uploadCrest(request: File): Promise<void> {
+        patchState(state, { loading: true });
+        const { data, error } = await supabase.uploadPicture(request, 'crest');
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
 
-  public readonly uploadCrest = this.effect((request$: Observable<File>) => {
-    return request$.pipe(
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap((request) =>
-        from(this.supabase.uploadPicture(request, 'crest')).pipe(
-          map(({ error, data }) => {
-            if (error) throw new Error(error.message);
+          return;
+        }
 
-            return data.path;
-          }),
-        ),
-      ),
-      tapResponse(
-        (crest_url) =>
-          this.patchState({ SCHOOL: { ...this.SCHOOL(), crest_url } }),
-        (error) => console.error(error),
-        () => this.patchState({ LOADING: false }),
-      ),
-    );
-  });
+        patchState(state, {
+          school: { ...school(), crest_url: data.path },
+          loading: false,
+        });
+      },
+      async saveSchool(request: Partial<School>): Promise<void> {
+        patchState(state, { loading: true });
+        const { error } = await supabase.client
+          .from(Table.Schools)
+          .upsert([request]);
+        if (error) {
+          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          console.error(error);
+          patchState(state, { loading: false });
 
-  public readonly saveSchool = this.effect(
-    (request$: Observable<Partial<School>>) => {
-      return request$.pipe(
-        tap(() => this.patchState({ LOADING: true })),
-        switchMap((request) =>
-          from(this.supabase.client.from(Table.Schools).upsert([request])).pipe(
-            map(({ error }) => {
-              if (error) throw new Error(error.message);
-
-              return EMPTY;
-            }),
-          ),
-        ),
-        tapResponse(
-          () =>
-            this.alert.showAlert({
-              icon: 'success',
-              message: 'ALERT.SUCCESS',
-            }),
-          (error: Error) =>
-            this.alert.showAlert({ icon: 'error', message: error.message }),
-          () => {
-            this.patchState({ LOADING: false });
-            this.auth.getProfiles();
-          },
-        ),
-      );
+          return;
+        }
+        patchState(state, { loading: false });
+      },
+    }),
+  ),
+  withHooks({
+    onInit({ fetchCountries }) {
+      fetchCountries();
     },
-  );
-
-  public ngrxOnStoreInit = (): void =>
-    this.setState({
-      SCHOOL: undefined,
-      LOADING: false,
-      COUNTRIES: [],
-      CREST_URL: undefined,
-    });
-}
+  }),
+);

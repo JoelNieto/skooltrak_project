@@ -1,14 +1,8 @@
 import { computed, inject } from '@angular/core';
 import { LoadingController, NavController } from '@ionic/angular';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { Chat, Table } from '@skooltrak/models';
-import { mobileAuthState, SupabaseService } from '@skooltrak/store';
+import { mobileStore, SupabaseService } from '@skooltrak/store';
 import { orderBy } from 'lodash';
 
 type State = {
@@ -18,7 +12,7 @@ type State = {
   loading: boolean;
 };
 
-export const messagesStore = signalStore(
+export const MessagesStore = signalStore(
   { providedIn: 'root' },
   withState({
     chats: [],
@@ -28,11 +22,8 @@ export const messagesStore = signalStore(
     loading: false,
   } as State),
   withComputed(
-    (
-      { chats, selectedId },
-      auth = inject(mobileAuthState.MobileAuthFacade),
-    ) => ({
-      userId: computed(() => auth.USER_ID()),
+    ({ chats, selectedId }, auth = inject(mobileStore.AuthStore)) => ({
+      userId: computed(() => auth.userId()),
       sortedChats: computed(() => orderBy(chats(), ['last_message'], ['desc'])),
       selectedChat: computed(() => chats().find((x) => x.id === selectedId())),
     }),
@@ -54,6 +45,7 @@ export const messagesStore = signalStore(
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
+
           return;
         }
 
@@ -69,6 +61,7 @@ export const messagesStore = signalStore(
         if (chat) {
           loading.dismiss();
           this.navigateToChat(chat.id);
+
           return;
         }
 
@@ -79,6 +72,7 @@ export const messagesStore = signalStore(
         if (error) {
           console.error();
           loading.dismiss();
+
           return;
         }
         this.fetchChats();

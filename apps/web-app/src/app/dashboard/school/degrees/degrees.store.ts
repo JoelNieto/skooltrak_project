@@ -39,7 +39,7 @@ export const SchoolDegreesStore = signalStore(
         pipe(
           filter(() => !!schoolId()),
           tap(() => patchState(store, { loading: true })),
-          switchMap((school_id) => {
+          switchMap(() => {
             return from(
               supabase.client
                 .from(Table.Degrees)
@@ -48,7 +48,7 @@ export const SchoolDegreesStore = signalStore(
                 })
                 .order('name', { ascending: true })
                 .range(start(), end())
-                .eq('school_id', school_id),
+                .eq('school_id', schoolId()),
             ).pipe(
               map(({ data, error, count }) => {
                 if (error) throw new Error(error.message);

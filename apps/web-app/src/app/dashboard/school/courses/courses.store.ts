@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, Degree, StudyPlan, Table, User } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { orderBy, pick } from 'lodash';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
@@ -44,12 +37,12 @@ export const SchoolCoursesStore = signalStore(
   withComputed(
     (
       { start, pageSize, degreeId, planId },
-      auth = inject(authState.AuthStateFacade),
+      auth = inject(webStore.AuthStore),
     ) => ({
       end: computed(() => start() + (pageSize() - 1)),
-      school_id: computed(() => auth.CURRENT_SCHOOL_ID()),
+      school_id: computed(() => auth.schoolId()),
       query: computed(() => ({
-        school_id: auth.CURRENT_SCHOOL_ID(),
+        school_id: auth.schoolId(),
         start: start(),
         pageSize: pageSize(),
         degreeId: degreeId(),

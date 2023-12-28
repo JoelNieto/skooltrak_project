@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Message, Table } from '@skooltrak/models';
-import { authState, messagingState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -23,17 +16,18 @@ export const ChatStore = signalStore(
   withComputed(
     (
       _,
-      auth = inject(authState.AuthStateFacade),
-      messaging = inject(messagingState.MessagingStateFacade),
+      auth = inject(webStore.AuthStore),
+      messaging = inject(webStore.MessagesStore),
     ) => ({
-      userId: computed(() => auth.USER_ID()),
-      chatId: computed(() => messaging.SELECTED_ID()),
+      userId: computed(() => auth.userId()),
+      chatId: computed(() => messaging.selectedId()),
     }),
   ),
   withMethods(
     (
       { chatId, userId, messages, ...state },
       supabase = inject(SupabaseService),
+      messaging = inject(webStore.MessagesStore),
     ) => ({
       fetchMessages: rxMethod<string | undefined>(
         pipe(
@@ -49,6 +43,7 @@ export const ChatStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return data.map((x) => ({
                   ...x,
                   mine: x.user_id === userId(),
@@ -71,11 +66,13 @@ export const ChatStore = signalStore(
           .single();
         if (error) {
           console.error(error);
+
           return;
         }
         patchState(state, {
           messages: [{ mine: true, ...(data as Message) }, ...messages()],
         });
+        messaging.fetchChats();
       },
     }),
   ),

@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -38,12 +31,12 @@ export const SchoolPeopleStore = signalStore(
   withComputed(
     (
       { selectedRole, selectedStatus, start, pageSize },
-      auth = inject(authState.AuthStateFacade),
+      auth = inject(webStore.AuthStore),
     ) => ({
       fetchData: computed(() => ({
         role: selectedRole(),
         status: selectedStatus(),
-        school_id: auth.CURRENT_SCHOOL_ID(),
+        schoolId: auth.schoolId(),
         end: start() + (pageSize() - 1),
       })),
     }),
@@ -55,7 +48,7 @@ export const SchoolPeopleStore = signalStore(
     ) => ({
       fetchPeople: rxMethod<typeof fetchData>(
         pipe(
-          filter(() => !!fetchData().school_id),
+          filter(() => !!fetchData().schoolId),
           tap(() => patchState(state, { loading: true })),
           switchMap(() => {
             let query = supabase.client
@@ -67,7 +60,7 @@ export const SchoolPeopleStore = signalStore(
                 },
               )
               .range(start(), fetchData().end)
-              .eq('school_id', fetchData().school_id);
+              .eq('school_id', fetchData().schoolId);
             query =
               selectedRole() !== 'all'
                 ? query.eq('role', selectedRole())

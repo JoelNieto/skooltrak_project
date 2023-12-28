@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Degree, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -32,22 +25,21 @@ const initialState: State = {
 
 export const SchoolDegreesStore = signalStore(
   withState(initialState),
-  withComputed(({ start, pageSize }) => ({
+  withComputed(({ start, pageSize }, auth = inject(webStore.AuthStore)) => ({
     end: computed(() => start() + (pageSize() - 1)),
+    schoolId: computed(() => auth.schoolId()),
   })),
   withMethods(
     (
-      { start, end, ...store },
-      auth = inject(authState.AuthStateFacade),
+      { start, end, schoolId, ...store },
       supabase = inject(SupabaseService),
       alert = inject(AlertService),
     ) => ({
       fetchDegrees: rxMethod<number>(
         pipe(
-          switchMap(() => auth.CURRENT_SCHOOL_ID$),
-          filter((school_id) => !!school_id),
+          filter(() => !!schoolId()),
           tap(() => patchState(store, { loading: true })),
-          switchMap((school_id) => {
+          switchMap(() => {
             return from(
               supabase.client
                 .from(Table.Degrees)
@@ -56,10 +48,11 @@ export const SchoolDegreesStore = signalStore(
                 })
                 .order('name', { ascending: true })
                 .range(start(), end())
-                .eq('school_id', school_id),
+                .eq('school_id', schoolId()),
             ).pipe(
               map(({ data, error, count }) => {
                 if (error) throw new Error(error.message);
+
                 return { degrees: data as unknown as Degree[], count };
               }),
               tap(({ count }) => !!count && patchState(store, { count })),
@@ -75,9 +68,10 @@ export const SchoolDegreesStore = signalStore(
       async saveDegree(request: Partial<Degree>): Promise<void> {
         const { error } = await supabase.client
           .from(Table.Degrees)
-          .upsert([{ ...request, school_id: auth.CURRENT_SCHOOL_ID() }]);
+          .upsert([{ ...request, school_id: schoolId() }]);
         if (error) {
           console.error(error);
+
           return;
         }
         alert.showAlert({
@@ -94,6 +88,7 @@ export const SchoolDegreesStore = signalStore(
         if (error) {
           alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
           console.error(error);
+
           return;
         }
 

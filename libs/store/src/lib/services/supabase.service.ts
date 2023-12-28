@@ -5,11 +5,11 @@ import {
   AuthChangeEvent,
   AuthResponse,
   AuthTokenResponse,
-  createClient,
   Session,
   SupabaseClient,
+  createClient,
 } from '@supabase/supabase-js';
-import { from, map, Observable } from 'rxjs';
+import { Observable, from, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
@@ -36,6 +36,7 @@ export class SupabaseService {
 
   public signUp(request: SignUpCredentials): Promise<AuthResponse> {
     const { email, password, first_name, father_name } = request;
+
     return this.client.auth.signUp({
       email,
       password,
@@ -76,6 +77,7 @@ export class SupabaseService {
   public uploadPicture(file: File, bucket: string) {
     const fileExt = file.name.split('.').pop();
     const filePath = `${Math.random() * 10}.${fileExt}`;
+
     return this.client.storage.from(bucket).upload(filePath, file);
   }
 }

@@ -1,19 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Message, Table } from '@skooltrak/models';
-import { mobileAuthState, SupabaseService } from '@skooltrak/store';
+import { mobileStore, SupabaseService } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
-
-import { messagesStore } from './messages.store';
 
 type State = {
   messages: Message[];
@@ -26,10 +17,10 @@ export const ChatStore = signalStore(
   withComputed(
     (
       { chatId },
-      auth = inject(mobileAuthState.MobileAuthFacade),
-      message = inject(messagesStore),
+      auth = inject(mobileStore.AuthStore),
+      message = inject(mobileStore.MessagesStore),
     ) => ({
-      userId: computed(() => auth.USER_ID()),
+      userId: computed(() => auth.userId()),
       currentChat: computed(() =>
         message.chats().find((x) => x.id === chatId()),
       ),

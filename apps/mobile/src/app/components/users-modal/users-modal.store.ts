@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Table, User } from '@skooltrak/models';
-import { mobileAuthState, SupabaseService } from '@skooltrak/store';
+import { mobileStore, SupabaseService } from '@skooltrak/store';
 import { debounceTime, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -21,8 +14,8 @@ type State = {
 
 export const UsersModalStore = signalStore(
   withState({ users: [], queryText: '', loading: true } as State),
-  withComputed((_, auth = inject(mobileAuthState.MobileAuthFacade)) => ({
-    userId: computed(() => auth.USER_ID()),
+  withComputed((_, auth = inject(mobileStore.AuthStore)) => ({
+    userId: computed(() => auth.userId()),
   })),
   withMethods(
     ({ userId, queryText, ...state }, supabase = inject(SupabaseService)) => ({

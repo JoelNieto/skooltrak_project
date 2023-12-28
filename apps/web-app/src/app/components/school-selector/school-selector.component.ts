@@ -4,14 +4,10 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  ConfirmationService,
-  defaultConfirmationOptions,
-} from '@skooltrak/ui';
+import { webStore } from '@skooltrak/store';
+import { ButtonDirective, CardComponent, ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -102,18 +98,18 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
   </sk-card>`,
 })
 export class SchoolSelectorComponent {
-  private auth = inject(authState.AuthStateFacade);
+  private auth = inject(webStore.AuthStore);
   public dialogRef = inject(DialogRef);
   private dialog = inject(Dialog);
   private confirm = inject(ConfirmationService);
   private destroyRef = inject(DestroyRef);
   private translate = inject(TranslateService);
 
-  public schools = this.auth.SCHOOLS;
-  public selected = this.auth.CURRENT_SCHOOL_ID;
+  public schools = this.auth.schools;
+  public selected = this.auth.schoolId;
 
   public setSchool(id: string): void {
-    this.auth.setSchoolId(id);
+    patchState(this.auth, { schoolId: id });
     this.dialogRef.close();
   }
 

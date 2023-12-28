@@ -1,13 +1,7 @@
 import { inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StudyPlan, Subject, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 
 type State = {
   subjects: Subject[];
@@ -24,14 +18,14 @@ export const CoursesFormStore = signalStore(
   withMethods(
     (
       state,
-      auth = inject(authState.AuthStateFacade),
+      auth = inject(webStore.AuthStore),
       supabase = inject(SupabaseService),
     ) => ({
       async fetchPlans(): Promise<void> {
         const { data, error } = await supabase.client
           .from(Table.StudyPlans)
           .select('id,name')
-          .eq('school_id', auth.CURRENT_SCHOOL_ID())
+          .eq('school_id', auth.schoolId())
           .order('year', { ascending: true });
         if (error) {
           console.error(error);
@@ -44,7 +38,7 @@ export const CoursesFormStore = signalStore(
           .select(
             'id,name, short_name, code, description, created_at, user:users(full_name)',
           )
-          .eq('school_id', auth.CURRENT_SCHOOL_ID())
+          .eq('school_id', auth.schoolId())
           .order('name', { ascending: true });
         if (error) {
           console.error(error);

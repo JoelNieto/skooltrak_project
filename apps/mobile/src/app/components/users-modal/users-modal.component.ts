@@ -157,6 +157,7 @@ import { UsersModalStore } from './users-modal.store';
               <ion-avatar slot="start">
                 <skooltrak-picture
                   bucket="avatars"
+                  rounded
                   [pictureURL]="user.avatar_url ?? 'default_avatar.jpg'"
                 />
               </ion-avatar>

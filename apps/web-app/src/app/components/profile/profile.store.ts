@@ -1,70 +1,57 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  ComponentStore,
-  OnStoreInit,
-  tapResponse,
-} from '@ngrx/component-store';
+import { inject } from '@angular/core';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { Gender, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
-import { from, map, Observable, switchMap, tap } from 'rxjs';
+import { SupabaseService, webStore } from '@skooltrak/store';
 
 type State = {
-  GENDERS: Gender[];
-  LOADING: boolean;
+  genders: Gender[];
+  loading: boolean;
 };
 
-@Injectable()
-export class ProfileFormStore
-  extends ComponentStore<State>
-  implements OnStoreInit
-{
-  private supabase = inject(SupabaseService);
-  private auth = inject(authState.AuthStateFacade);
+export const ProfileFormStore = signalStore(
+  withState({ genders: [], loading: false } as State),
+  withMethods(
+    (
+      { ...state },
+      supabase = inject(SupabaseService),
+      auth = inject(webStore.AuthStore),
+    ) => ({
+      async fetchGenders(): Promise<void> {
+        patchState(state, { loading: true });
+        const { data, error } = await supabase.client
+          .from(Table.Genders)
+          .select('id, name');
 
-  public readonly GENDERS = this.selectSignal((state) => state.GENDERS);
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
 
-  private readonly fetchGenders = this.effect<void>((trigger$) => {
-    return trigger$.pipe(
-      switchMap(() =>
-        from(this.supabase.client.from(Table.Genders).select('id, name')).pipe(
-          map(({ data, error }) => {
-            if (error) throw new Error(error.message);
+          return;
+        }
 
-            return data;
-          }),
-          tapResponse(
-            (GENDERS) => this.patchState({ GENDERS: GENDERS as Gender[] }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
-          ),
-        ),
-      ),
-    );
-  });
+        patchState(state, { loading: false, genders: data });
+      },
+      async uploadAvatar(request: File): Promise<void> {
+        patchState(state, { loading: true });
+        const { data, error } = await supabase.uploadPicture(
+          request,
+          'avatars',
+        );
 
-  public readonly uploadAvatar = this.effect((request$: Observable<File>) => {
-    return request$.pipe(
-      tap(() => this.patchState({ LOADING: true })),
-      switchMap((request) =>
-        from(this.supabase.uploadPicture(request, 'avatars')).pipe(
-          map(({ data, error }) => {
-            if (error) throw new Error(error.message);
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
 
-            return data.path;
-          }),
-          tapResponse(
-            (avatar_url) =>
-              this.auth.updateProfile({ ...this.auth.USER(), avatar_url }),
-            (error) => console.error(error),
-            () => this.patchState({ LOADING: false }),
-          ),
-        ),
-      ),
-    );
-  });
-
-  public ngrxOnStoreInit = (): void => {
-    this.setState({ GENDERS: [], LOADING: true });
-    this.fetchGenders();
-  };
-}
+          return;
+        }
+        auth.updateProfile({ ...auth.user(), avatar_url: data.path });
+        patchState(state, { loading: false });
+      },
+    }),
+  ),
+  withHooks({
+    onInit({ fetchGenders }) {
+      fetchGenders();
+    },
+  }),
+);

@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { authState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 
 @Component({
   selector: 'sk-root',
@@ -8,9 +8,6 @@ import { authState } from '@skooltrak/store';
   imports: [RouterOutlet],
   template: ` <router-outlet /> `,
 })
-export class AppComponent implements OnInit {
-  private auth = inject(authState.AuthStateFacade);
-  public ngOnInit(): void {
-    this.auth.init();
-  }
+export class AppComponent {
+  private auth = inject(webStore.AuthStore);
 }

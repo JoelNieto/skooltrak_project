@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { StudyPlan, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -38,16 +31,15 @@ export const SchoolPlansStore = signalStore(
   withMethods(
     (
       { start, end, ...store },
-      auth = inject(authState.AuthStateFacade),
+      auth = inject(webStore.AuthStore),
       supabase = inject(SupabaseService),
       alert = inject(AlertService),
     ) => ({
       fetchPlans: rxMethod<number>(
         pipe(
-          switchMap(() => auth.CURRENT_SCHOOL_ID$),
-          filter((school_id) => !!school_id),
+          filter(() => !!auth.schoolId()),
           tap(() => patchState(store, { loading: true })),
-          switchMap((school_id) => {
+          switchMap(() => {
             return from(
               supabase.client
                 .from(Table.StudyPlans)
@@ -59,10 +51,11 @@ export const SchoolPlansStore = signalStore(
                 )
                 .order('year', { ascending: true })
                 .range(start(), end())
-                .eq('school_id', school_id),
+                .eq('school_id', auth.schoolId()),
             ).pipe(
               map(({ data, error, count }) => {
                 if (error) throw new Error(error.message);
+
                 return { plans: data as unknown as StudyPlan[], count };
               }),
               tap(({ count }) => !!count && patchState(store, { count })),
@@ -78,9 +71,10 @@ export const SchoolPlansStore = signalStore(
       async savePlan(request: Partial<StudyPlan>): Promise<void> {
         const { error } = await supabase.client
           .from(Table.StudyPlans)
-          .upsert([{ ...request, school_id: auth.CURRENT_SCHOOL_ID() }]);
+          .upsert([{ ...request, school_id: auth.schoolId() }]);
         if (error) {
           console.error(error);
+
           return;
         }
         alert.showAlert({
@@ -97,6 +91,7 @@ export const SchoolPlansStore = signalStore(
         if (error) {
           alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
           console.error(error);
+
           return;
         }
 

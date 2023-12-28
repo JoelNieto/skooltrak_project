@@ -1,13 +1,7 @@
 import { computed, inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { ClassGroup, SchoolProfile, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 
 type State = {
@@ -26,12 +20,12 @@ const initialState: State = {
 
 export const SchoolPeopleFormStore = signalStore(
   withState(initialState),
-  withComputed((_, auth = inject(authState.AuthStateFacade)) => ({
-    school_id: computed(() => auth.CURRENT_SCHOOL_ID()),
+  withComputed((_, auth = inject(webStore.AuthStore)) => ({
+    schoolId: computed(() => auth.schoolId()),
   })),
   withMethods(
     (
-      { school_id, userId, ...state },
+      { schoolId, userId, ...state },
       supabase = inject(SupabaseService),
       alert = inject(AlertService),
     ) => ({
@@ -41,9 +35,10 @@ export const SchoolPeopleFormStore = signalStore(
           .select(
             'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
           )
-          .eq('school_id', school_id());
+          .eq('school_id', schoolId());
         if (error) {
           console.error(error);
+
           return;
         }
         patchState(state, { groups: data as Partial<ClassGroup>[] });
@@ -54,7 +49,7 @@ export const SchoolPeopleFormStore = signalStore(
           .from(Table.SchoolUsers)
           .update({ status, role })
           .eq('user_id', user_id)
-          .eq('school_id', school_id());
+          .eq('school_id', schoolId());
 
         if (error) {
           console.error(error);
@@ -62,6 +57,7 @@ export const SchoolPeopleFormStore = signalStore(
             icon: 'error',
             message: 'ALERT_FAILURE',
           });
+
           return;
         }
 
@@ -74,11 +70,12 @@ export const SchoolPeopleFormStore = signalStore(
         const { data, error } = await supabase.client
           .from(Table.GroupStudents)
           .select('group_id, user_id, created_at')
-          .eq('school_id', school_id())
+          .eq('school_id', schoolId())
           .eq('user_id', userId());
 
         if (error) {
           console.error(error);
+
           return;
         }
 
@@ -88,9 +85,10 @@ export const SchoolPeopleFormStore = signalStore(
       async saveGroup(group_id: string): Promise<void> {
         const { error } = await supabase.client
           .from(Table.GroupStudents)
-          .upsert([{ group_id, school_id: school_id(), user_id: userId() }]);
+          .upsert([{ group_id, school_id: schoolId(), user_id: userId() }]);
         if (error) {
           console.error(error);
+
           return;
         }
 

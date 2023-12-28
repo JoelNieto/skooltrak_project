@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Subject, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -34,16 +27,13 @@ const initialState: State = {
 export const SchoolSubjectsStore = signalStore(
   withState(initialState),
   withComputed(
-    (
-      { start, pageSize, queryText },
-      auth = inject(authState.AuthStateFacade),
-    ) => ({
+    ({ start, pageSize, queryText }, auth = inject(webStore.AuthStore)) => ({
       end: computed(() => start() + (pageSize() - 1)),
       query: computed(() => ({
         start: start(),
         text: queryText(),
         pageSize: pageSize(),
-        school_id: auth.CURRENT_SCHOOL_ID(),
+        schoolId: auth.schoolId(),
       })),
     }),
   ),
@@ -55,7 +45,7 @@ export const SchoolSubjectsStore = signalStore(
     ) => ({
       fetchSubjects: rxMethod<typeof query>(
         pipe(
-          filter(() => !!query().school_id),
+          filter(() => !!query().schoolId),
           tap(() => patchState(store, { loading: true })),
           switchMap(() =>
             from(
@@ -69,7 +59,7 @@ export const SchoolSubjectsStore = signalStore(
                 )
                 .order('name', { ascending: true })
                 .range(query().start, end())
-                .eq('school_id', query().school_id)
+                .eq('school_id', query().schoolId)
                 .or(
                   `name.ilike.%${query().text}%, short_name.ilike.%${
                     query().text
@@ -100,7 +90,7 @@ export const SchoolSubjectsStore = signalStore(
         patchState(store, { loading: true });
         const { error } = await supabase.client
           .from(Table.Subjects)
-          .upsert([{ ...request, school_id: query().school_id }]);
+          .upsert([{ ...request, school_id: query().schoolId }]);
         if (error) {
           alert.showAlert({
             icon: 'error',

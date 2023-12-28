@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Period, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -26,25 +19,25 @@ const initialState: State = {
 
 export const SchoolPeriodsStore = signalStore(
   withState(initialState),
-  withComputed((_, auth = inject(authState.AuthStateFacade)) => ({
-    school_id: computed(() => auth.CURRENT_SCHOOL_ID()),
+  withComputed((_, auth = inject(webStore.AuthStore)) => ({
+    schoolId: computed(() => auth.schoolId()),
   })),
   withMethods(
     (
-      { school_id, ...state },
+      { schoolId, ...state },
       supabase = inject(SupabaseService),
       alert = inject(AlertService),
     ) => ({
       fetchPeriods: rxMethod<string | undefined>(
         pipe(
-          filter(() => !!school_id),
+          filter(() => !!schoolId()),
           tap(() => patchState(state, { loading: true })),
           switchMap(() =>
             from(
               supabase.client
                 .from(Table.Periods)
                 .select('*')
-                .eq('school_id', school_id())
+                .eq('school_id', schoolId())
                 .order('start_at', { ascending: true }),
             ).pipe(
               map(({ error, data }) => {
@@ -65,7 +58,7 @@ export const SchoolPeriodsStore = signalStore(
         patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.Periods)
-          .upsert([{ ...request, school_id: school_id() }]);
+          .upsert([{ ...request, school_id: schoolId() }]);
 
         if (error) {
           alert.showAlert({
@@ -82,13 +75,13 @@ export const SchoolPeriodsStore = signalStore(
           message: 'ALERT.SUCCESS',
         });
         patchState(state, { loading: false });
-        this.fetchPeriods(school_id);
+        this.fetchPeriods(schoolId);
       },
     }),
   ),
   withHooks({
-    onInit({ fetchPeriods, school_id }) {
-      fetchPeriods(school_id);
+    onInit({ fetchPeriods, schoolId }) {
+      fetchPeriods(schoolId);
     },
   }),
 );

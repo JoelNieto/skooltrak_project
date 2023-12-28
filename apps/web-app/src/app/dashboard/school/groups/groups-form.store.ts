@@ -1,15 +1,9 @@
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Degree, StudyPlan, Table } from '@skooltrak/models';
-import { authState, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { orderBy } from 'lodash';
 import { filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -33,14 +27,14 @@ export const GroupsFormStore = signalStore(
     (
       { degreeId, ...state },
       supabase = inject(SupabaseService),
-      auth = inject(authState.AuthStateFacade),
+      auth = inject(webStore.AuthStore),
     ) => ({
       async fetchDegrees(): Promise<void> {
         patchState(state, { loading: true });
         const { data, error } = await supabase.client
           .from(Table.Degrees)
           .select('id, name, level:levels(id, name, sort)')
-          .eq('school_id', auth.CURRENT_SCHOOL_ID());
+          .eq('school_id', auth.schoolId());
         if (error) {
           console.error(error);
         }
@@ -61,6 +55,7 @@ export const GroupsFormStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return data;
               }),
               tapResponse({

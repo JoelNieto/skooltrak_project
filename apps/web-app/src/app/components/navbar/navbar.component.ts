@@ -14,7 +14,7 @@ import {
   heroHome,
 } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 
@@ -98,7 +98,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
               >
                 <span class="sr-only">Open user menu</span>
                 <sk-avatar
-                  [avatarUrl]="USER()?.avatar_url ?? 'default_avatar.jpg'"
+                  [avatarUrl]="user()?.avatar_url ?? 'default_avatar.jpg'"
                   [rounded]="true"
                   class="w-8"
                 />
@@ -107,7 +107,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
                   <p
                     class="font-sans text-sm font-semibold text-gray-50 dark:text-white"
                   >
-                    {{ USER()?.first_name }} {{ USER()?.father_name }}
+                    {{ user()?.first_name }} {{ user()?.father_name }}
                   </p>
                 </div>
               </button>
@@ -123,13 +123,13 @@ import { AvatarComponent } from '../avatar/avatar.component';
                     class="text-sm font-bold text-sky-700 dark:text-white"
                     role="none"
                   >
-                    {{ USER()?.first_name }} {{ USER()?.father_name }}
+                    {{ user()?.first_name }} {{ user()?.father_name }}
                   </p>
                   <p
                     class="truncate font-sans text-sm text-gray-500 dark:text-gray-300"
                     role="none"
                   >
-                    {{ USER()?.email }}
+                    {{ user()?.email }}
                   </p>
                 </div>
                 <ul class="py-1" role="none">
@@ -162,9 +162,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
     `,
 })
 export class NavbarComponent {
-  private auth = inject(authState.AuthStateFacade);
+  private auth = inject(webStore.AuthStore);
 
-  public USER = this.auth.USER;
-  public SCHOOL = this.auth.CURRENT_SCHOOL;
-  public IS_ADMIN = this.auth.IS_ADMIN;
+  public user = this.auth.user;
+  public school = this.auth.currentSchool;
+  public isAdmin = this.auth.isAdmin;
 }

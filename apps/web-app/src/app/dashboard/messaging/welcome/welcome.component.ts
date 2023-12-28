@@ -4,8 +4,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChatBubbleLeft } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/store';
 import { User } from '@skooltrak/models';
+import { webStore } from '@skooltrak/store';
 import { ButtonDirective } from '@skooltrak/ui';
 
 import { NewChatComponent } from '../new-chat/new-chat.component';
@@ -46,7 +46,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
 })
 export class WelcomeComponent {
   private dialog = inject(Dialog);
-  private store = inject(messagingState.MessagingStateFacade);
+  private store = inject(webStore.MessagesStore);
 
   public newChat(): void {
     this.dialog

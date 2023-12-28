@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -31,17 +24,15 @@ const initialState: State = {
 
 export const CoursesListStore = signalStore(
   withState(initialState),
-  withComputed(
-    ({ start, pageSize }, auth = inject(authState.AuthStateFacade)) => ({
-      schoolId: computed(() => auth.CURRENT_SCHOOL_ID()),
-      end: computed(() => start() + (pageSize() - 1)),
-      query: computed(() => ({
-        start: start(),
-        pageSize: pageSize(),
-        schoolId: auth.CURRENT_SCHOOL_ID(),
-      })),
-    }),
-  ),
+  withComputed(({ start, pageSize }, auth = inject(webStore.AuthStore)) => ({
+    schoolId: computed(() => auth.schoolId()),
+    end: computed(() => start() + (pageSize() - 1)),
+    query: computed(() => ({
+      start: start(),
+      pageSize: pageSize(),
+      schoolId: auth.schoolId(),
+    })),
+  })),
   withMethods(
     (
       { schoolId, query, start, end, ...state },

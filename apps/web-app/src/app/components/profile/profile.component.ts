@@ -1,22 +1,10 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { provideComponentStore } from '@ngrx/component-store';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { authState } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { webStore } from '@skooltrak/store';
+import { ButtonDirective, CardComponent, ImageCropperComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
@@ -34,7 +22,7 @@ import { ProfileFormStore } from './profile.store';
     LabelDirective,
     InputDirective,
   ],
-  providers: [provideComponentStore(ProfileFormStore)],
+  providers: [ProfileFormStore],
   template: `
     <div class="px-12 pt-4">
       <sk-card>
@@ -45,9 +33,9 @@ import { ProfileFormStore } from './profile.store';
           {{ 'PROFILE.TITLE' | translate }}
         </h2>
         <div class="mb-4  flex justify-center">
-          @if (this.USER()) {
+          @if (this.user()) {
             <sk-avatar
-              [avatarUrl]="this.USER()?.avatar_url ?? 'default_avatar.jpg'"
+              [avatarUrl]="this.user()?.avatar_url ?? 'default_avatar.jpg'"
               bucket="avatars"
               [rounded]="true"
               class="h-24 cursor-pointer"
@@ -98,7 +86,7 @@ import { ProfileFormStore } from './profile.store';
                 'PROFILE.GENDER' | translate
               }}</label>
               <select skInput formControlName="gender">
-                @for (gender of store.GENDERS(); track gender.id) {
+                @for (gender of store.genders(); track gender.id) {
                   <option [value]="gender.id">
                     {{ gender.name | translate }}
                   </option>
@@ -128,12 +116,12 @@ import { ProfileFormStore } from './profile.store';
   `,
 })
 export class ProfileComponent implements OnInit {
-  private auth = inject(authState.AuthStateFacade);
+  private auth = inject(webStore.AuthStore);
   public store = inject(ProfileFormStore);
-  public USER = this.auth.USER;
+  public user = this.auth.user;
   private dialog = inject(Dialog);
   private destroyRef = inject(DestroyRef);
-  public currentAvatar = this.USER()?.avatar_url;
+  public currentAvatar = this.user()?.avatar_url;
 
   public form = new FormGroup({
     email: new FormControl<string>('', {
@@ -169,9 +157,7 @@ export class ProfileComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form.get('email')?.disable();
-    this.auth.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (user) => !!user && this.form.patchValue(user),
-    });
+    !!this.user() && this.form.patchValue(this.user()!);
   }
 
   public changeAvatar(): void {
@@ -196,7 +182,7 @@ export class ProfileComponent implements OnInit {
   public saveChanges(): void {
     this.auth.updateProfile({
       ...this.form.getRawValue(),
-      id: this.USER()?.id,
+      id: this.user()?.id,
     });
   }
 }

@@ -13,6 +13,10 @@
     "NEW": "Nueva asignación",
     "WORK": "Trabajo"
   },
+  "AUTH": {
+    "LOGGED_OUT": "Sesión finalizada",
+    "WRONG_CREDENTIALS": "Credenciales incorrectas"
+  },
   "AUTH_FAILURE": {
     "OTHER": "Algo salio mal. Intente de nuevo.",
     "SIGN_IN": "Correo electrónico o contraseña inválidos."
@@ -39,6 +43,7 @@
   },
   "CODE": "Codigo",
   "CONFIRMATION": {
+    "CANCEL": "Cancelar",
     "DELETE": {
       "CANCEL": "Cancelar",
       "CONFIRM": "Si, borrar",
@@ -181,6 +186,7 @@
     "GENDER": "Genero",
     "MIDDLE_NAME": "Segundo nombre",
     "MOTHER_NAME": "Apellido materno",
+    "NAME": "Perfil",
     "TITLE": "Datos personales"
   },
   "Polls": "Encuestas",
@@ -198,6 +204,9 @@
     "SHORT_NAME": "Nombre corto",
     "TITLE": "Escuela",
     "TYPE": "Tipo de Escuela"
+  },
+  "SCHOOLS": {
+    "TITLE": "Escuelas"
   },
   "SCHOOL_CONNECTOR": {
     "CONNECT": "Conectar con escuela",
@@ -229,7 +238,10 @@
     "SIGN_UP": "Registrar mi cuenta",
     "TITLE": "Inicie sesion"
   },
-  "SIGN_OUT": "Cerrar sesión",
+  "SIGN_OUT": {
+    "TEXT": "Esta seguro?",
+    "TITLE": "Cerrar sesión"
+  },
   "SIGN_UP": {
     "CREATE_ACCOUNT": "Crear cuenta",
     "EMAIL": "Correo electrónico",

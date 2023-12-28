@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { messagingState } from '@skooltrak/store';
+import { webStore } from '@skooltrak/store';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
@@ -15,7 +15,7 @@ import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
       {{ 'MESSAGING.TITLE' | translate }}
     </h2>
     <div class="mt-2">
-      @if (store.LOADING()) {
+      @if (store.loading()) {
         <sk-chats-loading />
       } @else {
         <router-outlet />
@@ -32,6 +32,9 @@ import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
     ChatsLoadingComponent,
   ],
 })
-export class MessagingComponent {
-  public readonly store = inject(messagingState.MessagingStateFacade);
+export class MessagingComponent implements OnInit {
+  public readonly store = inject(webStore.MessagesStore);
+  public ngOnInit(): void {
+    this.store.fetchChats();
+  }
 }

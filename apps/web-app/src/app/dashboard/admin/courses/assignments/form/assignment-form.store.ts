@@ -1,23 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import {
-  Assignment,
-  AssignmentType,
-  ClassGroup,
-  Course,
-  GroupAssignment,
-  Table,
-} from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { Assignment, AssignmentType, ClassGroup, Course, GroupAssignment, Table } from '@skooltrak/models';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { orderBy, pick } from 'lodash';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -43,12 +29,10 @@ const initialState: State = {
 
 export const AssignmentFormStore = signalStore(
   withState(initialState),
-  withComputed(
-    ({ courses, courseId }, auth = inject(authState.AuthStateFacade)) => ({
-      schoolId: computed(() => auth.CURRENT_SCHOOL_ID()),
-      course: computed(() => courses().find((x) => x.id === courseId())),
-    }),
-  ),
+  withComputed(({ courses, courseId }, auth = inject(webStore.AuthStore)) => ({
+    schoolId: computed(() => auth.schoolId()),
+    course: computed(() => courses().find((x) => x.id === courseId())),
+  })),
   withMethods(
     (
       { schoolId, dates, course, ...state },

@@ -1,16 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { GradeObject, Period, Table } from '@skooltrak/models';
-import { SupabaseService, authState } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 import { CourseDetailsStore } from '../courses/details/course-details.store';
@@ -34,7 +27,7 @@ export const CourseGradesStore = signalStore(
   withComputed(
     (
       { periodId },
-      auth = inject(authState.AuthStateFacade),
+      auth = inject(webStore.AuthStore),
       course = inject(CourseDetailsStore),
     ) => ({
       courseId: computed(() => course.courseId()),
@@ -44,7 +37,7 @@ export const CourseGradesStore = signalStore(
         courseId: course.courseId(),
       })),
       students: computed(() => course.students()),
-      schoolId: computed(() => auth.CURRENT_SCHOOL_ID()),
+      schoolId: computed(() => auth.schoolId()),
     }),
   ),
   withMethods(

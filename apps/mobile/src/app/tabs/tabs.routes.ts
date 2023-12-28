@@ -28,6 +28,11 @@ export const routes: Routes = [
           import('../pages/schedule/schedule.page').then((m) => m.SchedulePage),
       },
       {
+        path: 'profile',
+        loadComponent: () =>
+          import('../pages/profile/profile.page').then((x) => x.ProfilePage),
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

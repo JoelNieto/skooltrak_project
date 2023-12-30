@@ -49,7 +49,7 @@
           }
         ]
       },
-      "extends": ["plugin:@ngrx/recommended", "plugin:@ngrx/component-store"]
+      "extends": ["plugin:@ngrx/recommended"]
     },
     {
       "files": ["*.ts", "*.tsx"],
@@ -58,7 +58,7 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@ngrx/recommended", "plugin:@ngrx/component-store"],
+      "extends": ["plugin:@ngrx/recommended"],
       "rules": {}
     },
     {

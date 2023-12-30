@@ -3,8 +3,6 @@ import { importProvidersFrom } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-import { provideStore } from '@ngrx/store';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
@@ -18,8 +16,6 @@ const translateLoader = (http: HttpClient): TranslateLoader =>
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(),
-    provideStore(),
-    provideStoreDevtools({ connectInZone: true }),
     importProvidersFrom(
       BrowserModule,
       TranslateModule.forRoot({

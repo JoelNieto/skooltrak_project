@@ -86,7 +86,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
         <ion-title> {{ 'MESSAGING.TITLE' | translate }} </ion-title>
         <ion-buttons slot="primary">
           <ion-button slot="icon-only" (click)="searchUser()">
-            <ion-icon name="add-circle" size="large" />
+            <ion-icon name="add-circle" size="large" color="primary" />
           </ion-button>
         </ion-buttons>
       </ion-toolbar>

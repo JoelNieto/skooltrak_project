@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   IonAvatar,
   IonButton,
@@ -55,6 +56,7 @@ import { HomeStore } from './home.store';
     PictureComponent,
     TranslateModule,
     FormsModule,
+    RouterLink,
   ],
   template: `
     <ion-header [translucent]="true">
@@ -74,7 +76,12 @@ import { HomeStore } from './home.store';
         </ion-toolbar>
       </ion-header>
       @for (course of store.courses(); track course.id) {
-        <ion-card>
+        <ion-card
+          button="true"
+          [routerLink]="'course'"
+          [queryParams]="{ course_id: course.id }"
+          routerDirection="forward"
+        >
           <skooltrak-picture
             bucket="courses"
             [pictureURL]="course.picture_url!"

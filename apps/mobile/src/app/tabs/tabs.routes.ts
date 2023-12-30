@@ -7,8 +7,18 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadComponent: () =>
-          import('../pages/home.page').then((m) => m.HomePage),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../pages/home.page').then((m) => m.HomePage),
+          },
+          {
+            path: 'course',
+            loadComponent: () =>
+              import('../pages/course/course.page').then((x) => x.CoursePage),
+          },
+        ],
       },
       {
         path: 'messages',
@@ -16,11 +26,6 @@ export const routes: Routes = [
           import('../pages/messages/messages.routes').then(
             (m) => m.messagesRoutes,
           ),
-      },
-      {
-        path: 'chat',
-        loadComponent: () =>
-          import('../pages/messages/chat.page').then((x) => x.ChatPage),
       },
       {
         path: 'schedule',
@@ -32,6 +37,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../pages/profile/profile.page').then((x) => x.ProfilePage),
       },
+
       {
         path: '',
         redirectTo: 'home',

@@ -185,6 +185,7 @@ export class CalendarComponent implements OnInit {
       queryItem: this.queryItem,
       queryValue: this.queryValue,
     });
+    this.fetchEvents();
   }
 
   public fetchEvents(): void {

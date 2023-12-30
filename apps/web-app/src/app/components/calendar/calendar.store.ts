@@ -29,7 +29,12 @@ const initialState: State = {
 export const CalendarStore = signalStore(
   withState(initialState),
   withComputed(({ startDate, endDate, queryItem, queryValue }) => ({
-    queryData: computed(() => ({ startDate, endDate, queryItem, queryValue })),
+    queryData: computed(() => ({
+      startDate: startDate(),
+      endDate: endDate(),
+      queryItem: queryItem(),
+      queryValue: queryValue(),
+    })),
   })),
   withMethods(
     (

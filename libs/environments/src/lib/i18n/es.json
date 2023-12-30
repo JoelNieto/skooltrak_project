@@ -11,6 +11,7 @@
     "GRADES": "Calificaciones",
     "INSTRUCTIONS": "Instrucciones",
     "NEW": "Nueva asignación",
+    "TITLE": "Tareas",
     "WORK": "Trabajo"
   },
   "AUTH": {
@@ -192,6 +193,7 @@
   "Polls": "Encuestas",
   "ROLE": "Rol",
   "SAVE_CHANGES": "Guardar cambios",
+  "SCHEDULE": "Agenda",
   "SCHOOL": {
     "ADDRESS": "Dirección",
     "COUNTRY": "Pais",
@@ -259,7 +261,6 @@
     "LABEL": "Asignatura",
     "TITLE": "Asignaturas"
   },
-  "Schedule": "Agenda",
   "School Connector": {
     "Message": "Ingrese el codigo de 10 digitos que le falicito el colegio y seleccione el rol con el cual desea ser invitado al mismo. Su solicitud sera aprobada muy pronto!"
   },

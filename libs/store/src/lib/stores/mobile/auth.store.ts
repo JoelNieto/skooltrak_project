@@ -1,7 +1,14 @@
 import { computed, inject } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { RoleEnum, SchoolUser, Table, User } from '@skooltrak/models';
@@ -196,6 +203,34 @@ export const AuthStore = signalStore(
           }),
         ),
       ),
+      async updateProfile(request: Partial<User>) {
+        patchState(state, { loading: true });
+        const { error } = await supabase.client
+          .from(Table.Users)
+          .update([request])
+          .eq('id', request.id);
+
+        if (error) {
+          console.error(error);
+          const toast = await toastCtrl.create({
+            color: 'danger',
+            message: translate.instant('ALERT.FAILURE'),
+            duration: 2000,
+          });
+          await toast.present;
+
+          return;
+        }
+
+        patchState(state, { user: { ...user()!, ...request }, loading: false });
+        const toast = await toastCtrl.create({
+          color: 'success',
+          message: translate.instant('ALERT.SUCCESS'),
+          duration: 1000,
+          position: 'top',
+        });
+        await toast.present();
+      },
     }),
   ),
   withHooks({

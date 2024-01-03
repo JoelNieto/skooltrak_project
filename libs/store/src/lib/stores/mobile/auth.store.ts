@@ -1,5 +1,9 @@
 import { computed, inject } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -11,7 +15,13 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { RoleEnum, SchoolUser, Table, User } from '@skooltrak/models';
+import {
+  RoleEnum,
+  SchoolUser,
+  SignUpCredentials,
+  Table,
+  User,
+} from '@skooltrak/models';
 import { Session } from '@supabase/supabase-js';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -76,6 +86,8 @@ export const AuthStore = signalStore(
       supabase = inject(SupabaseService),
       toastCtrl = inject(ToastController),
       translate = inject(TranslateService),
+      alertCtrl = inject(AlertController),
+      navCtrl = inject(NavController),
     ) => ({
       async getSession() {
         patchState(state, { loading: true });
@@ -118,6 +130,7 @@ export const AuthStore = signalStore(
           return;
         }
         patchState(state, { session, loading: false });
+        await navCtrl.navigateBack(['/']);
       },
       getUser: rxMethod<Session | null>(
         pipe(
@@ -183,7 +196,7 @@ export const AuthStore = signalStore(
         patchState(state, initialState);
         const toast = await toastCtrl.create({
           message: translate.instant('AUTH.LOGGED_OUT'),
-          position: 'middle',
+          position: 'top',
           duration: 2000,
         });
         await toast.present();
@@ -203,6 +216,25 @@ export const AuthStore = signalStore(
           }),
         ),
       ),
+      async signUp(request: SignUpCredentials) {
+        patchState(state, { loading: true });
+        const { error } = await supabase.signUp(request);
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+
+        const alert = await alertCtrl.create({
+          header: translate.instant('SIGN_UP.ACCOUNT_CREATED'),
+          message: translate.instant('SIGN_UP.CONFIRM_EMAIL'),
+          buttons: ['OK'],
+        });
+
+        await alert.present();
+        navCtrl.navigateBack(['/auth']);
+      },
       async updateProfile(request: Partial<User>) {
         patchState(state, { loading: true });
         const { error } = await supabase.client
@@ -216,8 +248,9 @@ export const AuthStore = signalStore(
             color: 'danger',
             message: translate.instant('ALERT.FAILURE'),
             duration: 2000,
+            position: 'top',
           });
-          await toast.present;
+          await toast.present();
 
           return;
         }

@@ -1,9 +1,7 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, NavController } from '@ionic/angular/standalone';
 import { mobileStore } from '@skooltrak/store';
-
-import { SignInPage } from './auth/sign-in.page';
 
 @Component({
   selector: 'skooltrak-root',
@@ -17,15 +15,11 @@ import { SignInPage } from './auth/sign-in.page';
 export class AppComponent implements OnInit {
   private readonly auth = inject(mobileStore.AuthStore);
   private readonly messages = inject(mobileStore.MessagesStore);
-  private readonly modalCtrl = inject(ModalController);
-  private readonly signInOpen = signal(false);
+  private readonly navCtrl = inject(NavController);
 
   constructor() {
     effect(() => {
-      !this.auth.loading() &&
-        !this.auth.user() &&
-        !this.signInOpen() &&
-        this.openModal();
+      !this.auth.loading() && !this.auth.session() && this.openModal();
     });
   }
 
@@ -35,12 +29,6 @@ export class AppComponent implements OnInit {
   }
 
   public async openModal(): Promise<void> {
-    const modal = await this.modalCtrl.create({
-      component: SignInPage,
-    });
-    modal.present();
-    this.signInOpen.set(true);
-    await modal.onWillDismiss();
-    this.signInOpen.set(false);
+    this.navCtrl.navigateRoot(['/auth']);
   }
 }

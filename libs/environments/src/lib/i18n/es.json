@@ -245,6 +245,9 @@
     "TITLE": "Cerrar sesión"
   },
   "SIGN_UP": {
+    "ACCOUNT_CREATED": "Cuenta creada!",
+    "CONFIRM_EMAIL": "Por favor revisar su email para confirmar el registro",
+    "CONFIRM_PASSWORD": "Confirmar contraseña",
     "CREATE_ACCOUNT": "Crear cuenta",
     "EMAIL": "Correo electrónico",
     "EXISTING_ACCOUNT": "Ya tiene una cuenta?",

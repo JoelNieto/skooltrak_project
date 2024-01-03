@@ -26,7 +26,13 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
-import { businessOutline, calendarOutline, createOutline, documentTextOutline, mailOutline } from 'ionicons/icons';
+import {
+  businessOutline,
+  calendarOutline,
+  createOutline,
+  documentTextOutline,
+  mailOutline,
+} from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
 import { ProfileEditPage } from './profile-edit.page';
@@ -114,7 +120,9 @@ import { ProfileEditPage } from './profile-edit.page';
         </ion-item>
         <ion-item>
           <ion-icon name="calendar-outline" slot="start"></ion-icon>
-          <ion-label>{{ auth.user()?.birth_date }}</ion-label>
+          <ion-label>{{
+            auth.user()?.birth_date | date: 'mediumDate'
+          }}</ion-label>
         </ion-item>
         <ion-item>
           <ion-icon name="document-text-outline" slot="start"></ion-icon>
@@ -137,7 +145,7 @@ import { ProfileEditPage } from './profile-edit.page';
         expand="block"
         color="danger"
         class="ion-margin"
-        >Sign out</ion-button
+        >{{ 'SIGN_OUT.TITLE' | translate }}</ion-button
       >
     </ion-content>
   `,

@@ -1,6 +1,12 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   IonButton,
   IonContent,
@@ -11,6 +17,7 @@ import {
   IonLabel,
   IonList,
   IonSpinner,
+  IonText,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -35,22 +42,26 @@ import { mobileStore } from '@skooltrak/store';
     IonToolbar,
     IonButton,
     IonSpinner,
+    IonText,
     TranslateModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    RouterLink,
   ],
   styles: `
 
   `,
   template: `<ion-header class="ion-no-border" [translucent]="true">
       <ion-toolbar>
-        <ion-title>{{ 'SIGN_IN.TITLE' | translate }}</ion-title>
+        <ion-title color="primary">{{ 'SIGN_IN.TITLE' | translate }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content [fullscreen]="true">
+    <ion-content fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">{{ 'SIGN_IN.TITLE' | translate }}</ion-title>
+          <ion-title size="large" color="primary">{{
+            'SIGN_IN.TITLE' | translate
+          }}</ion-title>
         </ion-toolbar>
       </ion-header>
       <form [formGroup]="form">
@@ -74,15 +85,13 @@ import { mobileStore } from '@skooltrak/store';
             ></ion-input>
           </ion-item>
         </ion-list>
-      </form>
-    </ion-content>
-    <ion-footer class="ion-no-border">
-      <ion-toolbar>
         <ion-button
+          class="ion-margin"
           fill="solid"
           expand="block"
           [disabled]="form.invalid"
           (click)="signIn()"
+          shape="round"
         >
           @if (auth.loading()) {
             <ion-spinner name="crescent" />
@@ -90,11 +99,13 @@ import { mobileStore } from '@skooltrak/store';
             <ion-label>{{ 'SIGN_IN.ENTER' | translate }}</ion-label>
           }
         </ion-button>
-      </ion-toolbar>
-    </ion-footer> `,
+      </form>
+      <ion-button fill="clear" routerLink="../sign-up">
+        {{ 'SIGN_IN.SIGN_UP' | translate }}
+      </ion-button>
+    </ion-content>`,
 })
 export class SignInPage {
-  private readonly modalCtrl = inject(ModalController);
   public readonly auth = inject(mobileStore.AuthStore);
   public form = new FormGroup({
     email: new FormControl<string>('', {
@@ -106,14 +117,6 @@ export class SignInPage {
       nonNullable: true,
     }),
   });
-
-  constructor() {
-    effect(() => {
-      if (this.auth.user()) {
-        this.modalCtrl.dismiss();
-      }
-    });
-  }
 
   public signIn(): void {
     const { email, password } = this.form.getRawValue();

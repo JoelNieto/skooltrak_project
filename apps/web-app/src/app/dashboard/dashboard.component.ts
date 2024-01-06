@@ -4,8 +4,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
   heroArrowRightOnRectangle,
-  heroBookmarkSquare,
   heroBookOpen,
+  heroBookmarkSquare,
   heroBuildingLibrary,
   heroCalendarDays,
   heroClipboardDocument,
@@ -92,7 +92,6 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
               >
             </li>
           }
-
           <li>
             <button class="link" (click)="auth.signOut()">
               <ng-icon name="heroArrowRightOnRectangle" size="24" />{{

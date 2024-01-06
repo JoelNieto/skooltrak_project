@@ -1,9 +1,22 @@
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { RoleEnum, SchoolUser, SignUpCredentials, Table, User } from '@skooltrak/models';
+import {
+  RoleEnum,
+  SchoolUser,
+  SignUpCredentials,
+  Table,
+  User,
+} from '@skooltrak/models';
 import { AlertService, ConfirmationService } from '@skooltrak/ui';
 import { Session } from '@supabase/supabase-js';
 import { filter, from, map, pipe, switchMap } from 'rxjs';
@@ -200,6 +213,27 @@ export const AuthStore = signalStore(
         }
 
         patchState(state, { user: { ...user()!, ...request }, loading: false });
+        alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
+      },
+      async resetPassword(email: string) {
+        const { error } = await supabase.resetPassword(email);
+        if (error) {
+          console.error(error);
+          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+
+          return;
+        }
+        alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
+      },
+      async changePassword(password: string) {
+        const { error } = await supabase.updatePassword(password);
+
+        if (error) {
+          console.error(error);
+          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+
+          return;
+        }
         alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
       },
       async signOut() {

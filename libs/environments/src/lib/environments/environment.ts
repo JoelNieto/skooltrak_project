@@ -1,5 +1,6 @@
 export const environment = {
   name: 'production',
+  url: 'https://edu.skooltrak.com/',
   supabase: {
     url: 'https://jkrmuxtnvewazvsaqwwh.supabase.co',
     jwt: 'OWG5uJY2rw3y76aO0NvGpxD6ZELJxfzJi/7538MKtaZbh7O3U9jxLxP5UmWymy8tQYJjGfS8d/YWPjXoCUk3gg==',

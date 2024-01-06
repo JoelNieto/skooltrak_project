@@ -29,6 +29,14 @@ export const dashboardRoutes: Routes = [
           ),
       },
       {
+        path: 'change-password',
+        title: 'CHANGE_PASSWORD.TITLE',
+        loadComponent: () =>
+          import(
+            '../auth/pages/change-password/change-password.component'
+          ).then((x) => x.ChangePasswordComponent),
+      },
+      {
         path: 'messaging',
         title: 'MESSAGING.TITLE',
         loadChildren: () =>

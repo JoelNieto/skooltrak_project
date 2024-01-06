@@ -264,6 +264,28 @@ export const AuthStore = signalStore(
         });
         await toast.present();
       },
+      async resetPassword(email: string) {
+        const { error } = await supabase.resetPassword(email);
+        if (error) {
+          console.error(error);
+          const toast = await toastCtrl.create({
+            color: 'danger',
+            message: translate.instant('ALERT.FAILURE'),
+            duration: 2000,
+            position: 'top',
+          });
+          await toast.present();
+
+          return;
+        }
+        const toast = await toastCtrl.create({
+          color: 'success',
+          message: translate.instant('RESET_PASSWORD.SUCCESS'),
+          position: 'top',
+          duration: 2000,
+        });
+        await toast.present();
+      },
     }),
   ),
   withHooks({

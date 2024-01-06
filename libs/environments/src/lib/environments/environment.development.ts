@@ -1,5 +1,6 @@
 export const environment = {
   name: 'development',
+  url: 'http://localhost:4200/',
   supabase: {
     url: 'https://qcbwaokkqkryrecfnxaz.supabase.co',
     jwt: 'F+gQ+x6wIQwyCKv7V99NfyfFHeRDhs8ZIHB6rG+h2PuGH85gvPJFNfXwwPYYNemQSPW5UpttnuWmPDn/hNxYqQ==',

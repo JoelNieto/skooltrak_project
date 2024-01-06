@@ -36,6 +36,13 @@
     "TODAY": "Hoy",
     "WEEK": "Semana"
   },
+  "CHANGE_PASSWORD": {
+    "CONFIRM_PASSWORD": "Confirmar contraseña",
+    "NEW_PASSWORD": "Nueva contraseña",
+    "SET_PASSWORD": "Actualizar nueva contraseña",
+    "SUBTITLE": "Introduce tu nueva contraseña y memorizala",
+    "TITLE": "Cambiar contraseña"
+  },
   "CHAT": {
     "CANCEL": "Cancelar",
     "NEW_CHAT": "Nuevo chat",
@@ -191,6 +198,12 @@
     "TITLE": "Datos personales"
   },
   "Polls": "Encuestas",
+  "RESET_PASSWORD": {
+    "SEND_REQUEST": "Enviar solicitud",
+    "SUBTITLE": "Ingresa tu correo electrónico y te enviaremos un enlace para que recuperes el acceso a tu cuenta.",
+    "SUCCESS": "Se ha enviado un link a su correo!",
+    "TITLE": "Reiniciar mi contraseña"
+  },
   "ROLE": "Rol",
   "SAVE_CHANGES": "Guardar cambios",
   "SCHEDULE": "Agenda",

@@ -62,11 +62,15 @@ export class SupabaseService {
     return this.client.auth.resetPasswordForEmail(email);
   }
 
+  public updatePassword(password: string) {
+    return this.client.auth.updateUser({ password });
+  }
+
   public signOut() {
     return this.client.auth.signOut();
   }
 
-  public downLoadImage(path: string, bucket: string) {
+  public downloadFile(path: string, bucket: string) {
     return this.client.storage.from(bucket).download(path);
   }
 

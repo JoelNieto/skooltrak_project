@@ -41,7 +41,7 @@ export class AvatarComponent {
 
   private async downloadImage(path: string): Promise<void> {
     try {
-      const { data } = await this.supabase.downLoadImage(path, this.bucket);
+      const { data } = await this.supabase.downloadFile(path, this.bucket);
 
       if (data instanceof Blob) {
         this._avatarUrl = this.dom.bypassSecurityTrustUrl(

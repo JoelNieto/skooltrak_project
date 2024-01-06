@@ -103,6 +103,9 @@ import { mobileStore } from '@skooltrak/store';
       <ion-button fill="clear" routerLink="../sign-up">
         {{ 'SIGN_IN.SIGN_UP' | translate }}
       </ion-button>
+      <ion-button fill="clear" color="danger" routerLink="../reset-password">
+        {{ 'SIGN_IN.FORGOT_PASSWORD' | translate }}
+      </ion-button>
     </ion-content>`,
 })
 export class SignInPage {

@@ -106,18 +106,15 @@ import { mobileStore } from '@skooltrak/store';
           type="submit"
           color="primary"
           expand="block"
+          [disabled]="form.invalid"
           shape="round"
           class="ion-margin"
           >{{ 'SIGN_UP.CREATE_ACCOUNT' | translate }}</ion-button
         >
       </form>
-      <ion-button
-        color="primary"
-        fill="clear"
-        routerLink="../sign-in"
-        routerAnimation="back"
-        >{{ 'SIGN_UP.SIGN_IN' | translate }}</ion-button
-      >
+      <ion-button color="primary" fill="clear" routerLink="../sign-in">{{
+        'SIGN_UP.SIGN_IN' | translate
+      }}</ion-button>
     </ion-content>`,
 })
 export class SignUpPage {

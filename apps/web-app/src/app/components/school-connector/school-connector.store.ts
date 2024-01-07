@@ -1,8 +1,10 @@
 import { inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { TranslateService } from '@ngx-translate/core';
 import { RoleEnum, School, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
-import { AlertService, ConfirmationService } from '@skooltrak/ui';
+import { ConfirmationService } from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 type State = {
@@ -17,7 +19,8 @@ export const SchoolConnectorStore = signalStore(
       { role, ...state },
       supabase = inject(SupabaseService),
       confirmation = inject(ConfirmationService),
-      alert = inject(AlertService),
+      translate = inject(TranslateService),
+      toast = inject(HotToastService),
     ) => ({
       async fetchSchoolByCode(code: string): Promise<void> {
         patchState(state, { loading: true });
@@ -53,19 +56,13 @@ export const SchoolConnectorStore = signalStore(
           .insert([{ role, school_id: request.id }]);
         if (error) {
           console.error(error);
-          alert.showAlert({
-            icon: 'error',
-            message: 'ALERT.FAILURE',
-          });
+          toast.error(translate.instant('ALERT.FAILURE'));
           patchState(state, { loading: false });
 
           return;
         }
+        toast.success(translate.instant('School connected successfully!'));
 
-        alert.showAlert({
-          icon: 'success',
-          message: 'School connected successfully!',
-        });
         patchState(state, { loading: false });
       },
     }),

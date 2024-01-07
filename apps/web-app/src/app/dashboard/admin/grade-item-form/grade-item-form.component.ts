@@ -11,9 +11,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
+import { TranslateService } from '@ngx-translate/core';
 import { Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
-import { AlertService, InputDirective } from '@skooltrak/ui';
+import { InputDirective } from '@skooltrak/ui';
 import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs';
 
 import { CourseGradesStore } from '../grades/course-grades.store';
@@ -30,8 +32,9 @@ export class GradeItemFormComponent implements OnInit {
   @Input({ required: true }) public gradeId!: string;
   @Input({ required: true }) public studentId!: string;
   private store = inject(CourseGradesStore);
-  private alert = inject(AlertService);
+  private toast = inject(HotToastService);
   private supabase = inject(SupabaseService);
+  private translate = inject(TranslateService);
   private injector = inject(Injector);
   private destroy = inject(DestroyRef);
   public scoreControl = new FormControl<undefined | number>(undefined, {
@@ -87,7 +90,7 @@ export class GradeItemFormComponent implements OnInit {
       .from(Table.GradeItems)
       .upsert([item]);
     if (error) {
-      this.alert.showAlert({ icon: 'error', message: 'ALERT_FAILURE' });
+      this.toast.error(this.translate.instant('ALERT_FAILURE'));
     }
   }
 }

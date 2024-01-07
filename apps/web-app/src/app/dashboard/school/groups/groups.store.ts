@@ -1,10 +1,18 @@
 import { computed, inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 import { ClassGroup, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -34,7 +42,8 @@ export const SchoolGroupsStore = signalStore(
       { start, end, schoolId, ...store },
 
       supabase = inject(SupabaseService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       fetchGroups: rxMethod<number>(
         pipe(
@@ -74,13 +83,11 @@ export const SchoolGroupsStore = signalStore(
           .upsert([{ ...request, school_id: schoolId() }]);
         if (error) {
           console.error(error);
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         this.fetchGroups(start());
       },
       async deleteGroup(id: string): Promise<void> {
@@ -89,16 +96,13 @@ export const SchoolGroupsStore = signalStore(
           .delete()
           .eq('id', id);
         if (error) {
-          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);
 
           return;
         }
 
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         this.fetchGroups(start);
       },
     }),

@@ -4,15 +4,19 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-PA';
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import {
-  provideRouter,
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
+import {
   TitleStrategy,
+  provideRouter,
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
   withRouterConfig,
   withViewTransitions,
 } from '@angular/router';
+import { provideHotToastConfig } from '@ngneat/hot-toast';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
@@ -59,5 +63,6 @@ export const appConfig: ApplicationConfig = {
       DialogModule,
     ),
     { provide: APP_CONFIG, useValue: environment },
+    provideHotToastConfig(),
   ],
 };

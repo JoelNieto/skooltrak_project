@@ -19,7 +19,7 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
       <h2
         class="font-title mb-2 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
-        {{ 'Welcome' | translate: { name: auth.user()?.first_name } }}
+        {{ 'WELCOME' | translate: { name: auth.user()?.first_name } }}
       </h2>
     </div>
     <router-outlet />

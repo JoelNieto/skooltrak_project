@@ -254,6 +254,7 @@
     "TITLE": "Inicie sesion"
   },
   "SIGN_OUT": {
+    "MESSAGE": "Sesión finalizada",
     "TEXT": "Esta seguro?",
     "TITLE": "Cerrar sesión"
   },
@@ -293,6 +294,6 @@
     "PLACEHOLDER": "Elegir usuarios",
     "SEARCH": "Buscar usuarios"
   },
-  "Welcome": "Bienvenido, {{ name }} 👋",
+  "WELCOME": "Bienvenido, {{ name }} 👋",
   "YES": "Si"
 }

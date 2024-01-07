@@ -1,10 +1,18 @@
 import { computed, inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 import { Course, Degree, StudyPlan, Table, User } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { AlertService } from '@skooltrak/ui';
 import { orderBy, pick } from 'lodash';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
@@ -54,7 +62,8 @@ export const SchoolCoursesStore = signalStore(
     (
       { school_id, query, planId, degreeId, end, start, ...state },
       supabase = inject(SupabaseService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       fetchDegrees: rxMethod<string | undefined>(
         pipe(
@@ -157,10 +166,7 @@ export const SchoolCoursesStore = signalStore(
           },
         ]);
         if (error) {
-          alert.showAlert({
-            icon: 'error',
-            message: 'ALERT.FAILURE',
-          });
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           patchState(state, { loading: false });
           console.error(error);
@@ -172,11 +178,7 @@ export const SchoolCoursesStore = signalStore(
         !!teachers?.length &&
           !!id &&
           (await this.saveCourseTeachers(id, teachers));
-
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
         this.fetchCourses(query);
       },

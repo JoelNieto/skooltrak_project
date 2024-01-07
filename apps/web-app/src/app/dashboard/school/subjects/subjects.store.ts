@@ -1,10 +1,18 @@
 import { computed, inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -41,7 +49,8 @@ export const SchoolSubjectsStore = signalStore(
     (
       { query, end, ...store },
       supabase = inject(SupabaseService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       fetchSubjects: rxMethod<typeof query>(
         pipe(
@@ -92,19 +101,13 @@ export const SchoolSubjectsStore = signalStore(
           .from(Table.Subjects)
           .upsert([{ ...request, school_id: query().schoolId }]);
         if (error) {
-          alert.showAlert({
-            icon: 'error',
-            message: 'ALERT.FAILURE',
-          });
+          toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(store, { loading: false });
 
           return;
         }
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         this.fetchSubjects(query);
       },
       async deleteSubject(id: string): Promise<void> {
@@ -114,19 +117,13 @@ export const SchoolSubjectsStore = signalStore(
           .delete()
           .eq('id', id);
         if (error) {
-          alert.showAlert({
-            icon: 'error',
-            message: 'ALERT.FAILURE',
-          });
+          toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(store, { loading: false });
 
           return;
         }
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         this.fetchSubjects(query);
       },
     }),

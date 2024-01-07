@@ -1,8 +1,15 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { HotToastService } from '@ngneat/hot-toast';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { TranslateService } from '@ngx-translate/core';
 import { ClassGroup, SchoolProfile, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { AlertService } from '@skooltrak/ui';
 
 type State = {
   loading: boolean;
@@ -27,7 +34,8 @@ export const SchoolPeopleFormStore = signalStore(
     (
       { schoolId, userId, ...state },
       supabase = inject(SupabaseService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       async fetchGroups(): Promise<void> {
         const { error, data } = await supabase.client
@@ -53,18 +61,12 @@ export const SchoolPeopleFormStore = signalStore(
 
         if (error) {
           console.error(error);
-          alert.showAlert({
-            icon: 'error',
-            message: 'ALERT_FAILURE',
-          });
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           return;
         }
 
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
       },
       async fetchStudentGroup(): Promise<void> {
         const { data, error } = await supabase.client

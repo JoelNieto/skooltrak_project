@@ -1,8 +1,9 @@
 import { inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { TranslateService } from '@ngx-translate/core';
 import { Grade, GradeBucket, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
-import { AlertService } from '@skooltrak/ui';
 
 type State = {
   grade: Partial<Grade> | undefined;
@@ -22,7 +23,8 @@ export const GradesFormStore = signalStore(
     (
       { ...state },
       supabase = inject(SupabaseService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       async fetchBuckets(courseId: string): Promise<void> {
         const { data, error } = await supabase.client
@@ -44,12 +46,12 @@ export const GradesFormStore = signalStore(
 
         if (error) {
           console.error();
-          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          toast.error(translate.instant('ALERT.FAILURE'));
           patchState(state, { loading: false });
 
           return;
         }
-        alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
       },
     }),

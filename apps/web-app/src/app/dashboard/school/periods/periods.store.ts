@@ -1,10 +1,18 @@
 import { computed, inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 import { Period, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { AlertService } from '@skooltrak/ui';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -26,7 +34,8 @@ export const SchoolPeriodsStore = signalStore(
     (
       { schoolId, ...state },
       supabase = inject(SupabaseService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       fetchPeriods: rxMethod<string | undefined>(
         pipe(
@@ -61,19 +70,13 @@ export const SchoolPeriodsStore = signalStore(
           .upsert([{ ...request, school_id: schoolId() }]);
 
         if (error) {
-          alert.showAlert({
-            icon: 'error',
-            message: 'ALERT.FAILURE',
-          });
+          toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        alert.showAlert({
-          icon: 'success',
-          message: 'ALERT.SUCCESS',
-        });
+        toast.success(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
         this.fetchPeriods(schoolId);
       },

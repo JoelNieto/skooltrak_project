@@ -1,5 +1,6 @@
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -10,6 +11,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 import {
   RoleEnum,
   SchoolUser,
@@ -17,7 +19,7 @@ import {
   Table,
   User,
 } from '@skooltrak/models';
-import { AlertService, ConfirmationService } from '@skooltrak/ui';
+import { ConfirmationService } from '@skooltrak/ui';
 import { Session } from '@supabase/supabase-js';
 import { filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -81,7 +83,8 @@ export const AuthStore = signalStore(
       { session, user, ...state },
       supabase = inject(SupabaseService),
       confirmation = inject(ConfirmationService),
-      alert = inject(AlertService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
       router = inject(Router),
     ) => ({
       async getSession() {
@@ -191,7 +194,7 @@ export const AuthStore = signalStore(
         } = await supabase.signInWithEmail(email, password);
         if (error) {
           console.error(error);
-          alert.showAlert({ icon: 'error', message: `AUTH_FAILURE.SIGN_IN` });
+          toast.error(translate.instant(`AUTH_FAILURE.SIGN_IN`));
 
           return;
         }
@@ -207,34 +210,34 @@ export const AuthStore = signalStore(
 
         if (error) {
           console.error(error);
-          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           return;
         }
 
         patchState(state, { user: { ...user()!, ...request }, loading: false });
-        alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
+        toast.success(translate.instant('ALERT.SUCCESS'));
       },
       async resetPassword(email: string) {
         const { error } = await supabase.resetPassword(email);
         if (error) {
           console.error(error);
-          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
+        toast.success(translate.instant('ALERT.SUCCESS'));
       },
       async changePassword(password: string) {
         const { error } = await supabase.updatePassword(password);
 
         if (error) {
           console.error(error);
-          alert.showAlert({ icon: 'error', message: 'ALERT.FAILURE' });
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        alert.showAlert({ icon: 'success', message: 'ALERT.SUCCESS' });
+        toast.success(translate.instant('ALERT.SUCCESS'));
       },
       async signOut() {
         await supabase.signOut();

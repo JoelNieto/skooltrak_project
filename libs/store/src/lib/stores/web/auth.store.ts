@@ -32,6 +32,7 @@ type State = {
   profiles: SchoolUser[];
   schoolId: string | undefined;
   error: unknown | undefined;
+  isSigning: boolean;
 };
 
 const initialState: State = {
@@ -41,6 +42,7 @@ const initialState: State = {
   profiles: [],
   schoolId: undefined,
   error: undefined,
+  isSigning: false,
 };
 
 export const AuthStore = signalStore(
@@ -80,7 +82,7 @@ export const AuthStore = signalStore(
   })),
   withMethods(
     (
-      { session, user, ...state },
+      { session, user, isSigning, ...state },
       supabase = inject(SupabaseService),
       confirmation = inject(ConfirmationService),
       toast = inject(HotToastService),
@@ -126,7 +128,15 @@ export const AuthStore = signalStore(
                 return data;
               }),
               tapResponse({
-                next: (user) => patchState(state, { user }),
+                next: (user) => {
+                  patchState(state, { user });
+                  if (isSigning()) {
+                    toast.success(
+                      translate.instant('WELCOME', { name: user.first_name }),
+                    );
+                    router.navigate(['/app']);
+                  }
+                },
                 error: (error) => {
                   console.error(error);
                   patchState(state, { error, loading: false });
@@ -199,7 +209,7 @@ export const AuthStore = signalStore(
           return;
         }
 
-        patchState(state, { session });
+        patchState(state, { session, isSigning: true });
       },
       async updateProfile(request: Partial<User>) {
         patchState(state, { loading: true });
@@ -243,6 +253,7 @@ export const AuthStore = signalStore(
         await supabase.signOut();
         patchState(state, initialState);
         router.navigate(['/']);
+        toast.info(translate.instant('SIGN_OUT.MESSAGE'));
       },
     }),
   ),

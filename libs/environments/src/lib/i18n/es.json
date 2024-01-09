@@ -51,6 +51,7 @@
   },
   "CODE": "Codigo",
   "CONFIRMATION": {
+    "ACCEPT": "Confirmar",
     "CANCEL": "Cancelar",
     "DELETE": {
       "CANCEL": "Cancelar",
@@ -87,6 +88,7 @@
     "TITLE": "Certificados"
   },
   "DESCRIPTION": "Descripción",
+  "DONE": "Listo",
   "Document ID": "Nro. Documento",
   "EDIT": "Editar",
   "Errors": {
@@ -131,6 +133,9 @@
     "REQUIRED": "Campo requerido"
   },
   "LEVEL": "Nivel",
+  "LOADING": {
+    "WAITING": "Por favor espere"
+  },
   "MEETING": {
     "CLOSE": "Cerrar",
     "TITLE": "Skooltrak Meet"
@@ -224,10 +229,17 @@
     "TITLE": "Escuelas"
   },
   "SCHOOL_CONNECTOR": {
+    "CODE_LABEL": "Ingrese codigo de escuela",
+    "CODE_PLACEHOLDER": "99999 99999",
     "CONNECT": "Conectar con escuela",
     "CREATE": "Crear nueva escuela",
     "CREATE_MESSAGE": "Esto es gratuito. Mas tarde puede actualizar a una escuela de pago",
     "CREATE_TITLE": "Desea crear una nueva escuela?",
+    "HELPER": "Ingrese el codigo de 10 digitos que le falicito el colegio",
+    "NOT_FOUND": "Codigo incorrecto",
+    "SCHOOL_CONNECTED": "Escuela asociada!",
+    "SCHOOL_FOUND": "Desea conectarse a esta escuela?",
+    "SELECT_ROLE": "Elija su tipo de perfil",
     "TITLE": "Elija una escuela"
   },
   "SCHOOL_TYPE": {

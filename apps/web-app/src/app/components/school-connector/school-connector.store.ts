@@ -53,7 +53,7 @@ export const SchoolConnectorStore = signalStore(
       async addSchoolConnection(request: Partial<School>): Promise<void> {
         const { error } = await supabase.client
           .from(Table.SchoolUsers)
-          .insert([{ role, school_id: request.id }]);
+          .insert([{ role: role(), school_id: request.id }]);
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));

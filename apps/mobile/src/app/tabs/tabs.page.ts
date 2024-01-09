@@ -16,7 +16,7 @@ import { calendarOutline, chatbubblesOutline, homeOutline, personOutline } from 
     `,
   ],
   template: `<ion-tabs>
-    <ion-tab-bar id="app-tab-bar" slot="bottom" translucent="true">
+    <ion-tab-bar id="app-tab-bar" slot="bottom">
       <ion-tab-button tab="home">
         <ion-icon aria-hidden="true" name="home-outline" />
       </ion-tab-button>

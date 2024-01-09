@@ -51,7 +51,7 @@ import { ProfileEditStore } from './profile-edit.store';
       <ion-toolbar>
         <ion-buttons slot="end">
           <ion-button (click)="modalCtrl.dismiss()">
-            {{ 'CHAT.CANCEL' | translate }}
+            {{ 'DONE' | translate }}
           </ion-button>
         </ion-buttons>
         <ion-title>{{ 'PROFILE.TITLE' | translate }}</ion-title>

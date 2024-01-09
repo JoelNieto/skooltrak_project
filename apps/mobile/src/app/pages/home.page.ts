@@ -21,6 +21,7 @@ import {
   IonRadioGroup,
   IonTitle,
   IonToolbar,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
@@ -28,6 +29,7 @@ import { mobileStore } from '@skooltrak/store';
 
 import { PictureComponent } from '../components/picture/picture.component';
 import { HomeStore } from './home.store';
+import { SchoolConnectorPage } from './school/school-connector.page';
 
 @Component({
   standalone: true,
@@ -119,6 +121,13 @@ import { HomeStore } from './home.store';
             }
           </ion-radio-group>
         </ion-list>
+        <ion-button
+          color="tertiary"
+          class="ion-margin"
+          expand="block"
+          (click)="connectToSchool()"
+          >{{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}</ion-button
+        >
       </ion-content>
     </ion-menu>
   `,
@@ -126,8 +135,17 @@ import { HomeStore } from './home.store';
 export class HomePage {
   public store = inject(HomeStore);
   public auth = inject(mobileStore.AuthStore);
+  private modalCtrl = inject(ModalController);
 
   public changeSchool(schoolId: string): void {
     patchState(this.auth, { schoolId });
+  }
+
+  public async connectToSchool(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: SchoolConnectorPage,
+    });
+
+    await modal.present();
   }
 }

@@ -1,27 +1,10 @@
 import { computed, inject } from '@angular/core';
-import {
-  AlertController,
-  NavController,
-  ToastController,
-} from '@ionic/angular';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  RoleEnum,
-  SchoolUser,
-  SignUpCredentials,
-  Table,
-  User,
-} from '@skooltrak/models';
+import { RoleEnum, SchoolUser, SignUpCredentials, Table, User } from '@skooltrak/models';
 import { Session } from '@supabase/supabase-js';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -34,6 +17,7 @@ type State = {
   profiles: SchoolUser[];
   schoolId: string | undefined;
   error: unknown | undefined;
+  isSigning: boolean;
 };
 
 const initialState: State = {
@@ -43,6 +27,7 @@ const initialState: State = {
   profiles: [],
   schoolId: undefined,
   error: undefined,
+  isSigning: false,
 };
 
 export const AuthStore = signalStore(
@@ -82,7 +67,7 @@ export const AuthStore = signalStore(
   })),
   withMethods(
     (
-      { user, session, error, ...state },
+      { user, session, error, isSigning, ...state },
       supabase = inject(SupabaseService),
       toastCtrl = inject(ToastController),
       translate = inject(TranslateService),
@@ -129,7 +114,7 @@ export const AuthStore = signalStore(
 
           return;
         }
-        patchState(state, { session, loading: false });
+        patchState(state, { session, loading: false, isSigning: true });
         await navCtrl.navigateBack(['/']);
       },
       getUser: rxMethod<Session | null>(
@@ -151,7 +136,21 @@ export const AuthStore = signalStore(
                 return data;
               }),
               tapResponse({
-                next: (user) => patchState(state, { user }),
+                next: async (user) => {
+                  patchState(state, { user });
+                  if (isSigning()) {
+                    const toast = await toastCtrl.create({
+                      color: 'success',
+                      duration: 2000,
+                      position: 'top',
+                      translucent: true,
+                      message: translate.instant('WELCOME', {
+                        name: user.first_name,
+                      }),
+                    });
+                    toast.present();
+                  }
+                },
                 error: (error) => {
                   patchState(state, { error });
                   console.error(error);
@@ -182,7 +181,7 @@ export const AuthStore = signalStore(
                 next: (profiles) =>
                   patchState(state, {
                     profiles,
-                    schoolId: profiles[0].school_id,
+                    schoolId: profiles[0]?.school_id,
                   }),
                 error: console.error,
                 finalize: () => patchState(state, { loading: false }),
@@ -198,6 +197,7 @@ export const AuthStore = signalStore(
           message: translate.instant('AUTH.LOGGED_OUT'),
           position: 'top',
           duration: 2000,
+          color: 'primary',
         });
         await toast.present();
       },
@@ -285,6 +285,9 @@ export const AuthStore = signalStore(
           duration: 2000,
         });
         await toast.present();
+      },
+      resetProfiles() {
+        this.getProfiles(user);
       },
     }),
   ),

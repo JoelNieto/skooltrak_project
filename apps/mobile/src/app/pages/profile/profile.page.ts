@@ -26,13 +26,7 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
-import {
-  businessOutline,
-  calendarOutline,
-  createOutline,
-  documentTextOutline,
-  mailOutline,
-} from 'ionicons/icons';
+import { businessOutline, calendarOutline, createOutline, documentTextOutline, mailOutline } from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
 import { ProfileEditPage } from './profile-edit.page';
@@ -78,17 +72,13 @@ import { ProfileEditPage } from './profile-edit.page';
   ],
   template: `
     <ion-header [translucent]="true">
-      <ion-toolbar color="light">
+      <ion-toolbar>
         <ion-title>
           {{ 'PROFILE.NAME' | translate }}
         </ion-title>
         <ion-buttons slot="primary">
-          <ion-button (click)="editProfile()">
-            <ion-icon
-              slot="icon-only"
-              color="primary"
-              name="create-outline"
-            ></ion-icon>
+          <ion-button color="primary" (click)="editProfile()">
+            {{ 'EDIT' | translate }}
           </ion-button>
         </ion-buttons>
       </ion-toolbar>

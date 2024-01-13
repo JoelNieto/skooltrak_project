@@ -28,13 +28,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 
 import { PictureComponent } from '../components/picture/picture.component';
-import { HomeStore } from './home.store';
+import { CoursesStore } from './courses/courses.store';
 import { SchoolConnectorPage } from './school/school-connector.page';
 
 @Component({
   standalone: true,
   selector: 'skooltrak-home',
-  providers: [HomeStore],
+  providers: [CoursesStore],
   imports: [
     IonHeader,
     IonToolbar,
@@ -122,7 +122,7 @@ import { SchoolConnectorPage } from './school/school-connector.page';
           </ion-radio-group>
         </ion-list>
         <ion-button
-          color="tertiary"
+          color="secondary"
           class="ion-margin"
           expand="block"
           (click)="connectToSchool()"
@@ -133,7 +133,7 @@ import { SchoolConnectorPage } from './school/school-connector.page';
   `,
 })
 export class HomePage {
-  public store = inject(HomeStore);
+  public store = inject(CoursesStore);
   public auth = inject(mobileStore.AuthStore);
   private modalCtrl = inject(ModalController);
 

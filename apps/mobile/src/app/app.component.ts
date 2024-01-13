@@ -1,6 +1,10 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { IonApp, IonRouterOutlet, NavController } from '@ionic/angular/standalone';
+import {
+  IonApp,
+  IonRouterOutlet,
+  NavController,
+} from '@ionic/angular/standalone';
 import { mobileStore } from '@skooltrak/store';
 
 @Component({
@@ -19,16 +23,15 @@ export class AppComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      !this.auth.loading() && !this.auth.session() && this.openModal();
+      !this.auth.loading() && !this.auth.session() && this.signOut();
     });
   }
 
   public ngOnInit(): void {
     this.messages.fetchChats();
-    !this.auth.loading() && !this.auth.user() && this.openModal();
   }
 
-  public async openModal(): Promise<void> {
+  public async signOut(): Promise<void> {
     this.navCtrl.navigateRoot(['/auth']);
   }
 }

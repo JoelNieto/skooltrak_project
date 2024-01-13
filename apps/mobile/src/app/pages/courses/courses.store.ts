@@ -1,21 +1,19 @@
-import { inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { Course, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 
 type State = {
   loading: boolean;
   courses: Course[];
+  selectedId: string | undefined;
 };
 
-export const HomeStore = signalStore(
-  withState({ loading: false, courses: [] } as State),
+export const CoursesStore = signalStore(
+  withState({ loading: false, courses: [], selectedId: undefined } as State),
+  withComputed(({ courses, selectedId }) => ({
+    selected: computed(() => courses().find((x) => x.id === selectedId())),
+  })),
   withMethods(({ ...state }, supabase = inject(SupabaseService)) => ({
     async fetchCourses(): Promise<void> {
       patchState(state, { loading: true });

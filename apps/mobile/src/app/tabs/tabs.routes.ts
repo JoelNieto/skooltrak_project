@@ -10,13 +10,10 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            loadComponent: () =>
-              import('../pages/home.page').then((m) => m.HomePage),
-          },
-          {
-            path: 'course',
-            loadComponent: () =>
-              import('../pages/course/course.page').then((x) => x.CoursePage),
+            loadChildren: () =>
+              import('../pages/courses/course.routes').then(
+                (m) => m.courseRoutes,
+              ),
           },
         ],
       },

@@ -26,7 +26,13 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
-import { businessOutline, calendarOutline, createOutline, documentTextOutline, mailOutline } from 'ionicons/icons';
+import {
+  businessOutline,
+  calendarOutline,
+  createOutline,
+  documentTextOutline,
+  mailOutline,
+} from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
 import { ProfileEditPage } from './profile-edit.page';
@@ -71,7 +77,7 @@ import { ProfileEditPage } from './profile-edit.page';
     `,
   ],
   template: `
-    <ion-header [translucent]="true">
+    <ion-header [translucent]="true" class="ion-no-border">
       <ion-toolbar>
         <ion-title>
           {{ 'PROFILE.NAME' | translate }}
@@ -93,7 +99,7 @@ import { ProfileEditPage } from './profile-edit.page';
               [pictureURL]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
             />
           </ion-avatar>
-          <ion-label>
+          <ion-label color="tertiary">
             <h1>
               {{ auth.user()?.first_name }} {{ auth.user()?.father_name }}
             </h1>
@@ -105,24 +111,24 @@ import { ProfileEditPage } from './profile-edit.page';
       </ion-list>
       <ion-list [inset]="true">
         <ion-item>
-          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-icon name="mail-outline" slot="start" color="medium" />
           <ion-label>{{ auth.user()?.email }}</ion-label>
         </ion-item>
         <ion-item>
-          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-icon name="calendar-outline" slot="start" color="medium" />
           <ion-label>{{
             auth.user()?.birth_date | date: 'mediumDate'
           }}</ion-label>
         </ion-item>
         <ion-item>
-          <ion-icon name="document-text-outline" slot="start"></ion-icon>
+          <ion-icon name="document-text-outline" slot="start" color="medium" />
           <ion-label>{{ auth.user()?.document_id }}</ion-label>
         </ion-item>
       </ion-list>
       <ion-list inset="true">
         @for (profile of auth.profiles(); track profile) {
           <ion-item>
-            <ion-icon name="business-outline" slot="start"></ion-icon>
+            <ion-icon name="business-outline" slot="start" color="medium" />
             <ion-label>{{ profile.school.short_name }}</ion-label>
             <ion-note>
               {{ 'PEOPLE.' + profile.role | translate }}
@@ -133,8 +139,9 @@ import { ProfileEditPage } from './profile-edit.page';
       <ion-button
         (click)="signOut()"
         expand="block"
-        color="danger"
+        color="secondary"
         class="ion-margin"
+        shape="round"
         >{{ 'SIGN_OUT.TITLE' | translate }}</ion-button
       >
     </ion-content>

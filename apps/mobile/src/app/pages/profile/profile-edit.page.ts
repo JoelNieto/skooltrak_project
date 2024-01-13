@@ -1,5 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   IonButton,
   IonButtons,
@@ -143,6 +148,7 @@ import { ProfileEditStore } from './profile-edit.store';
           expand="block"
           color="primary"
           class="ion-margin"
+          shape="round"
           >{{ 'SAVE_CHANGES' | translate }}</ion-button
         >
       </form>

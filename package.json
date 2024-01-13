@@ -1,14 +1,4 @@
 {
-  "name": "skooltrak",
-  "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {
-    "web": "nx serve web-app",
-    "mobile": "nx serve mobile",
-    "start": "nx run-many --parallel --target=serve --projects=web-app,mobile",
-    "mobile:build:dev": "./apps/mobile npx nx run mobile:build --configuration=development"
-  },
-  "private": true,
   "dependencies": {
     "@angular/animations": "17.0.8",
     "@angular/cdk": "17.0.4",
@@ -103,6 +93,15 @@
     "ts-jest": "29.1.0",
     "ts-node": "10.9.1",
     "typescript": "5.2.2"
-  }
+  },
+  "license": "MIT",
+  "name": "skooltrak",
+  "private": true,
+  "scripts": {
+    "mobile": "nx serve mobile",
+    "mobile:build:dev": "nx run mobile:build --configuration=development",
+    "start": "nx run-many --parallel --target=serve --projects=web-app,mobile",
+    "web": "nx serve web-app"
+  },
+  "version": "0.0.0"
 }
-

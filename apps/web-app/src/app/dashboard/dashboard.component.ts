@@ -118,9 +118,9 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       .link {
         @apply mt-1 flex items-center gap-3 border-b-4 border-white px-4 py-3 font-sans text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
         &.active {
-          @apply border-emerald-600 text-gray-800 dark:text-gray-500;
+          @apply border-sky-600 text-gray-800 dark:text-gray-500;
           ng-icon {
-            @apply text-emerald-600;
+            @apply text-sky-600;
           }
         }
       }

@@ -42,9 +42,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
       heroChatBubbleLeftRight,
     }),
   ],
-  template: `<nav
-    class="fixed top-0 z-50 w-full bg-emerald-600 dark:bg-gray-800"
-  >
+  template: `<nav class="fixed top-0 z-50 w-full bg-sky-500 dark:bg-gray-800">
     <div class="px-4 py-3 lg:px-12">
       <div class="flex items-center justify-between">
         <div class="flex flex-1 items-center justify-start">

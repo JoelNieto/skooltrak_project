@@ -7,6 +7,7 @@ export enum Table {
   StudyPlans = 'school_plans',
   Courses = 'courses',
   CourseTeachers = 'course_teachers',
+  CourseStudents = 'course_students',
   Genders = 'genders',
   Teachers = 'school_teachers',
   Groups = 'school_groups',

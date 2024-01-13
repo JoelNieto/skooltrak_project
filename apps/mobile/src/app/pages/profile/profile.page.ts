@@ -35,6 +35,7 @@ import {
 } from 'ionicons/icons';
 
 import { PictureComponent } from '../../components/picture/picture.component';
+import { SchoolConnectorPage } from '../school/school-connector.page';
 import { ProfileEditPage } from './profile-edit.page';
 
 @Component({
@@ -62,6 +63,7 @@ import { ProfileEditPage } from './profile-edit.page';
     IonButton,
     IonButtons,
     DatePipe,
+    SchoolConnectorPage,
   ],
   styles: [
     `
@@ -137,6 +139,15 @@ import { ProfileEditPage } from './profile-edit.page';
         }
       </ion-list>
       <ion-button
+        color="primary"
+        class="ion-margin"
+        expand="block"
+        shape="round"
+        fill="outline"
+        (click)="connectToSchool()"
+        >{{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}</ion-button
+      >
+      <ion-button
         (click)="signOut()"
         expand="block"
         color="secondary"
@@ -190,6 +201,14 @@ export class ProfilePage {
       component: ProfileEditPage,
       presentingElement: this.ionRouterOutlet.nativeEl,
     });
+    await modal.present();
+  }
+
+  public async connectToSchool(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: SchoolConnectorPage,
+    });
+
     await modal.present();
   }
 }

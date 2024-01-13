@@ -61,7 +61,9 @@
     }
   },
   "COURSES": {
+    "ASSIGNMENTS": "Tareas",
     "DETAILS": "Detalles del curso",
+    "GRADES": "Calificaciones",
     "OPEN_CLASS": "Iniciar clase",
     "PLAN": "Plan de estudios",
     "SELECT_DEGREE": "Seleccione nivel",

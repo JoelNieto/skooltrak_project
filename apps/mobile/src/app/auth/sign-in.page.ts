@@ -64,7 +64,7 @@ import { mobileStore } from '@skooltrak/store';
           }}</ion-title>
         </ion-toolbar>
       </ion-header>
-      <form [formGroup]="form">
+      <form [formGroup]="form" (ngSubmit)="signIn()">
         <ion-list lines="inset">
           <ion-item>
             <ion-input
@@ -87,10 +87,10 @@ import { mobileStore } from '@skooltrak/store';
         </ion-list>
         <ion-button
           class="ion-margin"
+          type="submit"
           fill="solid"
           expand="block"
           [disabled]="form.invalid"
-          (click)="signIn()"
           shape="round"
         >
           @if (auth.loading()) {

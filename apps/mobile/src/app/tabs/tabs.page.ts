@@ -1,8 +1,18 @@
 import { Component } from '@angular/core';
-import { IonIcon, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular/standalone';
+import {
+  IonIcon,
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
+} from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { calendarOutline, chatbubblesOutline, homeOutline, personOutline } from 'ionicons/icons';
+import {
+  calendarOutline,
+  chatbubblesOutline,
+  homeOutline,
+  personOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'skooltrak-tabs',

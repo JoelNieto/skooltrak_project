@@ -42,13 +42,13 @@ import { AvatarComponent } from '../avatar/avatar.component';
       heroChatBubbleLeftRight,
     }),
   ],
-  template: `<nav class="fixed top-0 z-50 w-full bg-sky-500 dark:bg-gray-800">
+  template: `<nav class="fixed top-0 z-50 w-full bg-blue-500 dark:bg-gray-800">
     <div class="px-4 py-3 lg:px-12">
       <div class="flex items-center justify-between">
         <div class="flex flex-1 items-center justify-start">
           <button
             type="button"
-            class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
+            class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
           >
             <span class="sr-only">Open sidebar</span>
             <svg
@@ -118,7 +118,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
               >
                 <div class="px-4 py-3" role="none">
                   <p
-                    class="text-sm font-bold text-sky-700 dark:text-white"
+                    class="text-sm font-bold text-blue-700 dark:text-white"
                     role="none"
                   >
                     {{ user()?.first_name }} {{ user()?.father_name }}
@@ -161,9 +161,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
         @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white;
       }
       .link {
-        @apply flex gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:border-0 md:hover:bg-transparent md:hover:text-sky-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500;
+        @apply flex gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:border-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500;
         &.active {
-          @apply flex gap-2 rounded-lg bg-sky-200 px-4 py-2 font-semibold text-sky-700;
+          @apply flex gap-2 rounded-lg bg-blue-200 px-4 py-2 font-semibold text-blue-700;
         }
       }
     `,

@@ -1,5 +1,8 @@
 {
-  "ACTIONS": "Acciones",
+  "ACTIONS": {
+    "ERROR": "Algo salio mal. Pruebe nuevamente",
+    "RELOAD": "Recargar"
+  },
   "ADMIN": "Administrador",
   "ALERT": {
     "FAILURE": "Algo salio mal!",

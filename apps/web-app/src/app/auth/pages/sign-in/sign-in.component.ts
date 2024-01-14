@@ -1,10 +1,20 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  InputDirective,
+  LabelDirective,
+} from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-in',
@@ -31,9 +41,8 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
           class="font-title mb-6 flex items-center text-2xl text-gray-900 dark:text-white"
         >
           <img
-            class="h-12"
-            width="240"
-            height="40"
+            width="300"
+            height="80"
             loading="lazy"
             ngSrc="assets/images/skooltrak.svg"
             alt="logo"

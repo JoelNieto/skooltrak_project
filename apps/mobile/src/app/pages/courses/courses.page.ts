@@ -11,5 +11,8 @@ import { CoursesStore } from './courses.store';
   template: `<ion-router-outlet />`,
 })
 export class CoursesPage {
-  public readonly store = inject(CoursesStore);
+  private readonly store = inject(CoursesStore);
+  public ionViewDidEnter(): void {
+    this.store.fetchCourses();
+  }
 }

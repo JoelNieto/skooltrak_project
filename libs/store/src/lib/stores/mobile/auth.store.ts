@@ -1,10 +1,27 @@
 import { computed, inject } from '@angular/core';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { RoleEnum, SchoolUser, SignUpCredentials, Table, User } from '@skooltrak/models';
+import {
+  RoleEnum,
+  SchoolUser,
+  SignUpCredentials,
+  Table,
+  User,
+} from '@skooltrak/models';
 import { Session } from '@supabase/supabase-js';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
 
@@ -115,7 +132,9 @@ export const AuthStore = signalStore(
           return;
         }
         patchState(state, { session, loading: false, isSigning: true });
-        await navCtrl.navigateBack(['/']);
+        setTimeout(() => {
+          navCtrl.navigateBack(['/']);
+        }, 1000);
       },
       getUser: rxMethod<Session | null>(
         pipe(
@@ -184,7 +203,8 @@ export const AuthStore = signalStore(
                     schoolId: profiles[0]?.school_id,
                   }),
                 error: console.error,
-                finalize: () => patchState(state, { loading: false }),
+                finalize: () =>
+                  patchState(state, { loading: false, isSigning: false }),
               }),
             ),
           ),

@@ -1,5 +1,14 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, effect, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft, heroChevronRight } from '@ng-icons/heroicons/outline';
@@ -56,7 +65,7 @@ import { InputDirective } from '../../directives/input/input.directive';
           <ng-icon name="heroChevronLeft" size="14" />
         </a>
       </li>
-      @for(page of PAGES(); track page) {
+      @for (page of PAGES(); track page) {
         <li>
           <a
             (click)="setPage(page)"
@@ -91,7 +100,7 @@ import { InputDirective } from '../../directives/input/input.directive';
         @apply border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
       }
       .active {
-        @apply block border border-emerald-300 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
+        @apply block border border-blue-300 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
       }
       .disabled {
         @apply z-10 cursor-not-allowed border border-gray-300 bg-gray-100 text-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400;
@@ -114,7 +123,7 @@ export class PaginatorComponent implements OnInit {
   ITEMS_COUNT = signal<number>(0);
   PAGE_SIZE = signal<number>(5);
   TOTAL_PAGES = computed(() =>
-    Math.ceil(this.ITEMS_COUNT() / this.PAGE_SIZE())
+    Math.ceil(this.ITEMS_COUNT() / this.PAGE_SIZE()),
   );
 
   pageSizeControl = new FormControl<null | number>(null, { nonNullable: true });
@@ -149,8 +158,8 @@ export class PaginatorComponent implements OnInit {
   END_INDEX = computed(() =>
     Math.min(
       this.START_INDEX() + (this.PAGE_SIZE() - 1),
-      this.ITEMS_COUNT() - 1
-    )
+      this.ITEMS_COUNT() - 1,
+    ),
   );
 
   CURRENT_RANGE = computed(() => this.CURRENT_PAGE());
@@ -167,7 +176,7 @@ export class PaginatorComponent implements OnInit {
           start: this.START_INDEX(),
           pageSize: this.PAGE_SIZE(),
         }),
-      { allowSignalWrites: true }
+      { allowSignalWrites: true },
     );
   }
   ngOnInit(): void {

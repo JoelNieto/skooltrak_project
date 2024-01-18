@@ -1,7 +1,9 @@
 import { computed, inject } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 import { Assignment, AssignmentType, ClassGroup, Course, GroupAssignment, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { orderBy, pick } from 'lodash';
@@ -37,6 +39,8 @@ export const AssignmentFormStore = signalStore(
     (
       { schoolId, dates, course, ...state },
       supabase = inject(SupabaseService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => ({
       async fetchTypes(): Promise<void> {
         const { data, error } = await supabase.client
@@ -115,6 +119,7 @@ export const AssignmentFormStore = signalStore(
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
+          toast.error(translate.instant('ALERT.FAILURE'));
 
           return;
         }
@@ -128,7 +133,12 @@ export const AssignmentFormStore = signalStore(
           .upsert(groups);
         if (error) {
           console.error(error);
+          toast.error(translate.instant('ALERT.FAILURE'));
+
+          return;
         }
+
+        toast.success(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
       },
       fetchGroups: rxMethod<Course | undefined>(

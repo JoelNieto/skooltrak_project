@@ -146,6 +146,7 @@ import { AssignmentFormStore } from './assignment-form.store';
                   skInput
                   type="datetime-local"
                   formControlName="start_at"
+                  step="300"
                 />
               </div>
             </ng-container>

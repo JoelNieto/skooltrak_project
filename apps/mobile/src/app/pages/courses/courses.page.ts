@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
 
 import { CoursesStore } from './courses.store';
@@ -10,9 +10,4 @@ import { CoursesStore } from './courses.store';
   imports: [IonRouterOutlet],
   template: `<ion-router-outlet />`,
 })
-export class CoursesPage {
-  private readonly store = inject(CoursesStore);
-  public ionViewDidEnter(): void {
-    this.store.fetchCourses();
-  }
-}
+export class CoursesPage {}

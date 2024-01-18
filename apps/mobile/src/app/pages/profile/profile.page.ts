@@ -131,10 +131,11 @@ import { ProfileEditPage } from './profile-edit.page';
         @for (profile of auth.profiles(); track profile) {
           <ion-item>
             <ion-icon name="business-outline" slot="start" color="medium" />
-            <ion-label>{{ profile.school.short_name }}</ion-label>
-            <ion-note>
-              {{ 'PEOPLE.' + profile.role | translate }}
-            </ion-note>
+            <ion-label
+              ><h3>{{ profile.school.short_name }}</h3>
+              <p>{{ 'PEOPLE.' + profile.role | translate }}</p></ion-label
+            >
+            <ion-note>{{ auth.group()?.name }}</ion-note>
           </ion-item>
         }
       </ion-list>

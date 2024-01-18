@@ -1,7 +1,20 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
@@ -188,7 +201,11 @@ export class SchoolFormComponent implements OnInit {
     const dialogRef = this.dialog.open<{
       imageFile: File | undefined;
       cropImgPreview: string;
-    }>(ImageCropperComponent, { minWidth: '28rem' });
+    }>(ImageCropperComponent, {
+      width: '48rem',
+      maxWidth: '90%',
+      data: { ratio: 2 },
+    });
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         if (!result) return;

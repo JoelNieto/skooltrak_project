@@ -4,7 +4,6 @@ import {
   NavController,
   ToastController,
 } from '@ionic/angular';
-import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
@@ -16,6 +15,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  ClassGroup,
   RoleEnum,
   SchoolUser,
   SignUpCredentials,
@@ -23,7 +23,7 @@ import {
   User,
 } from '@skooltrak/models';
 import { Session } from '@supabase/supabase-js';
-import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
+import { distinctUntilChanged, filter, map, pipe, tap } from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 
@@ -33,6 +33,7 @@ type State = {
   session: Session | null;
   profiles: SchoolUser[];
   schoolId: string | undefined;
+  group: Partial<ClassGroup> | undefined;
   error: unknown | undefined;
   isSigning: boolean;
 };
@@ -43,6 +44,7 @@ const initialState: State = {
   session: null,
   profiles: [],
   schoolId: undefined,
+  group: undefined,
   error: undefined,
   isSigning: false,
 };
@@ -50,48 +52,52 @@ const initialState: State = {
 export const AuthStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ profiles, user, schoolId }) => ({
-    userId: computed(() => user()?.id),
-    schools: computed(() => [...new Set(profiles().map((x) => x.school))]),
-    selectedSchool: computed(() =>
-      [...new Set(profiles().map((x) => x.school))].find(
-        (x) => x.id === schoolId(),
-      ),
-    ),
-    roles: computed(() =>
+  withComputed(({ profiles, user, schoolId }) => {
+    const userId = computed(() => user()?.id);
+    const schools = computed(() => [
+      ...new Set(profiles().map((x) => x.school)),
+    ]);
+    const selectedSchool = computed(() =>
+      schools().find((x) => x.id === schoolId()),
+    );
+    const roles = computed(() =>
       profiles()
         .filter((x) => x.school_id === schoolId())
         .map((x) => x.role),
-    ),
-    isAdmin: computed(() =>
-      profiles()
-        .filter((x) => x.school_id === schoolId())
-        .map((x) => x.role)
-        .includes(RoleEnum.Administrator),
-    ),
-    isTeacher: computed(() =>
-      profiles()
-        .filter((x) => x.school_id === schoolId())
-        .map((x) => x.role)
-        .includes(RoleEnum.Teacher),
-    ),
-    isStudent: computed(() =>
-      profiles()
-        .filter((x) => x.school_id === schoolId())
-        .map((x) => x.role)
-        .includes(RoleEnum.Student),
-    ),
-  })),
+    );
+    const isAdmin = computed(() => roles().includes(RoleEnum.Administrator));
+    const isTeacher = computed(() => roles().includes(RoleEnum.Teacher));
+    const isStudent = computed(() => roles().includes(RoleEnum.Student));
+
+    return {
+      userId,
+      schools,
+      roles,
+      selectedSchool,
+      isAdmin,
+      isTeacher,
+      isStudent,
+    };
+  }),
   withMethods(
     (
-      { user, session, error, isSigning, ...state },
+      {
+        user,
+        session,
+        error,
+        schoolId,
+        userId,
+        isStudent,
+        isSigning,
+        ...state
+      },
       supabase = inject(SupabaseService),
       toastCtrl = inject(ToastController),
       translate = inject(TranslateService),
       alertCtrl = inject(AlertController),
       navCtrl = inject(NavController),
-    ) => ({
-      async getSession() {
+    ) => {
+      async function getSession() {
         patchState(state, { loading: true });
         const {
           data: { session },
@@ -111,8 +117,8 @@ export const AuthStore = signalStore(
         }
 
         patchState(state, { session });
-      },
-      async signIn(request: { email: string; password: string }) {
+      }
+      async function signIn(request: { email: string; password: string }) {
         patchState(state, { loading: true, error: undefined });
         const { email, password } = request;
         const {
@@ -120,8 +126,6 @@ export const AuthStore = signalStore(
           error,
         } = await supabase.signInWithEmail(email, password);
         if (error) {
-          console.error(error);
-
           patchState(state, { error, loading: false });
 
           return;
@@ -135,82 +139,69 @@ export const AuthStore = signalStore(
         setTimeout(() => {
           navCtrl.navigateBack(['/']);
         }, 1000);
-      },
-      getUser: rxMethod<Session | null>(
+      }
+      async function setUser() {
+        const { data, error } = await supabase.client
+          .from(Table.Users)
+          .select(
+            'id, email, first_name, middle_name, father_name, document_id, mother_name, avatar_url, updated_at, birth_date, gender',
+          )
+          .eq('id', session()?.user?.id)
+          .single();
+
+        if (error) {
+          patchState(state, { error: error, loading: false });
+
+          return;
+        }
+        patchState(state, { user: data });
+        if (isSigning()) {
+          const toast = await toastCtrl.create({
+            color: 'success',
+            duration: 2000,
+            position: 'top',
+            translucent: true,
+            message: translate.instant('WELCOME', {
+              name: data.first_name,
+            }),
+          });
+          toast.present();
+        }
+      }
+      const getUser = rxMethod<Session | null>(
         pipe(
           filter(() => !!session()),
-          switchMap(() =>
-            from(
-              supabase.client
-                .from(Table.Users)
-                .select(
-                  'id, email, first_name, middle_name, father_name, document_id, mother_name, avatar_url, updated_at, birth_date, gender',
-                )
-                .eq('id', session()?.user?.id)
-                .single(),
-            ).pipe(
-              map(({ error, data }) => {
-                if (error) throw new Error(error.message);
-
-                return data;
-              }),
-              tapResponse({
-                next: async (user) => {
-                  patchState(state, { user });
-                  if (isSigning()) {
-                    const toast = await toastCtrl.create({
-                      color: 'success',
-                      duration: 2000,
-                      position: 'top',
-                      translucent: true,
-                      message: translate.instant('WELCOME', {
-                        name: user.first_name,
-                      }),
-                    });
-                    toast.present();
-                  }
-                },
-                error: (error) => {
-                  patchState(state, { error });
-                  console.error(error);
-                },
-              }),
-            ),
-          ),
+          tap(() => setUser()),
         ),
-      ),
-      getProfiles: rxMethod<User | undefined>(
+      );
+      async function setProfiles() {
+        const { data, error } = await supabase.client
+          .from(Table.SchoolUsers)
+          .select(
+            'user_id, school_id, school:schools(*, country:countries(*)), status, role, created_at',
+          )
+          .eq('user_id', user()?.id);
+
+        if (error) {
+          patchState(state, { error, loading: false, isSigning: false });
+
+          return;
+        }
+
+        patchState(state, {
+          profiles: data as SchoolUser[],
+          schoolId: data[0]?.school_id,
+          loading: false,
+          isSigning: false,
+        });
+      }
+      const getProfiles = rxMethod<User | undefined>(
         pipe(
           filter(() => !!user()),
-          switchMap(() =>
-            from(
-              supabase.client
-                .from(Table.SchoolUsers)
-                .select(
-                  'user_id, school_id, school:schools(*, country:countries(*)), status, role, created_at',
-                )
-                .eq('user_id', user()?.id),
-            ).pipe(
-              map(({ error, data }) => {
-                if (error) throw new Error(error.message);
-
-                return data as SchoolUser[];
-              }),
-              tapResponse({
-                next: (profiles) =>
-                  patchState(state, {
-                    profiles,
-                    schoolId: profiles[0]?.school_id,
-                  }),
-                error: console.error,
-                finalize: () =>
-                  patchState(state, { loading: false, isSigning: false }),
-              }),
-            ),
-          ),
+          tap(() => setProfiles()),
         ),
-      ),
-      async signOut() {
+      );
+      async function signOut() {
         await supabase.signOut();
         patchState(state, initialState);
         const toast = await toastCtrl.create({
@@ -220,11 +211,12 @@ export const AuthStore = signalStore(
           color: 'primary',
         });
         await toast.present();
-      },
-      showError: rxMethod<unknown>(
+      }
+      const showError = rxMethod<unknown>(
         pipe(
           filter(() => !!error()),
           distinctUntilChanged(),
+          tap(() => console.error(error())),
           map(async () => {
             const toast = await toastCtrl.create({
               color: 'danger',
@@ -235,8 +227,32 @@ export const AuthStore = signalStore(
             await toast.present();
           }),
         ),
-      ),
-      async signUp(request: SignUpCredentials) {
+      );
+      const setSchool = rxMethod<string | undefined>(
+        pipe(
+          filter(() => !!schoolId()),
+          filter(() => isStudent()),
+          tap(() => getGroup()),
+        ),
+      );
+
+      async function getGroup() {
+        const { data, error } = await supabase.client
+          .from(Table.Groups)
+          .select(
+            'id, name, plan:school_plans(*), degree:school_degrees(*), group_students!inner(user_id)',
+          )
+          .eq('group_students.user_id', userId())
+          .single();
+        if (error) {
+          console.error(error);
+
+          return;
+        }
+
+        patchState(state, { group: data as unknown as ClassGroup });
+      }
+      async function signUp(request: SignUpCredentials) {
         patchState(state, { loading: true });
         const { error } = await supabase.signUp(request);
         if (error) {
@@ -254,8 +270,8 @@ export const AuthStore = signalStore(
 
         await alert.present();
         navCtrl.navigateBack(['/auth']);
-      },
-      async updateProfile(request: Partial<User>) {
+      }
+      async function updateProfile(request: Partial<User>) {
         patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.Users)
@@ -283,8 +299,8 @@ export const AuthStore = signalStore(
           position: 'top',
         });
         await toast.present();
-      },
-      async resetPassword(email: string) {
+      }
+      async function resetPassword(email: string) {
         const { error } = await supabase.resetPassword(email);
         if (error) {
           console.error(error);
@@ -305,11 +321,28 @@ export const AuthStore = signalStore(
           duration: 2000,
         });
         await toast.present();
-      },
-      resetProfiles() {
-        this.getProfiles(user);
-      },
-    }),
+      }
+      function resetProfiles() {
+        getProfiles(user);
+      }
+
+      return {
+        getUser,
+        getSession,
+        getProfiles,
+        signIn,
+        showError,
+        signUp,
+        updateProfile,
+        resetPassword,
+        resetProfiles,
+        signOut,
+        setUser,
+        setProfiles,
+        setSchool,
+        getGroup,
+      };
+    },
   ),
   withHooks({
     onInit({
@@ -320,11 +353,14 @@ export const AuthStore = signalStore(
       session,
       user,
       error,
+      setSchool,
+      schoolId,
     }) {
       getSession();
       getUser(session);
       getProfiles(user);
       showError(error);
+      setSchool(schoolId);
     },
   }),
 );

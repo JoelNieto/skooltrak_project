@@ -29,16 +29,20 @@ import {
     <ion-tab-bar id="app-tab-bar" slot="bottom">
       <ion-tab-button tab="home">
         <ion-icon aria-hidden="true" name="home-outline" />
+        {{ 'HOME' | translate }}
       </ion-tab-button>
 
       <ion-tab-button tab="schedule">
         <ion-icon aria-hidden="true" name="calendar-outline" />
+        {{ 'SCHEDULE' | translate }}
       </ion-tab-button>
       <ion-tab-button tab="messages">
         <ion-icon aria-hidden="true" name="chatbubbles-outline" />
+        {{ 'MESSAGING.TITLE' | translate }}
       </ion-tab-button>
       <ion-tab-button tab="profile">
         <ion-icon aria-hidden="true" name="person-outline" />
+        {{ 'PROFILE.NAME' | translate }}
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs> `,

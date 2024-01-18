@@ -1,5 +1,12 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -30,7 +37,7 @@ import { ChatStore } from './chat.store';
             <div class="flex-col">
               @if (!message.mine) {
                 <div
-                  class="font-sans text-sm text-emerald-800 flex gap-1 mb-2 font-semibold "
+                  class="font-sans text-sm text-blue-800 flex gap-1 mb-2 font-semibold "
                 >
                   <sk-avatar
                     [avatarUrl]="
@@ -44,9 +51,9 @@ import { ChatStore } from './chat.store';
               }
               <div
                 [ngClass]="{
-                  'bg-emerald-600 text-white dark:bg-emerald-900 dark:text-emerald-200 rounded-ee-sm':
+                  'bg-blue-600 text-white dark:bg-blue-900 dark:text-blue-200 rounded-ee-sm':
                     message.mine,
-                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-600 dark:text-emerald-100 rounded-es-sm':
+                  'bg-blue-100 text-blue-700 dark:bg-blue-600 dark:text-blue-100 rounded-es-sm':
                     !message.mine
                 }"
                 class="px-4 py-3 rounded-2xl relative chat-item"
@@ -75,7 +82,7 @@ import { ChatStore } from './chat.store';
           />
           <button
             type="button"
-            class="inline-flex justify-center p-2 text-emerald-600 rounded-full cursor-pointer hover:bg-emerald-100 dark:emerald -blue-500 dark:hover:bg-gray-600"
+            class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:blue -blue-500 dark:hover:bg-gray-600"
             [disabled]="messageControl.invalid"
             (click)="sendMessage()"
           >

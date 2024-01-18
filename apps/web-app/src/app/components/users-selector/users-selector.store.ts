@@ -1,10 +1,16 @@
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Table, User } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { debounceTime, filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { debounceTime, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
   filteredUsers: Partial<User>[];
@@ -30,7 +36,6 @@ export const UsersSelectorStore = signalStore(
     ) => ({
       fetchUsers: rxMethod<string>(
         pipe(
-          filter(() => queryText().length > 2),
           tap(() => patchState(state, { loading: true })),
           debounceTime(1000),
           switchMap(() =>
@@ -38,7 +43,7 @@ export const UsersSelectorStore = signalStore(
               supabase.client
                 .from(Table.Users)
                 .select('id, first_name, father_name, email, avatar_url')
-                .neq('id', auth.userId)
+                .neq('id', auth.userId())
                 .limit(10)
                 .order('first_name', { ascending: true })
                 .order('father_name', { ascending: true })

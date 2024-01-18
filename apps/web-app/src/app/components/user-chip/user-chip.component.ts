@@ -11,7 +11,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
   imports: [AvatarComponent, NgIconComponent],
   providers: [provideIcons({ heroXMark })],
   template: `<div
-    class="flex p-1 pr-2 items-center text-xs gap-2 rounded-full font-sans font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-700 dark:text-gray-200"
+    class="flex p-1 pr-2 items-center text-xs gap-2 rounded-full font-sans font-semibold bg-pink-100 text-pink-700 dark:bg-pink-700 dark:text-gray-200"
   >
     <sk-avatar
       [avatarUrl]="user.avatar_url ?? 'default_avatar.jpg'"

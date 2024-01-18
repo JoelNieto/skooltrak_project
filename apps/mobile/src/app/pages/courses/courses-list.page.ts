@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import {
   IonAvatar,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -15,12 +16,16 @@ import {
   IonHeader,
   IonIcon,
   IonLabel,
+  IonRefresher,
+  IonRefresherContent,
   IonRow,
   IonText,
   IonTitle,
   IonToolbar,
+  RefresherCustomEvent,
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
+import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
 import { closeCircle } from 'ionicons/icons';
 
@@ -46,19 +51,39 @@ import { CoursesStore } from './courses.store';
     IonCol,
     IonRow,
     IonButton,
+    IonButtons,
     IonIcon,
     IonText,
     IonChip,
     IonAvatar,
     IonLabel,
+    IonRefresher,
+    IonRefresherContent,
   ],
-  selector: 'skooltrak-list',
-  template: ` <ion-header translucent="true">
-      <ion-toolbar color="primary">
+  selector: 'skooltrak-courses-list',
+  styles: `
+  .header-avatar {
+    padding: .5rem;
+  }
+  `,
+  template: ` <ion-header translucent="true" class="ion-no-border">
+      <ion-toolbar>
         <ion-title>{{ 'COURSES.TITLE' | translate }} </ion-title>
+        <ion-buttons slot="primary">
+          <ion-avatar class="header-avatar">
+            <skooltrak-picture
+              bucket="avatars"
+              rounded
+              [pictureURL]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
+            />
+          </ion-avatar>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content fullscreen="true">
+      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content />
+      </ion-refresher>
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">
@@ -66,6 +91,7 @@ import { CoursesStore } from './courses.store';
           </ion-title>
         </ion-toolbar>
       </ion-header>
+
       @for (course of store.courses(); track course.id) {
         <ion-card routerLink="details" [queryParams]="{ course_id: course.id }">
           <skooltrak-picture
@@ -83,7 +109,7 @@ import { CoursesStore } from './courses.store';
           @if (!store.isTeacher() && course.teachers.length) {
             <ion-card-content>
               @for (teacher of course.teachers; track teacher.id) {
-                <ion-chip color="tertiary">
+                <ion-chip color="primary">
                   <ion-avatar aria-hidden="true">
                     <skooltrak-picture
                       bucket="avatars"
@@ -139,7 +165,15 @@ import { CoursesStore } from './courses.store';
 })
 export class CoursesListPage {
   public readonly store = inject(CoursesStore);
+  public readonly auth = inject(mobileStore.AuthStore);
   constructor() {
     addIcons({ closeCircle });
+  }
+
+  public handleRefresh(event: RefresherCustomEvent): void {
+    setTimeout(async () => {
+      await this.store.fetchCourses();
+      event.target.complete();
+    }, 1000);
   }
 }

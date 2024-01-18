@@ -36,7 +36,7 @@ import { CoursesStore } from './courses.store';
       </ion-toolbar>
       <ion-toolbar>
         <ion-segment
-          color="tertiary"
+          color="secondary"
           value="assignments"
           (ionChange)="changeSegment($event)"
         >
@@ -48,7 +48,7 @@ import { CoursesStore } from './courses.store';
           >
         </ion-segment>
       </ion-toolbar> </ion-header
-    ><ion-content>
+    ><ion-content scrollY="false">
       @switch (currentSegment()) {
         @case ('assignments') {
           <skooltrak-course-assignments />

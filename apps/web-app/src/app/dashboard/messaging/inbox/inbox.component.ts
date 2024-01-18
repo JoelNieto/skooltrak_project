@@ -43,7 +43,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
             <a
               class="flex justify-between px-6 py-4 gap-2 items-center hover:bg-gray-100"
               routerLink="chat"
-              routerLinkActive="bg-emerald-50 dark:bg-emerald-800 "
+              routerLinkActive="bg-blue-50 dark:bg-blue-800 "
               [queryParams]="{ chat_id: chat.id }"
             >
               <div class="flex items-center gap-2">
@@ -54,7 +54,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
                     rounded
                   />
                   <div
-                    class="flex flex-col text-sm justify-center text-emerald-800 dark:text-emerald-200"
+                    class="flex flex-col text-sm justify-center text-blue-800 dark:text-blue-200"
                   >
                     {{ member.user.first_name }} {{ member.user.father_name }}
                     <span class="font-mono text-gray-600 text-xs font-thin">{{
@@ -80,13 +80,13 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
             rounded
           />
           <div
-            class="flex flex-col justify-center text-lg text-emerald-800 dark:text-emerald-200"
+            class="flex flex-col justify-center text-lg text-blue-800 dark:text-blue-200"
           >
             {{ member.user.first_name }} {{ member.user.father_name }}
           </div>
         }
       </div>
-      <div class="bg-white dark:bg-emerald-950 ">
+      <div class="bg-white dark:bg-blue-950 ">
         <router-outlet />
       </div>
     </div>

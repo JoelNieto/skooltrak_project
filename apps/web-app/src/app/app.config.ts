@@ -2,7 +2,11 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-PA';
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import {
+  ApplicationConfig,
+  LOCALE_ID,
+  importProvidersFrom,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
   BrowserAnimationsModule,
@@ -63,6 +67,7 @@ export const appConfig: ApplicationConfig = {
       DialogModule,
     ),
     { provide: APP_CONFIG, useValue: environment },
+    { provide: LOCALE_ID, useValue: 'es-PA' },
     provideHotToastConfig(),
   ],
 };

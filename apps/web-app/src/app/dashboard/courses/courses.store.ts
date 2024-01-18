@@ -9,106 +9,135 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, Table } from '@skooltrak/models';
-import { SupabaseService, mobileStore } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import { PostgrestError } from '@supabase/supabase-js';
-import { filter, pipe, tap } from 'rxjs';
+import { filter, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
-  loading: boolean;
   courses: Course[];
   selectedId: string | undefined;
-  error: boolean;
+  count: number;
+  pageSize: number;
+  start: number;
+  loading: boolean;
+};
+
+const initialState: State = {
+  courses: [],
+  selectedId: undefined,
+  count: 0,
+  pageSize: 5,
+  start: 0,
+  loading: false,
 };
 
 export const CoursesStore = signalStore(
-  withState({
-    loading: false,
-    courses: [],
-    selectedId: undefined,
-    error: false,
-  } as State),
+  withState(initialState),
   withComputed(
-    ({ courses, selectedId }, auth = inject(mobileStore.AuthStore)) => ({
+    (
+      { start, pageSize, courses, selectedId },
+      auth = inject(webStore.AuthStore),
+    ) => ({
+      schoolId: computed(() => auth.schoolId()),
+      end: computed(() => start() + (pageSize() - 1)),
       selected: computed(() => courses().find((x) => x.id === selectedId())),
-      userId: computed(() => auth.userId()),
+      query: computed(() => ({
+        start: start(),
+        pageSize: pageSize(),
+        schoolId: auth.schoolId(),
+      })),
       isAdmin: computed(() => auth.isAdmin()),
       isStudent: computed(() => auth.isStudent()),
       isTeacher: computed(() => auth.isTeacher()),
-      schoolId: computed(() => auth.schoolId()),
+      userId: computed(() => auth.userId()),
     }),
   ),
   withMethods(
     (
-      { userId, isStudent, isTeacher, schoolId, ...state },
+      { schoolId, query, start, end, isTeacher, isStudent, userId, ...state },
       supabase = inject(SupabaseService),
     ) => {
-      const requestCourses = rxMethod<string | undefined>(
+      const updateQuery = rxMethod<typeof query>(
         pipe(
           filter(() => !!schoolId()),
-          tap(() => fetchCourses()),
+          tap(() => patchState(state, { loading: true })),
+          switchMap(() => fetchCourses()),
         ),
       );
-
       async function fetchCourses(): Promise<void> {
-        patchState(state, { loading: true, error: false, courses: [] });
+        patchState(state, { loading: true });
+        if (isTeacher()) {
+          fetchTeacherCourses();
+
+          return;
+        }
 
         if (isStudent()) {
-          await fetchStudentCourses();
+          fetchStudentCourses();
+
           return;
         }
-        if (isTeacher()) {
-          await fetchTeacherCourses();
-          return;
-        }
-        const { data, error } = await supabase.client
+
+        const { data, error, count } = await supabase.client
           .from(Table.Courses)
           .select(
-            'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
+            'id, school_id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
+            { count: 'exact' },
           )
-          .eq('school_id', schoolId());
+          .eq('school_id', schoolId())
+          .range(start(), end());
 
         if (error) {
           logError(error);
+
           return;
         }
 
-        setCourses(data);
+        setCourses(data, count);
       }
       async function fetchStudentCourses(): Promise<void> {
-        const { data, error } = await supabase.client
+        const { data, error, count } = await supabase.client
           .from(Table.Courses)
           .select(
             'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, student:users!course_students!inner(id), teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
+            { count: 'exact' },
           )
           .eq('school_id', schoolId())
+          .range(start(), end())
           .filter('student.id', 'eq', userId());
         if (error) {
           logError(error);
+
           return;
         }
-        setCourses(data);
+
+        setCourses(data, count);
       }
       async function fetchTeacherCourses(): Promise<void> {
-        const { data, error } = await supabase.client
+        const { data, error, count } = await supabase.client
           .from(Table.Courses)
           .select(
             'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, teachers:users!course_teachers!inner(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
+            { count: 'exact' },
           )
           .eq('school_id', schoolId())
+          .range(start(), end())
           .filter('teachers.id', 'eq', userId());
         if (error) {
           logError(error);
+
           return;
         }
-        setCourses(data);
+        setCourses(data, count);
       }
       function logError(error: PostgrestError): void {
         console.error(error);
-        patchState(state, { loading: false, error: true });
+        patchState(state, { loading: false });
       }
-      function setCourses(data: unknown): void {
+      function setCourses(data: unknown, count: number | null): void {
         patchState(state, {
           courses: data as Course[],
+          count: count ?? 0,
           loading: false,
         });
       }
@@ -119,13 +148,13 @@ export const CoursesStore = signalStore(
         fetchTeacherCourses,
         logError,
         setCourses,
-        requestCourses,
+        updateQuery,
       };
     },
   ),
   withHooks({
-    onInit({ requestCourses, schoolId }) {
-      requestCourses(schoolId);
+    onInit({ updateQuery, query }) {
+      updateQuery(query);
     },
   }),
 );

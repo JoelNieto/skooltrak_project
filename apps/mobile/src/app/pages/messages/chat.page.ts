@@ -63,8 +63,8 @@ import { ChatStore } from './chat.store';
       --border-radius: 2.5rem;
       --padding-start: 1rem;
     }
-    .footer {
-      padding: .25rem;
+    .sender {
+      padding-bottom: var(--ion-safe-area-bottom, 0);
     }
 
     .message {
@@ -140,20 +140,21 @@ import { ChatStore } from './chat.store';
       </ion-list>
     </ion-content>
     <ion-footer class="ion-no-border">
-      <form [formGroup]="sendForm" (ngSubmit)="sendText()">
-        <ion-toolbar class="footer">
-          <ion-buttons slot="end">
-            <ion-button type="submit" [disabled]="sendForm.invalid">
-              <ion-icon slot="icon-only" name="send"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-          <ion-input
-            formControlName="textBox"
-            type="text"
-            placeholder="Enter message..."
-          />
-        </ion-toolbar>
-      </form>
+      <ion-toolbar class="sender"
+        ><form [formGroup]="sendForm" (ngSubmit)="sendText()">
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button type="submit" [disabled]="sendForm.invalid">
+                <ion-icon slot="icon-only" name="send"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+            <ion-input
+              formControlName="textBox"
+              type="text"
+              placeholder="Enter message..."
+            />
+          </ion-toolbar></form
+      ></ion-toolbar>
     </ion-footer>`,
 })
 export class ChatPage implements OnInit {

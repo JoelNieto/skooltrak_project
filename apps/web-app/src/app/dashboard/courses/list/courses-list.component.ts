@@ -15,7 +15,7 @@ import {
 } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
-import { CoursesListStore } from './courses-list.store';
+import { CoursesStore } from '../courses.store';
 
 @Component({
   standalone: true,
@@ -33,7 +33,7 @@ import { CoursesListStore } from './courses-list.store';
     LoadingComponent,
     EmptyTableComponent,
   ],
-  providers: [provideIcons({ heroMagnifyingGlass, heroEye }), CoursesListStore],
+  providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: ` <sk-card>
     <div header>
       <h2
@@ -68,18 +68,18 @@ import { CoursesListStore } from './courses-list.store';
         <thead
           class="font-title bg-gray-100 text-xs font-semibold uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-200"
         >
-          <tr class="cursor-pointer">
-            <th scope="col" class="px-6 py-3">{{ 'Subject' | translate }}</th>
-            <th scope="col" class="px-6 py-3">{{ 'Plan' | translate }}</th>
-            <th scope="col" class="px-6 py-3">
-              {{ 'Teachers' | translate }}
+          <tr class="cursor-pointer *:bg-blue-200 *:text-blue-700">
+            <th scope="col" class="px-6 py-3 rounded-tl-lg">
+              {{ 'COURSES.SUBJECT' | translate }}
             </th>
             <th scope="col" class="px-6 py-3">
-              {{ 'Weekly hours' | translate }}
+              {{ 'COURSES.PLAN' | translate }}
             </th>
-            <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-            <th scope="col" class="px-6 py-3 text-center">
-              {{ 'Actions' | translate }}
+            <th scope="col" class="px-6 py-3">
+              {{ 'COURSES.TEACHERS' | translate }}
+            </th>
+            <th scope="col" class="px-6 py-3 text-center rounded-tr-lg">
+              {{ 'ACTIONS.TITLE' | translate }}
             </th>
           </tr>
         </thead>
@@ -99,14 +99,12 @@ import { CoursesListStore } from './courses-list.store';
                   {{ course.subject?.name }}
                 </th>
                 <td class="px-6 py-3.5">{{ course.plan.name }}</td>
-                <td class="flex gap-1 px-6 py-3.5">
-                  @for (teacher of course.teachers; track teacher.id) {
-                    <sk-user-chip [user]="teacher" />
-                  }
-                </td>
-                <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
-                <td class="px-6 py-3.5">
-                  {{ course.created_at | date: 'medium' }}
+                <td class=" px-6 py-3.5">
+                  <div class="flex gap-1">
+                    @for (teacher of course.teachers; track teacher.id) {
+                      <sk-user-chip [user]="teacher" />
+                    }
+                  </div>
                 </td>
                 <td
                   class="flex content-center justify-center gap-2 px-6 py-3.5"
@@ -145,7 +143,7 @@ import { CoursesListStore } from './courses-list.store';
   </sk-card>`,
 })
 export class CoursesListComponent {
-  public store = inject(CoursesListStore);
+  public store = inject(CoursesStore);
 
   public getCurrentPage(pagination: {
     currentPage: number;

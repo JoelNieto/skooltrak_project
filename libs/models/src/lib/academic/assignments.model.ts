@@ -13,7 +13,7 @@ export type Assignment = EntityBase & {
   course_id: string;
   course?: Partial<Course>;
   title: string;
-  dates?: [{ group: { id: string; name: string }; start_at: Date }];
+  dates?: [{ group: { id: string; name: string }; date: Date }];
   description: string;
   upload_file?: boolean;
   user_id?: string;
@@ -38,11 +38,11 @@ export type AssignmentView = {
   user_email: string;
   user_name: string;
   user_avatar: string;
-  start_at: string;
+  date: string;
 };
 
 export type GroupAssignment = {
   assignment_id: string;
   group_id: string;
-  start_at: Date;
+  date: Date;
 };

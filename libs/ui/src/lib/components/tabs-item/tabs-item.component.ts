@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -21,7 +21,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   ],
   template: `<li class="mr-2">
     <a
-      routerLink="{{ link }}"
+      routerLink="{{ link() }}"
       routerLinkActive="active"
       queryParamsHandling="preserve"
       class="link flex items-center gap-2 font-sans"
@@ -31,5 +31,5 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   </li>`,
 })
 export class TabsItemComponent {
-  @Input({ required: true }) link!: string;
+  public link = input.required<string>();
 }

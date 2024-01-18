@@ -1,10 +1,25 @@
 import { computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { Assignment, AssignmentType, ClassGroup, Course, GroupAssignment, Table } from '@skooltrak/models';
+import {
+  Assignment,
+  AssignmentType,
+  ClassGroup,
+  Course,
+  GroupAssignment,
+  Table,
+} from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { orderBy, pick } from 'lodash';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
@@ -41,6 +56,7 @@ export const AssignmentFormStore = signalStore(
       supabase = inject(SupabaseService),
       toast = inject(HotToastService),
       translate = inject(TranslateService),
+      router = inject(Router),
     ) => ({
       async fetchTypes(): Promise<void> {
         const { data, error } = await supabase.client
@@ -139,6 +155,7 @@ export const AssignmentFormStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
+        router.navigate(['app', 'courses', 'assignments', id]);
         patchState(state, { loading: false });
       },
       fetchGroups: rxMethod<Course | undefined>(

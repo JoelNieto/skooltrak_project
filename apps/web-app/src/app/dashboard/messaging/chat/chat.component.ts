@@ -40,9 +40,7 @@ import { ChatStore } from './chat.store';
                   class="font-sans text-sm text-blue-800 flex gap-1 mb-2 font-semibold "
                 >
                   <sk-avatar
-                    [avatarUrl]="
-                      message.user.avatar_url ?? 'default_avatar.jpg'
-                    "
+                    [fileName]="message.user.avatar_url ?? 'default_avatar.jpg'"
                     class="h-5"
                     rounded
                   />

@@ -159,11 +159,7 @@ import { SchoolCoursesStore } from './courses.store';
         </p>
       </div>
     }
-    <sk-paginator
-      [count]="store.count()"
-      [pageSize]="store.pageSize()"
-      (paginate)="getCurrentPage($event)"
-    />
+    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
 export class SchoolCoursesComponent implements OnInit {

@@ -116,11 +116,7 @@ import { SchoolDegreesStore } from './degrees.store';
       </tbody>
     </table>
 
-    <sk-paginator
-      [count]="store.count()"
-      [pageSize]="store.pageSize()"
-      (paginate)="getCurrentPage($event)"
-    />
+    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
 export class SchoolDegreesComponent {

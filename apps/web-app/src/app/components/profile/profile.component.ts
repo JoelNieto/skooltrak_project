@@ -46,7 +46,7 @@ import { ProfileFormStore } from './profile.store';
         <div class="mb-4  flex justify-center">
           @if (this.user()) {
             <sk-avatar
-              [avatarUrl]="this.user()?.avatar_url ?? 'default_avatar.jpg'"
+              [fileName]="this.user()?.avatar_url ?? 'default_avatar.jpg'"
               bucket="avatars"
               [rounded]="true"
               class="h-24 cursor-pointer"

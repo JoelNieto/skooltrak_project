@@ -136,7 +136,6 @@ import { CoursesStore } from '../courses.store';
       }
       <sk-paginator
         [count]="store.count()"
-        [pageSize]="store.pageSize()"
         (paginate)="getCurrentPage($event)"
       />
     </div>

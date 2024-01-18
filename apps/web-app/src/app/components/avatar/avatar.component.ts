@@ -1,10 +1,11 @@
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  effect,
   inject,
-  Input,
+  input,
+  signal,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/store';
@@ -14,9 +15,9 @@ import { SupabaseService } from '@skooltrak/store';
   standalone: true,
   imports: [],
   template: `<img
-    [attr.src]="_avatarUrl"
+    [attr.src]="avatarUrl()"
     class="h-full"
-    [class.rounded-full]="rounded"
+    [class.rounded-full]="rounded()"
   />`,
   styles: `
       :host {
@@ -26,28 +27,28 @@ import { SupabaseService } from '@skooltrak/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
-  @Input() public bucket: 'avatars' | 'crests' = 'avatars';
-  @Input({ transform: booleanAttribute }) public rounded: boolean = false;
-  @Input({ required: true })
-  public set avatarUrl(url: string) {
-    if (url) {
-      this.downloadImage(url);
-    }
-  }
-  public _avatarUrl: SafeResourceUrl | undefined;
+  public bucket = input('avatars');
+  public rounded = input<boolean, string | boolean>(false, {
+    transform: booleanAttribute,
+  });
+
+  public fileName = input.required<string>();
+  public avatarUrl = signal<SafeResourceUrl | undefined>(undefined);
   private supabase = inject(SupabaseService);
   private dom = inject(DomSanitizer);
-  private cd = inject(ChangeDetectorRef);
+
+  constructor() {
+    effect(() => this.downloadImage(this.fileName()));
+  }
 
   private async downloadImage(path: string): Promise<void> {
     try {
-      const { data } = await this.supabase.downloadFile(path, this.bucket);
+      const { data } = await this.supabase.downloadFile(path, this.bucket());
 
       if (data instanceof Blob) {
-        this._avatarUrl = this.dom.bypassSecurityTrustUrl(
-          URL.createObjectURL(data),
+        this.avatarUrl.set(
+          this.dom.bypassSecurityTrustUrl(URL.createObjectURL(data)),
         );
-        this.cd.detectChanges();
       }
     } catch (error) {
       if (error instanceof Error) {

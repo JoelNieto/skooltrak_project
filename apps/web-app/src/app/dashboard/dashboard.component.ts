@@ -72,7 +72,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
             >
               @if (auth.currentSchool()?.crest_url) {
                 <sk-avatar
-                  [avatarUrl]="auth.currentSchool()?.crest_url!"
+                  [fileName]="auth.currentSchool()?.crest_url!"
                   bucket="crests"
                   class="h-8"
                 />

@@ -1,6 +1,6 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -124,11 +124,7 @@ import { SchoolSubjectsStore } from './subjects.store';
         }
       </tbody>
     </table>
-    <sk-paginator
-      [count]="store.count()"
-      [pageSize]="store.pageSize()"
-      (paginate)="getCurrentPage($event)"
-    />
+    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
 export class SchoolSubjectsComponent implements OnInit {

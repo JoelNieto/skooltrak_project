@@ -31,7 +31,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
     <div class="flex flex-col items-center justify-center space-y-3">
       @if (school()?.crest_url) {
         <sk-avatar
-          [avatarUrl]="school()?.crest_url!"
+          [fileName]="school()?.crest_url!"
           bucket="crests"
           class="h-16"
         />

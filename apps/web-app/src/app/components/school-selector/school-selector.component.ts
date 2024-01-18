@@ -7,7 +7,12 @@ import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { ButtonDirective, CardComponent, ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
+import {
+  ButtonDirective,
+  CardComponent,
+  ConfirmationService,
+  defaultConfirmationOptions,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -58,7 +63,7 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
             <div class="flex flex-1 items-center justify-center">
               @if (school?.crest_url) {
                 <sk-avatar
-                  [avatarUrl]="school.crest_url!"
+                  [fileName]="school.crest_url!"
                   bucket="crests"
                   class="h-16"
                 />

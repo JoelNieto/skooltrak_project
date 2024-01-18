@@ -74,7 +74,7 @@ import { CoursesStore } from './courses.store';
             <skooltrak-picture
               bucket="avatars"
               rounded
-              [pictureURL]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
+              [fileName]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
             />
           </ion-avatar>
         </ion-buttons>
@@ -96,7 +96,7 @@ import { CoursesStore } from './courses.store';
         <ion-card routerLink="details" [queryParams]="{ course_id: course.id }">
           <skooltrak-picture
             bucket="courses"
-            [pictureURL]="course.picture_url!"
+            [fileName]="course.picture_url!"
           ></skooltrak-picture>
           <ion-card-header>
             <ion-card-title>
@@ -114,7 +114,7 @@ import { CoursesStore } from './courses.store';
                     <skooltrak-picture
                       bucket="avatars"
                       rounded
-                      [pictureURL]="teacher.avatar_url ?? 'default_avatar.jpg'"
+                      [fileName]="teacher.avatar_url ?? 'default_avatar.jpg'"
                     />
                   </ion-avatar>
                   <ion-label

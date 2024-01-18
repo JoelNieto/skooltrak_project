@@ -6,7 +6,7 @@ import {
   DestroyRef,
   effect,
   inject,
-  Input,
+  input,
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -77,7 +77,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           <h3
             class="font-title mb-4 text-2xl  text-gray-700 dark:text-gray-100"
           >
-            {{ (id ? 'ASSIGNMENTS.EDIT' : 'ASSIGNMENTS.NEW') | translate }}
+            {{ (id() ? 'ASSIGNMENTS.EDIT' : 'ASSIGNMENTS.NEW') | translate }}
           </h3>
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -142,12 +142,7 @@ import { AssignmentFormStore } from './assignment-form.store';
             <ng-container>
               <div [formGroupName]="i">
                 <label [for]="i">{{ store.groups()[i].name }}</label>
-                <input
-                  skInput
-                  type="datetime-local"
-                  formControlName="start_at"
-                  step="300"
-                />
+                <input skInput type="date" formControlName="date" />
               </div>
             </ng-container>
           }
@@ -158,8 +153,8 @@ import { AssignmentFormStore } from './assignment-form.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentFormComponent implements OnInit {
-  @Input({ required: true }) public course_id!: string;
-  @Input({ required: false }) public id?: string;
+  public course_id = input<string>();
+  public id = input<string>();
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
   public store = inject(AssignmentFormStore);
@@ -205,6 +200,19 @@ export class AssignmentFormComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+
+    effect(() => {
+      const id = this.id();
+      !!id && this.store.fetchAssignment(id);
+    });
+
+    effect(() => {
+      const course_id = this.course_id();
+      if (course_id) {
+        this.assignmentForm.get('course_id')?.patchValue(course_id);
+        this.assignmentForm.get('course_id')?.disable();
+      }
+    });
   }
 
   public ngOnInit(): void {
@@ -223,17 +231,10 @@ export class AssignmentFormComponent implements OnInit {
         next: (dates) =>
           asapScheduler.schedule(() => patchState(this.store, { dates })),
       });
-    !!this.course_id && this.setCourse();
-    !!this.id && this.store.fetchAssignment(this.id);
   }
 
   get formGroups(): FormArray {
     return this.assignmentForm.get('groups') as FormArray;
-  }
-
-  private setCourse(): void {
-    this.assignmentForm.get('course_id')?.patchValue(this.course_id);
-    this.assignmentForm.get('course_id')?.disable();
   }
 
   private setGroups(groups: Partial<ClassGroup>[]): void {
@@ -243,7 +244,7 @@ export class AssignmentFormComponent implements OnInit {
       control.push(
         new FormGroup({
           group_id: new FormControl(group.id),
-          start_at: new FormControl<string | undefined>(undefined, {
+          date: new FormControl<string | undefined>(undefined, {
             nonNullable: true,
           }),
         }),

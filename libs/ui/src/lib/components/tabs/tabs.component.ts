@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, Input } from '@angular/core';
+import { booleanAttribute, Component, input } from '@angular/core';
 
 @Component({
   selector: 'sk-tabs',
@@ -10,10 +10,15 @@ import { booleanAttribute, Component, Input } from '@angular/core';
       }
     `,
   ],
-  template: `<ul class="-mb-px flex flex-wrap" [class.justify-center]="center">
+  template: `<ul
+    class="-mb-px flex flex-wrap"
+    [class.justify-center]="center()"
+  >
     <ng-content></ng-content>
   </ul>`,
 })
 export class TabsComponent {
-  @Input({ transform: booleanAttribute }) center: boolean = false;
+  public center = input<boolean, boolean | string>(false, {
+    transform: booleanAttribute,
+  });
 }

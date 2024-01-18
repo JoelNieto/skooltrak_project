@@ -65,7 +65,7 @@ import { SchoolFormStore } from './school-form.store';
     <div class="flex flex-col items-center justify-center space-y-4">
       @if (store.school()?.crest_url) {
         <sk-avatar
-          [avatarUrl]="store.school()?.crest_url!"
+          [fileName]="store.school()?.crest_url!"
           (click)="uploadCrest()"
           bucket="crests"
           class="h-24 rounded-md"

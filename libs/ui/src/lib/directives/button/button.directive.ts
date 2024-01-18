@@ -1,16 +1,11 @@
-import { Directive, HostBinding, Input, OnInit } from '@angular/core';
+import { Directive, HostBinding, input, OnInit } from '@angular/core';
 
 @Directive({
   selector: `[skButton]`,
   standalone: true,
 })
 export class ButtonDirective implements OnInit {
-  @Input({ required: true }) color!:
-    | 'blue'
-    | 'sky'
-    | 'red'
-    | 'green'
-    | 'purple';
+  public color = input.required<'blue' | 'sky' | 'red' | 'green' | 'purple'>();
 
   @HostBinding('class') get classes() {
     return this.styles;
@@ -63,7 +58,7 @@ export class ButtonDirective implements OnInit {
 
   ngOnInit(): void {
     this.styles = [
-      ...this.colorVariants[this.color],
+      ...this.colorVariants[this.color()],
       `text-gray-50`,
       `disabled:opacity-50`,
       `disabled:cursor-not-allowed`,

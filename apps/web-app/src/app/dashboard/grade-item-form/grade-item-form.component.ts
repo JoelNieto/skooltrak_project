@@ -6,7 +6,7 @@ import {
   effect,
   inject,
   Injector,
-  Input,
+  input,
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,8 +29,8 @@ import { CourseGradesStore } from '../grades/course-grades.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GradeItemFormComponent implements OnInit {
-  @Input({ required: true }) public gradeId!: string;
-  @Input({ required: true }) public studentId!: string;
+  public gradeId = input.required<string>();
+  public studentId = input.required<string>();
   private store = inject(CourseGradesStore);
   private toast = inject(HotToastService);
   private supabase = inject(SupabaseService);
@@ -43,11 +43,13 @@ export class GradeItemFormComponent implements OnInit {
     updateOn: 'blur',
   });
   public currentGrade = computed(() =>
-    this.store.grades().find((x) => x.id === this.gradeId),
+    this.store.grades().find((x) => x.id === this.gradeId()),
   );
   public currentItem = computed(
     () =>
-      this.currentGrade()?.items?.find((x) => x.student_id === this.studentId),
+      this.currentGrade()?.items?.find(
+        (x) => x.student_id === this.studentId(),
+      ),
   );
 
   public ngOnInit(): void {

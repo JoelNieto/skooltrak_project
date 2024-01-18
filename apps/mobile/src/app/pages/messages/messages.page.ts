@@ -137,7 +137,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
                     <skooltrak-picture
                       bucket="avatars"
                       rounded
-                      [pictureURL]="
+                      [fileName]="
                         member.user.avatar_url ?? 'default_avatar.jpg'
                       "
                     />

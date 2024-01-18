@@ -98,7 +98,7 @@ import { ProfileEditPage } from './profile-edit.page';
             <skooltrak-picture
               bucket="avatars"
               rounded
-              [pictureURL]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
+              [fileName]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
             />
           </ion-avatar>
           <ion-label color="tertiary">

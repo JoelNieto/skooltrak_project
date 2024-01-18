@@ -117,11 +117,7 @@ import { SchoolPlansStore } from './plans.store';
         }
       </tbody>
     </table>
-    <sk-paginator
-      [count]="store.count()"
-      [pageSize]="store.pageSize()"
-      (paginate)="getCurrentPage($event)"
-    />
+    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
 export class StudyPlansComponent {

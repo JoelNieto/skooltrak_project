@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -139,7 +139,7 @@ import { SchoolPeopleStore } from './people.store';
               >
                 <div class="flex items-center gap-2">
                   <sk-avatar
-                    [avatarUrl]="person.user.avatar_url ?? 'default_avatar.jpg'"
+                    [fileName]="person.user.avatar_url ?? 'default_avatar.jpg'"
                     class="h-10"
                     [rounded]="true"
                   />
@@ -175,11 +175,7 @@ import { SchoolPeopleStore } from './people.store';
         }
       </tbody>
     </table>
-    <sk-paginator
-      [count]="store.count()"
-      [pageSize]="store.pageSize()"
-      (paginate)="getCurrentPage($event)"
-    />
+    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
 export class SchoolPeopleComponent implements OnInit {

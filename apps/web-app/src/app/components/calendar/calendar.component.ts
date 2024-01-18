@@ -1,14 +1,29 @@
 import { DialogModule } from '@angular/cdk/dialog';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssignmentView } from '@skooltrak/models';
 import { ButtonDirective } from '@skooltrak/ui';
-import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, DateAdapter } from 'angular-calendar';
+import {
+  CalendarDateFormatter,
+  CalendarEvent,
+  CalendarModule,
+  CalendarView,
+  DateAdapter,
+} from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DAYS_OF_WEEK } from 'calendar-utils';
-import { endOfDay, endOfMonth, endOfWeek, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
+import {
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+  isSameDay,
+  isSameMonth,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 
 import { CalendarStore } from './calendar.store';
 
@@ -32,7 +47,7 @@ import { CalendarStore } from './calendar.store';
       color="green"
       class="fixed bottom-12 right-12 z-50"
       routerLink="/app/courses/assignments"
-      [queryParams]="{ course_id: queryValue }"
+      [queryParams]="{ course_id: queryValue() }"
     >
       {{ 'CALENDAR.NEW_ASSIGNMENT' | translate }}
     </a>
@@ -163,8 +178,8 @@ import { CalendarStore } from './calendar.store';
     </div>`,
 })
 export class CalendarComponent implements OnInit {
-  @Input() public queryValue?: string;
-  @Input() public queryItem: 'course_id' | 'group_id' = 'course_id';
+  public queryValue = input<string>();
+  public queryItem = input<'course_id' | 'group_id'>('course_id');
   public store = inject(CalendarStore);
   private router = inject(Router);
   public assignments = this.store.assignments;
@@ -182,8 +197,8 @@ export class CalendarComponent implements OnInit {
 
   public ngOnInit(): void {
     patchState(this.store, {
-      queryItem: this.queryItem,
-      queryValue: this.queryValue,
+      queryItem: this.queryItem(),
+      queryValue: this.queryValue(),
     });
     this.fetchEvents();
   }

@@ -2,9 +2,9 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   Component,
   DestroyRef,
+  OnInit,
   effect,
   inject,
-  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -61,7 +61,7 @@ import { SchoolPeopleFormStore } from './people-form.store';
     <form [formGroup]="form" class="flex flex-col space-y-3">
       <div class="flex flex-col items-center justify-center gap-1">
         <sk-avatar
-          [avatarUrl]="data.user.avatar_url ?? 'default_avatar.jpg'"
+          [fileName]="data.user.avatar_url ?? 'default_avatar.jpg'"
           class="h-16"
           [rounded]="true"
         />

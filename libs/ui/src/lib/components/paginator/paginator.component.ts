@@ -4,7 +4,7 @@ import {
   computed,
   effect,
   EventEmitter,
-  Input,
+  input,
   OnInit,
   Output,
   signal,
@@ -39,9 +39,9 @@ import { InputDirective } from '../../directives/input/input.directive';
           'PAGINATOR.SHOWING'
             | translate
               : {
-                  start: START_INDEX() + 1,
-                  end: END_INDEX() + 1,
-                  count: ITEMS_COUNT()
+                  start: startIndex() + 1,
+                  end: endIndex() + 1,
+                  count: count()
                 }
         "
       >
@@ -58,36 +58,36 @@ import { InputDirective } from '../../directives/input/input.directive';
     <ul class="inline-flex items-center -space-x-px">
       <li>
         <a
-          (click)="setPage(CURRENT_PAGE() - 1)"
+          (click)="setPage(currentPage() - 1)"
           class="item block rounded-l-lg"
-          [ngClass]="{ disabled: CURRENT_PAGE() === 1 }"
+          [ngClass]="{ disabled: currentPage() === 1 }"
         >
           <ng-icon name="heroChevronLeft" size="14" />
         </a>
       </li>
-      @for (page of PAGES(); track page) {
+      @for (page of pages(); track page) {
         <li>
           <a
             (click)="setPage(page)"
             class="item block"
-            [ngClass]="{ active: CURRENT_PAGE() === page }"
+            [ngClass]="{ active: currentPage() === page }"
             >{{ page }}</a
           >
         </li>
       }
       <li>
         <a
-          (click)="setPage(TOTAL_PAGES())"
+          (click)="setPage(totalPages())"
           class="item block"
-          [ngClass]="{ active: CURRENT_PAGE() === TOTAL_PAGES() }"
-          >{{ TOTAL_PAGES() }}</a
+          [ngClass]="{ active: currentPage() === totalPages() }"
+          >{{ totalPages() }}</a
         >
       </li>
       <li>
         <a
-          (click)="setPage(CURRENT_PAGE() + 1)"
+          (click)="setPage(currentPage() + 1)"
           class="item block rounded-r-lg"
-          [ngClass]="{ disabled: CURRENT_PAGE() === TOTAL_PAGES() }"
+          [ngClass]="{ disabled: currentPage() === totalPages() }"
         >
           <ng-icon name="heroChevronRight" size="14" />
         </a>
@@ -109,72 +109,59 @@ import { InputDirective } from '../../directives/input/input.directive';
   ],
 })
 export class PaginatorComponent implements OnInit {
-  @Input() set count(count: number) {
-    this.ITEMS_COUNT.set(count);
-  }
-  @Input({ required: true }) set pageSize(pageSize: number) {
-    this.PAGE_SIZE.set(pageSize);
-  }
   @Output() paginate = new EventEmitter<{
     currentPage: number;
     start: number;
     pageSize: number;
   }>();
-  ITEMS_COUNT = signal<number>(0);
-  PAGE_SIZE = signal<number>(5);
-  TOTAL_PAGES = computed(() =>
-    Math.ceil(this.ITEMS_COUNT() / this.PAGE_SIZE()),
-  );
+  public count = input<number>(0);
+  public pageSize = signal<number>(5);
+
+  totalPages = computed(() => Math.ceil(this.count() / this.pageSize()));
 
   pageSizeControl = new FormControl<null | number>(null, { nonNullable: true });
-  CURRENT_PAGE = signal(1);
+  currentPage = signal(1);
 
-  START_PAGE = computed(() => {
-    if (this.TOTAL_PAGES() <= 5 || this.CURRENT_PAGE() <= 3) {
+  startPage = computed(() => {
+    if (this.totalPages() <= 5 || this.currentPage() <= 3) {
       return 1;
     }
-    if (this.CURRENT_PAGE() + 2 >= this.TOTAL_PAGES()) {
-      return this.TOTAL_PAGES() - 5;
+    if (this.currentPage() + 2 >= this.totalPages()) {
+      return this.totalPages() - 5;
     }
-    return this.CURRENT_PAGE() - 2;
+    return this.currentPage() - 2;
   });
 
-  END_PAGE = computed(() => {
-    if (
-      this.TOTAL_PAGES() <= 5 ||
-      this.CURRENT_PAGE() + 2 >= this.TOTAL_PAGES()
-    ) {
-      return this.TOTAL_PAGES();
+  endPage = computed(() => {
+    if (this.totalPages() <= 5 || this.currentPage() + 2 >= this.totalPages()) {
+      return this.totalPages();
     }
 
-    if (this.CURRENT_PAGE() <= 3) {
+    if (this.currentPage() <= 3) {
       return 6;
     }
 
-    return this.CURRENT_PAGE() + 3;
+    return this.currentPage() + 3;
   });
 
-  START_INDEX = computed(() => (this.CURRENT_PAGE() - 1) * this.PAGE_SIZE());
-  END_INDEX = computed(() =>
-    Math.min(
-      this.START_INDEX() + (this.PAGE_SIZE() - 1),
-      this.ITEMS_COUNT() - 1,
-    ),
+  startIndex = computed(() => (this.currentPage() - 1) * this.pageSize());
+  endIndex = computed(() =>
+    Math.min(this.startIndex() + (this.pageSize() - 1), this.count() - 1),
   );
 
-  CURRENT_RANGE = computed(() => this.CURRENT_PAGE());
+  currentRange = computed(() => this.currentPage());
 
-  PAGES = computed(() => range(this.START_PAGE(), this.END_PAGE())); //TODO - Fix three points page
+  pages = computed(() => range(this.startPage(), this.endPage())); //TODO - Fix three points page
 
-  setPage = (page: number) => this.CURRENT_PAGE.set(page);
+  setPage = (page: number) => this.currentPage.set(page);
 
   constructor() {
     effect(
       () =>
         this.paginate.emit({
-          currentPage: this.CURRENT_PAGE(),
-          start: this.START_INDEX(),
-          pageSize: this.PAGE_SIZE(),
+          currentPage: this.currentPage(),
+          start: this.startIndex(),
+          pageSize: this.pageSize(),
         }),
       { allowSignalWrites: true },
     );
@@ -182,9 +169,9 @@ export class PaginatorComponent implements OnInit {
   ngOnInit(): void {
     this.pageSizeControl.valueChanges.subscribe({
       next: (val) => {
-        !!val && this.PAGE_SIZE.set(val);
+        !!val && this.pageSize.set(val);
       },
     });
-    this.pageSizeControl.setValue(this.PAGE_SIZE());
+    this.pageSizeControl.setValue(this.pageSize());
   }
 }

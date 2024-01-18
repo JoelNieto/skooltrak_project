@@ -49,7 +49,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
               <div class="flex items-center gap-2">
                 @for (member of chat.members; track member.user_id) {
                   <sk-avatar
-                    [avatarUrl]="member.user.avatar_url ?? 'default_avatar.jpg'"
+                    [fileName]="member.user.avatar_url ?? 'default_avatar.jpg'"
                     class="h-12"
                     rounded
                   />
@@ -75,7 +75,7 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
       <div class="w-full px-8 py-3 border-b border-gray-200 flex gap-2">
         @for (member of store.currentChat()?.members; track member.user_id) {
           <sk-avatar
-            [avatarUrl]="member.user.avatar_url ?? 'default_avatar.jpg'"
+            [fileName]="member.user.avatar_url ?? 'default_avatar.jpg'"
             class="h-8"
             rounded
           />

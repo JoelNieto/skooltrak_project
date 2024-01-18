@@ -86,7 +86,7 @@ import { SchoolConnectorPage } from './school/school-connector.page';
         >
           <skooltrak-picture
             bucket="courses"
-            [pictureURL]="course.picture_url!"
+            [fileName]="course.picture_url!"
           ></skooltrak-picture>
           <ion-card-header>
             <ion-card-title>{{ course.subject?.name }}</ion-card-title>
@@ -112,7 +112,7 @@ import { SchoolConnectorPage } from './school/school-connector.page';
                 <ion-avatar aria-hidden="true" slot="start">
                   <skooltrak-picture
                     bucket="crests"
-                    [pictureURL]="school.crest_url ?? 'default_avatar.jpg'"
+                    [fileName]="school.crest_url ?? 'default_avatar.jpg'"
                   /> </ion-avatar
                 ><ion-radio [value]="school.id">{{
                   school.short_name

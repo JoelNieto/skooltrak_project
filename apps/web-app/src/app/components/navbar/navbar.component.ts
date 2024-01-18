@@ -96,7 +96,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
               >
                 <span class="sr-only">Open user menu</span>
                 <sk-avatar
-                  [avatarUrl]="user()?.avatar_url ?? 'default_avatar.jpg'"
+                  [fileName]="user()?.avatar_url ?? 'default_avatar.jpg'"
                   [rounded]="true"
                   class="w-8"
                 />

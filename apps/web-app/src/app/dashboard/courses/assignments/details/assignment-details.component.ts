@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -93,11 +93,11 @@ import { AssignmentDetailsStore } from './assignment-details.store';
   `,
 })
 export class AssignmentDetailsComponent implements OnInit {
-  @Input() private id: string | undefined;
+  private id = input.required<string>();
 
   public store = inject(AssignmentDetailsStore);
 
   public ngOnInit(): void {
-    !!this.id && this.store.fetchAssignment(this.id);
+    this.store.fetchAssignment(this.id());
   }
 }

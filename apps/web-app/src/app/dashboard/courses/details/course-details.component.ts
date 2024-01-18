@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroVideoCamera } from '@ng-icons/heroicons/outline';
@@ -74,13 +74,13 @@ import { CourseDetailsStore } from './course-details.store';
   `,
 })
 export class CourseDetailsComponent implements OnInit {
-  @Input() private course_id?: string;
+  private course_id = input.required<string>();
   public store = inject(CourseDetailsStore);
 
   private dialog = inject(Dialog);
 
   public ngOnInit(): void {
-    !!this.course_id && this.store.fetchCourse(this.course_id);
+    this.store.fetchCourse(this.course_id());
   }
 
   public showMeeting(): void {

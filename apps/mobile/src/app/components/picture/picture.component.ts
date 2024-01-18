@@ -4,7 +4,7 @@ import {
   Component,
   effect,
   inject,
-  Input,
+  input,
   signal,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -13,7 +13,7 @@ import { SupabaseService } from '@skooltrak/store';
 @Component({
   selector: 'skooltrak-picture',
   standalone: true,
-  template: `<img [class.rounded]="rounded" [attr.src]="src()" />`,
+  template: `<img [class.rounded]="rounded()" [attr.src]="src()" />`,
   styles: `
       :host {
         display: block;
@@ -24,22 +24,14 @@ import { SupabaseService } from '@skooltrak/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PictureComponent {
-  // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input({ required: false, alias: 'bucket' }) set _bucket(
-    bucket: string | undefined,
-  ) {
-    this.bucket.set(bucket);
-  }
-  @Input({ required: true }) set pictureURL(src: string) {
-    this.path.set(src);
-  }
+  public bucket = input<string>();
+  public fileName = input.required<string>();
 
-  @Input({ transform: booleanAttribute }) public rounded: boolean = false;
-
-  private path = signal('');
+  public rounded = input<boolean, string | boolean>(false, {
+    transform: booleanAttribute,
+  });
 
   public src = signal<SafeResourceUrl | undefined>('');
-  public bucket = signal<string | undefined>(undefined);
 
   private supabase = inject(SupabaseService);
   private dom = inject(DomSanitizer);
@@ -48,9 +40,9 @@ export class PictureComponent {
     effect(
       () => {
         if (!this.bucket()) {
-          this.src.set(this.path());
+          this.src.set(this.fileName());
         } else {
-          this.downloadImage(this.path());
+          this.downloadImage(this.fileName());
         }
       },
       { allowSignalWrites: true },

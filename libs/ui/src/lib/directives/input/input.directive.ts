@@ -4,7 +4,7 @@ import {
   ElementRef,
   HostBinding,
   inject,
-  Input,
+  input,
   OnInit,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -15,7 +15,9 @@ import { TranslateService } from '@ngx-translate/core';
   standalone: true,
 })
 export class InputDirective implements OnInit {
-  @Input({ transform: booleanAttribute }) validation: boolean = false;
+  public validation = input<boolean, boolean | string>(false, {
+    transform: booleanAttribute,
+  });
   private control = inject(NgControl);
   private elRef = inject(ElementRef);
   private translate = inject(TranslateService);
@@ -26,7 +28,7 @@ export class InputDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.validation) {
+    if (this.validation()) {
       const { name } = this.control;
       this.errorId = `${name}-error`;
       this.control.statusChanges?.subscribe({

@@ -104,7 +104,7 @@ import { ChatStore } from './chat.store';
                 <skooltrak-picture
                   bucket="avatars"
                   rounded
-                  [pictureURL]="member.user.avatar_url ?? 'default_avatar.jpg'"
+                  [fileName]="member.user.avatar_url ?? 'default_avatar.jpg'"
                 />
               </ion-avatar>
               <ion-label

@@ -1,8 +1,14 @@
 import { computed, inject } from '@angular/core';
 import { LoadingController, NavController } from '@ionic/angular';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { Chat, Table } from '@skooltrak/models';
-import { mobileStore, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, mobileStore } from '@skooltrak/store';
 import { orderBy } from 'lodash';
 
 type State = {
@@ -39,9 +45,10 @@ export const MessagesStore = signalStore(
         patchState(state, { loading: true });
         const { data, error } = await supabase.client
           .from(Table.Chats)
-          .select('*, members:chat_members(user_id, user:users(*), created_at)')
+          .select(
+            '*, members:chat_members(user_id, user:users(*), created_at), messages!inner(id, text, sent_at)',
+          )
           .order('last_message', { ascending: false });
-
         if (error) {
           console.error(error);
           patchState(state, { loading: false });

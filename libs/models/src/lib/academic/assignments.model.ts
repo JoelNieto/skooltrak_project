@@ -29,6 +29,7 @@ export type AssignmentView = {
   type_id: string;
   type: string;
   group_id: string;
+  upload_file: boolean;
   group_name: string;
   course_id: string;
   subject_id: string;
@@ -39,6 +40,7 @@ export type AssignmentView = {
   user_name: string;
   user_avatar: string;
   date: string;
+  created_at: Date;
 };
 
 export type GroupAssignment = {

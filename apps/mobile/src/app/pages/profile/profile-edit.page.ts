@@ -114,7 +114,7 @@ import { ProfileEditStore } from './profile-edit.store';
                 <ion-datetime
                   id="datetime"
                   presentation="date"
-                  locale="es-PA"
+                  locale="es-MX"
                   formControlName="birth_date"
                 />
               </ion-content>

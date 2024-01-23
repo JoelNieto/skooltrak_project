@@ -74,10 +74,10 @@ import { UsersSelectorStore } from './users-selector.store';
           IS_OPEN()
       }"
     >
-      @for (user of CURRENT_VALUE(); track user.id) {
+      @for (user of currentValue(); track user.id) {
         <sk-user-chip
           [user]="user"
-          [removable]="!single"
+          [removable]="!single()"
           (remove)="removeValue(user)"
         />
       } @empty {
@@ -158,7 +158,7 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
   public single = input<boolean, string | boolean>(false, {
     transform: booleanAttribute,
   });
-  public CURRENT_VALUE = signal<Partial<User>[]>([]);
+  public currentValue = signal<Partial<User>[]>([]);
   public overlay = inject(Overlay);
   public store = inject(UsersSelectorStore);
   private overlayRef!: OverlayRef;
@@ -181,7 +181,7 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
   public onTouch: any = () => {};
 
   constructor() {
-    effect(() => this.onChange(this.CURRENT_VALUE()), {
+    effect(() => this.onChange(this.currentValue()), {
       allowSignalWrites: true,
     });
   }
@@ -205,7 +205,7 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
   public IS_DISABLED!: boolean;
 
   public writeValue(obj: Partial<User>[] | undefined): void {
-    !!obj && this.CURRENT_VALUE.set(obj);
+    !!obj && this.currentValue.set(obj);
   }
 
   public registerOnChange = (fn: any): void => {
@@ -232,17 +232,21 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
 
   public toggleValue = (val: Partial<User>): void => {
     if (this.single()) {
-      this.CURRENT_VALUE.set([val]);
+      this.currentValue.set([val]);
       this.hide();
     } else {
-      this.CURRENT_VALUE.update((value) => [...value, val]);
+      if (this.currentValue().some((x) => x.id === val.id)) {
+        this.removeValue(val);
+      } else {
+        this.currentValue.update((value) => [...value, val]);
+      }
     }
 
     this.onTouch();
   };
 
   public removeValue = (val: Partial<User>): void => {
-    this.CURRENT_VALUE.update((value) => value.filter((x) => x.id !== val.id));
+    this.currentValue.update((value) => value.filter((x) => x.id !== val.id));
   };
 
   private hide = (): void => {

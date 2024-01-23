@@ -120,7 +120,7 @@ import { SchoolPeopleStore } from './people.store';
             {{ 'CREATED_AT' | translate }}
           </th>
           <th scope="col" class="px-6 py-3 text-center">
-            {{ 'ACTIONS' | translate }}
+            {{ 'ACTIONS.TITLE' | translate }}
           </th>
         </tr>
       </thead>

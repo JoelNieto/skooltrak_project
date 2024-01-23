@@ -83,7 +83,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
                 {{ date.group.name }}
               </div>
               <div class="font-sans text-gray-500 dark:text-gray-100">
-                {{ date.start_at | date: 'medium' }}
+                {{ date.date | date: 'mediumDate' }}
               </div>
             </div>
           }

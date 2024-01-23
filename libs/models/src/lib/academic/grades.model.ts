@@ -31,6 +31,7 @@ export type GradeBucket = Readonly<{
 export type GradeItem = Readonly<
   EntityBase & {
     grade_id: string;
+    grade?: Partial<GradeObject>;
     student_id: string;
     score: number;
     comments: string;

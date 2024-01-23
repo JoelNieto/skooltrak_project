@@ -62,23 +62,26 @@ import { SchoolFormStore } from './school-form.store';
         />
       </button>
     </div>
-    <div class="flex flex-col items-center justify-center space-y-4">
-      @if (store.school()?.crest_url) {
-        <sk-avatar
-          [fileName]="store.school()?.crest_url!"
-          (click)="uploadCrest()"
-          bucket="crests"
-          class="h-24 rounded-md"
-        />
-      } @else {
-        <img
-          (click)="uploadCrest()"
-          src="assets/images/skooltrak-logo.svg"
-          class="h-24"
-          alt="Skooltrak Logo"
-        />
-      }
-    </div>
+    @if (store.school()?.id) {
+      <div class="flex flex-col items-center justify-center space-y-4">
+        @if (store.school()?.crest_url) {
+          <sk-avatar
+            [fileName]="store.school()?.crest_url!"
+            (click)="uploadCrest()"
+            bucket="crests"
+            class="h-24 rounded-md"
+          />
+        } @else {
+          <img
+            (click)="uploadCrest()"
+            src="assets/images/skooltrak-logo.svg"
+            class="h-24"
+            alt="Skooltrak Logo"
+          />
+        }
+      </div>
+    }
+
     <form
       [formGroup]="form"
       class="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4"
@@ -88,13 +91,13 @@ import { SchoolFormStore } from './school-form.store';
         <label for="short_name" skLabel>{{
           'SCHOOL.SHORT_NAME' | translate
         }}</label>
-        <input type="text" formControlName="short_name" skInput />
+        <input type="text" formControlName="short_name" skInput validation />
       </div>
       <div>
         <label for="full_name" skLabel>{{
           'SCHOOL.FULL_NAME' | translate
         }}</label>
-        <input type="text" formControlName="full_name" skInput />
+        <input type="text" formControlName="full_name" skInput validation />
       </div>
       <div>
         <label for="type" skLabel>{{ 'SCHOOL.TYPE' | translate }}</label>
@@ -124,7 +127,12 @@ import { SchoolFormStore } from './school-form.store';
         <label for="contact_email" skLabel>{{
           'SCHOOL.EMAIL' | translate
         }}</label>
-        <input type="email" formControlName="contact_email" skInput />
+        <input
+          type="email"
+          formControlName="contact_email"
+          skInput
+          validation
+        />
       </div>
       <div>
         <label for="contact_phone" skLabel>{{
@@ -141,7 +149,7 @@ import { SchoolFormStore } from './school-form.store';
           type="submit"
           skButton
           color="sky"
-          [disabled]="this.form.invalid || this.form.untouched"
+          [disabled]="this.form.invalid"
         >
           {{ 'SAVE_CHANGES' | translate }}
         </button>
@@ -167,7 +175,7 @@ export class SchoolFormComponent implements OnInit {
     }),
     short_name: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(20)],
+      validators: [Validators.required, Validators.maxLength(50)],
     }),
     motto: new FormControl<string>('', { nonNullable: true }),
     address: new FormControl<string>('', { nonNullable: true }),
@@ -204,7 +212,7 @@ export class SchoolFormComponent implements OnInit {
     }>(ImageCropperComponent, {
       width: '48rem',
       maxWidth: '90%',
-      data: { ratio: 2 },
+      data: { ratio: 2, format: 'png' },
     });
     dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {

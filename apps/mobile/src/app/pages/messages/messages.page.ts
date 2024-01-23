@@ -30,6 +30,7 @@ import { DateAgoPipe } from '@skooltrak/ui';
 import { addIcons } from 'ionicons';
 import { add, addCircle, trash } from 'ionicons/icons';
 
+import { LoadingComponent } from '../../components/loading/loading.component';
 import { PictureComponent } from '../../components/picture/picture.component';
 import { UsersModalComponent } from '../../components/users-modal/users-modal.component';
 
@@ -60,6 +61,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
     IonButtons,
     IonButton,
     IonItemOptions,
+    LoadingComponent,
   ],
   providers: [IonRouterOutlet, ModalController],
   styles: [
@@ -103,64 +105,40 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
         </ion-toolbar>
       </ion-header>
       <ion-list>
-        @if (store.loading()) {
-          @for (item of loadingItems; track item) {
-            <ion-item>
-              <ion-thumbnail slot="start">
-                <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-              </ion-thumbnail>
-              <ion-label>
-                <h3>
-                  <ion-skeleton-text
-                    [animated]="true"
-                    style="width: 80%;"
-                  ></ion-skeleton-text>
-                </h3>
-                <p>
-                  <ion-skeleton-text
-                    [animated]="true"
-                    style="width: 60%;"
-                  ></ion-skeleton-text>
-                </p>
-              </ion-label>
+        @for (chat of store.sortedChats(); track chat.id) {
+          <ion-item-sliding>
+            <ion-item
+              [routerLink]="'chat'"
+              [queryParams]="{ chat_id: chat.id }"
+            >
+              @for (member of chat.members; track member.user_id) {
+                <ion-avatar aria-hidden="true" slot="start">
+                  <skooltrak-picture
+                    bucket="avatars"
+                    rounded
+                    [fileName]="member.user.avatar_url ?? 'default_avatar.jpg'"
+                  />
+                </ion-avatar>
+                <ion-label
+                  ><strong
+                    >{{ member.user.first_name }}
+                    {{ member.user.father_name }}</strong
+                  > </ion-label
+                ><ion-note color="medium">
+                  {{ chat.last_message | dateAgo }}</ion-note
+                >
+              }
             </ion-item>
-          }
-        } @else {
-          @for (chat of store.sortedChats(); track chat.id) {
-            <ion-item-sliding>
-              <ion-item
-                [routerLink]="'chat'"
-                [queryParams]="{ chat_id: chat.id }"
-              >
-                @for (member of chat.members; track member.user_id) {
-                  <ion-avatar aria-hidden="true" slot="start">
-                    <skooltrak-picture
-                      bucket="avatars"
-                      rounded
-                      [fileName]="
-                        member.user.avatar_url ?? 'default_avatar.jpg'
-                      "
-                    />
-                  </ion-avatar>
-                  <ion-label
-                    ><strong
-                      >{{ member.user.first_name }}
-                      {{ member.user.father_name }}</strong
-                    >
-                    <ion-text>{{ member.user.email }}</ion-text
-                    ><ion-note color="medium">
-                      {{ chat.last_message | dateAgo }}</ion-note
-                    ></ion-label
-                  >
-                }
-              </ion-item>
-              <ion-item-options>
-                <ion-item-option color="danger"
-                  ><ion-icon slot="icon-only" name="trash"
-                /></ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
-          } @empty {
+            <ion-item-options>
+              <ion-item-option color="danger"
+                ><ion-icon slot="icon-only" name="trash"
+              /></ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        } @empty {
+          @if (store.loading()) {
+            <skooltrak-loading type="users" />
+          } @else {
             <ion-text class="ion-text-center"
               ><h2>{{ 'CHAT.NO_ITEMS' | translate }}</h2>
             </ion-text>

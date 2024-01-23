@@ -37,8 +37,8 @@ export const coursesRoutes: Routes = [
           {
             path: 'grades',
             loadComponent: () =>
-              import('./grades/course-grades.component').then(
-                (x) => x.CourseGradesComponent,
+              import('./grades/grades.component').then(
+                (x) => x.GradesComponent,
               ),
           },
           {

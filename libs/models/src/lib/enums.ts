@@ -27,3 +27,10 @@ export enum ChannelPermissionEnum {
   READ = 'READ',
   WRITE = 'WRITE',
 }
+
+export enum PaymentMethodEnum {
+  CASH = 'CASH',
+  CREDIT_CARD = 'CREDIT_CARD',
+  TRANSFER = 'TRANSFER',
+  OTHER = 'OTHER',
+}

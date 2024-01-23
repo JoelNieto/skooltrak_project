@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDistance, formatRelative, isSameDay } from 'date-fns';
+import { format, formatDistance, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 @Pipe({
   name: 'dateAgo',
   standalone: true,
-  pure: false,
+  pure: true,
 })
 export class DateAgoPipe implements PipeTransform {
   transform(value: Date | string): string {
@@ -17,6 +17,6 @@ export class DateAgoPipe implements PipeTransform {
         addSuffix: true,
       });
     }
-    return formatRelative(new Date(date), now.getTime(), { locale: es });
+    return format(new Date(date), 'dd/MM/yyyy');
   }
 }

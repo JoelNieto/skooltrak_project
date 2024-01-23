@@ -50,7 +50,7 @@ import { GradesFormStore } from './grades-form.store';
         </button>
       </div>
       <div>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 gap-2">
           <div>
             <label for="title" skLabel>{{ 'GRADES.NAME' | translate }}</label>
             <input
@@ -71,6 +71,17 @@ import { GradesFormStore } from './grades-form.store';
             />
           </div>
           <div>
+            <label for="period" skLabel>{{
+              'GRADES.PERIOD' | translate
+            }}</label>
+            <sk-select
+              [items]="this.store.periods()"
+              label="name"
+              [placeholder]="'GRADES.SELECT_PERIOD' | translate"
+              formControlName="period_id"
+            />
+          </div>
+          <div>
             <label for="start_at" skLabel>{{
               'GRADES.DATE' | translate
             }}</label>
@@ -82,7 +93,7 @@ import { GradesFormStore } from './grades-form.store';
               skInput
             />
           </div>
-          <div class="col-span-3">
+          <div class="col-span-2">
             <label for="description" skLabel>{{
               'GRADES.DESCRIPTION' | translate
             }}</label>
@@ -96,10 +107,12 @@ import { GradesFormStore } from './grades-form.store';
         </div>
       </div>
       <div footer class="flex justify-end pt-6">
-        <button skButton color="blue" class="mr-2">
-          {{ 'GRADES.PUBLISH' | translate }}
-        </button>
-        <button skButton color="green" type="submit">
+        <button
+          skButton
+          color="green"
+          type="submit"
+          [disabled]="gradeForm.invalid"
+        >
           {{ 'GRADES.SAVE_CHANGES' | translate }}
         </button>
       </div>
@@ -122,7 +135,10 @@ export class GradesFormComponent implements OnInit {
     }),
     description: new FormControl('', { nonNullable: true }),
     course_id: new FormControl('', { nonNullable: true }),
-    period_id: new FormControl('', { nonNullable: true }),
+    period_id: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
   public store = inject(GradesFormStore);
   public dialogRef = inject(DialogRef<Grade>);

@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import localeEs from '@angular/common/locales/es-PA';
+import localeEs from '@angular/common/locales/es-MX';
 import { LOCALE_ID, importProvidersFrom } from '@angular/core';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import {
@@ -19,7 +19,7 @@ import { APP_CONFIG, environment } from '@skooltrak/environments';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 
-registerLocaleData(localeEs, 'es-PA');
+registerLocaleData(localeEs, 'es-MX');
 
 const translateLoader = (http: HttpClient): TranslateLoader =>
   new TranslateHttpLoader(http, '/assets/i18n/', '.json');
@@ -42,6 +42,6 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withComponentInputBinding()),
     { provide: APP_CONFIG, useValue: environment },
-    { provide: LOCALE_ID, useValue: 'es-PA' },
+    { provide: LOCALE_ID, useValue: 'es-MX' },
   ],
 });

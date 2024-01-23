@@ -11,11 +11,19 @@
     "TRY_AGAIN": "Por favor, intente nuevamente"
   },
   "ASSIGNMENTS": {
+    "CREATED": "Creada",
+    "DATE": "Fecha",
+    "DETAILS": "Detalles de la tarea",
     "EDIT": "Datos de la asignación",
     "GRADES": "Calificaciones",
     "INSTRUCTIONS": "Instrucciones",
+    "ITEM_TITLE": "Titulo",
     "NEW": "Nueva asignación",
+    "PLAN": "Nivel",
+    "TEACHER": "Docente",
     "TITLE": "Tareas",
+    "TYPE": "Tipo",
+    "UPLOAD_FILE": "Subir archivo",
     "WORK": "Trabajo"
   },
   "AUTH": {
@@ -109,15 +117,18 @@
   "GRADES": {
     "DATE": "Fecha",
     "DESCRIPTION": "Descripción",
-    "DESCRIPTION_PLACEHOLDER": "Descripción de la calificacion...",
-    "DETAILS": "Datos de la calificacion",
+    "DESCRIPTION_PLACEHOLDER": "Descripción de la calificación...",
+    "DETAILS": "Datos de la calificación",
     "NAME": "Nombre",
-    "NAME_PLACEHOLDER": "Nombre calificacion",
+    "NAME_PLACEHOLDER": "Nombre calificación",
+    "NEW": "Nueva calificación",
+    "PERIOD": "Periodo",
     "PUBLISH": "Publicar",
     "SAVE_CHANGES": "Guardar cambios",
+    "SELECT_PERIOD": "Elija periodo",
     "SELECT_TYPE": "Elija tipo",
     "TITLE": "Calificaciones",
-    "TYPE": "Tipo de calificacion"
+    "TYPE": "Tipo de calificación"
   },
   "GROUPS": {
     "DETAILS": "Detalles del grupo",
@@ -220,10 +231,11 @@
   "SCHEDULE": "Agenda",
   "SCHOOL": {
     "ADDRESS": "Dirección",
+    "ADMINISTRATION": "Administración",
     "COUNTRY": "Pais",
     "EMAIL": "Correo electrónico",
     "FULL_NAME": "Nombre completo",
-    "INFO": "Datos de la escuela",
+    "INFO": "Datos",
     "MOTTO": "Lema",
     "PHONE": "Telefono de contacto",
     "SETTINGS": "Ajustes del colegio",

@@ -21,6 +21,7 @@ import {
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { LoadingComponent } from '../loading/loading.component';
 import { PictureComponent } from '../picture/picture.component';
 import { UsersModalStore } from './users-modal.store';
 
@@ -42,6 +43,7 @@ import { UsersModalStore } from './users-modal.store';
     IonLabel,
     IonAvatar,
     IonText,
+    LoadingComponent,
     TranslateModule,
     PictureComponent,
     ReactiveFormsModule,
@@ -75,82 +77,7 @@ import { UsersModalStore } from './users-modal.store';
     <ion-content>
       <ion-list>
         @if (store.loading()) {
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 80%;"
-                ></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text
-                  [animated]="true"
-                  style="width: 60%;"
-                ></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
+          <skooltrak-loading type="users" [count]="10" />
         } @else {
           @for (user of store.users(); track user.id) {
             <ion-item (click)="modalCtrl.dismiss([user])">

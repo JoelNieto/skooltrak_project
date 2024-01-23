@@ -7,7 +7,6 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/store';
 
 @Component({
@@ -31,29 +30,22 @@ export class AvatarComponent {
   public rounded = input<boolean, string | boolean>(false, {
     transform: booleanAttribute,
   });
-
   public fileName = input.required<string>();
-  public avatarUrl = signal<SafeResourceUrl | undefined>(undefined);
+  public avatarUrl = signal<string | undefined>(undefined);
   private supabase = inject(SupabaseService);
-  private dom = inject(DomSanitizer);
 
   constructor() {
-    effect(() => this.downloadImage(this.fileName()));
-  }
-
-  private async downloadImage(path: string): Promise<void> {
-    try {
-      const { data } = await this.supabase.downloadFile(path, this.bucket());
-
-      if (data instanceof Blob) {
-        this.avatarUrl.set(
-          this.dom.bypassSecurityTrustUrl(URL.createObjectURL(data)),
+    effect(
+      () => {
+        const { data } = this.supabase.getFileURL(
+          this.fileName(),
+          this.bucket(),
         );
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error downloading image: ', error.message);
-      }
-    }
+        if (data.publicUrl) {
+          this.avatarUrl.set(data.publicUrl);
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 }

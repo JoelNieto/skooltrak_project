@@ -1,5 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, input, signal } from '@angular/core';
 import {
   IonBackButton,
   IonButtons,
@@ -78,19 +77,19 @@ import { CoursesStore } from './courses.store';
   ],
 })
 export class CourseDetailsPage {
+  private course_id = input<string>();
   public store = inject(CoursesStore);
-  private route = inject(ActivatedRoute);
   public currentSegment = signal('assignments');
   constructor() {
     addIcons({ checkboxOutline, starOutline });
   }
 
   public ionViewWillEnter(): void {
-    this.route.queryParams.subscribe({
-      next: ({ course_id }) => {
-        patchState(this.store, { selectedId: course_id });
-      },
-    });
+    patchState(this.store, { selectedId: this.course_id() });
+  }
+
+  public ionViewWillLeave(): void {
+    patchState(this.store, { selectedId: undefined });
   }
 
   public changeSegment(ev: CustomEvent): void {

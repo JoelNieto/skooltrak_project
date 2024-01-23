@@ -8,4 +8,6 @@ export type StudyPlan = EntityBase & {
   degree?: Degree;
   degree_id: string;
   year: number;
+  monthly_fee?: number;
+  annual_fee?: number;
 };

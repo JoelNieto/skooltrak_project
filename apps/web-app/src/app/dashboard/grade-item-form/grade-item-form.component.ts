@@ -24,7 +24,12 @@ import { CourseGradesStore } from '../grades/course-grades.store';
   selector: 'sk-grade-item-form',
   standalone: true,
   imports: [ReactiveFormsModule, InputDirective],
-  template: ` <input [formControl]="scoreControl" skInput type="number" />`,
+  template: ` <input
+    [formControl]="scoreControl"
+    skInput
+    type="number"
+    step=".1"
+  />`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -80,9 +85,9 @@ export class GradeItemFormComponent implements OnInit {
 
   private async saveGrade(): Promise<void> {
     let item = {
-      grade_id: this.gradeId,
+      grade_id: this.gradeId(),
       score: this.scoreControl.getRawValue(),
-      student_id: this.studentId,
+      student_id: this.studentId(),
     };
     item = this.currentItem()
       ? { ...item, ...{ id: this.currentItem()?.id } }
@@ -93,6 +98,10 @@ export class GradeItemFormComponent implements OnInit {
       .upsert([item]);
     if (error) {
       this.toast.error(this.translate.instant('ALERT_FAILURE'));
+
+      return;
     }
+    this.store.refresh();
+    this.toast.success(this.translate.instant('ALERT.SUCCESS'));
   }
 }

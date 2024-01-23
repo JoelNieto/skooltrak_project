@@ -62,6 +62,7 @@ import { AssignmentFormStore } from './assignment-form.store';
       ::ng-deep .ql-container.ql-snow,
       ::ng-deep .ql-toolbar.ql-snow {
         @apply border-0;
+        font-size: 1rem !important;
       }
     `,
   ],
@@ -104,6 +105,23 @@ import { AssignmentFormStore } from './assignment-form.store';
               formControlName="type_id"
             />
           </div>
+          <div class="flex flex-col justify-end pb-3">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input
+                formControlName="upload_file"
+                type="checkbox"
+                value=""
+                class="sr-only peer"
+              />
+              <div
+                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-sky-300 dark:peer-focus:ring-sky-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky-600"
+              ></div>
+              <span
+                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >{{ 'ASSIGNMENTS.UPLOAD_FILE' | translate }}</span
+              >
+            </label>
+          </div>
           <div class="col-span-2">
             <label for="description" skLabel>{{
               'DESCRIPTION' | translate
@@ -112,7 +130,7 @@ import { AssignmentFormStore } from './assignment-form.store';
               formControlName="description"
               [modules]="modules"
               theme="snow"
-              [styles]="{ height: '32vh' }"
+              [styles]="{ height: '20vh' }"
               skInput
             ></quill-editor>
           </div>
@@ -136,7 +154,6 @@ import { AssignmentFormStore } from './assignment-form.store';
             {{ 'GROUPS.TITLE' | translate }}
           </h2>
         </div>
-        {{ store.assignment()?.title }}
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
           @for (group of formGroups.controls; track group; let i = $index) {
             <ng-container>
@@ -172,6 +189,7 @@ export class AssignmentFormComponent implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
+    upload_file: new FormControl<boolean>(false, { nonNullable: true }),
     description: new FormControl<string>('', { nonNullable: true }),
     groups: new UntypedFormArray([]),
   });

@@ -29,6 +29,7 @@ import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
 import { closeCircle } from 'ionicons/icons';
 
+import { LoadingComponent } from '../../components/loading/loading.component';
 import { PictureComponent } from '../../components/picture/picture.component';
 import { CoursesStore } from './courses.store';
 
@@ -39,6 +40,7 @@ import { CoursesStore } from './courses.store';
     IonToolbar,
     IonTitle,
     IonContent,
+    LoadingComponent,
     TranslateModule,
     PictureComponent,
     IonCard,
@@ -128,7 +130,7 @@ import { CoursesStore } from './courses.store';
         </ion-card>
       } @empty {
         @if (store.loading()) {
-          Loading;
+          <skooltrak-loading type="card" />
         } @else if (store.error()) {
           <ion-grid>
             <ion-row class="ion-justify-content-center ion-align-items-center">

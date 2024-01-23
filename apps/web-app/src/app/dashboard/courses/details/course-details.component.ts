@@ -58,7 +58,7 @@ import { CourseDetailsStore } from './course-details.store';
         <sk-tabs>
           <sk-tabs-item link="news">{{ 'News' | translate }}</sk-tabs-item>
           <sk-tabs-item link="schedule">{{
-            'Schedule' | translate
+            'SCHEDULE' | translate
           }}</sk-tabs-item>
           <sk-tabs-item link="grades">{{
             'GRADES.TITLE' | translate

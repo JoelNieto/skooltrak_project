@@ -12,7 +12,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 import { CalendarEvent } from 'calendar-utils';
-import { format } from 'date-fns';
+import { addHours, format } from 'date-fns';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type QueryItem = 'course_id' | 'group_id';
@@ -70,7 +70,7 @@ export const CalendarStore = signalStore(
                 return data.map((assignment) => ({
                   id: assignment.id,
                   title: `${assignment.subject_name} (${assignment.group_name}): ${assignment.title}`,
-                  start: new Date(assignment.date),
+                  start: addHours(new Date(assignment.date), 13),
                   meta: { assignment },
                 }));
               }),

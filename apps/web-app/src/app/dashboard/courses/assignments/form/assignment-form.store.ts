@@ -61,7 +61,9 @@ export const AssignmentFormStore = signalStore(
       async fetchTypes(): Promise<void> {
         const { data, error } = await supabase.client
           .from(Table.AssignmentTypes)
-          .select('id, name, is_urgent, is_summative');
+          .select('id, name, is_urgent, is_summative')
+          .order('name', { ascending: true });
+
         if (error) {
           console.error(error);
 
@@ -101,7 +103,6 @@ export const AssignmentFormStore = signalStore(
         ),
       ),
       async fetchAssignment(assignmentId: string): Promise<void> {
-        patchState(state, { loading: true });
         const { data, error } = await supabase.client
           .from(Table.Assignments)
           .select('id,title,course_id,type_id,description,created_at,user_id')
@@ -125,6 +126,7 @@ export const AssignmentFormStore = signalStore(
               'id',
               'title',
               'description',
+              'upload_file',
               'course_id',
               'type_id',
             ]),

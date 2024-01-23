@@ -74,6 +74,14 @@ export class SupabaseService {
     return this.client.storage.from(bucket).download(path);
   }
 
+  public getFileURL(path: string, bucket: string) {
+    return this.client.storage.from(bucket).getPublicUrl(path);
+  }
+
+  public createBucket(name: string) {
+    return this.client.storage.createBucket(name);
+  }
+
   public deleteImage(bucket: string, path: string) {
     this.client.storage.from(bucket).remove([path]);
   }

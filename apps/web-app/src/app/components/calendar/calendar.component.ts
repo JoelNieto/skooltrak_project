@@ -99,7 +99,7 @@ import { CalendarStore } from './calendar.store';
             viewDate
               | calendarDate
                 : view + 'ViewTitle'
-                : 'es-PA'
+                : 'es-MX'
                 : weekStartOn
                 : excludeDays
           }}
@@ -190,7 +190,7 @@ export class CalendarComponent implements OnInit {
   public weekStartOn = DAYS_OF_WEEK.MONDAY;
   public weekendDays = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
   public excludeDays: number[] = [0, 8];
-  public locale = 'es-PA';
+  public locale = 'es-MX';
   public events: CalendarEvent[] = this.store.assignments();
 
   public activeDayIsOpen = true;

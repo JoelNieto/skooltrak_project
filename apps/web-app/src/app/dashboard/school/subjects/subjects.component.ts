@@ -81,7 +81,7 @@ import { SchoolSubjectsStore } from './subjects.store';
           <th scope="col" class="px-6 py-3">{{ 'CODE' | translate }}</th>
           <th score="col" class="px-6 py-3">{{ 'CREATED' | translate }}</th>
           <th scope="col" class="px-6 py-3 text-center">
-            {{ 'ACTIONS' | translate }}
+            {{ 'ACTIONS.TITLE' | translate }}
           </th>
         </tr>
       </thead>

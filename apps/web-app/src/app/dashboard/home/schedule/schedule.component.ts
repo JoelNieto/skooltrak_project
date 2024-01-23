@@ -6,9 +6,7 @@ import { CalendarComponent } from '../../../components/calendar/calendar.compone
   standalone: true,
   selector: 'sk-schedule',
   imports: [CalendarComponent],
-  template: `@defer {
-    <sk-calendar [queryValue]="course_id()" />
-  }`,
+  template: ` <sk-calendar [queryValue]="course_id()" /> `,
 })
 export class ScheduleComponent {
   public course_id = input.required<string>();

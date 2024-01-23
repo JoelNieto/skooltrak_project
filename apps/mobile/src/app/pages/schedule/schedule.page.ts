@@ -11,13 +11,19 @@ import {
   IonList,
   IonNote,
   IonRow,
+  IonText,
   IonTitle,
   IonToolbar,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
+import { AssignmentView } from '@skooltrak/models';
+import { webStore } from '@skooltrak/store';
 import { format } from 'date-fns';
 
+import { AssignmentDetailsPage } from '../../components/assignment/assignment-details.component';
+import { LoadingComponent } from '../../components/loading/loading.component';
 import { ScheduleStore } from './schedule.store';
 
 @Component({
@@ -36,41 +42,61 @@ import { ScheduleStore } from './schedule.store';
     IonCol,
     IonLabel,
     IonNote,
+    IonText,
     ReactiveFormsModule,
+    AssignmentDetailsPage,
+    LoadingComponent,
   ],
   providers: [ScheduleStore],
-  template: `<ion-header>
+  template: `<ion-header class="ion-no-border">
       <ion-toolbar>
-        <ion-title> {{ 'SCHEDULE' | translate }}</ion-title>
+        <ion-title>
+          {{ 'SCHEDULE' | translate }}
+        </ion-title>
       </ion-toolbar>
       <ion-toolbar>
         <ion-grid>
-          <ion-row>
-            <ion-col class="ion-align-self-center">
-              <ion-datetime [formControl]="dateControl" presentation="date" />
+          <ion-row class="ion-justify-content-center">
+            <ion-col class="ion-align-self-center" size="11">
+              <ion-datetime
+                [formControl]="dateControl"
+                presentation="date"
+                locale="es-MX"
+              />
             </ion-col>
           </ion-row>
         </ion-grid> </ion-toolbar></ion-header
-    ><ion-content class="ion-padding">
+    ><ion-content>
       <ion-list>
         @for (assignment of store.assignments(); track assignment.id) {
-          <ion-item>
+          <ion-item (click)="showAssignment(assignment)">
             <ion-label>
-              <h2>
+              <h2 color="tertiary">
                 {{ assignment.title }}
               </h2>
               <p>{{ assignment.subject_name }}</p>
+              @if (auth.isAdmin() || auth.isTeacher()) {
+                <ion-text color="tertiary">
+                  <p>{{ assignment.group_name }}</p>
+                </ion-text>
+              }
             </ion-label>
             <ion-note color="primary">
               {{ assignment.type }}
             </ion-note>
           </ion-item>
+        } @empty {
+          @if (store.loading()) {
+            <skooltrak-loading type="items" />
+          }
         }
       </ion-list>
     </ion-content>`,
 })
 export class SchedulePage implements OnInit {
   public store = inject(ScheduleStore);
+  public auth = inject(webStore.AuthStore);
+  private modalCtrl = inject(ModalController);
   public dateControl = new FormControl(format(new Date(), 'yyyy-MM-dd'), {
     nonNullable: true,
   });
@@ -81,5 +107,13 @@ export class SchedulePage implements OnInit {
         patchState(this.store, { date });
       },
     });
+  }
+
+  public async showAssignment(assignment: AssignmentView): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: AssignmentDetailsPage,
+      componentProps: { assignment },
+    });
+    modal.present();
   }
 }

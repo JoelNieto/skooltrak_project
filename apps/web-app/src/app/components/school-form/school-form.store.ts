@@ -10,6 +10,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Country, School, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
+import { snakeCase } from 'lodash';
 
 type State = {
   loading: boolean;
@@ -49,7 +50,7 @@ export const SchoolFormStore = signalStore(
       },
       async uploadCrest(request: File): Promise<void> {
         patchState(state, { loading: true });
-        const { data, error } = await supabase.uploadPicture(request, 'crest');
+        const { data, error } = await supabase.uploadPicture(request, 'crests');
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
@@ -74,6 +75,8 @@ export const SchoolFormStore = signalStore(
 
           return;
         }
+        toast.success(translate.instant('ALERT.SUCCESS'));
+        await supabase.createBucket(snakeCase(request.full_name));
         patchState(state, { loading: false });
       },
     }),

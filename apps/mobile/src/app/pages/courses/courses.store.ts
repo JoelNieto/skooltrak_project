@@ -54,10 +54,12 @@ export const CoursesStore = signalStore(
 
         if (isStudent()) {
           await fetchStudentCourses();
+
           return;
         }
         if (isTeacher()) {
           await fetchTeacherCourses();
+
           return;
         }
         const { data, error } = await supabase.client
@@ -65,10 +67,12 @@ export const CoursesStore = signalStore(
           .select(
             'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
           )
+          .order('subject(name)', { ascending: true })
           .eq('school_id', schoolId());
 
         if (error) {
           logError(error);
+
           return;
         }
 
@@ -81,13 +85,16 @@ export const CoursesStore = signalStore(
             'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, student:users!course_students!inner(id), teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
           )
           .eq('school_id', schoolId())
+          .order('subject(name)')
           .filter('student.id', 'eq', userId());
         if (error) {
           logError(error);
+
           return;
         }
         setCourses(data);
       }
+
       async function fetchTeacherCourses(): Promise<void> {
         const { data, error } = await supabase.client
           .from(Table.Courses)
@@ -95,22 +102,23 @@ export const CoursesStore = signalStore(
             'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, teachers:users!course_teachers!inner(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
           )
           .eq('school_id', schoolId())
+          .order('subject(name)', { ascending: true })
           .filter('teachers.id', 'eq', userId());
         if (error) {
           logError(error);
+
           return;
         }
         setCourses(data);
       }
+
       function logError(error: PostgrestError): void {
         console.error(error);
         patchState(state, { loading: false, error: true });
       }
+
       function setCourses(data: unknown): void {
-        patchState(state, {
-          courses: data as Course[],
-          loading: false,
-        });
+        patchState(state, { courses: data as Course[], loading: false });
       }
 
       return {

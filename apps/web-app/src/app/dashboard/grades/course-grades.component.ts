@@ -48,7 +48,7 @@ import { CourseGradesStore } from './course-grades.store';
         />
       </div>
       <button skButton color="green" (click)="newGrade()">
-        + {{ 'New' | translate }}
+        + {{ 'GRADES.NEW' | translate }}
       </button>
     </div>
     <div class="max-h-96 w-auto overflow-auto">

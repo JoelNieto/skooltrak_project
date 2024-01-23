@@ -18,13 +18,15 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
       <h2
         class="font-title mb-3 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
-        {{ 'SCHOOL.SETTINGS' | translate }}
+        {{ 'SCHOOL.ADMINISTRATION' | translate }}
       </h2>
     </div>
     <div>
       <sk-tabs>
         <sk-tabs-item link="info">{{ 'SCHOOL.INFO' | translate }}</sk-tabs-item>
-        <sk-tabs-item link="courses">{{ 'COURSES.TITLE' | translate }}</sk-tabs-item>
+        <sk-tabs-item link="courses">{{
+          'COURSES.TITLE' | translate
+        }}</sk-tabs-item>
         <sk-tabs-item link="plans">{{
           'PLANS.TITLE' | translate
         }}</sk-tabs-item>

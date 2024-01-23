@@ -16,7 +16,7 @@ import { distinctUntilChanged, filter, pipe, tap } from 'rxjs';
 type State = {
   loading: boolean;
   date: string;
-  assignments: Partial<AssignmentView>[];
+  assignments: AssignmentView[];
 };
 
 const initialState: State = {
@@ -46,16 +46,26 @@ export const ScheduleStore = signalStore(
 
       async function getAssignments(): Promise<void> {
         patchState(state, { loading: true, assignments: [] });
-        const { data, error } = await supabase.client
+        let query = supabase.client
           .from(Table.AssignmentsView)
           .select('*')
-          .eq('group_id', auth.group()?.id)
-          .gte('start_at', date())
-          .lte('start_at', endDate());
+          .eq('school_id', auth.schoolId())
+          .gte('date', date())
+          .lte('date', endDate());
+
+        if (auth.isTeacher()) {
+          query = query.eq('user_id', auth.userId());
+        }
+        if (auth.isStudent()) {
+          query = query.eq('group_id', auth.group()?.id);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
+
           return;
         }
 

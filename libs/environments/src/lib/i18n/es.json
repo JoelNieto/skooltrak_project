@@ -75,7 +75,8 @@
   "COURSES": {
     "ASSIGNMENTS": "Tareas",
     "DETAILS": "Detalles del curso",
-    "GRADES": "Calificaciones",
+    "GRADES": "Notas",
+    "NEWS": "Noticias",
     "OPEN_CLASS": "Iniciar clase",
     "PLAN": "Plan de estudios",
     "SELECT_DEGREE": "Seleccione nivel",

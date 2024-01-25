@@ -39,6 +39,9 @@ import { CoursesStore } from './courses.store';
           value="assignments"
           (ionChange)="changeSegment($event)"
         >
+          <ion-segment-button value="news">
+            {{ 'COURSES.NEWS' | translate }}</ion-segment-button
+          >
           <ion-segment-button value="assignments">
             {{ 'COURSES.ASSIGNMENTS' | translate }}</ion-segment-button
           >

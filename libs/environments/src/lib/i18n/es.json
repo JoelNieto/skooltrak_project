@@ -2,6 +2,7 @@
   "ACTIONS": {
     "ERROR": "Algo salio mal. Pruebe nuevamente",
     "RELOAD": "Recargar",
+    "SEARCH": "Buscar",
     "TITLE": "Acciones"
   },
   "ADMIN": "Administrador",
@@ -173,6 +174,9 @@
   "Mother name": "Apellido materno",
   "NAME": "Nombre",
   "NEW": "Nuevo",
+  "NEWS": {
+    "TITLE": "Noticias"
+  },
   "NO_ITEMS": "Sin  elementos para este filtro",
   "News": "Novedades",
   "Other": "Otro",
@@ -219,6 +223,20 @@
     "MOTHER_NAME": "Apellido materno",
     "NAME": "Perfil",
     "TITLE": "Datos personales"
+  },
+  "PUBLICATIONS": {
+    "BODY": "Que esta pasando?",
+    "DEGREE": "Nivel",
+    "DETAILS": "Publicación",
+    "NEW": "Nueva publicación",
+    "PERSONAL_FILTER": "Mis notificaciones",
+    "PLAN": "Grado",
+    "PUBLIC": "Visible para toda la escuela",
+    "PUBLIC_FILTER": "Publico",
+    "PUBLISH": "Publicar",
+    "ROLES": "Roles",
+    "SUCCESS": "Anuncio publicado exitosamente!",
+    "TITLE": "Titulo de la publicación"
   },
   "Polls": "Encuestas",
   "RESET_PASSWORD": {

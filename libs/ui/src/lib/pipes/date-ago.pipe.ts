@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { format, formatDistance, isSameDay } from 'date-fns';
+import { format, isSameDay, isSameWeek } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 @Pipe({
@@ -12,10 +12,12 @@ export class DateAgoPipe implements PipeTransform {
     const now = new Date();
     const date = new Date(value);
     if (isSameDay(now, date)) {
-      return formatDistance(new Date(date), now.getTime(), {
+      return format(new Date(date), 'h:mm aaaa', {
         locale: es,
-        addSuffix: true,
       });
+    }
+    if (isSameWeek(now, date)) {
+      return format(new Date(date), 'eeee', { locale: es });
     }
     return format(new Date(date), 'dd/MM/yyyy');
   }

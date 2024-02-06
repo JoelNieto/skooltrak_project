@@ -27,4 +27,8 @@ export enum Table {
   Messages = 'messages',
   ChatMembers = 'chat_members',
   Students = 'active_students',
+  Publications = 'publications',
+  PublicationDegrees = 'publication_degrees',
+  PublicationPlans = 'publication_plans',
+  PublicationRoles = 'publication_roles',
 }

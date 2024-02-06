@@ -9,7 +9,7 @@ import {
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { RoleEnum, Table } from '@skooltrak/models';
-import { mobileStore, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, mobileStore } from '@skooltrak/store';
 
 type State = {
   loading: boolean;
@@ -47,6 +47,7 @@ export const SchoolConnectorStore = signalStore(
           });
           toast.present();
           patchState(state, { loading: false });
+
           return;
         }
         const alert = await alertCtrl.create({
@@ -86,6 +87,7 @@ export const SchoolConnectorStore = signalStore(
           toast.present();
           patchState(state, { loading: false });
           loading.dismiss();
+
           return;
         }
         const toast = await toastCtrl.create({

@@ -1,5 +1,6 @@
 import { User } from '../auth';
 import { EntityBase } from '../entity';
+import { Message } from './message.model';
 
 export type Chat = EntityBase & {
   id: string;
@@ -7,6 +8,7 @@ export type Chat = EntityBase & {
   user_id: string;
   members: ChatMember[];
   last_message: Date;
+  message: Message[];
 };
 
 export type ChatMember = {

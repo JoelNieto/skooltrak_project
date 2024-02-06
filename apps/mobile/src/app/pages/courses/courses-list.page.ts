@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import {
   IonAvatar,
   IonButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -19,6 +18,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonRow,
+  IonSearchbar,
   IonText,
   IonTitle,
   IonToolbar,
@@ -53,13 +53,13 @@ import { CoursesStore } from './courses.store';
     IonCol,
     IonRow,
     IonButton,
-    IonButtons,
     IonIcon,
     IonText,
     IonChip,
     IonAvatar,
     IonLabel,
     IonRefresher,
+    IonSearchbar,
     IonRefresherContent,
   ],
   selector: 'skooltrak-courses-list',
@@ -68,32 +68,18 @@ import { CoursesStore } from './courses.store';
     padding: .5rem;
   }
   `,
-  template: ` <ion-header translucent="true" class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>{{ 'COURSES.TITLE' | translate }} </ion-title>
-        <ion-buttons slot="primary">
-          <ion-avatar class="header-avatar">
-            <skooltrak-picture
-              bucket="avatars"
-              rounded
-              [fileName]="auth.user()?.avatar_url ?? 'default_avatar.jpg'"
-            />
-          </ion-avatar>
-        </ion-buttons>
+  template: ` <ion-header class="ion-no-border">
+      <ion-toolbar color="primary">
+        <ion-title size="large">{{ 'COURSES.TITLE' | translate }} </ion-title>
+      </ion-toolbar>
+      <ion-toolbar color="primary">
+        <ion-searchbar inputmode="search" />
       </ion-toolbar>
     </ion-header>
     <ion-content fullscreen="true">
       <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content />
       </ion-refresher>
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">
-            {{ 'COURSES.TITLE' | translate }}
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
-
       @for (course of store.courses(); track course.id) {
         <ion-card routerLink="details" [queryParams]="{ course_id: course.id }">
           <skooltrak-picture

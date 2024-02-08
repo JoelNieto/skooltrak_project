@@ -1,45 +1,36 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { PublicationObject, Table } from '@skooltrak/models';
-import { mobileStore, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 
 type State = {
   loading: boolean;
-  news: PublicationObject[];
+  publications: PublicationObject[];
   start: number;
   pageSize: number;
-  filterText: string;
-  filterType: 'public' | 'personal';
 };
 
 const initial: State = {
   loading: true,
-  news: [],
+  publications: [],
   start: 0,
   pageSize: 10,
-  filterText: '',
-  filterType: 'public',
 };
 
-export const NewsStore = signalStore(
+export const PublicationsStore = signalStore(
   withState(initial),
-  withComputed(({ start, pageSize }, auth = inject(mobileStore.AuthStore)) => {
+  withComputed(({ start, pageSize }, auth = inject(webStore.AuthStore)) => {
     const schoolId = computed(() => auth.schoolId());
     const end = computed(() => start() + (pageSize() - 1));
-    const isAdmin = computed(() => auth.isAdmin());
-    const isStudent = computed(() => auth.isStudent());
-    const isTeacher = computed(() => auth.isTeacher());
-    const group = computed(() => auth.group());
-    const role = computed(() => auth.currentRole());
 
-    return { schoolId, end, isAdmin, isStudent, isTeacher, group, role };
+    return { schoolId, end };
   }),
   withMethods(
     (
-      { schoolId, start, end, pageSize, role, ...state },
+      { schoolId, start, end, pageSize, ...state },
       supabase = inject(SupabaseService),
     ) => {
-      async function getNews(): Promise<void> {
+      async function getPublications(): Promise<void> {
         patchState(state, { loading: true });
 
         const { data, error } = await supabase.client
@@ -48,7 +39,6 @@ export const NewsStore = signalStore(
             'id, title, body, created_at, school_id, user_id, roles:publication_roles!inner(role), user:users(id, first_name, father_name, avatar_url)',
           )
           .eq('school_id', schoolId())
-          .eq('roles.role', role())
           .range(start(), end())
           .order('created_at', { ascending: false });
 
@@ -61,16 +51,18 @@ export const NewsStore = signalStore(
 
         patchState(state, {
           loading: false,
-          news: [...state.news(), ...(data as PublicationObject[])],
+          publications: [
+            ...state.publications(),
+            ...(data as PublicationObject[]),
+          ],
         });
       }
-
       function paginate(): void {
         patchState(state, { start: start() + pageSize() });
-        getNews();
+        getPublications();
       }
 
-      return { getNews, paginate };
+      return { getPublications, paginate };
     },
   ),
 );

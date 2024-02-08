@@ -21,8 +21,6 @@ import {
   IonLabel,
   IonRow,
   IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -30,6 +28,7 @@ import {
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { PublicationObject } from '@skooltrak/models';
+import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
 import { add } from 'ionicons/icons';
 
@@ -66,13 +65,11 @@ import { NewsStore } from './news.store';
     IonInfiniteScrollContent,
     IonSearchbar,
     IonItem,
-    IonSegment,
-    IonSegmentButton,
   ],
   providers: [NewsStore],
   styles: `
     .text-preview {
-      height: 2rem;
+      height: 2.5rem;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -94,16 +91,6 @@ import { NewsStore } from './news.store';
           animated="true"
           [placeholder]="'ACTIONS.SEARCH' | translate"
         />
-      </ion-toolbar>
-      <ion-toolbar>
-        <ion-segment color="primary" value="public">
-          <ion-segment-button value="public">{{
-            'PUBLICATIONS.PUBLIC_FILTER' | translate
-          }}</ion-segment-button>
-          <ion-segment-button value="personal">{{
-            'PUBLICATIONS.PERSONAL_FILTER' | translate
-          }}</ion-segment-button>
-        </ion-segment>
       </ion-toolbar>
     </ion-header>
     <ion-content fullscreen="true">
@@ -138,16 +125,19 @@ import { NewsStore } from './news.store';
       <ion-infinite-scroll (ionInfinite)="infiniteScroll($event)">
         <ion-infinite-scroll-content />
       </ion-infinite-scroll>
-      <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-        <ion-fab-button (click)="newPublication()">
-          <ion-icon name="add" />
-        </ion-fab-button>
-      </ion-fab>
+      @if (auth.isAdmin()) {
+        <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+          <ion-fab-button (click)="newPublication()">
+            <ion-icon name="add" />
+          </ion-fab-button>
+        </ion-fab>
+      }
     </ion-content>`,
 })
 export class NewsPage {
   private modalCtrl = inject(ModalController);
   public store = inject(NewsStore);
+  public auth = inject(mobileStore.AuthStore);
 
   constructor() {
     addIcons({ add });

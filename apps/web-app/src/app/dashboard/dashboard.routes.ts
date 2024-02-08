@@ -15,6 +15,14 @@ export const dashboardRoutes: Routes = [
           import('./home/home.routes').then((x) => x.homeRoutes),
       },
       {
+        path: 'schedule',
+        title: 'SCHEDULE',
+        loadComponent: () =>
+          import('./schedule/schedule.component').then(
+            (x) => x.ScheduleComponent,
+          ),
+      },
+      {
         path: 'courses',
         title: 'COURSES.TITLE',
         loadChildren: () =>

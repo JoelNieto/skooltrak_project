@@ -14,16 +14,7 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
     TranslateModule,
     RouterOutlet,
   ],
-  template: ` <sk-card>
-    <div header>
-      <h2
-        class="font-title mb-2 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
-      >
-        {{ 'WELCOME' | translate: { name: auth.user()?.first_name } }}
-      </h2>
-    </div>
-    <router-outlet />
-  </sk-card>`,
+  template: `<router-outlet />`,
 })
 export class HomeComponent {
   public auth = inject(webStore.AuthStore);

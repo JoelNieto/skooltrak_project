@@ -4,8 +4,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
   heroArrowRightOnRectangle,
-  heroBookOpen,
   heroBookmarkSquare,
+  heroBookOpen,
   heroBuildingLibrary,
   heroCalendarDays,
   heroClipboardDocument,
@@ -53,6 +53,13 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
         <li>
           <a routerLink="home" class="link" routerLinkActive="active"
             ><ng-icon name="heroHome" size="24" />{{ 'HOME' | translate }}</a
+          >
+        </li>
+        <li>
+          <a routerLink="schedule" class="link" routerLinkActive="active"
+            ><ng-icon name="heroCalendarDays" size="24" />{{
+              'SCHEDULE' | translate
+            }}</a
           >
         </li>
         <li>

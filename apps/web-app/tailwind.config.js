@@ -12,11 +12,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Urbanist', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Inter', 'Helvetica Neue', 'sans-serif'],
         title: ['Gabarito', 'Helvetica Neue', 'sans-serif'],
         mono: ['Space Mono', 'monospace'],
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
+  plugins: [require('flowbite/plugin')],
 };

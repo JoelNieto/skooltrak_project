@@ -1,22 +1,15 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, OnInit, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Grade } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
 
 import { GradesFormStore } from './grades-form.store';
 
@@ -29,8 +22,10 @@ import { GradesFormStore } from './grades-form.store';
     SelectComponent,
     ReactiveFormsModule,
     NgIconComponent,
-    LabelDirective,
-    InputDirective,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
   ],
   providers: [GradesFormStore, provideIcons({ heroXMark })],
   template: `<form [formGroup]="gradeForm" (ngSubmit)="saveGrade()">
@@ -51,59 +46,67 @@ import { GradesFormStore } from './grades-form.store';
       </div>
       <div>
         <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label for="title" skLabel>{{ 'GRADES.NAME' | translate }}</label>
+          <mat-form-field>
+            <mat-label for="title">{{ 'GRADES.NAME' | translate }}</mat-label>
             <input
               type="text"
               name="title"
               [placeholder]="'GRADES.NAME_PLACEHOLDER' | translate"
               formControlName="title"
-              skInput
+              matInput
             />
-          </div>
-          <div>
-            <label for="bucket" skLabel>{{ 'GRADES.TYPE' | translate }}</label>
-            <sk-select
-              [items]="this.store.buckets()"
-              label="name"
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label for="bucket" skLabel>{{
+              'GRADES.TYPE' | translate
+            }}</mat-label>
+            <mat-select
               [placeholder]="'GRADES.SELECT_TYPE' | translate"
               formControlName="bucket_id"
-            />
-          </div>
-          <div>
-            <label for="period" skLabel>{{
+            >
+              @for (bucket of store.buckets(); track bucket.id) {
+                <mat-option [value]="bucket.id">{{ bucket.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label for="period">{{
               'GRADES.PERIOD' | translate
-            }}</label>
-            <sk-select
-              [items]="this.store.periods()"
-              label="name"
+            }}</mat-label>
+            <mat-select
               [placeholder]="'GRADES.SELECT_PERIOD' | translate"
               formControlName="period_id"
-            />
-          </div>
-          <div>
-            <label for="start_at" skLabel>{{
+            >
+              @for (period of store.periods(); track period.id) {
+                <mat-option [value]="period.id">{{ period.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label for="start_at">{{
               'GRADES.DATE' | translate
-            }}</label>
+            }}</mat-label>
             <input
-              type="date"
               name="start_at"
               formControlName="start_at"
               id="start_at"
-              skInput
+              matInput
+              [matDatepicker]="picker"
             />
-          </div>
-          <div class="col-span-2">
-            <label for="description" skLabel>{{
+            <mat-datepicker-toggle matIconSuffix [for]="picker" />
+            <mat-datepicker #picker />
+          </mat-form-field>
+          <mat-form-field class="col-span-2">
+            <mat-label for="description" skLabel>{{
               'GRADES.DESCRIPTION' | translate
-            }}</label>
+            }}</mat-label>
             <textarea
-              skInput
+              matInput
               formControlName="description"
               [placeholder]="'GRADES.DESCRIPTION_PLACEHOLDER' | translate"
               rows="3"
             ></textarea>
-          </div>
+          </mat-form-field>
         </div>
       </div>
       <div footer class="flex justify-end pt-6">

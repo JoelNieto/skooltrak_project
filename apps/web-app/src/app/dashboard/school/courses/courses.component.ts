@@ -3,21 +3,22 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
-  heroChevronUpDown,
-  heroEye,
-  heroMagnifyingGlass,
-  heroPencilSquare,
-} from '@ng-icons/heroicons/outline';
+  MatFormField,
+  MatLabel,
+  MatSelectModule,
+} from '@angular/material/select';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
 import {
   ButtonDirective,
   PaginatorComponent,
-  SelectComponent,
   UtilService,
 } from '@skooltrak/ui';
 
@@ -30,135 +31,105 @@ import { SchoolCoursesStore } from './courses.store';
   standalone: true,
   imports: [
     TranslateModule,
-    NgIconComponent,
     UserChipComponent,
     PaginatorComponent,
     DatePipe,
     RouterLink,
     ButtonDirective,
-    SelectComponent,
+    MatSelectModule,
+    MatFormField,
+    MatLabel,
     ReactiveFormsModule,
+    MatTableModule,
+    MatIcon,
+    MatIconButton,
+    MatSortModule,
   ],
-  providers: [
-    UtilService,
-    SchoolCoursesStore,
-    provideIcons({
-      heroMagnifyingGlass,
-      heroEye,
-      heroChevronUpDown,
-      heroPencilSquare,
-    }),
-  ],
+  providers: [UtilService, SchoolCoursesStore],
   template: ` <div class="relative overflow-x-auto">
-    <div class="mb-4 flex flex-nowrap justify-between gap-4 px-1 py-2">
-      <div class="flex-1">
-        <sk-select
-          label="name"
-          [items]="store.degrees()"
-          [formControl]="degreeControl"
-          placeholder="COURSES.SELECT_DEGREE"
-        />
-      </div>
-      <div class="flex-1">
-        <sk-select
-          label="name"
-          [items]="store.plans()"
+    <div class="flex flex-nowrap justify-between items-baseline gap-4 px-1">
+      <mat-form-field class="w-96">
+        <mat-label>{{ 'COURSES.SELECT_PLAN' | translate }}</mat-label>
+        <mat-select
           [formControl]="planControl"
-          placeholder="COURSES.SELECT_PLAN"
-        />
-      </div>
-      <div class="flex flex-1 justify-end">
-        <button skButton color="green" (click)="createCourse()">
-          {{ 'NEW' | translate }}
-        </button>
-      </div>
-    </div>
-    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-      <thead
-        class="bg-gray-100 font-sans text-xs font-semibold uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-200"
-      >
-        <tr class="cursor-pointer">
-          <th scope="col" class="flex items-center gap-3 px-6 py-3">
-            {{ 'Subject' | translate }}
-            <ng-icon name="heroChevronUpDown" size="18" />
-          </th>
-          <th scope="col" class="px-6 py-3">{{ 'Plan' | translate }}</th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'Teachers' | translate }}
-          </th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'Weekly hours' | translate }}
-          </th>
-          <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-          <th scope="col" class="px-6 py-3 text-center">
-            {{ 'Actions' | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (course of store.courses(); track course.id) {
-          <tr
-            [class.hidden]="store.loading()"
-            class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-          >
-            <th
-              scope="row"
-              class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
-            >
-              {{ course.subject?.name }}
-            </th>
-            <td class="px-6 py-3.5">{{ course.plan?.name }}</td>
-            <td class="flex px-6 py-3.5">
-              @for (teacher of course.teachers; track teacher.id) {
-                <sk-user-chip [user]="teacher" />
+          [placeholder]="'COURSES.PLAN' | translate"
+        >
+          @for (degree of store.degrees(); track degree.id) {
+            <mat-optgroup [label]="degree.name!">
+              @for (plan of degree.plans; track plan.id) {
+                <mat-option [value]="plan.id">{{ plan.name }}</mat-option>
               }
-            </td>
-            <td class="px-6 py-3.5">{{ course.weekly_hours }}</td>
-            <td class="px-6 py-3.5">
-              {{ course.created_at | date: 'medium' }}
-            </td>
-            <td class="flex content-center justify-center gap-2 px-6 py-3.5">
-              <a
-                routerLink="../../courses/details"
-                [queryParams]="{ course_id: course.id }"
-              >
-                <ng-icon name="heroEye" size="24" class="text-sky-500" />
-              </a>
-              <button type="button" (click)="editCourse(course)">
-                <ng-icon
-                  name="heroPencilSquare"
-                  class="text-green-500"
-                  size="24"
-                />
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
+            </mat-optgroup>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button skButton color="green" (click)="createCourse()">
+        {{ 'NEW' | translate }}
+      </button>
+    </div>
+    <table
+      mat-table
+      [dataSource]="store.courses()"
+      matSort
+      (matSortChange)="changeSort($event)"
+    >
+      <ng-container matColumnDef="subject(name)">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COURSES.SUBJECT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.subject?.name }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="plan(year)">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COURSES.PLAN' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.plan?.name }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="teachers">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'COURSES.TEACHERS' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          <div class="flex gap-1">
+            @for (teacher of item.teachers; track teacher.id) {
+              <sk-user-chip [user]="teacher" />
+            }
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'CREATED_AT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.created_at | date: 'medium' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'ACTIONS.TITLE' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          <button
+            mat-icon-button
+            routerLink="../../courses/details"
+            [queryParams]="{ course_id: item.id }"
+          >
+            <mat-icon class="text-sky-600">visibility</mat-icon>
+          </button>
+          <button type="button" mat-icon-button (click)="editCourse(item)">
+            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    @if (store.loading()) {
-      <div class="mt-4 animate-pulse">
-        <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-        <ul class="mt-8 space-y-8">
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-        </ul>
-      </div>
-    }
-    @if (!store.loading() && !store.courses().length) {
-      <div class="flex flex-col items-center justify-center gap-4 py-12">
-        <img
-          src="/assets/images/books-lineal-colored.svg"
-          class="h-24"
-          alt=""
-        />
-        <p class="font-sans italic text-gray-400">
-          {{ 'NO_ITEMS' | translate }}
-        </p>
-      </div>
-    }
+
     <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
@@ -166,26 +137,31 @@ export class SchoolCoursesComponent implements OnInit {
   public store = inject(SchoolCoursesStore);
   private destroyRef = inject(DestroyRef);
   private dialog = inject(Dialog);
-
-  public degreeControl = new FormControl<string | undefined>(undefined, {
-    nonNullable: true,
-  });
+  public displayedColumns = [
+    'subject(name)',
+    'plan(year)',
+    'teachers',
+    'created_at',
+    'actions',
+  ];
 
   public planControl = new FormControl<string | undefined>(undefined, {
     nonNullable: true,
   });
 
   public ngOnInit(): void {
-    this.degreeControl.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (degreeId) => patchState(this.store, { degreeId }),
-      });
     this.planControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (planId) => patchState(this.store, { planId }),
       });
+  }
+
+  public changeSort(sort: Sort): void {
+    patchState(this.store, {
+      sortColumn: sort.active,
+      sortDirection: sort.direction,
+    });
   }
 
   public getCurrentPage(pagination: { pageSize: number; start: number }): void {
@@ -195,32 +171,45 @@ export class SchoolCoursesComponent implements OnInit {
 
   public createCourse(): void {
     this.dialog
-      .open<Partial<Course>>(SchoolCoursesFormComponent, {
-        width: '36rem',
-        maxWidth: '75%',
-        disableClose: true,
-        data: { plan_id: this.store.planId() },
-      })
+      .open<{ course: Partial<Course>; teachers: string[] }>(
+        SchoolCoursesFormComponent,
+        {
+          width: '36rem',
+          maxWidth: '75%',
+          disableClose: true,
+          data: { plan_id: this.store.planId() },
+        },
+      )
       .closed.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (request) => {
-          !!request && this.store.saveCourse(request);
+          if (!request) {
+            return;
+          }
+          const { course, teachers } = request;
+          !!course && this.store.saveCourse(course);
         },
       });
   }
 
-  public editCourse(course: Partial<Course>): void {
+  public editCourse(item: Partial<Course>): void {
     this.dialog
-      .open<Partial<Course>>(SchoolCoursesFormComponent, {
-        width: '36rem',
-        maxWidth: '75%',
-        disableClose: true,
-        data: course,
-      })
+      .open<{ course: Partial<Course>; teachers: string[] }>(
+        SchoolCoursesFormComponent,
+        {
+          width: '36rem',
+          maxWidth: '75%',
+          disableClose: true,
+          data: item,
+        },
+      )
       .closed.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (request) => {
-          !!request && this.store.saveCourse({ ...request, id: course.id });
+          if (request) {
+            const { course, teachers } = request;
+            !!course && this.store.saveCourse({ ...course, id: item.id });
+          }
         },
       });
   }

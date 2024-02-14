@@ -1,10 +1,16 @@
 import { computed, inject } from '@angular/core';
-import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { filter, pipe, tap } from 'rxjs';
 
 type State = {
   loading: boolean;
@@ -14,6 +20,8 @@ type State = {
   count: number;
   pageSize: number;
   start: number;
+  sortDirection: 'asc' | 'desc' | '';
+  sortColumn: string;
 };
 
 const initialState: State = {
@@ -24,13 +32,22 @@ const initialState: State = {
   count: 0,
   pageSize: 5,
   start: 0,
+  sortColumn: '',
+  sortDirection: '',
 };
 
 export const SchoolPeopleStore = signalStore(
   withState(initialState),
   withComputed(
     (
-      { selectedRole, selectedStatus, start, pageSize },
+      {
+        selectedRole,
+        selectedStatus,
+        start,
+        pageSize,
+        sortColumn,
+        sortDirection,
+      },
       auth = inject(webStore.AuthStore),
     ) => ({
       fetchData: computed(() => ({
@@ -38,58 +55,70 @@ export const SchoolPeopleStore = signalStore(
         status: selectedStatus(),
         schoolId: auth.schoolId(),
         end: start() + (pageSize() - 1),
+        sortDirection: sortDirection(),
+        sortColumn: sortColumn(),
       })),
     }),
   ),
   withMethods(
     (
-      { fetchData, selectedRole, selectedStatus, start, ...state },
+      {
+        fetchData,
+        selectedRole,
+        selectedStatus,
+        sortColumn,
+        sortDirection,
+        start,
+        ...state
+      },
       supabase = inject(SupabaseService),
-    ) => ({
-      fetchPeople: rxMethod<typeof fetchData>(
+    ) => {
+      const fetchPeople = rxMethod<typeof fetchData>(
         pipe(
           filter(() => !!fetchData().schoolId),
-          tap(() => patchState(state, { loading: true })),
-          switchMap(() => {
-            let query = supabase.client
-              .from(Table.SchoolUsers)
-              .select(
-                'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
-                {
-                  count: 'exact',
-                },
-              )
-              .range(start(), fetchData().end)
-              .eq('school_id', fetchData().schoolId);
-            query =
-              selectedRole() !== 'all'
-                ? query.eq('role', selectedRole())
-                : query;
-            query =
-              selectedStatus() !== 'all'
-                ? query.eq('status', selectedStatus())
-                : query;
-
-            return from(query).pipe(
-              map(({ error, data, count }) => {
-                if (error) throw new Error(error.message);
-
-                return {
-                  people: data as unknown as SchoolProfile[],
-                  count: count ?? 0,
-                };
-              }),
-              tapResponse({
-                next: ({ people, count }) =>
-                  patchState(state, { people, count }),
-                error: console.error,
-                finalize: () => patchState(state, { loading: false }),
-              }),
-            );
-          }),
+          tap(() => getPeople()),
         ),
-      ),
-    }),
+      );
+
+      async function getPeople(): Promise<void> {
+        patchState(state, { loading: true });
+        let query = supabase.client
+          .from(Table.SchoolUsers)
+          .select(
+            'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
+            {
+              count: 'exact',
+            },
+          )
+          .range(start(), fetchData().end)
+          .eq('school_id', fetchData().schoolId);
+        query =
+          selectedRole() !== 'all' ? query.eq('role', selectedRole()) : query;
+        query =
+          selectedStatus() !== 'all'
+            ? query.eq('status', selectedStatus())
+            : query;
+        if (sortColumn()) {
+          query = query.order(sortColumn(), {
+            ascending: sortDirection() !== 'desc',
+          });
+        }
+        const { data, error, count } = await query;
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+        patchState(state, {
+          people: data as SchoolProfile[],
+          count: count ?? 0,
+          loading: false,
+        });
+      }
+
+      return { fetchPeople, getPeople };
+    },
   ),
   withHooks({
     onInit({ fetchData, fetchPeople }) {

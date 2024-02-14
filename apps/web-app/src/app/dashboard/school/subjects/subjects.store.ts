@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { HotToastService } from '@ngneat/hot-toast';
-import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
@@ -13,7 +12,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { filter, pipe, tap } from 'rxjs';
 
 type State = {
   subjects: Subject[];
@@ -22,6 +21,8 @@ type State = {
   start: number;
   queryText: string;
   loading: boolean;
+  sortColumn: string;
+  sortDirection: 'asc' | 'desc' | '';
 };
 
 const initialState: State = {
@@ -31,87 +32,98 @@ const initialState: State = {
   pageSize: 5,
   queryText: '',
   start: 0,
+  sortDirection: '',
+  sortColumn: '',
 };
 export const SchoolSubjectsStore = signalStore(
   withState(initialState),
   withComputed(
-    ({ start, pageSize, queryText }, auth = inject(webStore.AuthStore)) => ({
+    (
+      { start, pageSize, queryText, sortDirection, sortColumn },
+      auth = inject(webStore.AuthStore),
+    ) => ({
       end: computed(() => start() + (pageSize() - 1)),
-      query: computed(() => ({
+      fetchData: computed(() => ({
         start: start(),
         text: queryText(),
         pageSize: pageSize(),
         schoolId: auth.schoolId(),
+        sortDirection: sortDirection(),
+        sortColumn: sortColumn(),
       })),
     }),
   ),
   withMethods(
     (
-      { query, end, ...store },
+      { fetchData, end, sortColumn, sortDirection, ...state },
       supabase = inject(SupabaseService),
       toast = inject(HotToastService),
       translate = inject(TranslateService),
-    ) => ({
-      fetchSubjects: rxMethod<typeof query>(
-        pipe(
-          filter(() => !!query().schoolId),
-          tap(() => patchState(store, { loading: true })),
-          switchMap(() =>
-            from(
-              supabase.client
-                .from(Table.Subjects)
-                .select(
-                  'id,name, short_name, code, description, created_at, user:users(full_name)',
-                  {
-                    count: 'exact',
-                  },
-                )
-                .order('name', { ascending: true })
-                .range(query().start, end())
-                .eq('school_id', query().schoolId)
-                .or(
-                  `name.ilike.%${query().text}%, short_name.ilike.%${
-                    query().text
-                  }%, code.ilike.%${query().text}%, description.ilike.%${
-                    query().text
-                  }%`,
-                ),
-            ).pipe(
-              map(({ error, data, count }) => {
-                if (error) throw new Error(error.message);
+    ) => {
+      async function getSubjects(): Promise<void> {
+        patchState(state, { loading: true });
+        let query = supabase.client
+          .from(Table.Subjects)
+          .select(
+            'id,name, short_name, code, description, created_at, user:users(full_name)',
+            {
+              count: 'exact',
+            },
+          )
+          .range(fetchData().start, end())
+          .eq('school_id', fetchData().schoolId)
+          .or(
+            `name.ilike.%${fetchData().text}%, short_name.ilike.%${
+              fetchData().text
+            }%, code.ilike.%${fetchData().text}%, description.ilike.%${
+              fetchData().text
+            }%`,
+          );
 
-                return {
-                  subjects: data as unknown as Subject[],
-                  count: count ?? 0,
-                };
-              }),
-              tapResponse({
-                next: ({ subjects, count }) =>
-                  patchState(store, { subjects, count }),
-                error: console.error,
-                finalize: () => patchState(store, { loading: false }),
-              }),
-            ),
-          ),
+        if (sortColumn()) {
+          query = query.order(sortColumn(), {
+            ascending: sortDirection() !== 'desc',
+          });
+        }
+
+        const { data, error, count } = await query;
+
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+
+        patchState(state, {
+          loading: false,
+          count: count ?? 0,
+          subjects: data as unknown as Subject[],
+        });
+      }
+      const fetchSubjects = rxMethod<typeof fetchData>(
+        pipe(
+          filter(() => !!fetchData().schoolId),
+          tap(() => getSubjects()),
         ),
-      ),
-      async saveSubject(request: Partial<Subject>): Promise<void> {
-        patchState(store, { loading: true });
+      );
+      async function saveSubject(request: Partial<Subject>): Promise<void> {
+        patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.Subjects)
-          .upsert([{ ...request, school_id: query().schoolId }]);
+          .upsert([{ ...request, school_id: fetchData().schoolId }]);
         if (error) {
           toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);
-          patchState(store, { loading: false });
+          patchState(state, { loading: false });
 
           return;
         }
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchSubjects(query);
-      },
-      async deleteSubject(id: string): Promise<void> {
-        patchState(store, { loading: true });
+        fetchSubjects(fetchData);
+      }
+      async function deleteSubject(id: string): Promise<void> {
+        patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.Subjects)
           .delete()
@@ -119,18 +131,20 @@ export const SchoolSubjectsStore = signalStore(
         if (error) {
           toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);
-          patchState(store, { loading: false });
+          patchState(state, { loading: false });
 
           return;
         }
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchSubjects(query);
-      },
-    }),
+        fetchSubjects(fetchData);
+      }
+
+      return { fetchSubjects, saveSubject, deleteSubject, getSubjects };
+    },
   ),
   withHooks({
-    onInit({ query, fetchSubjects }) {
-      fetchSubjects(query);
+    onInit({ fetchData, fetchSubjects }) {
+      fetchSubjects(fetchData);
     },
   }),
 );

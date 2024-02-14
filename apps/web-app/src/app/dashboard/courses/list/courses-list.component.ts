@@ -1,5 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
@@ -7,8 +17,6 @@ import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CardComponent,
-  EmptyTableComponent,
-  LoadingComponent,
   PaginatorComponent,
   TabsComponent,
   TabsItemComponent,
@@ -30,8 +38,14 @@ import { CoursesStore } from '../courses.store';
     RouterLink,
     PaginatorComponent,
     DatePipe,
-    LoadingComponent,
-    EmptyTableComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatIcon,
+    MatPrefix,
+    MatTableModule,
+    MatIconButton,
+    MatSortModule,
   ],
   providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: ` <sk-card>
@@ -42,98 +56,71 @@ import { CoursesStore } from '../courses.store';
         {{ 'COURSES.TITLE' | translate }}
       </h2>
     </div>
-    <div class="relative mt-1 overflow-x-auto">
-      <div class="mb-4 flex justify-between px-1 py-3.5">
-        <div>
-          <label for="table-search" class="sr-only">Search</label>
-          <div class="relative">
-            <div
-              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-            >
-              <ng-icon
-                name="heroMagnifyingGlass"
-                class="text-gray-500 dark:text-gray-400"
-              />
-            </div>
-            <input
-              type="text"
-              id="table-search"
-              class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
-              placeholder="Search for items"
-            />
-          </div>
-        </div>
+    <div class="relative overflow-x-auto">
+      <div class="flex justify-between px-1 py-3.5">
+        <mat-form-field class="w-full lg:w-96">
+          <mat-label for="table-search">Search</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            type="text"
+            id="table-search"
+            matInput
+            placeholder="Search for items"
+          />
+        </mat-form-field>
       </div>
-      <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-        <thead
-          class="font-title bg-gray-100 text-xs font-semibold uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-200"
-        >
-          <tr class="cursor-pointer *:bg-blue-200 *:text-blue-700">
-            <th scope="col" class="px-6 py-3 rounded-tl-lg">
-              {{ 'COURSES.SUBJECT' | translate }}
-            </th>
-            <th scope="col" class="px-6 py-3">
-              {{ 'COURSES.PLAN' | translate }}
-            </th>
-            <th scope="col" class="px-6 py-3">
-              {{ 'COURSES.TEACHERS' | translate }}
-            </th>
-            <th scope="col" class="px-6 py-3 text-center rounded-tr-lg">
-              {{ 'ACTIONS.TITLE' | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (store.loading()) {
-            <tr sk-loading></tr>
-          } @else {
-            @for (course of store.courses(); track course.id) {
-              <tr
-                [class.hidden]="store.loading()"
-                class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-              >
-                <th
-                  scope="row"
-                  class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
-                >
-                  {{ course.subject?.name }}
-                </th>
-                <td class="px-6 py-3.5">{{ course.plan.name }}</td>
-                <td class=" px-6 py-3.5">
-                  <div class="flex gap-1">
-                    @for (teacher of course.teachers; track teacher.id) {
-                      <sk-user-chip [user]="teacher" />
-                    }
-                  </div>
-                </td>
-                <td
-                  class="flex content-center justify-center gap-2 px-6 py-3.5"
-                >
-                  <a
-                    routerLink="../details"
-                    [queryParams]="{ course_id: course.id }"
-                  >
-                    <ng-icon name="heroEye" size="24" class="text-sky-500" />
-                  </a>
-                </td>
-              </tr>
-            } @empty {
-              <tr sk-empty></tr>
-            }
-          }
-        </tbody>
+      <table
+        mat-table
+        [dataSource]="store.courses()"
+        matSort
+        (matSortChange)="sortChange($event)"
+      >
+        <ng-container matColumnDef="subject(name)">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ 'COURSES.SUBJECT' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.subject?.name }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="plan(year)">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ 'COURSES.PLAN' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.plan?.name }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="teachers">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'COURSES.TEACHERS' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let item">
+            <div class="flex gap-1">
+              @for (teacher of item.teachers; track teacher.id) {
+                <sk-user-chip [user]="teacher" />
+              }
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'ACTIONS.TITLE' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let item">
+            <a
+              mat-icon-button
+              routerLink="../details"
+              [queryParams]="{ course_id: item.id }"
+            >
+              <mat-icon class="text-sky-600">visibility</mat-icon>
+            </a>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-      @if (store.loading()) {
-        <div class="mt-4 animate-pulse">
-          <h3 class="h-4 w-10/12 rounded-md bg-gray-200 dark:bg-gray-700"></h3>
-          <ul class="mt-5 space-y-3">
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-            <li class="h-4 w-full rounded-md bg-gray-200 dark:bg-gray-700"></li>
-          </ul>
-        </div>
-      }
+
       <sk-paginator
         [count]="store.count()"
         (paginate)="getCurrentPage($event)"
@@ -143,6 +130,12 @@ import { CoursesStore } from '../courses.store';
 })
 export class CoursesListComponent {
   public store = inject(CoursesStore);
+  public displayedColumns = [
+    'subject(name)',
+    'plan(year)',
+    'teachers',
+    'actions',
+  ];
 
   public getCurrentPage(pagination: {
     currentPage: number;
@@ -151,5 +144,12 @@ export class CoursesListComponent {
   }): void {
     const { start, pageSize } = pagination;
     patchState(this.store, { start, pageSize });
+  }
+
+  public sortChange(sort: Sort): void {
+    patchState(this.store, {
+      sortColumn: sort.active,
+      sortDirection: sort.direction,
+    });
   }
 }

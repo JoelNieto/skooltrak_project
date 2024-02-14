@@ -3,12 +3,14 @@ import { DatePipe, JsonPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-} from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
@@ -28,7 +30,6 @@ import { SchoolPeopleStore } from './people.store';
   selector: 'sk-school-people',
   imports: [
     TranslateModule,
-    NgIconComponent,
     ReactiveFormsModule,
     PaginatorComponent,
     UserChipComponent,
@@ -38,142 +39,131 @@ import { SchoolPeopleStore } from './people.store';
     AvatarComponent,
     LoadingComponent,
     EmptyTableComponent,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatInputModule,
+    MatIcon,
+    MatOption,
+    MatTableModule,
+    MatSortModule,
+    MatIconButton,
   ],
-  providers: [
-    SchoolPeopleStore,
-    provideIcons({ heroMagnifyingGlass, heroPencilSquare }),
-  ],
-  styles: [
-    `
-      input,
-      select,
-      textarea {
-        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 focus:ring-sky-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500 sm:text-sm;
-        &.ng-invalid.ng-dirty {
-          @apply border-red-400 bg-red-100 text-red-800 focus:border-red-600 focus:ring-red-600;
-        }
-      }
+  providers: [SchoolPeopleStore],
+  styles: `
 
-      label {
-        @apply mb-2 block font-sans text-sm font-medium text-gray-600 dark:text-white;
-      }
     `,
-  ],
   template: `<div class="relative overflow-x-auto">
-    <div class="mb-4 flex justify-between gap-4 p-1">
-      <div class="flex-1">
-        <select [formControl]="roleControl">
-          <option value="all">{{ 'PEOPLE.ALL_ROLES' | translate }}</option>
+    <div class="flex justify-between gap-4 px-1">
+      <mat-form-field class="flex-1">
+        <mat-select [formControl]="roleControl">
+          <mat-option value="all">{{
+            'PEOPLE.ALL_ROLES' | translate
+          }}</mat-option>
           @for (role of roles; track role) {
-            <option [value]="role">
+            <mat-option [value]="role">
               {{ 'PEOPLE.' + role | translate }}
-            </option>
+            </mat-option>
           }
-        </select>
-      </div>
-      <div class="flex-1">
-        <select [formControl]="statusControl">
-          <option value="all">{{ 'PEOPLE.ALL_STATUS' | translate }}</option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="flex-1">
+        <mat-select [formControl]="statusControl">
+          <mat-option value="all">{{
+            'PEOPLE.ALL_STATUS' | translate
+          }}</mat-option>
           @for (status of statuses; track status) {
-            <option [value]="status">
+            <mat-option [value]="status">
               {{ 'PEOPLE.' + status | translate }}
-            </option>
+            </mat-option>
           }
-        </select>
-      </div>
-      <div class="flex-1">
-        <div>
-          <label for="table-search" class="sr-only">Search</label>
-          <div class="relative">
-            <div
-              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-            >
-              <ng-icon
-                name="heroMagnifyingGlass"
-                class="text-gray-500 dark:text-gray-400"
-              />
-            </div>
-            <input
-              type="text"
-              id="table-search"
-              class="pl-10"
-              [placeholder]="'SEARCH_ITEMS' | translate"
-            />
-          </div>
-        </div>
-      </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="flex-1">
+        <mat-label>{{ 'SEARCH_ITEMS' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          type="text"
+          [placeholder]="'SEARCH_ITEMS' | translate"
+          matInput
+        />
+      </mat-form-field>
     </div>
-    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-      <thead
-        class="bg-gray-100 font-sans text-xs font-semibold uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-200"
-      >
-        <tr class="cursor-pointer">
-          <th scope="col" class="flex items-center gap-3 px-6 py-3">
-            {{ 'USER' | translate }}
-          </th>
-          <th scope="col" class="px-6 py-3">{{ 'DOCUMENT_ID' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'ROLE' | translate }}</th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'STATUS' | translate }}
-          </th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'CREATED_AT' | translate }}
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            {{ 'ACTIONS.TITLE' | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (store.loading()) {
-          <tr sk-loading></tr>
-        } @else {
-          @for (person of store.people(); track person.user_id) {
-            <tr
-              [class.hidden]="store.loading()"
-              class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-            >
-              <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-3.5 font-medium text-gray-900 dark:text-white"
-              >
-                <div class="flex items-center gap-2">
-                  <sk-avatar
-                    [fileName]="person.user.avatar_url ?? 'default_avatar.jpg'"
-                    class="h-10"
-                    [rounded]="true"
-                  />
-                  <div class="flex flex-col">
-                    <div class="text-base text-gray-700 dark:text-gray-200">
-                      {{ person.user.first_name }} {{ person.user.father_name }}
-                    </div>
-                    <div class="font-mono text-sm text-gray-400">
-                      {{ person.user.email }}
-                    </div>
-                  </div>
-                </div>
-              </th>
-              <td class="px-6 py-3.5">{{ person.user.document_id }}</td>
-              <td class="px-6 py-3.5">{{ person.role | translate }}</td>
-              <td class="px-6 py-3.5">{{ person.status | translate }}</td>
-              <td class="px-6 py-3.5">
-                {{ person.created_at | date: 'medium' }}
-              </td>
-              <td class="flex content-center justify-center gap-2 px-6 py-3.5">
-                <button type="button" (click)="editPeople(person)">
-                  <ng-icon
-                    name="heroPencilSquare"
-                    class="text-green-500"
-                    size="24"
-                  />
-                </button>
-              </td>
-            </tr>
-          } @empty {
-            <tr sk-empty></tr>
-          }
-        }
-      </tbody>
+    <table
+      mat-table
+      [dataSource]="store.people()"
+      matSort
+      (matSortChange)="sortChange($event)"
+    >
+      <ng-container matColumnDef="user(first_name)">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PEOPLE.PERSON' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          <div class="flex items-center gap-2">
+            <sk-avatar
+              [fileName]="item.user.avatar_url ?? 'default_avatar.jpg'"
+              class="h-10"
+              [rounded]="true"
+            />
+            <div class="flex flex-col">
+              <div class="text-base text-gray-700 dark:text-gray-200">
+                {{ item.user.first_name }} {{ item.user.father_name }}
+              </div>
+              <div class="font-mono text-sm text-gray-400">
+                {{ item.user.email }}
+              </div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="user(document_id)">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PEOPLE.DOCUMENT_ID' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.user.document_id }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PEOPLE.ROLE' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.role | translate }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PEOPLE.STATUS' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.status | translate }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'CREATED_AT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.created_at | date: 'medium' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'ACTIONS.TITLE' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          <button type="button" mat-icon-button (click)="editPeople(item)">
+            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          </button>
+          <button type="button" mat-icon-button>
+            <mat-icon class="text-red-600">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedCols"></tr>
     </table>
     <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
@@ -186,6 +176,14 @@ export class SchoolPeopleComponent implements OnInit {
   public roleControl = new FormControl<'all' | RoleEnum>('all', {
     nonNullable: true,
   });
+  public displayedCols = [
+    'user(first_name)',
+    'user(document_id)',
+    'role',
+    'status',
+    'created_at',
+    'actions',
+  ];
 
   public statusControl = new FormControl<'all' | StatusEnum>('all', {
     nonNullable: true,
@@ -208,6 +206,13 @@ export class SchoolPeopleComponent implements OnInit {
           patchState(this.store, { selectedStatus: status });
         },
       });
+  }
+
+  public sortChange(sort: Sort): void {
+    patchState(this.store, {
+      sortDirection: sort.direction,
+      sortColumn: sort.active,
+    });
   }
 
   public getCurrentPage(pagination: { pageSize: number; start: number }): void {

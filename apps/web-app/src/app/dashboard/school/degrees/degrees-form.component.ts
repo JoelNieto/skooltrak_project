@@ -1,22 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 import { DegreesFormStore } from './degrees-form.store';
 
@@ -29,9 +20,11 @@ import { DegreesFormStore } from './degrees-form.store';
     TranslateModule,
     NgIconComponent,
     ButtonDirective,
-    SelectComponent,
-    LabelDirective,
-    InputDirective,
+    MatSelect,
+    MatInput,
+    MatFormField,
+    MatLabel,
+    MatOption,
   ],
   providers: [DegreesFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -51,21 +44,21 @@ import { DegreesFormStore } from './degrees-form.store';
     </div>
     <form
       [formGroup]="form"
-      class="flex flex-col space-y-3"
+      class="flex flex-col space-y-1"
       (ngSubmit)="saveChanges()"
     >
-      <div>
-        <label for="name" skLabel>{{ 'NAME' | translate }}</label>
-        <input type="text" formControlName="name" skInput />
-      </div>
-      <div>
-        <label for="level_id" skLabel>{{ 'LEVEL' | translate }}</label>
-        <sk-select
-          [items]="store.levels()"
-          label="name"
-          formControlName="level_id"
-        />
-      </div>
+      <mat-form-field>
+        <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
+        <input type="text" formControlName="name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="level_id">{{ 'LEVEL' | translate }}</mat-label>
+        <mat-select formControlName="level_id">
+          @for (level of store.levels(); track level.id) {
+            <mat-option [value]="level.id"> {{ level.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'SAVE_CHANGES' | translate }}

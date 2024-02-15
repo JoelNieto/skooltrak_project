@@ -1,20 +1,12 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-in',
@@ -23,11 +15,12 @@ import {
     ReactiveFormsModule,
     TranslateModule,
     NgOptimizedImage,
-    LabelDirective,
-    InputDirective,
     ButtonDirective,
     RouterLink,
     CardComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
   ],
   template: `<div class="w-min-screen flex h-screen">
     <section
@@ -58,42 +51,39 @@ import {
           </div>
           <div>
             <form
-              class="space-y-4 md:space-y-6"
+              class="space-y-4 md:space-y-4"
               [formGroup]="form"
               (ngSubmit)="signIn()"
             >
-              <div>
-                <label for="email" class="label" skLabel>{{
-                  'SIGN_IN.EMAIL' | translate
-                }}</label>
+              <mat-form-field class="w-full">
+                <mat-label>
+                  {{ 'SIGN_IN.EMAIL' | translate }}
+                </mat-label>
                 <input
                   formControlName="email"
                   type="email"
                   name="email"
                   id="email"
-                  class="input"
                   autocomplete="email"
                   placeholder="name@company.com"
                   required
-                  skInput
+                  matInput
                 />
-              </div>
-              <div>
-                <label class="label" skLabel>{{
-                  'SIGN_IN.PASSWORD' | translate
-                }}</label>
+              </mat-form-field>
+
+              <mat-form-field class="w-full">
+                <mat-label>{{ 'SIGN_IN.PASSWORD' | translate }}</mat-label>
                 <input
                   formControlName="password"
                   autocomplete="current-password"
-                  class="input"
                   type="password"
                   name="password"
                   id="password"
                   placeholder="••••••••"
                   required=""
-                  skInput
+                  matInput
                 />
-              </div>
+              </mat-form-field>
               <div class="flex items-center justify-between">
                 <a
                   routerLink="../password-reset"

@@ -10,12 +10,12 @@ import {
   signal,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft, heroChevronRight } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { range } from 'lodash';
-
-import { InputDirective } from '../../directives/input/input.directive';
 
 @Component({
   selector: 'sk-paginator',
@@ -25,7 +25,10 @@ import { InputDirective } from '../../directives/input/input.directive';
     NgIconComponent,
     TranslateModule,
     ReactiveFormsModule,
-    InputDirective,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
   ],
   providers: [provideIcons({ heroChevronLeft, heroChevronRight })],
   template: `<nav
@@ -46,13 +49,13 @@ import { InputDirective } from '../../directives/input/input.directive';
         "
       >
       </span>
-      <div class="w-16">
-        <select [formControl]="pageSizeControl" skInput>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-        </select>
-      </div>
+      <mat-form-field class="w-16">
+        <mat-select [formControl]="pageSizeControl">
+          <mat-option [value]="5">5</mat-option>
+          <mat-option [value]="10">10</mat-option>
+          <mat-option [value]="15">15</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <ul class="inline-flex items-center -space-x-px">
@@ -119,7 +122,7 @@ export class PaginatorComponent implements OnInit {
 
   totalPages = computed(() => Math.ceil(this.count() / this.pageSize()));
 
-  pageSizeControl = new FormControl<null | number>(null, { nonNullable: true });
+  pageSizeControl = new FormControl<number>(5, { nonNullable: true });
   currentPage = signal(1);
 
   startPage = computed(() => {

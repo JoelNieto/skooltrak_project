@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
 import { RouterOutlet } from '@angular/router';
-import { webStore } from '@skooltrak/store';
 
 @Component({
   selector: 'sk-root',
@@ -9,5 +9,7 @@ import { webStore } from '@skooltrak/store';
   template: ` <router-outlet /> `,
 })
 export class AppComponent {
-  private auth = inject(webStore.AuthStore);
+  constructor(iconRegistry: MatIconRegistry) {
+    iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
+  }
 }

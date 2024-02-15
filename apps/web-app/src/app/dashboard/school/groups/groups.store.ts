@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { HotToastService } from '@ngneat/hot-toast';
-import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
@@ -13,7 +12,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { ClassGroup, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { filter, pipe, tap } from 'rxjs';
 
 type State = {
   groups: ClassGroup[];
@@ -21,6 +20,8 @@ type State = {
   pageSize: number;
   start: number;
   loading: boolean;
+  sortDirection: 'asc' | 'desc' | '';
+  sortColumn: string;
 };
 
 const initialState: State = {
@@ -29,55 +30,76 @@ const initialState: State = {
   count: 0,
   pageSize: 5,
   start: 0,
+  sortColumn: '',
+  sortDirection: '',
 };
 
 export const SchoolGroupsStore = signalStore(
   withState(initialState),
-  withComputed(({ start, pageSize }, auth = inject(webStore.AuthStore)) => ({
-    end: computed(() => start() + (pageSize() - 1)),
-    schoolId: computed(() => auth.schoolId()),
-  })),
+  withComputed(
+    (
+      { start, pageSize, sortColumn, sortDirection },
+      auth = inject(webStore.AuthStore),
+    ) => ({
+      end: computed(() => start() + (pageSize() - 1)),
+      schoolId: computed(() => auth.schoolId()),
+      query: computed(() => ({
+        pageSize: pageSize(),
+        start: start(),
+        sortDirection: sortDirection(),
+        sortColumn: sortColumn(),
+      })),
+    }),
+  ),
   withMethods(
     (
-      { start, end, schoolId, ...store },
-
+      { start, end, schoolId, query, sortColumn, sortDirection, ...state },
       supabase = inject(SupabaseService),
       toast = inject(HotToastService),
       translate = inject(TranslateService),
-    ) => ({
-      fetchGroups: rxMethod<number>(
+    ) => {
+      const fetchGroups = rxMethod<typeof query>(
         pipe(
           filter(() => !!schoolId()),
-          tap(() => patchState(store, { loading: true })),
-          switchMap(() => {
-            return from(
-              supabase.client
-                .from(Table.Groups)
-                .select(
-                  'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
-                  {
-                    count: 'exact',
-                  },
-                )
-                .range(start(), end())
-                .eq('school_id', schoolId()),
-            ).pipe(
-              map(({ data, error, count }) => {
-                if (error) throw new Error(error.message);
-
-                return { groups: data as unknown as ClassGroup[], count };
-              }),
-              tap(({ count }) => !!count && patchState(store, { count })),
-              tapResponse(
-                ({ groups }) => patchState(store, { groups }),
-                (error) => console.error(error),
-                () => patchState(store, { loading: false }),
-              ),
-            );
-          }),
+          tap(() => getGroups()),
         ),
-      ),
-      async saveGroup(request: Partial<ClassGroup>): Promise<void> {
+      );
+
+      async function getGroups(): Promise<void> {
+        patchState(state, { loading: true });
+        let query = supabase.client
+          .from(Table.Groups)
+          .select(
+            'id, name, plan:school_plans(id, year, name), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
+            {
+              count: 'exact',
+            },
+          )
+          .range(start(), end())
+          .eq('school_id', schoolId());
+
+        if (sortColumn()) {
+          query = query.order(sortColumn(), {
+            ascending: sortDirection() !== 'desc',
+          });
+        }
+
+        const { data, error, count } = await query;
+
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+
+        !!count && patchState(state, { count });
+        patchState(state, {
+          groups: data as unknown as ClassGroup[],
+          loading: false,
+        });
+      }
+      async function saveGroup(request: Partial<ClassGroup>): Promise<void> {
         const { error } = await supabase.client
           .from(Table.Groups)
           .upsert([{ ...request, school_id: schoolId() }]);
@@ -88,9 +110,9 @@ export const SchoolGroupsStore = signalStore(
           return;
         }
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchGroups(start());
-      },
-      async deleteGroup(id: string): Promise<void> {
+        fetchGroups(query);
+      }
+      async function deleteGroup(id: string): Promise<void> {
         const { error } = await supabase.client
           .from(Table.Groups)
           .delete()
@@ -103,13 +125,15 @@ export const SchoolGroupsStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchGroups(start);
-      },
-    }),
+        fetchGroups(query);
+      }
+
+      return { fetchGroups, deleteGroup, saveGroup, getGroups };
+    },
   ),
   withHooks({
-    onInit({ fetchGroups, end }) {
-      fetchGroups(end);
+    onInit({ fetchGroups, query }) {
+      fetchGroups(query);
     },
   }),
 );

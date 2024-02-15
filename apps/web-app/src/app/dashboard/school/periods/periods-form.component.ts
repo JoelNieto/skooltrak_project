@@ -1,21 +1,19 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
 import { format } from 'date-fns';
 
 @Component({
@@ -25,9 +23,11 @@ import { format } from 'date-fns';
     ReactiveFormsModule,
     NgIconComponent,
     TranslateModule,
-    LabelDirective,
     ButtonDirective,
-    InputDirective,
+    LabelDirective,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
   ],
   providers: [provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -50,24 +50,28 @@ import { format } from 'date-fns';
       (ngSubmit)="saveChanges()"
       class="flex flex-col space-y-3"
     >
-      <div>
-        <label for="name" skLabel>{{ 'Name' | translate }}</label>
-        <input type="text" formControlName="name" skInput />
-      </div>
-      <div>
-        <label for="year" skLabel>{{ 'PERIODS.YEAR' | translate }}</label>
-        <input type="number" formControlName="year" skInput />
-      </div>
-      <div>
-        <label for="start_at" skLabel>{{
+      <mat-form-field>
+        <mat-label for="name">{{ 'Name' | translate }}</mat-label>
+        <input type="text" formControlName="name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="year">{{ 'PERIODS.YEAR' | translate }}</mat-label>
+        <input type="number" formControlName="year" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="start_at">{{
           'PERIODS.START_AT' | translate
-        }}</label>
-        <input type="date" formControlName="start_at" skInput />
-      </div>
-      <div>
-        <label for="end_at" skLabel>{{ 'PERIODS.END_AT' | translate }}</label>
-        <input type="date" formControlName="end_at" skInput />
-      </div>
+        }}</mat-label>
+        <input formControlName="start_at" matInput [matDatepicker]="start" />
+        <mat-datepicker-toggle matIconSuffix [for]="start" />
+        <mat-datepicker #start />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="end_at">{{ 'PERIODS.END_AT' | translate }}</mat-label>
+        <input formControlName="end_at" matInput [matDatepicker]="end" />
+        <mat-datepicker-toggle matIconSuffix [for]="end" />
+        <mat-datepicker #end />
+      </mat-form-field>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit">
           {{ 'Save changes' | translate }}

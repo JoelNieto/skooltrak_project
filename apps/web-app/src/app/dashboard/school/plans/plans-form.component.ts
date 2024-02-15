@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -7,17 +7,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './plans-form.store';
@@ -32,8 +28,11 @@ import { PlansFormStore } from './plans-form.store';
     NgIconComponent,
     SelectComponent,
     ButtonDirective,
-    LabelDirective,
-    InputDirective,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatSelect,
+    MatOption,
   ],
   providers: [PlansFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -53,40 +52,40 @@ import { PlansFormStore } from './plans-form.store';
     </div>
     <form
       [formGroup]="form"
-      class="flex flex-col space-y-3"
+      class="flex flex-col space-y-1"
       (ngSubmit)="saveChanges()"
     >
-      <div>
-        <label for="name" skLabel>{{ 'NAME' | translate }}</label>
-        <input type="text" formControlName="name" skInput />
-      </div>
-      <div>
-        <label for="degree_id" skLabel>{{ 'PLANS.DEGREE' | translate }}</label>
-        <sk-select
-          [items]="store.degrees()"
-          label="name"
-          formControlName="degree_id"
-        />
-      </div>
-      <div>
-        <label for="year" skLabel>{{ 'PLANS.YEAR' | translate }}</label>
-        <select label="name" formControlName="year" skInput>
-          <option [value]="-1">Pre-Kinder</option>
-          <option [value]="0">Kinder</option>
-          <option [value]="1">1</option>
-          <option [value]="2">2</option>
-          <option [value]="3">3</option>
-          <option [value]="4">4</option>
-          <option [value]="5">5</option>
-          <option [value]="6">6</option>
-          <option [value]="7">7</option>
-          <option [value]="8">8</option>
-          <option [value]="9">9</option>
-          <option [value]="10">10</option>
-          <option [value]="11">11</option>
-          <option [value]="12">12</option>
-        </select>
-      </div>
+      <mat-form-field>
+        <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
+        <input type="text" formControlName="name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="degree_id">{{ 'PLANS.DEGREE' | translate }}</mat-label>
+        <mat-select formControlName="degree_id">
+          @for (degree of store.degrees(); track degree.id) {
+            <mat-option [value]="degree.id">{{ degree.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="year">{{ 'PLANS.YEAR' | translate }}</mat-label>
+        <mat-select label="name" formControlName="year">
+          <mat-option [value]="-1">Pre-Kinder</mat-option>
+          <mat-option [value]="0">Kinder</mat-option>
+          <mat-option [value]="1">1</mat-option>
+          <mat-option [value]="2">2</mat-option>
+          <mat-option [value]="3">3</mat-option>
+          <mat-option [value]="4">4</mat-option>
+          <mat-option [value]="5">5</mat-option>
+          <mat-option [value]="6">6</mat-option>
+          <mat-option [value]="7">7</mat-option>
+          <mat-option [value]="8">8</mat-option>
+          <mat-option [value]="9">9</mat-option>
+          <mat-option [value]="10">10</mat-option>
+          <mat-option [value]="11">11</mat-option>
+          <mat-option [value]="12">12</mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'SAVE_CHANGES' | translate }}

@@ -15,6 +15,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
@@ -24,8 +27,6 @@ import {
   ButtonDirective,
   CardComponent,
   ImageCropperComponent,
-  InputDirective,
-  LabelDirective,
   SelectComponent,
 } from '@skooltrak/ui';
 
@@ -43,8 +44,11 @@ import { SchoolFormStore } from './school-form.store';
     TranslateModule,
     SelectComponent,
     NgIconComponent,
-    LabelDirective,
-    InputDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
   ],
   providers: [SchoolFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -87,63 +91,58 @@ import { SchoolFormStore } from './school-form.store';
       class="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4"
       (ngSubmit)="saveChanges()"
     >
-      <div>
-        <label for="short_name" skLabel>{{
+      <mat-form-field class="w-full">
+        <mat-label for="short_name">{{
           'SCHOOL.SHORT_NAME' | translate
-        }}</label>
-        <input type="text" formControlName="short_name" skInput validation />
-      </div>
-      <div>
-        <label for="full_name" skLabel>{{
+        }}</mat-label>
+        <input type="text" formControlName="short_name" matInput />
+      </mat-form-field>
+      <mat-form-field class="w-full">
+        <mat-label for="full_name">{{
           'SCHOOL.FULL_NAME' | translate
-        }}</label>
-        <input type="text" formControlName="full_name" skInput validation />
-      </div>
-      <div>
-        <label for="type" skLabel>{{ 'SCHOOL.TYPE' | translate }}</label>
-        <select formControlName="type" skInput>
+        }}</mat-label>
+        <input type="text" formControlName="full_name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="type">{{ 'SCHOOL.TYPE' | translate }}</mat-label>
+        <mat-select formControlName="type" matInput>
           @for (type of types(); track type) {
-            <option [value]="type">
+            <mat-option [value]="type">
               {{ 'SCHOOL_TYPE.' + type | translate }}
-            </option>
+            </mat-option>
           }
-        </select>
-      </div>
-      <div>
-        <label for="country_id" skLabel>{{
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="country_id">{{
           'SCHOOL.COUNTRY' | translate
-        }}</label>
-        <sk-select
-          formControlName="country_id"
-          [items]="store.countries()"
-          label="name"
-        />
-      </div>
-      <div>
-        <label for="address" skLabel>{{ 'SCHOOL.ADDRESS' | translate }}</label>
-        <input type="text" formControlName="address" skInput />
-      </div>
-      <div>
-        <label for="contact_email" skLabel>{{
+        }}</mat-label>
+        <mat-select formControlName="country_id">
+          @for (country of store.countries(); track country.id) {
+            <mat-option [value]="country.id">{{ country.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="address">{{ 'SCHOOL.ADDRESS' | translate }}</mat-label>
+        <input type="text" formControlName="address" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="contact_email">{{
           'SCHOOL.EMAIL' | translate
-        }}</label>
-        <input
-          type="email"
-          formControlName="contact_email"
-          skInput
-          validation
-        />
-      </div>
-      <div>
-        <label for="contact_phone" skLabel>{{
+        }}</mat-label>
+        <input type="email" formControlName="contact_email" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="contact_phone">{{
           'SCHOOL.PHONE' | translate
-        }}</label>
-        <input type="tel" formControlName="contact_phone" skInput />
-      </div>
-      <div class="col-span-2">
-        <label for="motto" skLabel>{{ 'SCHOOL.MOTTO' | translate }}</label>
-        <input type="text" formControlName="motto" skInput />
-      </div>
+        }}</mat-label>
+        <input type="tel" formControlName="contact_phone" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-span-2">
+        <mat-label for="motto">{{ 'SCHOOL.MOTTO' | translate }}</mat-label>
+        <input type="text" formControlName="motto" matInput />
+      </mat-form-field>
       <div class="col-span-4 flex justify-end">
         <button
           type="submit"

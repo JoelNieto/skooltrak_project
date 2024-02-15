@@ -132,8 +132,11 @@
     "TYPE": "Tipo de calificación"
   },
   "GROUPS": {
+    "DATES": "Fechas",
+    "DEGREE": "Nivel",
     "DETAILS": "Detalles del grupo",
     "NAME": "Grupo",
+    "TEACHERS": "Docentes",
     "TITLE": "Grupos"
   },
   "Gender": "Genero",
@@ -185,9 +188,11 @@
     "ALL_ROLES": "--Cualquier rol--",
     "ALL_STATUS": "--Cualquier estatus--",
     "APPROVED": "Aprobado",
+    "DOCUMENT_ID": "Nro. Documento",
     "EDIT": "Editar usuario",
     "PARENT": "Acudiente",
     "PENDING": "Pendiente",
+    "PERSON": "Persona",
     "REJECTED": "Rechazado",
     "ROLE": "Rol",
     "STATUS": "Estatus",
@@ -205,6 +210,8 @@
   "PLANS": {
     "DEGREE": "Certificado",
     "DETAILS": "Detalles del Plan de estudio",
+    "LEVEL": "Nivel",
+    "NAME": "Nombre plan",
     "TITLE": "Planes de estudio",
     "YEAR": "Año"
   },

@@ -2,12 +2,18 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { MatIconButton } from '@angular/material/button';
 import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
@@ -34,88 +40,80 @@ import { SchoolDegreesStore } from './degrees.store';
     DialogModule,
     LoadingComponent,
     EmptyTableComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatIcon,
+    MatPrefix,
+    MatTableModule,
+    MatSortModule,
+    MatIconButton,
   ],
   providers: [
     SchoolDegreesStore,
-    provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
+    provideIcons({ heroPencilSquare, heroTrash }),
     ConfirmationService,
   ],
   template: `<div class="relative overflow-x-auto">
-    <div class="mb-4 flex justify-between px-1 py-2">
-      <div>
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative">
-          <div
-            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-          >
-            <ng-icon
-              name="heroMagnifyingGlass"
-              class=" text-gray-500 dark:text-gray-400"
-            />
-          </div>
-          <input
-            type="text"
-            id="table-search"
-            class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
-            placeholder="Search for items"
-          />
-        </div>
-      </div>
+    <div class="flex justify-between items-baseline px-1">
+      <mat-form-field class="w-96">
+        <mat-label for="table-search">Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          type="text"
+          id="table-search"
+          placeholder="Search for items"
+          matInput
+        />
+      </mat-form-field>
 
       <button skButton color="green" (click)="newDegree()">
         {{ 'NEW' | translate }}
       </button>
     </div>
-    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-      <thead
-        class="font-title bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-600 dark:text-gray-300"
-      >
-        <tr class="cursor-pointer">
-          <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">{{ 'Level' | translate }}</th>
-          <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-          <th scope="col" class="px-6 py-3 text-center">
-            {{ 'Actions' | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (store.loading()) {
-          <tr sk-loading></tr>
-        } @else {
-          @for (degree of store.degrees(); track degree.id) {
-            <tr
-              [class.hidden]="store.loading()"
-              class="border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
-            >
-              <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-              >
-                {{ degree.name }}
-              </th>
-              <td class="px-6 py-4">{{ degree.level?.name }}</td>
-              <td class="px-6 py-4">{{ degree.created_at | date: 'short' }}</td>
-              <td class="flex content-center justify-center gap-2 px-6 py-4">
-                <button type="button" (click)="editDegree(degree)">
-                  <ng-icon
-                    name="heroPencilSquare"
-                    class="text-green-500"
-                    size="24"
-                  />
-                </button>
-                <button type="button" (click)="deleteDegree(degree)">
-                  <ng-icon name="heroTrash" class="text-red-600" size="24" />
-                </button>
-              </td>
-            </tr>
-          } @empty {
-            <tr sk-empty></tr>
-          }
-        }
-      </tbody>
+    <table
+      mat-table
+      [dataSource]="store.degrees()"
+      matSort
+      (matSortChange)="changeSort($event)"
+    >
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'NAME' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.name }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="level(name)">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'LEVEL' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.level.name }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'CREATED_AT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.created_at | date: 'medium' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'ACTIONS.TITLE' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button (click)="editDegree(item)">
+            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedCols"></tr>
     </table>
-
     <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
@@ -124,10 +122,18 @@ export class SchoolDegreesComponent {
   private dialog = inject(Dialog);
   private confirmation = inject(ConfirmationService);
   private destroyRef = inject(DestroyRef);
+  public displayedCols = ['name', 'level(name)', 'created_at', 'actions'];
 
   public getCurrentPage(pagination: { pageSize: number; start: number }): void {
     const { start, pageSize } = pagination;
     patchState(this.store, { start, pageSize });
+  }
+
+  public changeSort(sort: Sort): void {
+    patchState(this.store, {
+      sortColumn: sort.active,
+      sortDirection: sort.direction,
+    });
   }
 
   public newDegree(): void {

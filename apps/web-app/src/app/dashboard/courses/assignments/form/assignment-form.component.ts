@@ -18,6 +18,11 @@ import {
   UntypedFormArray,
   Validators,
 } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { NgIconComponent } from '@ng-icons/core';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,13 +30,9 @@ import { ClassGroup } from '@skooltrak/models';
 import {
   ButtonDirective,
   CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
   TabsComponent,
   TabsItemComponent,
 } from '@skooltrak/ui';
-import { QuillModule } from 'ngx-quill';
 import { asapScheduler } from 'rxjs';
 
 import { AssignmentFormStore } from './assignment-form.store';
@@ -44,28 +45,19 @@ import { AssignmentFormStore } from './assignment-form.store';
     TranslateModule,
     TabsComponent,
     TabsItemComponent,
-    SelectComponent,
-    QuillModule,
     ButtonDirective,
     ReactiveFormsModule,
     NgClass,
     NgIconComponent,
-    LabelDirective,
-    InputDirective,
+    MatFormField,
+    MatLabel,
+    MatInputModule,
+    MatSelect,
+    MatOption,
+    MatSlideToggle,
+    MatDatepickerModule,
   ],
-  styles: [
-    `
-      quill-editor {
-        @apply block p-0;
-      }
-
-      ::ng-deep .ql-container.ql-snow,
-      ::ng-deep .ql-toolbar.ql-snow {
-        @apply border-0;
-        font-size: 1rem !important;
-      }
-    `,
-  ],
+  styles: [],
   providers: [AssignmentFormStore],
   template: `
     <form
@@ -82,58 +74,46 @@ import { AssignmentFormStore } from './assignment-form.store';
           </h3>
         </div>
         <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="title" skLabel>{{ 'NAME' | translate }}</label>
-            <input skInput type="text" name="title" formControlName="title" />
-          </div>
-          <div>
-            <label for="course" skLabel>{{
+          <mat-form-field>
+            <mat-label for="title">{{ 'NAME' | translate }}</mat-label>
+            <input matInput type="text" name="title" formControlName="title" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label for="course" skLabel>{{
               'COURSES.TITLE' | translate
-            }}</label>
-            <sk-select
-              [items]="store.courses()"
-              label="subject.name"
-              secondaryLabel="plan.name"
-              formControlName="course_id"
-            />
+            }}</mat-label>
+            <mat-select formControlName="course_id">
+              @for (course of store.courses(); track course.id) {
+                <mat-option [value]="course.id">
+                  {{ course.subject?.name }} - {{ course.plan.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label for="type">{{ 'TYPE' | translate }}</mat-label>
+            <mat-select formControlName="type_id">
+              @for (type of store.types(); track type.id) {
+                <mat-option [value]="type.id">{{ type.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <div class="flex items-baseline pb-3">
+            <mat-slide-toggle formControlName="upload_file">{{
+              'ASSIGNMENTS.UPLOAD_FILE' | translate
+            }}</mat-slide-toggle>
           </div>
-          <div>
-            <label for="type" skLabel>{{ 'TYPE' | translate }}</label>
-            <sk-select
-              [items]="store.types()"
-              label="name"
-              formControlName="type_id"
-            />
-          </div>
-          <div class="flex flex-col justify-end pb-3">
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input
-                formControlName="upload_file"
-                type="checkbox"
-                value=""
-                class="sr-only peer"
-              />
-              <div
-                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-sky-300 dark:peer-focus:ring-sky-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >{{ 'ASSIGNMENTS.UPLOAD_FILE' | translate }}</span
-              >
-            </label>
-          </div>
-          <div class="col-span-2">
-            <label for="description" skLabel>{{
+          <mat-form-field class="col-span-2">
+            <mat-label for="description">{{
               'DESCRIPTION' | translate
-            }}</label>
-            <quill-editor
+            }}</mat-label>
+            <textarea
               formControlName="description"
-              [modules]="modules"
               theme="snow"
-              [styles]="{ height: '20vh' }"
-              skInput
-            ></quill-editor>
-          </div>
+              matInput
+              rows="5"
+            ></textarea>
+          </mat-form-field>
         </div>
         <div footer class="flex justify-end pt-6">
           <button
@@ -151,16 +131,22 @@ import { AssignmentFormStore } from './assignment-form.store';
           <h2
             class="font-title mb-1 flex text-lg leading-tight tracking-tight text-gray-700 dark:text-white"
           >
-            {{ 'GROUPS.TITLE' | translate }}
+            {{ 'GROUPS.DATES' | translate }}
           </h2>
         </div>
         <div formArrayName="groups" class="mt-4 flex flex-col gap-4">
           @for (group of formGroups.controls; track group; let i = $index) {
             <ng-container>
-              <div [formGroupName]="i">
-                <label [for]="i">{{ store.groups()[i].name }}</label>
-                <input skInput type="date" formControlName="date" />
-              </div>
+              <mat-form-field [formGroupName]="i">
+                <mat-label for="i">{{ store.groups()[i].name }}</mat-label>
+                <input
+                  formControlName="date"
+                  matInput
+                  [matDatepicker]="datePicker"
+                />
+                <mat-datepicker-toggle matIconSuffix [for]="datePicker" />
+                <mat-datepicker #datePicker />
+              </mat-form-field>
             </ng-container>
           }
         </div>

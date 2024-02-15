@@ -14,17 +14,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import {
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 import { distinctUntilChanged } from 'rxjs';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
@@ -38,9 +35,10 @@ import { SchoolPeopleFormStore } from './people-form.store';
     NgIconComponent,
     ReactiveFormsModule,
     AvatarComponent,
-    InputDirective,
-    LabelDirective,
-    SelectComponent,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
   ],
   providers: [provideIcons({ heroXMark }), SchoolPeopleFormStore],
   template: `<sk-card
@@ -58,7 +56,7 @@ import { SchoolPeopleFormStore } from './people-form.store';
         />
       </button>
     </div>
-    <form [formGroup]="form" class="flex flex-col space-y-3">
+    <form [formGroup]="form" class="flex flex-col space-y-1">
       <div class="flex flex-col items-center justify-center gap-1">
         <sk-avatar
           [fileName]="data.user.avatar_url ?? 'default_avatar.jpg'"
@@ -71,35 +69,35 @@ import { SchoolPeopleFormStore } from './people-form.store';
         </p>
         <p class="font-mono text-sm text-sky-800">{{ data.user.email }}</p>
       </div>
-      <div>
-        <label for="role" skLabel>{{ 'PEOPLE.ROLE' | translate }}</label>
-        <select formControlName="role" skInput>
+      <mat-form-field>
+        <mat-label for="role">{{ 'PEOPLE.ROLE' | translate }}</mat-label>
+        <mat-select formControlName="role">
           @for (role of roles; track role) {
-            <option [value]="role">
+            <mat-option [value]="role">
               {{ 'PEOPLE.' + role | translate }}
-            </option>
+            </mat-option>
           }
-        </select>
-      </div>
-      <div>
-        <label for="status" skLabel>{{ 'PEOPLE.STATUS' | translate }}</label>
-        <select formControlName="status" skInput>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="status">{{ 'PEOPLE.STATUS' | translate }}</mat-label>
+        <mat-select formControlName="status">
           @for (status of statuses; track status) {
-            <option [value]="status">
+            <mat-option [value]="status">
               {{ 'PEOPLE.' + status | translate }}
-            </option>
+            </mat-option>
           }
-        </select>
-      </div>
+        </mat-select>
+      </mat-form-field>
       @if (IS_STUDENT()) {
-        <div>
-          <label for="group" skLabel>{{ 'GROUPS.NAME' | translate }}</label>
-          <sk-select
-            label="name"
-            [formControl]="groupControl"
-            [items]="store.groups()"
-          />
-        </div>
+        <mat-form-field>
+          <mat-label for="group">{{ 'GROUPS.NAME' | translate }}</mat-label>
+          <mat-select [formControl]="groupControl">
+            @for (group of store.groups(); track group.id) {
+              <mat-option [value]="group.id">{{ group.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       }
     </form>
   </sk-card> `,

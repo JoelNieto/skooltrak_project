@@ -1,6 +1,11 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
@@ -50,11 +55,7 @@ import { ButtonDirective, CardComponent } from '@skooltrak/ui';
             </h1>
           </div>
           <div>
-            <form
-              class="space-y-4 md:space-y-4"
-              [formGroup]="form"
-              (ngSubmit)="signIn()"
-            >
+            <form class="space-y-2" [formGroup]="form" (ngSubmit)="signIn()">
               <mat-form-field class="w-full">
                 <mat-label>
                   {{ 'SIGN_IN.EMAIL' | translate }}
@@ -70,7 +71,6 @@ import { ButtonDirective, CardComponent } from '@skooltrak/ui';
                   matInput
                 />
               </mat-form-field>
-
               <mat-form-field class="w-full">
                 <mat-label>{{ 'SIGN_IN.PASSWORD' | translate }}</mat-label>
                 <input

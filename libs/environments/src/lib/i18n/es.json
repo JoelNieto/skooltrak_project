@@ -1,5 +1,6 @@
 {
   "ACTIONS": {
+    "ADD": "Agregar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
     "RELOAD": "Recargar",
     "SEARCH": "Buscar",

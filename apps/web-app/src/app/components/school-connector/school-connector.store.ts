@@ -32,6 +32,7 @@ export const SchoolConnectorStore = signalStore(
 
         if (error || !data) {
           console.error(error);
+          toast.error(translate.instant('SCHOOL_CONNECTOR.NOT_FOUND'));
           patchState(state, { loading: false });
 
           return;

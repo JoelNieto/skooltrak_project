@@ -6,6 +6,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonDirective, CardComponent, InputDirective } from '@skooltrak/ui';
 
@@ -24,6 +26,9 @@ import { PublicationsStore } from './publications.store';
     ButtonDirective,
     DatePipe,
     UserChipComponent,
+    MatFormField,
+    MatInput,
+    MatLabel,
   ],
   template: `<div class="flex gap-6 w-full">
     <sk-card class="w-72">
@@ -41,12 +46,14 @@ import { PublicationsStore } from './publications.store';
           >
             {{ 'PUBLICATIONS.NEW' | translate }}
           </h2>
-          <textarea
-            [formControl]="textControl"
-            type="text"
-            skInput
-            [placeholder]="'PUBLICATIONS.BODY' | translate"
-          ></textarea>
+          <mat-form-field class="w-full">
+            <textarea
+              [formControl]="textControl"
+              type="text"
+              matInput
+              [placeholder]="'PUBLICATIONS.BODY' | translate"
+            ></textarea>
+          </mat-form-field>
         </div>
         <div class="flex justify-end" footer>
           <button skButton color="sky">
@@ -59,7 +66,6 @@ import { PublicationsStore } from './publications.store';
           <sk-card>
             <div header>
               <div class="flex"><sk-user-chip [user]="publication.user" /></div>
-
               <h3 class="font-semibold font-title text-gray-700 text-lg">
                 {{ publication.title }}
               </h3>

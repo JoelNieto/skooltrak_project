@@ -4,8 +4,8 @@ import {
   Component,
   ElementRef,
   OnInit,
-  ViewChild,
   inject,
+  viewChild,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -130,8 +130,8 @@ import { ChatStore } from './chat.store';
   ],
 })
 export class ChatComponent implements OnInit {
-  @ViewChild('chatContainer')
-  private chatContainer!: ElementRef<HTMLDivElement>;
+  private chatContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('chatContainer');
   public readonly store = inject(ChatStore);
   public readonly state = inject(webStore.MessagesStore);
   private route = inject(ActivatedRoute);
@@ -159,7 +159,7 @@ export class ChatComponent implements OnInit {
   }
 
   public sendMessage(): void {
-    const { nativeElement } = this.chatContainer;
+    const { nativeElement } = this.chatContainer();
     this.store.sendMessage(this.messageControl.value);
     this.messageControl.setValue('');
     nativeElement.scroll({ top: nativeElement.scrollHeight });

@@ -7,14 +7,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 import {
   ButtonDirective,
   CardComponent,
   ImageCropperComponent,
-  InputDirective,
-  LabelDirective,
 } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
@@ -30,8 +32,12 @@ import { ProfileFormStore } from './profile.store';
     ButtonDirective,
     AvatarComponent,
     DialogModule,
-    LabelDirective,
-    InputDirective,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatInputModule,
+    MatOption,
+    MatDatepickerModule,
   ],
   providers: [ProfileFormStore],
   template: `
@@ -55,61 +61,67 @@ import { ProfileFormStore } from './profile.store';
           }
         </div>
         <form [formGroup]="form" (ngSubmit)="saveChanges()">
-          <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-            <div>
-              <label skLabel for="first_name">{{
+          <div class="grid grid-cols-1 gap-2 lg:grid-cols-4">
+            <mat-form-field>
+              <mat-label for="first_name">{{
                 'PROFILE.FIRST_NAME' | translate
-              }}</label>
-              <input skInput type="text" formControlName="first_name" />
-            </div>
-            <div>
-              <label skLabel for="middle_name">{{
+              }}</mat-label>
+              <input matInput type="text" formControlName="first_name" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="middle_name">{{
                 'PROFILE.MIDDLE_NAME' | translate
-              }}</label>
-              <input skInput type="text" formControlName="middle_name" />
-            </div>
-            <div>
-              <label skLabel for="father_name">{{
+              }}</mat-label>
+              <input matInput type="text" formControlName="middle_name" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="father_name">{{
                 'PROFILE.FATHER_NAME' | translate
-              }}</label>
-              <input skInput type="text" formControlName="father_name" />
-            </div>
-            <div>
-              <label skLabel for="mother_name">{{
+              }}</mat-label>
+              <input matInput type="text" formControlName="father_name" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="mother_name">{{
                 'PROFILE.MOTHER_NAME' | translate
-              }}</label>
-              <input skInput type="text" formControlName="mother_name" />
-            </div>
-            <div>
-              <label skLabel for="document_id">{{
+              }}</mat-label>
+              <input matInput type="text" formControlName="mother_name" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="document_id">{{
                 'PROFILE.DOCUMENT_ID' | translate
-              }}</label>
-              <input skInput type="text" formControlName="document_id" />
-            </div>
-            <div>
-              <label skLabel for="birth_date">{{
+              }}</mat-label>
+              <input matInput type="text" formControlName="document_id" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="birth_date">{{
                 'PROFILE.BIRTH_DATE' | translate
-              }}</label>
-              <input skInput type="date" formControlName="birth_date" />
-            </div>
-            <div>
-              <label skLabel for="gender">{{
+              }}</mat-label>
+              <input
+                formControlName="birth_date"
+                matInput
+                [matDatepicker]="birth_date"
+              />
+              <mat-datepicker-toggle matIconSuffix [for]="birth_date" />
+              <mat-datepicker #birth_date />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="gender">{{
                 'PROFILE.GENDER' | translate
-              }}</label>
-              <select skInput formControlName="gender">
+              }}</mat-label>
+              <mat-select formControlName="gender">
                 @for (gender of store.genders(); track gender.id) {
-                  <option [value]="gender.id">
+                  <mat-option [value]="gender.id">
                     {{ gender.name | translate }}
-                  </option>
+                  </mat-option>
                 }
-              </select>
-            </div>
-            <div>
-              <label skLabel for="email">{{
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="email">{{
                 'PROFILE.EMAIL' | translate
-              }}</label>
-              <input skInput type="email" formControlName="email" />
-            </div>
+              }}</mat-label>
+              <input matInput type="email" formControlName="email" />
+            </mat-form-field>
             <div class="mt-2 md:col-span-4">
               <button
                 type="submit"

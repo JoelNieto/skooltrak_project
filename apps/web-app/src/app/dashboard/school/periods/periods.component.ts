@@ -2,12 +2,17 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
-  heroMagnifyingGlass,
-  heroPencilSquare,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
+  MatFormField,
+  MatInput,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/input';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
 import {
@@ -22,108 +27,93 @@ import { SchoolPeriodsStore } from './periods.store';
 @Component({
   standalone: true,
   imports: [
-    NgIconComponent,
     TranslateModule,
     ButtonDirective,
     DatePipe,
     DialogModule,
     EmptyTableComponent,
     LoadingComponent,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatIcon,
+    MatPrefix,
+    MatTableModule,
+    MatSortModule,
+    MatIconButton,
   ],
-  providers: [
-    SchoolPeriodsStore,
-    provideIcons({ heroMagnifyingGlass, heroPencilSquare, heroTrash }),
-  ],
+  providers: [SchoolPeriodsStore],
   template: `<div class="relative overflow-x-auto">
-    <div class="mb-2 flex justify-between px-1 py-2">
-      <div>
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative">
-          <div
-            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-          >
-            <ng-icon
-              name="heroMagnifyingGlass"
-              class="text-gray-500 dark:text-gray-400"
-            />
-          </div>
-          <input
-            type="text"
-            id="table-search"
-            class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-sky-500 dark:focus:ring-sky-500"
-            placeholder="Search for items"
-          />
-        </div>
-      </div>
+    <div class="flex justify-between items-baseline px-1">
+      <mat-form-field class="w-full lg:w-96">
+        <mat-label for="table-search">Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          type="text"
+          id="table-search"
+          matInput
+          placeholder="Search for items"
+        />
+      </mat-form-field>
 
       <button skButton color="green" (click)="createPeriod()">
-        {{ 'New' | translate }}
+        {{ 'NEW' | translate }}
       </button>
     </div>
-    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-      <thead
-        class="bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
-      >
-        <tr class="cursor-pointer">
-          <th scope="col" class="px-6 py-3">{{ 'Name' | translate }}</th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'PERIODS.YEAR' | translate }}
-          </th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'PERIODS.START_AT' | translate }}
-          </th>
-          <th scope="col" class="px-6 py-3">
-            {{ 'PERIODS.END_AT' | translate }}
-          </th>
-          <th score="col" class="px-6 py-3">{{ 'Created' | translate }}</th>
-          <th scope="col" class="px-6 py-3 text-center">
-            {{ 'Actions' | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (store.loading()) {
-          <tr sk-loading></tr>
-        } @else {
-          @for (period of store.periods(); track period.id) {
-            <tr
-              [class.hidden]="store.loading()"
-              class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
-            >
-              <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-2.5 font-medium text-gray-900 dark:text-white"
-              >
-                {{ period.name }}
-              </th>
-              <td class="px-6 py-2.5">{{ period.year }}</td>
-              <td class="px-6 py-2.5">
-                {{ period.start_at | date: 'mediumDate' }}
-              </td>
-              <td class="px-6 py-2.5">
-                {{ period.end_at | date: 'mediumDate' }}
-              </td>
-              <td class="px-6 py-2.5">
-                {{ period.created_at | date: 'medium' }}
-              </td>
-              <td class="flex content-center justify-center gap-2 px-6 py-2.5">
-                <button type="button" (click)="editPeriod(period)">
-                  <ng-icon
-                    name="heroPencilSquare"
-                    class="text-green-500"
-                    size="24"
-                  />
-                </button>
-                <button type="button">
-                  <ng-icon name="heroTrash" class="text-red-600" size="24" />
-                </button>
-              </td>
-            </tr>
-          } @empty {
-            <tr sk-empty></tr>
-          }
-        }
-      </tbody>
+
+    <table
+      mat-table
+      [dataSource]="store.sortedItems()"
+      matSort
+      (matSortChange)="sortChange($event)"
+    >
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'NAME' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.name }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="start_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PERIODS.START_AT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.start_at | date: 'mediumDate' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="end_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PERIODS.END_AT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.end_at | date: 'mediumDate' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'PERIODS.END_AT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.created_at | date: 'medium' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'ACTIONS.TITLE' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          <button type="button" mat-icon-button (click)="editPeriod(item)">
+            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          </button>
+          <button type="button" mat-icon-button>
+            <mat-icon class="text-red-600">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>`,
 })
@@ -131,6 +121,20 @@ export class SchoolPeriodsComponent {
   public store = inject(SchoolPeriodsStore);
   private dialog = inject(Dialog);
   private destroy = inject(DestroyRef);
+  public displayedColumns = [
+    'name',
+    'start_at',
+    'end_at',
+    'created_at',
+    'actions',
+  ];
+
+  public sortChange(sort: Sort): void {
+    patchState(this.store, {
+      sort_column: sort.active,
+      sort_direction: sort.direction,
+    });
+  }
 
   public createPeriod(): void {
     const dialogRef = this.dialog.open<Partial<Period>>(

@@ -6,15 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-up',
@@ -23,10 +19,11 @@ import {
     ReactiveFormsModule,
     CardComponent,
     TranslateModule,
-    InputDirective,
-    LabelDirective,
     NgOptimizedImage,
     ButtonDirective,
+    MatInput,
+    MatFormField,
+    MatLabel,
     RouterLink,
   ],
   template: `<div
@@ -54,55 +51,55 @@ import {
       <form
         [formGroup]="form"
         (ngSubmit)="onSubmit()"
-        class="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-3"
+        class="mt-2 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3"
       >
-        <div>
-          <label for="first_name" skLabel>{{
+        <mat-form-field>
+          <mat-label for="first_name">{{
             'SIGN_UP.FIRST_NAME' | translate
-          }}</label>
+          }}</mat-label>
           <input
             type="text"
             name="first_name"
             placeholder="John"
             formControlName="first_name"
-            skInput
+            matInput
           />
-        </div>
-        <div>
-          <label for="first_name" skLabel>{{
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label for="first_name">{{
             'SIGN_UP.FATHER_NAME' | translate
-          }}</label>
+          }}</mat-label>
           <input
-            skInput
+            matInput
             type="text"
             name="father_name"
             placeholder="Doe"
             formControlName="father_name"
           />
-        </div>
-        <div>
-          <label for="email" skLabel>{{ 'SIGN_UP.EMAIL' | translate }}</label>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label for="email">{{ 'SIGN_UP.EMAIL' | translate }}</mat-label>
           <input
             type="email"
             name="email"
             placeholder="user@domain.com"
             formControlName="email"
-            skInput
+            matInput
           />
-        </div>
-        <div>
-          <label for="password" skLabel>{{
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label for="password">{{
             'SIGN_UP.PASSWORD' | translate
-          }}</label>
+          }}</mat-label>
           <input
             type="password"
             name="password"
             autocomplete="new-password"
             formControlName="password"
             placeholder="•••••••••"
-            skInput
+            matInput
           />
-        </div>
+        </mat-form-field>
 
         <div class="md:col-span-2">
           <button

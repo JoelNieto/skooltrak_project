@@ -13,23 +13,41 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Period, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
+import { orderBy } from 'lodash';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
   loading: boolean;
   periods: Period[];
+  sort_column: string;
+  sort_direction: 'asc' | 'desc' | '';
 };
 
 const initialState: State = {
   loading: false,
   periods: [],
+  sort_column: '',
+  sort_direction: '',
 };
 
 export const SchoolPeriodsStore = signalStore(
   withState(initialState),
-  withComputed((_, auth = inject(webStore.AuthStore)) => ({
-    schoolId: computed(() => auth.schoolId()),
-  })),
+  withComputed(
+    (
+      { sort_direction, sort_column, periods },
+      auth = inject(webStore.AuthStore),
+    ) => {
+      const schoolId = computed(() => auth.schoolId());
+
+      const sortedItems = computed(() =>
+        sort_direction() !== ''
+          ? orderBy(periods(), [sort_column()], [sort_direction() as any])
+          : periods(),
+      );
+
+      return { schoolId, sortedItems };
+    },
+  ),
   withMethods(
     (
       { schoolId, ...state },

@@ -1,6 +1,4 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { webStore } from '@skooltrak/store';
 
 export const dashboardRoutes: Routes = [
   {
@@ -59,7 +57,7 @@ export const dashboardRoutes: Routes = [
       {
         path: 'school',
         title: 'SCHOOL.SETTINGS',
-        canMatch: [(): boolean => inject(webStore.AuthStore).isAdmin()],
+        // canActivateChild: [(): boolean => inject(webStore.AuthStore).isAdmin()],
         loadChildren: () =>
           import('./school/school.routes').then((x) => x.schoolRoutes),
       },

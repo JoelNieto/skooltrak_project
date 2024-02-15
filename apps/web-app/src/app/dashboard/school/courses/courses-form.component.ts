@@ -7,6 +7,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,8 +19,6 @@ import {
   ButtonDirective,
   CardComponent,
   ImageCropperComponent,
-  InputDirective,
-  LabelDirective,
   SelectComponent,
 } from '@skooltrak/ui';
 
@@ -35,10 +36,14 @@ import { CoursesFormStore } from './courses-form.store';
     SelectComponent,
     ButtonDirective,
     UsersSelectorComponent,
-    LabelDirective,
-    InputDirective,
+
     NgOptimizedImage,
     PictureComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
   ],
   providers: [CoursesFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -58,10 +63,10 @@ import { CoursesFormStore } from './courses-form.store';
     </div>
     <form
       [formGroup]="form"
-      class="grid grid-cols-2 gap-2 gap-y-3"
+      class="grid grid-cols-2 gap-2 gap-y-1"
       (ngSubmit)="saveChanges()"
     >
-      @if (data) {
+      @if (data?.id) {
         <div class="col-span-2 rounded cursor-pointer hover:opacity-70">
           <sk-picture
             [bucket]="bucket()"
@@ -71,38 +76,45 @@ import { CoursesFormStore } from './courses-form.store';
           />
         </div>
       }
-      <div>
-        <label for="plan_id" skLabel>{{ 'COURSES.PLAN' | translate }}</label>
-        <sk-select
-          label="name"
-          [items]="store.plans()"
-          formControlName="plan_id"
-        />
-      </div>
-      <div>
-        <label for="subject_id" skLabel>{{
+      <mat-form-field>
+        <mat-label for="plan_id">{{ 'COURSES.PLAN' | translate }}</mat-label>
+        <mat-select formControlName="plan_id">
+          @for (plan of store.plans(); track plan.id) {
+            <mat-option [value]="plan.id">{{ plan.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="subject_id">{{
           'COURSES.SUBJECT' | translate
-        }}</label>
-        <sk-select
-          label="name"
-          [items]="store.subjects()"
-          formControlName="subject_id"
-        />
-      </div>
-      <div>
-        <label for="weekly_hours" skLabel>{{
+        }}</mat-label>
+        <mat-select formControlName="subject_id">
+          @for (subject of store.subjects(); track subject.id) {
+            <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="weekly_hours">{{
           'COURSES.WEEKLY_HOURS' | translate
-        }}</label>
-        <input skInput formControlName="weekly_hours" type="number" />
-      </div>
-      <div>
-        <label skLabel>{{ 'COURSES.TEACHERS' | translate }}</label>
-        <sk-users-selector formControlName="teachers" />
-      </div>
-      <div class="col-span-2">
-        <label for="description" skLabel>{{ 'DESCRIPTION' | translate }}</label>
-        <textarea skInput formControlName="description"></textarea>
-      </div>
+        }}</mat-label>
+        <input matInput formControlName="weekly_hours" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'COURSES.TEACHERS' | translate }}</mat-label>
+        <mat-select [formControl]="teachersControl" multiple>
+          @for (teacher of store.teachers(); track teacher.user_id) {
+            <mat-option [value]="teacher.user_id"
+              >{{ teacher.user?.first_name }}
+              {{ teacher.user?.father_name }}</mat-option
+            >
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-span-2">
+        <mat-label for="description">{{ 'DESCRIPTION' | translate }}</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
       <div class="flex justify-end col-span-2">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'SAVE_CHANGES' | translate }}
@@ -137,9 +149,14 @@ export class SchoolCoursesFormComponent implements OnInit {
     description: new FormControl<string>('', { nonNullable: true }),
   });
 
+  public teachersControl = new FormControl<string[]>([], {
+    nonNullable: true,
+  });
+
   public ngOnInit(): void {
     if (this.data) {
       this.form.patchValue(this.data);
+      this.teachersControl.patchValue(this.data.teachers?.map((x) => x.id!));
       const { picture_url } = this.data;
       !!picture_url && this.pictureUrl.set(picture_url);
     }
@@ -187,6 +204,12 @@ export class SchoolCoursesFormComponent implements OnInit {
   }
 
   public saveChanges(): void {
-    this.dialogRef.close(this.form.getRawValue(), {});
+    this.dialogRef.close(
+      {
+        course: this.form.getRawValue(),
+        teachers: this.teachersControl.getRawValue(),
+      },
+      {},
+    );
   }
 }

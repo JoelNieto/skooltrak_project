@@ -77,7 +77,7 @@ export const CourseGradesStore = signalStore(
               supabase.client
                 .from(Table.Grades)
                 .select(
-                  'id, title, period:periods(id, name), bucket:grade_buckets(*), bucket_id, start_at, items:grade_items(*)',
+                  'id, title, period:periods(id, name), period_id, bucket:grade_buckets(*), bucket_id, start_at, items:grade_items(*)',
                 )
                 .eq('course_id', courseId())
                 .eq('period_id', periodId()),

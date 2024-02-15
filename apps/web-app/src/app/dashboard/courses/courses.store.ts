@@ -20,6 +20,8 @@ type State = {
   pageSize: number;
   start: number;
   loading: boolean;
+  sortColumn: string;
+  sortDirection: 'asc' | 'desc' | '';
 };
 
 const initialState: State = {
@@ -29,13 +31,15 @@ const initialState: State = {
   pageSize: 5,
   start: 0,
   loading: false,
+  sortColumn: '',
+  sortDirection: '',
 };
 
 export const CoursesStore = signalStore(
   withState(initialState),
   withComputed(
     (
-      { start, pageSize, courses, selectedId },
+      { start, pageSize, courses, sortColumn, sortDirection, selectedId },
       auth = inject(webStore.AuthStore),
     ) => ({
       schoolId: computed(() => auth.schoolId()),
@@ -45,6 +49,8 @@ export const CoursesStore = signalStore(
         start: start(),
         pageSize: pageSize(),
         schoolId: auth.schoolId(),
+        sortColumn: sortColumn(),
+        sortDirection: sortDirection(),
       })),
       isAdmin: computed(() => auth.isAdmin()),
       isStudent: computed(() => auth.isStudent()),
@@ -54,7 +60,18 @@ export const CoursesStore = signalStore(
   ),
   withMethods(
     (
-      { schoolId, query, start, end, isTeacher, isStudent, userId, ...state },
+      {
+        schoolId,
+        query,
+        start,
+        end,
+        isTeacher,
+        isStudent,
+        userId,
+        sortColumn,
+        sortDirection,
+        ...state
+      },
       supabase = inject(SupabaseService),
     ) => {
       const updateQuery = rxMethod<typeof query>(
@@ -78,7 +95,7 @@ export const CoursesStore = signalStore(
           return;
         }
 
-        const { data, error, count } = await supabase.client
+        let query = supabase.client
           .from(Table.Courses)
           .select(
             'id, school_id, subject:school_subjects(id, name), subject_id, teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description, weekly_hours, created_at',
@@ -86,6 +103,14 @@ export const CoursesStore = signalStore(
           )
           .eq('school_id', schoolId())
           .range(start(), end());
+
+        if (sortColumn()) {
+          query = query.order(sortColumn(), {
+            ascending: sortDirection() !== 'desc',
+          });
+        }
+
+        const { data, error, count } = await query;
 
         if (error) {
           logError(error);
@@ -96,7 +121,7 @@ export const CoursesStore = signalStore(
         setCourses(data, count);
       }
       async function fetchStudentCourses(): Promise<void> {
-        const { data, error, count } = await supabase.client
+        let query = supabase.client
           .from(Table.Courses)
           .select(
             'id, school_id, subject:school_subjects(id, name), picture_url, subject_id, student:users!course_students!inner(id), teachers:users!course_teachers(id, first_name, father_name, email, avatar_url), period:periods(*), period_id, plan:school_plans(id, name, year), plan_id, description',
@@ -105,6 +130,14 @@ export const CoursesStore = signalStore(
           .eq('school_id', schoolId())
           .range(start(), end())
           .filter('student.id', 'eq', userId());
+
+        if (sortColumn()) {
+          query = query.order(sortColumn(), {
+            ascending: sortDirection() !== 'desc',
+          });
+        }
+
+        const { data, error, count } = await query;
         if (error) {
           logError(error);
 

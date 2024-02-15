@@ -1,11 +1,18 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '@skooltrak/ui';
+import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-school-subjects-form',
@@ -16,8 +23,9 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
     ButtonDirective,
     ReactiveFormsModule,
     TranslateModule,
-    LabelDirective,
-    InputDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
   ],
   providers: [provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -37,25 +45,25 @@ import { ButtonDirective, CardComponent, InputDirective, LabelDirective } from '
     </div>
     <form
       [formGroup]="form"
-      class="flex flex-col space-y-3"
+      class="flex flex-col space-y-1"
       (ngSubmit)="saveChanges()"
     >
-      <div>
-        <label for="name" skLabel>{{ 'NAME' | translate }}</label>
-        <input type="text" formControlName="name" skInput />
-      </div>
-      <div>
-        <label for="short_name" skLabel>{{ 'SHORT_NAME' | translate }}</label>
-        <input type="text" formControlName="short_name" skInput />
-      </div>
-      <div>
-        <label for="code" skLabel>{{ 'CODE' | translate }}</label>
-        <input type="text" formControlName="code" skInput />
-      </div>
-      <div>
-        <label for="description" skLabel>{{ 'DESCRIPTION' | translate }}</label>
-        <textarea rows="3" formControlName="description" skInput></textarea>
-      </div>
+      <mat-form-field>
+        <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
+        <input type="text" formControlName="name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="short_name">{{ 'SHORT_NAME' | translate }}</mat-label>
+        <input type="text" formControlName="short_name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="code">{{ 'CODE' | translate }}</mat-label>
+        <input type="text" formControlName="code" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="description">{{ 'DESCRIPTION' | translate }}</mat-label>
+        <textarea rows="3" formControlName="description" matInput></textarea>
+      </mat-form-field>
       <div class="flex justify-end">
         <button skButton color="sky" type="submit" [disabled]="form.invalid">
           {{ 'SAVE_CHANGES' | translate }}

@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { HotToastService } from '@ngneat/hot-toast';
-import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
@@ -13,7 +12,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Degree, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { filter, pipe, tap } from 'rxjs';
 
 type State = {
   degrees: Degree[];
@@ -21,6 +20,8 @@ type State = {
   pageSize: number;
   start: number;
   loading: boolean;
+  sortColumn: string;
+  sortDirection: 'asc' | 'desc' | '';
 };
 
 const initialState: State = {
@@ -29,52 +30,74 @@ const initialState: State = {
   count: 0,
   pageSize: 5,
   start: 0,
+  sortColumn: '',
+  sortDirection: '',
 };
 
 export const SchoolDegreesStore = signalStore(
   withState(initialState),
-  withComputed(({ start, pageSize }, auth = inject(webStore.AuthStore)) => ({
-    end: computed(() => start() + (pageSize() - 1)),
-    schoolId: computed(() => auth.schoolId()),
-  })),
+  withComputed(
+    (
+      { start, pageSize, sortColumn, sortDirection },
+      auth = inject(webStore.AuthStore),
+    ) => {
+      const end = computed(() => start() + (pageSize() - 1));
+      const schoolId = computed(() => auth.schoolId());
+      const fetchData = computed(() => ({
+        end: end(),
+        sortDirection: sortDirection(),
+        sortColumn: sortColumn(),
+        schoolId: schoolId(),
+      }));
+
+      return { end, schoolId, fetchData };
+    },
+  ),
   withMethods(
     (
-      { start, end, schoolId, ...store },
+      { start, end, schoolId, sortColumn, sortDirection, fetchData, ...state },
       supabase = inject(SupabaseService),
       toast = inject(HotToastService),
       translate = inject(TranslateService),
-    ) => ({
-      fetchDegrees: rxMethod<number>(
+    ) => {
+      async function getDegrees(): Promise<void> {
+        patchState(state, { loading: true });
+        let query = supabase.client
+          .from(Table.Degrees)
+          .select('id,name, level:levels(*), level_id, created_at', {
+            count: 'exact',
+          })
+          .range(start(), end())
+          .eq('school_id', schoolId());
+
+        if (sortColumn()) {
+          query = query.order(sortColumn(), {
+            ascending: sortDirection() !== 'desc',
+          });
+        }
+
+        const { data, error, count } = await query;
+
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+
+        patchState(state, {
+          count: count ?? 0,
+          loading: false,
+          degrees: data as unknown as Degree[],
+        });
+      }
+      const fetchDegrees = rxMethod<typeof fetchData>(
         pipe(
           filter(() => !!schoolId()),
-          tap(() => patchState(store, { loading: true })),
-          switchMap(() => {
-            return from(
-              supabase.client
-                .from(Table.Degrees)
-                .select('id,name, level:levels(*), level_id, created_at', {
-                  count: 'exact',
-                })
-                .order('name', { ascending: true })
-                .range(start(), end())
-                .eq('school_id', schoolId()),
-            ).pipe(
-              map(({ data, error, count }) => {
-                if (error) throw new Error(error.message);
-
-                return { degrees: data as unknown as Degree[], count };
-              }),
-              tap(({ count }) => !!count && patchState(store, { count })),
-              tapResponse(
-                ({ degrees }) => patchState(store, { degrees }),
-                (error) => console.error(error),
-                () => patchState(store, { loading: false }),
-              ),
-            );
-          }),
+          tap(() => getDegrees()),
         ),
-      ),
-      async saveDegree(request: Partial<Degree>): Promise<void> {
+      );
+      async function saveDegree(request: Partial<Degree>): Promise<void> {
         const { error } = await supabase.client
           .from(Table.Degrees)
           .upsert([{ ...request, school_id: schoolId() }]);
@@ -86,9 +109,9 @@ export const SchoolDegreesStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchDegrees(start());
-      },
-      async deleteDegree(id: string): Promise<void> {
+        fetchDegrees(fetchData);
+      }
+      async function deleteDegree(id: string): Promise<void> {
         const { error } = await supabase.client
           .from(Table.Degrees)
           .delete()
@@ -101,13 +124,15 @@ export const SchoolDegreesStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchDegrees(start);
-      },
-    }),
+        fetchDegrees(fetchData);
+      }
+
+      return { deleteDegree, saveDegree, fetchDegrees };
+    },
   ),
   withHooks({
-    onInit({ fetchDegrees, end }) {
-      fetchDegrees(end);
+    onInit({ fetchDegrees, fetchData }) {
+      fetchDegrees(fetchData);
     },
   }),
 );

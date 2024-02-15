@@ -7,6 +7,8 @@ import {
   LOCALE_ID,
   importProvidersFrom,
 } from '@angular/core';
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
   BrowserAnimationsModule,
@@ -27,6 +29,7 @@ import { APP_CONFIG, environment } from '@skooltrak/environments';
 import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { es } from 'date-fns/locale';
 import { QuillModule } from 'ngx-quill';
 
 import { appRoutes } from './app.routes';
@@ -39,6 +42,7 @@ const translateLoader = (http: HttpClient): TranslateLoader =>
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
+
     { provide: TitleStrategy, useClass: PageTitleStrategy },
     provideRouter(
       appRoutes,
@@ -68,6 +72,8 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: APP_CONFIG, useValue: environment },
     { provide: LOCALE_ID, useValue: 'es-MX' },
+    { provide: MAT_DATE_LOCALE, useValue: es },
+    provideDateFnsAdapter(),
     provideHotToastConfig(),
   ],
 };

@@ -1,6 +1,8 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
@@ -24,6 +26,10 @@ import { CourseGradesStore } from './course-grades.store';
     DialogModule,
     ReactiveFormsModule,
     GradeItemFormComponent,
+    MatFormField,
+    MatSelect,
+    MatLabel,
+    MatOption,
   ],
   styles: [
     `
@@ -38,35 +44,33 @@ import { CourseGradesStore } from './course-grades.store';
   ],
   providers: [CourseGradesStore, provideIcons({ heroPencil })],
   template: `
-    <div class="mb-4 mt-2 flex justify-between">
-      <div class="w-64">
-        <sk-select
-          [formControl]="periodControl"
-          [items]="store.periods()"
-          label="name"
-          [search]="false"
-        />
-      </div>
+    <div class="mb-4 mt-2 flex justify-between items-baseline">
+      <mat-form-field class="w-64">
+        <mat-label>{{ 'SELECT.SELECT_VALUE' | translate }}</mat-label>
+        <mat-select [formControl]="periodControl">
+          @for (period of store.periods(); track period.id) {
+            <mat-option [value]="period.id">{{ period.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
       <button skButton color="green" (click)="newGrade()">
         + {{ 'GRADES.NEW' | translate }}
       </button>
     </div>
     <div class="max-h-96 w-auto overflow-auto">
       <table class="text-left text-sm text-gray-500 dark:text-gray-400">
-        <thead
-          class="bg-gray-50 font-sans text-xs text-gray-700 dark:bg-gray-600 dark:text-gray-200"
-        >
+        <thead class="font-sans text-xs text-gray-700 dark:text-gray-200">
           <tr>
             <th
               scope="col"
-              class="sticky left-0 top-0 w-16 bg-gray-50 px-6 py-3 font-bold uppercase"
+              class="sticky left-0 top-0 w-16  px-6 py-3 font-bold uppercase"
             >
               {{ 'Student' | translate }}
             </th>
             @for (grade of store.grades(); track grade.id) {
               <th
                 scope="col"
-                class="sticky top-0 whitespace-nowrap bg-gray-50 px-2 py-3 font-semibold"
+                class="sticky top-0 whitespace-nowrap px-2 py-3 font-semibold"
                 (click)="editGrade(grade)"
               >
                 <div class="flex justify-between">
@@ -97,7 +101,7 @@ import { CourseGradesStore } from './course-grades.store';
                 {{ student.first_name }} {{ student.father_name }}
               </th>
               @for (grade of store.grades(); track grade) {
-                <td class="border px-2 py-1 text-center">
+                <td class="border-t px-2 py-1 text-center">
                   <sk-grade-item-form
                     [gradeId]="grade.id!"
                     [studentId]="student.id!"

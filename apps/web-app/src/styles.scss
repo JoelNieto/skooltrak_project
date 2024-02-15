@@ -1,4 +1,13 @@
 @use '@ngneat/hot-toast/src/styles/styles.scss';
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
 @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -7,6 +16,32 @@
 @tailwind utilities;
 @import '@angular/cdk/overlay-prebuilt.css';
 @import 'quill/dist/quill.snow.css';
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$skooltrak-primary: mat.define-palette(mat.$blue-palette);
+$skooltrak-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$skooltrak-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$skooltrak-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $skooltrak-primary,
+      accent: $skooltrak-accent,
+      warn: $skooltrak-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($skooltrak-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -22,4 +57,57 @@ body {
 
 .ql-container {
   font-family: 'Inter', 'Helvetica Neue', 'sans-serif';
+}
+
+[type='text']:focus,
+[type='email']:focus,
+[type='url']:focus,
+[type='password']:focus,
+[type='number']:focus,
+[type='date']:focus,
+[type='datetime-local']:focus,
+[type='month']:focus,
+[type='search']:focus,
+[type='tel']:focus,
+[type='time']:focus,
+[type='week']:focus,
+[multiple]:focus,
+textarea:focus,
+select:focus {
+  box-shadow: none;
+}
+
+.mat-mdc-header-row {
+  @apply font-semibold uppercase border-b-0 font-title #{!important};
+}
+
+.material-symbols-rounded {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+[multiple] {
+  appearance: unset;
+  background-color: unset;
+  border-color: unset;
+  border-width: 0;
+  border-radius: unset;
+  padding-top: unset;
+  padding-right: unset;
+  padding-bottom: unset;
+  padding-left: unset;
+  font-size: unset;
+  line-height: unset;
+  --tw-shadow: 0 0 #0000;
+}
+
+.mat-mdc-optgroup-label {
+  @apply font-semibold text-sky-900 font-mono;
+}
+
+mat-label {
+  @apply font-mono;
 }

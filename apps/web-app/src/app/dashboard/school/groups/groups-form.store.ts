@@ -1,6 +1,12 @@
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Degree, StudyPlan, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
@@ -45,7 +51,7 @@ export const GroupsFormStore = signalStore(
       },
       fetchPlans: rxMethod<string | undefined>(
         pipe(
-          filter(() => !!degreeId),
+          filter(() => !!degreeId()),
           switchMap(() =>
             from(
               supabase.client

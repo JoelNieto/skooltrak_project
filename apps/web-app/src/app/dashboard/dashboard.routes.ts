@@ -16,7 +16,13 @@ export const dashboardRoutes: Routes = [
         path: 'courses',
         title: 'COURSES.TITLE',
         loadChildren: () =>
-          import('./courses.routes').then((x) => x.coursesRoutes),
+          import('./courses/courses.routes').then((x) => x.coursesRoutes),
+      },
+      {
+        path: 'quizzes',
+        title: 'QUIZZES.TITLE',
+        loadChildren: () =>
+          import('./quizzes/quizzes.routes').then((x) => x.quizzesRoutes),
       },
       {
         path: 'profile',

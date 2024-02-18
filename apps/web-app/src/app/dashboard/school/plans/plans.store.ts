@@ -1,19 +1,11 @@
 import { computed, inject } from '@angular/core';
 import { HotToastService } from '@ngneat/hot-toast';
-import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { StudyPlan, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { debounceTime, filter, pipe, tap } from 'rxjs';
 
 type State = {
   plans: StudyPlan[];
@@ -21,6 +13,8 @@ type State = {
   pageSize: number;
   start: number;
   loading: boolean;
+  sortDirection: 'asc' | 'desc' | '';
+  sortColumn: string;
 };
 
 const initialState: State = {
@@ -29,58 +23,82 @@ const initialState: State = {
   count: 0,
   pageSize: 5,
   start: 0,
+  sortColumn: '',
+  sortDirection: '',
 };
 
 export const SchoolPlansStore = signalStore(
   withState(initialState),
-  withComputed(({ start, pageSize }) => ({
-    end: computed(() => start() + (pageSize() - 1)),
-  })),
+  withComputed(
+    (
+      { start, pageSize, sortDirection, sortColumn },
+      auth = inject(webStore.AuthStore),
+    ) => {
+      const end = computed(() => start() + (pageSize() - 1));
+      const fetchData = computed(() => ({
+        pageSize: pageSize(),
+        end: end(),
+        sortColumn: sortColumn(),
+        sortDirection: sortDirection(),
+        schoolId: auth.schoolId(),
+      }));
+
+      return { end, fetchData };
+    },
+  ),
   withMethods(
     (
-      { start, end, ...store },
-      auth = inject(webStore.AuthStore),
+      { start, end, fetchData, ...state },
       supabase = inject(SupabaseService),
       toast = inject(HotToastService),
       translate = inject(TranslateService),
-    ) => ({
-      fetchPlans: rxMethod<number>(
-        pipe(
-          filter(() => !!auth.schoolId()),
-          tap(() => patchState(store, { loading: true })),
-          switchMap(() => {
-            return from(
-              supabase.client
-                .from(Table.StudyPlans)
-                .select(
-                  'id,name, level:levels(*), level_id, degree_id, degree:school_degrees(*), year, created_at',
-                  {
-                    count: 'exact',
-                  },
-                )
-                .order('year', { ascending: true })
-                .range(start(), end())
-                .eq('school_id', auth.schoolId()),
-            ).pipe(
-              map(({ data, error, count }) => {
-                if (error) throw new Error(error.message);
+    ) => {
+      async function getPlans(): Promise<void> {
+        patchState(state, { loading: true });
 
-                return { plans: data as unknown as StudyPlan[], count };
-              }),
-              tap(({ count }) => !!count && patchState(store, { count })),
-              tapResponse(
-                ({ plans }) => patchState(store, { plans }),
-                (error) => console.error(error),
-                () => patchState(store, { loading: false }),
-              ),
-            );
-          }),
+        let query = supabase.client
+          .from(Table.StudyPlans)
+          .select(
+            'id,name, level:levels(*), level_id, degree_id, degree:school_degrees(*), year, created_at',
+            {
+              count: 'exact',
+            },
+          )
+          .range(start(), end())
+          .eq('school_id', fetchData().schoolId);
+
+        if (fetchData().sortColumn) {
+          query = query.order(fetchData().sortColumn, {
+            ascending: fetchData().sortDirection !== 'desc',
+          });
+        }
+
+        const { data, error, count } = await query;
+
+        if (error) {
+          console.error(error);
+
+          patchState(state, { loading: false });
+        }
+
+        patchState(state, {
+          count: count ?? 0,
+          plans: data as unknown as StudyPlan[],
+          loading: false,
+        });
+      }
+
+      const fetchPlans = rxMethod<typeof fetchData>(
+        pipe(
+          debounceTime(250),
+          filter(() => !!fetchData().schoolId),
+          tap(() => getPlans()),
         ),
-      ),
-      async savePlan(request: Partial<StudyPlan>): Promise<void> {
+      );
+      async function savePlan(request: Partial<StudyPlan>): Promise<void> {
         const { error } = await supabase.client
           .from(Table.StudyPlans)
-          .upsert([{ ...request, school_id: auth.schoolId() }]);
+          .upsert([{ ...request, school_id: fetchData().schoolId }]);
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));
@@ -88,9 +106,9 @@ export const SchoolPlansStore = signalStore(
           return;
         }
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchPlans(start());
-      },
-      async deletePlan(id: string): Promise<void> {
+        fetchPlans(fetchData);
+      }
+      async function deletePlan(id: string): Promise<void> {
         const { error } = await supabase.client
           .from(Table.StudyPlans)
           .delete()
@@ -103,13 +121,15 @@ export const SchoolPlansStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
-        this.fetchPlans(start);
-      },
-    }),
+        fetchPlans(fetchData);
+      }
+
+      return { deletePlan, savePlan, fetchPlans };
+    },
   ),
   withHooks({
-    onInit({ fetchPlans, end }) {
-      fetchPlans(end);
+    onInit({ fetchPlans, fetchData }) {
+      fetchPlans(fetchData);
     },
   }),
 );

@@ -4,22 +4,13 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MatFormField,
-  MatInput,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/input';
+import { MatFormField, MatInput, MatLabel, MatPrefix } from '@angular/material/input';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  EmptyTableComponent,
-  LoadingComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, EmptyTableComponent, LoadingComponent } from '@skooltrak/ui';
 
 import { SchoolPeriodsFormComponent } from './periods-form.component';
 import { SchoolPeriodsStore } from './periods.store';
@@ -43,7 +34,7 @@ import { SchoolPeriodsStore } from './periods.store';
     MatIconButton,
   ],
   providers: [SchoolPeriodsStore],
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-full lg:w-96">
         <mat-label for="table-search">Search</mat-label>

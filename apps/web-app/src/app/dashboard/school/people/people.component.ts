@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
@@ -14,11 +14,7 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import {
-  EmptyTableComponent,
-  LoadingComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
@@ -53,9 +49,10 @@ import { SchoolPeopleStore } from './people.store';
   styles: `
 
     `,
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between gap-4 px-1">
       <mat-form-field class="flex-1">
+        <mat-label>{{ 'ROLE' | translate }}</mat-label>
         <mat-select [formControl]="roleControl">
           <mat-option value="all">{{
             'PEOPLE.ALL_ROLES' | translate
@@ -68,6 +65,7 @@ import { SchoolPeopleStore } from './people.store';
         </mat-select>
       </mat-form-field>
       <mat-form-field class="flex-1">
+        <mat-label>{{ 'PEOPLE.STATUS' | translate }}</mat-label>
         <mat-select [formControl]="statusControl">
           <mat-option value="all">{{
             'PEOPLE.ALL_STATUS' | translate

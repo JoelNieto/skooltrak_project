@@ -1,5 +1,7 @@
 {
   "ACTIONS": {
+    "DELETE": "Eliminar",
+    "EDIT": "Editar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
     "RELOAD": "Recargar",
     "TITLE": "Acciones"
@@ -228,6 +230,26 @@
     "TITLE": "Datos personales"
   },
   "Polls": "Encuestas",
+  "QUESTION_TYPE": {
+    "BOOLEAN": "Cierto/Falso",
+    "LONG_TEXT": "Texto largo",
+    "MATCH": "Pareo",
+    "SELECTION": "Seleccion",
+    "SHORT_TEXT": "Texto corto"
+  },
+  "QUIZZES": {
+    "ADD_QUESTION": "Agregar pregunta",
+    "DESCRIPTION": "Descripción",
+    "DETAILS": "Datos del quiz",
+    "IS_CORRECT": "Respuesta correcta",
+    "NAME": "Nombre del quiz",
+    "OPTION": "Opción",
+    "OPTIONS": "Opciones",
+    "QUESTION": "Pregunta",
+    "QUESTION_TEXT": "Texto de la pregunta",
+    "QUESTION_TYPE": "Tipo pregunta",
+    "TITLE": "Quizes"
+  },
   "RESET_PASSWORD": {
     "SEND_REQUEST": "Enviar solicitud",
     "SUBTITLE": "Ingresa tu correo electrónico y te enviaremos un enlace para que recuperes el acceso a tu cuenta.",
@@ -273,6 +295,10 @@
     "OTHER": "Otro",
     "PRIVATE": "Privado",
     "PUBLIC": "Oficial"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Ingrese texto a buscar",
+    "TITLE": "Buscar"
   },
   "SEARCH_ITEMS": "Buscar elementos",
   "SELECT": {
@@ -327,6 +353,7 @@
     "Details": "Datos del docente"
   },
   "Teachers": "Docentes",
+  "USER": "Usuario",
   "USERS_SELECTOR": {
     "NOT_FOUND": "Sin usuarios encontrados",
     "PLACEHOLDER": "Elegir usuarios",

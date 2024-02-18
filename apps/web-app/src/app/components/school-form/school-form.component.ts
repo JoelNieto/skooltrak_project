@@ -1,20 +1,7 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -23,12 +10,7 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { School, SchoolTypeEnum } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolFormStore } from './school-form.store';
@@ -88,7 +70,7 @@ import { SchoolFormStore } from './school-form.store';
 
     <form
       [formGroup]="form"
-      class="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4"
+      class="mt-8 lg:grid gap-2 "
       (ngSubmit)="saveChanges()"
     >
       <mat-form-field class="w-full">
@@ -103,7 +85,7 @@ import { SchoolFormStore } from './school-form.store';
         }}</mat-label>
         <input type="text" formControlName="full_name" matInput />
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field class="w-full">
         <mat-label for="type">{{ 'SCHOOL.TYPE' | translate }}</mat-label>
         <mat-select formControlName="type" matInput>
           @for (type of types(); track type) {
@@ -113,7 +95,7 @@ import { SchoolFormStore } from './school-form.store';
           }
         </mat-select>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field class="w-full">
         <mat-label for="country_id">{{
           'SCHOOL.COUNTRY' | translate
         }}</mat-label>
@@ -123,17 +105,17 @@ import { SchoolFormStore } from './school-form.store';
           }
         </mat-select>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field class="w-full">
         <mat-label for="address">{{ 'SCHOOL.ADDRESS' | translate }}</mat-label>
         <input type="text" formControlName="address" matInput />
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field class="w-full">
         <mat-label for="contact_email">{{
           'SCHOOL.EMAIL' | translate
         }}</mat-label>
         <input type="email" formControlName="contact_email" matInput />
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field class="w-full">
         <mat-label for="contact_phone">{{
           'SCHOOL.PHONE' | translate
         }}</mat-label>

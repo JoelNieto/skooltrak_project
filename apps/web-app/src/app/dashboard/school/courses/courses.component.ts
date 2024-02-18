@@ -5,22 +5,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MatFormField,
-  MatLabel,
-  MatSelectModule,
-} from '@angular/material/select';
+import { MatFormField, MatLabel, MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  PaginatorComponent,
-  UtilService,
-} from '@skooltrak/ui';
+import { ButtonDirective, PaginatorComponent, UtilService } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolCoursesFormComponent } from './courses-form.component';
@@ -46,7 +38,7 @@ import { SchoolCoursesStore } from './courses.store';
     MatSortModule,
   ],
   providers: [UtilService, SchoolCoursesStore],
-  template: ` <div class="relative overflow-x-auto">
+  template: ` <div class="relative ">
     <div class="flex flex-nowrap justify-between items-baseline gap-4 px-1">
       <mat-form-field class="w-96">
         <mat-label>{{ 'COURSES.SELECT_PLAN' | translate }}</mat-label>

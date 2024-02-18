@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/store';
 
@@ -13,7 +6,7 @@ import { SupabaseService } from '@skooltrak/store';
   selector: 'sk-picture',
   standalone: true,
   imports: [],
-  template: `<img [attr.src]="src()" class="rounded shadow" />`,
+  template: `<img [attr.src]="src()" class="rounded shadow h-full" />`,
   styles: `
       :host {
         display: block;
@@ -22,7 +15,7 @@ import { SupabaseService } from '@skooltrak/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PictureComponent {
-  public bucket = input<string | undefined>(undefined);
+  public bucket = input.required<string>();
 
   public pictureURL = input.required<string>();
 
@@ -46,7 +39,7 @@ export class PictureComponent {
 
   private async downloadImage(path: string): Promise<void> {
     try {
-      const { data } = await this.supabase.downloadFile(path, this.bucket()!);
+      const { data } = await this.supabase.downloadFile(path, this.bucket());
 
       if (data instanceof Blob) {
         this.src.set(

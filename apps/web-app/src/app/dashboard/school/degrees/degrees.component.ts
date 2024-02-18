@@ -3,11 +3,7 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -54,7 +50,7 @@ import { SchoolDegreesStore } from './degrees.store';
     provideIcons({ heroPencilSquare, heroTrash }),
     ConfirmationService,
   ],
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-96">
         <mat-label for="table-search">Search</mat-label>

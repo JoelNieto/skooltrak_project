@@ -2,21 +2,15 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-MX';
-import {
-  ApplicationConfig,
-  LOCALE_ID,
-  importProvidersFrom,
-} from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import {
-  BrowserAnimationsModule,
-  provideAnimations,
-} from '@angular/platform-browser/animations';
-import {
-  TitleStrategy,
   provideRouter,
+  TitleStrategy,
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
   withRouterConfig,
@@ -73,6 +67,10 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_CONFIG, useValue: environment },
     { provide: LOCALE_ID, useValue: 'es-MX' },
     { provide: MAT_DATE_LOCALE, useValue: es },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
     provideDateFnsAdapter(),
     provideHotToastConfig(),
   ],

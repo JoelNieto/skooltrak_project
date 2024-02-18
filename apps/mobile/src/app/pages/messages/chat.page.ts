@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -168,7 +168,7 @@ export class ChatPage implements OnInit {
       validators: [Validators.required],
     }),
   });
-  @ViewChild(IonContent, { static: true }) private ionContent!: IonContent;
+  private ionContent = viewChild.required(IonContent);
 
   constructor() {
     effect(() => {
@@ -202,7 +202,7 @@ export class ChatPage implements OnInit {
       },
     });
     setTimeout(() => {
-      this.ionContent.scrollToBottom(300);
+      this.ionContent().scrollToBottom(300);
     }, 400);
   }
 

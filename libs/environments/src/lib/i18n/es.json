@@ -1,6 +1,7 @@
 {
   "ACTIONS": {
     "DELETE": "Eliminar",
+    "DETAILS": "Detalles",
     "EDIT": "Editar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
     "RELOAD": "Recargar",
@@ -353,6 +354,7 @@
     "Details": "Datos del docente"
   },
   "Teachers": "Docentes",
+  "UPDATED_AT": "Actualizado",
   "USER": "Usuario",
   "USERS_SELECTOR": {
     "NOT_FOUND": "Sin usuarios encontrados",

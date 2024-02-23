@@ -2,7 +2,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -12,13 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  EmptyTableComponent,
-  LoadingComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ConfirmationService, EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './plans-form.component';
 import { SchoolPlansStore } from './plans.store';
@@ -31,7 +25,7 @@ import { SchoolPlansStore } from './plans.store';
     PaginatorComponent,
     DatePipe,
     DialogModule,
-    ButtonDirective,
+    MatButton,
     LoadingComponent,
     EmptyTableComponent,
     MatFormField,
@@ -59,8 +53,8 @@ import { SchoolPlansStore } from './plans.store';
           matInput
         />
       </mat-form-field>
-      <button skButton color="green" (click)="newStudyPlan()">
-        {{ 'NEW' | translate }}
+      <button mat-flat-button color="primary" (click)="newStudyPlan()">
+        <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
     <table
@@ -105,15 +99,15 @@ import { SchoolPlansStore } from './plans.store';
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
           <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_horiz</mat-icon>
+            <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="editStudyPlan(item)">
-              <mat-icon class="text-emerald-600">edit_square</mat-icon>
+              <mat-icon color="accent">edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
             <button mat-menu-item (click)="deletePlan(item)">
-              <mat-icon class="text-red-600">delete</mat-icon>
+              <mat-icon color="warn">delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
           </mat-menu>

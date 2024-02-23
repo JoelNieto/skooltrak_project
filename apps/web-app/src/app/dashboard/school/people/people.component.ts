@@ -7,6 +7,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -44,6 +45,7 @@ import { SchoolPeopleStore } from './people.store';
     MatTableModule,
     MatSortModule,
     MatIconButton,
+    MatMenuModule,
   ],
   providers: [SchoolPeopleStore],
   styles: `
@@ -152,12 +154,19 @@ import { SchoolPeopleStore } from './people.store';
           {{ 'ACTIONS.TITLE' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
-          <button type="button" mat-icon-button (click)="editPeople(item)">
-            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button type="button" mat-icon-button>
-            <mat-icon class="text-red-600">delete</mat-icon>
-          </button>
+          <mat-menu #menu="matMenu">
+            <button type="button" mat-menu-item (click)="editPeople(item)">
+              <mat-icon class="text-emerald-600">edit_square</mat-icon>
+              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+            </button>
+            <button type="button" mat-menu-item>
+              <mat-icon class="text-red-600">delete</mat-icon>
+              <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>

@@ -1,5 +1,12 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Quiz, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
@@ -12,7 +19,7 @@ type State = {
   pageSize: number;
   start: number;
   sortDirection: 'asc' | 'desc' | '';
-  sortColumn: '';
+  sortColumn: string;
 };
 
 const initial: State = {
@@ -21,8 +28,8 @@ const initial: State = {
   count: 0,
   pageSize: 5,
   start: 0,
-  sortDirection: '',
-  sortColumn: '',
+  sortDirection: 'desc',
+  sortColumn: 'updated_at',
 };
 
 export const QuizzesStore = signalStore(
@@ -62,7 +69,7 @@ export const QuizzesStore = signalStore(
         let query = supabase.client
           .from(Table.Quizzes)
           .select(
-            'id, title, description, user:users(email, first_name, father_name), created_at',
+            'id, title, description, user:users(email, first_name, father_name), created_at, updated_at',
             { count: 'exact' },
           )
           .eq('school_id', schoolId())

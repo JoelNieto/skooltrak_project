@@ -2,6 +2,7 @@ import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -10,7 +11,7 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { School, SchoolTypeEnum } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
+import { CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolFormStore } from './school-form.store';
@@ -21,7 +22,7 @@ import { SchoolFormStore } from './school-form.store';
   imports: [
     ReactiveFormsModule,
     CardComponent,
-    ButtonDirective,
+    MatButton,
     AvatarComponent,
     TranslateModule,
     SelectComponent,
@@ -128,8 +129,8 @@ import { SchoolFormStore } from './school-form.store';
       <div class="col-span-4 flex justify-end">
         <button
           type="submit"
-          skButton
-          color="sky"
+          mat-flat-button
+          color="primary"
           [disabled]="this.form.invalid"
         >
           {{ 'SAVE_CHANGES' | translate }}

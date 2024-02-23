@@ -6,6 +6,7 @@ export type Question = EntityBase & {
   text: string;
   hint?: string;
   type: QuestionTypeEnum;
+  options?: Partial<QuestionOption>[];
 };
 
 export type QuestionOption = {
@@ -14,8 +15,4 @@ export type QuestionOption = {
   is_correct: boolean;
   created_at?: Date;
   text: string;
-};
-
-export type QuestionObject = Question & {
-  options?: QuestionOption[];
 };

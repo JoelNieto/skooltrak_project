@@ -21,7 +21,8 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $skooltrak-primary: mat.define-palette(mat.$blue-palette);
-$skooltrak-accent: mat.define-palette(mat.$green-palette);
+$skooltrak-accent: mat.define-palette(mat.$teal-palette, 600, 700, 800);
+$skooltrak-secondary: mat.define-palette(mat.$blue-palette, 600, 700, 800);
 
 // The warn palette is optional (defaults to red).
 $skooltrak-warn: mat.define-palette(mat.$red-palette);
@@ -33,6 +34,7 @@ $skooltrak-theme: mat.define-light-theme(
     color: (
       primary: $skooltrak-primary,
       accent: $skooltrak-accent,
+      secondary: $skooltrak-secondary,
       warn: $skooltrak-warn,
     ),
   )
@@ -78,7 +80,7 @@ select:focus {
 }
 
 .mat-mdc-header-row {
-  @apply font-semibold uppercase text-sky-900 border-b-0 font-title #{!important};
+  @apply font-semibold uppercase text-slate-800 leading-tight border-b-0 font-title #{!important};
 }
 
 .material-symbols-rounded {
@@ -110,4 +112,9 @@ select:focus {
 
 .mdc-notched-outline__notch {
   border-right: 0 !important;
+}
+
+.mdc-button {
+  @apply px-5 py-2.5 uppercase rounded-lg #{!important};
+  height: unset !important;
 }

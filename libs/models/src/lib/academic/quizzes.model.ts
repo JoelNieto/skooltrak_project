@@ -7,7 +7,7 @@ export type Quiz = EntityBase & {
   description?: string;
   user_id?: string;
   school_id?: string;
-  questions: QuizQuestion[];
+  questions: Question[];
 };
 
 export type QuizObject = Quiz & {

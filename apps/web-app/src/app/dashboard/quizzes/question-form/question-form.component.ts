@@ -1,7 +1,20 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatIconButton, MatMiniFabButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -10,9 +23,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
-import { Question, QuestionTypeEnum } from '@skooltrak/models';
+import { Question, QuestionOption, QuestionTypeEnum } from '@skooltrak/models';
 import { CardComponent } from '@skooltrak/ui';
-import { debounceTime } from 'rxjs';
+import { combineLatest, filter } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
 
@@ -101,13 +115,14 @@ import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionFormComponent implements OnInit {
-  public question = input.required<Partial<Question>>();
+  public question = input.required<Question>();
   public index = input.required<number>();
   public types = Object.values(QuestionTypeEnum);
   public store = inject(QuizzesFormStore);
   private destroy = inject(DestroyRef);
 
   public form = new FormGroup({
+    id: new FormControl(uuidv4(), { nonNullable: true }),
     text: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -120,13 +135,20 @@ export class QuestionFormComponent implements OnInit {
   });
 
   public ngOnInit(): void {
-    const { type, text } = this.question();
-    this.form.patchValue({ type, text });
+    const { type, text, id, options } = this.question();
+    this.form.patchValue({ type, text, id });
 
-    this.form.valueChanges
-      .pipe(takeUntilDestroyed(this.destroy), debounceTime(250))
+    if (options?.length) {
+      this.existingOptions();
+    }
+
+    combineLatest([this.form.valueChanges, this.form.statusChanges])
+      .pipe(
+        takeUntilDestroyed(this.destroy),
+        filter(([, status]) => status === 'VALID'),
+      )
       .subscribe({
-        next: (value) => {
+        next: ([value]) => {
           this.store.updateQuestion(this.index(), value);
         },
       });
@@ -147,19 +169,36 @@ export class QuestionFormComponent implements OnInit {
     return this.form.get('options') as FormArray;
   }
 
-  public addOptions(): void {
+  private existingOptions(): void {
+    this.question().options?.forEach((option) => {
+      this.addOptions(option);
+    });
+  }
+
+  public addOptions(option?: Partial<QuestionOption>): void {
+    const id = uuidv4();
     this.form.controls.options.push(
       new FormGroup({
-        text: new FormControl<string>('', {
+        id: new FormControl(option?.id ?? id, {
           nonNullable: true,
           validators: [Validators.required],
         }),
-        is_correct: new FormControl<boolean>(true, { nonNullable: true }),
+        text: new FormControl<string>(option?.text ?? '', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        is_correct: new FormControl<boolean>(option?.is_correct ?? false, {
+          nonNullable: true,
+        }),
       }),
     );
   }
 
   public removeOptions(index: number): void {
+    const { id } = this.form.controls.options.at(index).getRawValue();
+
+    !!id && this.store.removeOption(id);
+
     this.form.controls.options.removeAt(index);
   }
 }

@@ -2,7 +2,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -13,13 +13,7 @@ import { heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  EmptyTableComponent,
-  LoadingComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ConfirmationService, EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -32,7 +26,7 @@ import { SchoolDegreesStore } from './degrees.store';
     TranslateModule,
     DatePipe,
     PaginatorComponent,
-    ButtonDirective,
+    MatButton,
     DialogModule,
     LoadingComponent,
     EmptyTableComponent,
@@ -63,8 +57,8 @@ import { SchoolDegreesStore } from './degrees.store';
         />
       </mat-form-field>
 
-      <button skButton color="green" (click)="newDegree()">
-        {{ 'NEW' | translate }}
+      <button mat-flat-button color="primary" (click)="newDegree()">
+        <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
     <table

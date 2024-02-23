@@ -2,7 +2,7 @@ import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -34,6 +34,7 @@ import { CoursesFormStore } from './courses-form.store';
     MatOption,
     MatIconButton,
     MatIcon,
+    MatButton,
   ],
   providers: [CoursesFormStore],
   template: `<sk-card>
@@ -102,7 +103,12 @@ import { CoursesFormStore } from './courses-form.store';
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
       <div class="flex justify-end col-span-2">
-        <button skButton color="sky" type="submit" [disabled]="form.invalid">
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
           {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>

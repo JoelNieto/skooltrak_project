@@ -1,16 +1,11 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
 import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
@@ -25,7 +20,6 @@ import { PlansFormStore } from './plans-form.store';
     ReactiveFormsModule,
     CardComponent,
     TranslateModule,
-    NgIconComponent,
     SelectComponent,
     ButtonDirective,
     MatFormField,
@@ -33,21 +27,20 @@ import { PlansFormStore } from './plans-form.store';
     MatLabel,
     MatSelect,
     MatOption,
+    MatButton,
+    MatIconButton,
+    MatIcon,
   ],
-  providers: [PlansFormStore, provideIcons({ heroXMark })],
+  providers: [PlansFormStore],
   template: `<sk-card>
-    <div class="flex items-start justify-between" header>
+    <div class="flex items-baseline justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'PLANS.DETAILS' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          class="text-gray-700 dark:text-gray-100"
-          size="24"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form
@@ -87,7 +80,12 @@ import { PlansFormStore } from './plans-form.store';
         </mat-select>
       </mat-form-field>
       <div class="flex justify-end">
-        <button skButton color="sky" type="submit" [disabled]="form.invalid">
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
           {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>

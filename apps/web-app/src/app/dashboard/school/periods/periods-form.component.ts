@@ -1,19 +1,14 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, OnInit, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, LabelDirective } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 import { format } from 'date-fns';
 
 @Component({
@@ -21,28 +16,24 @@ import { format } from 'date-fns';
   imports: [
     CardComponent,
     ReactiveFormsModule,
-    NgIconComponent,
     TranslateModule,
-    ButtonDirective,
-    LabelDirective,
+    MatButton,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    MatIcon,
+    MatIconButton,
   ],
-  providers: [provideIcons({ heroXMark })],
+  providers: [],
   template: `<sk-card>
-    <div class="mb-3 flex items-start justify-between" header>
+    <div class="mb-3 flex items-center justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'PERIODS.DETAILS' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          class="text-gray-700 dark:text-gray-100"
-          size="24"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form
@@ -51,7 +42,7 @@ import { format } from 'date-fns';
       class="flex flex-col space-y-3"
     >
       <mat-form-field>
-        <mat-label for="name">{{ 'Name' | translate }}</mat-label>
+        <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
         <input type="text" formControlName="name" matInput />
       </mat-form-field>
       <mat-form-field>
@@ -73,8 +64,13 @@ import { format } from 'date-fns';
         <mat-datepicker #end />
       </mat-form-field>
       <div class="flex justify-end">
-        <button skButton color="sky" type="submit">
-          {{ 'Save changes' | translate }}
+        <button
+          mat-flat-button
+          color="accent"
+          [disabled]="form.invalid"
+          type="submit"
+        >
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

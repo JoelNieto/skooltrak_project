@@ -18,6 +18,7 @@ import {
   UntypedFormArray,
   Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,12 +28,7 @@ import { NgIconComponent } from '@ng-icons/core';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 import { asapScheduler } from 'rxjs';
 
 import { AssignmentFormStore } from './assignment-form.store';
@@ -45,7 +41,7 @@ import { AssignmentFormStore } from './assignment-form.store';
     TranslateModule,
     TabsComponent,
     TabsItemComponent,
-    ButtonDirective,
+    MatButton,
     ReactiveFormsModule,
     NgClass,
     NgIconComponent,
@@ -117,8 +113,8 @@ import { AssignmentFormStore } from './assignment-form.store';
         </div>
         <div footer class="flex justify-end pt-6">
           <button
-            skButton
-            color="sky"
+            mat-flat-button
+            color="accent"
             type="submit"
             [disabled]="assignmentForm.invalid"
           >

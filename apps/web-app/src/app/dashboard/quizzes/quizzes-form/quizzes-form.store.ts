@@ -63,6 +63,7 @@ export const QuizzesFormStore = signalStore(
           )
           .eq('id', id)
           .single();
+
         if (error) {
           console.error(error);
 
@@ -135,6 +136,7 @@ export const QuizzesFormStore = signalStore(
           .upsert([request])
           .select('id')
           .single();
+
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));
@@ -179,6 +181,7 @@ export const QuizzesFormStore = signalStore(
           .upsert(
             questions().map((x) => ({ quiz_id: quizId(), question_id: x.id })),
           );
+
         if (error) {
           throw new Error(error.message);
         }
@@ -215,6 +218,7 @@ export const QuizzesFormStore = signalStore(
           .from(Table.QuestionOptions)
           .delete()
           .eq('id', id);
+
         if (error) {
           console.error(error);
         }

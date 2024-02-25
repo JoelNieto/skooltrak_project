@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogModule, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroCheckCircle, heroExclamationCircle, heroTrash, heroXCircle } from '@ng-icons/heroicons/outline';
+import { Component, OnInit, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CardComponent } from '../card/card.component';
@@ -10,28 +10,16 @@ import { ConfirmationOptions } from './confirmation.type';
 @Component({
   selector: 'sk-confirmation',
   standalone: true,
-  imports: [
-    CardComponent,
-    TranslateModule,
-    NgIconComponent,
-    DialogModule,
-  ],
-  providers: [
-    provideIcons({
-      heroExclamationCircle,
-      heroCheckCircle,
-      heroTrash,
-      heroXCircle,
-    }),
-  ],
+  imports: [CardComponent, TranslateModule, DialogModule, MatButton, MatIcon],
+  providers: [],
+  styles: `
+    .mat-icon{
+      transform: scale(2);
+    }`,
   template: `
     <sk-card>
       <div class="flex justify-center">
-        <ng-icon
-          [name]="options.icon"
-          size="52"
-          [class]="iconColor[options.color]"
-        />
+        <mat-icon [color]="options.color">{{ options.icon }}</mat-icon>
       </div>
       <p
         class="font-title my-3 text-center text-lg font-semibold text-gray-600 dark:text-gray-100"
@@ -41,11 +29,11 @@ import { ConfirmationOptions } from './confirmation.type';
         class="my-3 text-center text-sm text-gray-400 dark:text-gray-300"
         [innerHTML]="options.description ?? '' | translate"
       ></p>
-      <div class="my-3 flex justify-around px-4">
-        @if(options.showCancelButton) {
+      <div footer class="my-3 flex justify-around px-4">
+        @if (options.showCancelButton) {
           <button
-            class="rounded-full bg-white px-5 py-2.5 font-sans dark:bg-gray-600"
-            [class]="cancelButtonColor[options.color]"
+            mat-button
+            [color]="options.color"
             cdkFocusInitial
             (click)="dialogRef.close(false)"
           >
@@ -53,8 +41,9 @@ import { ConfirmationOptions } from './confirmation.type';
           </button>
         }
         <button
+          mat-flat-button
           class="rounded-full px-5 py-2.5 font-sans text-white"
-          [class]="confirmButtonColor[options.color]"
+          [color]="options.color"
           (click)="dialogRef.close(true)"
         >
           {{ options.confirmButtonText ?? 'Confirm' | translate }}
@@ -73,25 +62,4 @@ export class ConfirmationComponent implements OnInit {
   ngOnInit(): void {
     this.options = this.data.options;
   }
-
-  public iconColor = {
-    blue: 'text-blue-400',
-    yellow: 'text-yellow-400',
-    green: 'text-green-400',
-    red: 'text-red-400',
-  };
-
-  public confirmButtonColor = {
-    blue: 'bg-blue-300',
-    yellow: 'bg-yellow-400',
-    green: 'bg-green-400',
-    red: 'bg-red-400',
-  };
-
-  public cancelButtonColor = {
-    blue: 'text-blue-300',
-    yellow: 'text-yellow-400',
-    green: 'text-green-400',
-    red: 'text-red-400',
-  };
 }

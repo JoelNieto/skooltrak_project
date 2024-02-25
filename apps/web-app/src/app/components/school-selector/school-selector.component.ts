@@ -134,7 +134,7 @@ export class SchoolSelectorComponent {
         title: this.translate.instant('SCHOOL_CONNECTOR.CREATE_TITLE'),
         description: this.translate.instant('SCHOOL_CONNECTOR.CREATE_MESSAGE'),
         confirmButtonText: this.translate.instant('YES'),
-        color: 'green',
+        color: 'accent',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

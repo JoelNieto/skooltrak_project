@@ -31,4 +31,5 @@ export enum Table {
   Questions = 'questions',
   QuizQuestions = 'quiz_questions',
   QuestionOptions = 'question_options',
+  QuizAssignations = 'quiz_assignations',
 }

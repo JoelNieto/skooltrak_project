@@ -99,6 +99,7 @@ export const SchoolPlansStore = signalStore(
         const { error } = await supabase.client
           .from(Table.StudyPlans)
           .upsert([{ ...request, school_id: fetchData().schoolId }]);
+
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));
@@ -113,6 +114,7 @@ export const SchoolPlansStore = signalStore(
           .from(Table.StudyPlans)
           .delete()
           .eq('id', id);
+
         if (error) {
           toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);

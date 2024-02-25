@@ -114,6 +114,7 @@ export class SchoolPeopleFormComponent implements OnInit {
   constructor() {
     effect(() => {
       const group = this.store.currentGroupId();
+
       if (!group) return;
 
       this.groupControl.disable();
@@ -126,6 +127,7 @@ export class SchoolPeopleFormComponent implements OnInit {
     const { status, role, user_id } = this.data;
     patchState(this.store, { userId: user_id });
     this.form.patchValue({ status, role });
+
     if (role === 'STUDENT') {
       this.store.fetchGroups();
       this.store.fetchStudentGroup();
@@ -141,6 +143,7 @@ export class SchoolPeopleFormComponent implements OnInit {
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: ({ status, role }) => {
         this.store.savePerson({ status, role, user_id });
+
         if (role === 'STUDENT') {
           this.store.fetchGroups();
         }

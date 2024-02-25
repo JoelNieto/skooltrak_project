@@ -144,6 +144,7 @@
   },
   "Gender": "Genero",
   "Go back": "Volver",
+  "HIDDEN": "Oculto",
   "HOME": "Inicio",
   "Home": "Inicio",
   "IMAGE_CROPPER": {
@@ -240,15 +241,23 @@
   },
   "QUIZZES": {
     "ADD_QUESTION": "Agregar pregunta",
+    "ASSIGN": "Asignar",
+    "ASSIGNATION": "Asignar quizz",
+    "ASSIGNATIONS": "Asignaciones",
+    "COURSE": "Curso",
     "DESCRIPTION": "Descripción",
     "DETAILS": "Datos del quiz",
+    "END_DATE": "Fecha final",
     "IS_CORRECT": "Respuesta correcta",
+    "ITEM": "Quiz",
     "NAME": "Nombre del quiz",
     "OPTION": "Opción",
     "OPTIONS": "Opciones",
     "QUESTION": "Pregunta",
     "QUESTION_TEXT": "Texto de la pregunta",
     "QUESTION_TYPE": "Tipo pregunta",
+    "START_DATE": "Fecha inicio",
+    "TIME": "Duración (min)",
     "TITLE": "Quizes"
   },
   "RESET_PASSWORD": {

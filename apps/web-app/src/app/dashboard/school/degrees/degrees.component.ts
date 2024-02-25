@@ -3,7 +3,11 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -13,7 +17,12 @@ import { heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import { ConfirmationService, EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ConfirmationService,
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -158,8 +167,8 @@ export class SchoolDegreesComponent {
       .openDialog({
         title: 'CONFIRMATION.DELETE.TITLE',
         description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'heroTrash',
-        color: 'red',
+        icon: 'delete',
+        color: 'warn',
         confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,

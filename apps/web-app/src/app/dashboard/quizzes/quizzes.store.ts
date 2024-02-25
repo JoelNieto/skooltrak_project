@@ -44,7 +44,7 @@ export const QuizzesStore = signalStore(
       const fetchData = computed(() => ({
         start: start(),
         pageSize: pageSize(),
-        schoolId: auth.schoolId(),
+        schoolId: schoolId(),
         sortColumn: sortColumn(),
         sortDirection: sortDirection(),
       }));
@@ -69,7 +69,7 @@ export const QuizzesStore = signalStore(
         let query = supabase.client
           .from(Table.Quizzes)
           .select(
-            'id, title, description, user:users(email, first_name, father_name), created_at, updated_at',
+            'id, title, description, user_id, user:users(email, first_name, father_name), created_at, updated_at',
             { count: 'exact' },
           )
           .eq('school_id', schoolId())

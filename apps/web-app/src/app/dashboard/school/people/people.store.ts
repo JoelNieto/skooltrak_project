@@ -98,12 +98,14 @@ export const SchoolPeopleStore = signalStore(
           selectedStatus() !== 'all'
             ? query.eq('status', selectedStatus())
             : query;
+
         if (sortColumn()) {
           query = query.order(sortColumn(), {
             ascending: sortDirection() !== 'desc',
           });
         }
         const { data, error, count } = await query;
+
         if (error) {
           console.error(error);
           patchState(state, { loading: false });

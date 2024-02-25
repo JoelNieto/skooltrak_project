@@ -200,13 +200,14 @@ export class SchoolSubjectsComponent implements OnInit {
 
   public deleteSubject(subject: Subject): void {
     const { id } = subject;
+
     if (!id) return;
     this.confirmation
       .openDialog({
         title: 'CONFIRMATION.DELETE.TITLE',
         description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'heroTrash',
-        color: 'red',
+        icon: 'delete',
+        color: 'warn',
         confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,

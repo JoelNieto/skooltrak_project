@@ -14,6 +14,13 @@ export const quizzesRoutes: Routes = [
           ),
       },
       {
+        path: 'assignations',
+        loadComponent: () =>
+          import('./quiz-assignations/quiz-assignations.component').then(
+            (x) => x.QuizAssignationsComponent,
+          ),
+      },
+      {
         path: 'new',
         loadComponent: () =>
           import('./quizzes-form/quizzes-form.component').then(

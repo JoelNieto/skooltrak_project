@@ -29,6 +29,7 @@ export const CoursesFormStore = signalStore(
           .select('id,name')
           .eq('school_id', auth.schoolId())
           .order('year', { ascending: true });
+
         if (error) {
           console.error(error);
         }
@@ -42,6 +43,7 @@ export const CoursesFormStore = signalStore(
           )
           .eq('school_id', auth.schoolId())
           .order('name', { ascending: true });
+
         if (error) {
           console.error(error);
         }

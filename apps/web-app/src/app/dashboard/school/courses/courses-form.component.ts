@@ -169,22 +169,26 @@ export class SchoolCoursesFormComponent implements OnInit {
           if (!res) return;
           const { cropImgPreview, imageFile } = res;
           this.pictureUrl.set(cropImgPreview);
+
           if (!imageFile) {
             return;
           }
           const { data, error: uploadError } =
             await this.supabase.uploadPicture(imageFile, 'courses');
+
           if (uploadError) {
             console.error('upload', uploadError);
 
             return;
           }
           this.pictureUrl.set(data.path);
+
           if (data.path) {
             const { error } = await this.supabase.client
               .from(Table.Courses)
               .update({ picture_url: data.path })
               .eq('id', this.data?.id);
+
             if (error) {
               console.error(error);
 

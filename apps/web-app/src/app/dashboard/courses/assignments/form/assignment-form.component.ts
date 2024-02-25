@@ -195,6 +195,7 @@ export class AssignmentFormComponent implements OnInit {
     });
     effect(() => {
       const assignment = this.store.assignment();
+
       if (assignment) {
         this.assignmentForm.patchValue(assignment);
         this.cdr.detectChanges();
@@ -208,6 +209,7 @@ export class AssignmentFormComponent implements OnInit {
 
     effect(() => {
       const course_id = this.course_id();
+
       if (course_id) {
         this.assignmentForm.get('course_id')?.patchValue(course_id);
         this.assignmentForm.get('course_id')?.disable();

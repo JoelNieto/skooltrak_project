@@ -41,6 +41,7 @@ export const GroupsFormStore = signalStore(
           .from(Table.Degrees)
           .select('id, name, level:levels(id, name, sort)')
           .eq('school_id', auth.schoolId());
+
         if (error) {
           console.error(error);
         }

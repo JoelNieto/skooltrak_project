@@ -223,6 +223,7 @@ export class SchoolCoursesComponent implements OnInit {
 
   public deleteCourse(course: Course): void {
     const { id } = course;
+
     if (!id) return;
   }
 }

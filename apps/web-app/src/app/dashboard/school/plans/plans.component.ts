@@ -3,7 +3,11 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -12,7 +16,12 @@ import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { ConfirmationService, EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
+import {
+  ConfirmationService,
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './plans-form.component';
 import { SchoolPlansStore } from './plans.store';
@@ -179,14 +188,15 @@ export class StudyPlansComponent {
 
   public deletePlan(plan: StudyPlan): void {
     const { id } = plan;
+
     if (!id) return;
 
     this.confirmation
       .openDialog({
         title: 'CONFIRMATION.DELETE.TITLE',
         description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'heroTrash',
-        color: 'red',
+        icon: 'delete',
+        color: 'warn',
         confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,

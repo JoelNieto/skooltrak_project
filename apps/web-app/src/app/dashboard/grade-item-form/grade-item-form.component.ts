@@ -96,6 +96,7 @@ export class GradeItemFormComponent implements OnInit {
     const { error } = await this.supabase.client
       .from(Table.GradeItems)
       .upsert([item]);
+
     if (error) {
       this.toast.error(this.translate.instant('ALERT_FAILURE'));
 

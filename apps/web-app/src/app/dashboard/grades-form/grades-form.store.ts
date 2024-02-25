@@ -40,6 +40,7 @@ export const GradesFormStore = signalStore(
           .from(Table.GradeBuckets)
           .select('id, course_id, name, weighing')
           .eq('course_id', courseId);
+
         if (error) {
           console.error(error);
 
@@ -52,6 +53,7 @@ export const GradesFormStore = signalStore(
           .from(Table.Periods)
           .select('id, name, year, start_at, end_at, school_id')
           .eq('school_id', auth.schoolId());
+
         if (error) {
           console.error(error);
 

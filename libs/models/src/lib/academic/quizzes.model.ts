@@ -1,5 +1,6 @@
 import { User } from '../auth';
 import { EntityBase } from '../entity';
+import { Course } from './courses.model';
 import { Question } from './questions.model';
 
 export type Quiz = EntityBase & {
@@ -19,4 +20,16 @@ export type QuizQuestion = {
   question: Question;
   value: number;
   created_at: Date;
+};
+
+export type QuizAssignation = EntityBase & {
+  course_id: string;
+  course?: Partial<Course>;
+  quiz_id: string;
+  quiz?: Partial<Quiz>;
+  school_id: string;
+  start_date: string;
+  end_date: string;
+  hidden: boolean;
+  minutes: number;
 };

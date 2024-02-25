@@ -83,6 +83,7 @@ export const CoursesStore = signalStore(
       );
       async function fetchCourses(): Promise<void> {
         patchState(state, { loading: true });
+
         if (isTeacher()) {
           fetchTeacherCourses();
 
@@ -138,6 +139,7 @@ export const CoursesStore = signalStore(
         }
 
         const { data, error, count } = await query;
+
         if (error) {
           logError(error);
 
@@ -156,6 +158,7 @@ export const CoursesStore = signalStore(
           .eq('school_id', schoolId())
           .range(start(), end())
           .filter('teachers.id', 'eq', userId());
+
         if (error) {
           logError(error);
 

@@ -1,4 +1,5 @@
-import { DatePipe } from '@angular/common';
+import { Dialog } from '@angular/cdk/dialog';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import {
@@ -14,8 +15,10 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
+import { webStore } from '@skooltrak/store';
 import { CardComponent, PaginatorComponent } from '@skooltrak/ui';
 
+import { AssignationFormComponent } from '../assignation-form/assignation-form.component';
 import { QuizzesStore } from '../quizzes.store';
 
 @Component({
@@ -38,6 +41,7 @@ import { QuizzesStore } from '../quizzes.store';
     RouterLink,
     PaginatorComponent,
     MatSortModule,
+    NgClass,
   ],
   template: `<sk-card>
     <div header>
@@ -57,9 +61,16 @@ import { QuizzesStore } from '../quizzes.store';
         />
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
-      <button mat-flat-button color="accent" routerLink="../new">
-        {{ 'NEW' | translate }}
-      </button>
+      <div class="flex gap-3">
+        <button mat-flat-button color="primary" routerLink="../assignations">
+          <mat-icon>event_available</mat-icon>
+          {{ 'QUIZZES.ASSIGNATIONS' | translate }}
+        </button>
+        <button mat-flat-button color="accent" routerLink="../new">
+          <mat-icon>add</mat-icon>
+          {{ 'NEW' | translate }}
+        </button>
+      </div>
     </div>
     <table
       mat-table
@@ -84,7 +95,17 @@ import { QuizzesStore } from '../quizzes.store';
           {{ 'USER' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
-          {{ item.user.first_name }} {{ item.user.father_name }}
+          <div class="flex">
+            <div
+              class="px-3 py-1.5 rounded-full  text-xs"
+              [ngClass]="{
+                'bg-emerald-100 text-emerald-600':
+                  item.user_id === auth.userId()
+              }"
+            >
+              {{ item.user.first_name }} {{ item.user.father_name }}
+            </div>
+          </div>
         </td>
       </ng-container>
       <ng-container matColumnDef="created_at">
@@ -112,14 +133,24 @@ import { QuizzesStore } from '../quizzes.store';
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <a
-              mat-menu-item
-              routerLink="../edit"
-              [queryParams]="{ quizId: item.id }"
-            >
-              <mat-icon class="text-emerald-600">edit_square</mat-icon>
-              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
-            </a>
+            <button mat-menu-item (click)="assignQuiz(item.id)">
+              <mat-icon color="primary">event_available</mat-icon>
+              <span>{{ 'QUIZZES.ASSIGN' | translate }}</span>
+            </button>
+            @if (item.user_id === auth.userId()) {
+              <a
+                mat-menu-item
+                routerLink="../edit"
+                [queryParams]="{ quizId: item.id }"
+              >
+                <mat-icon color="accent">edit_square</mat-icon>
+                <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+              </a>
+              <button mat-menu-item>
+                <mat-icon color="warn">delete</mat-icon>
+                <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+              </button>
+            }
           </mat-menu>
         </td>
       </ng-container>
@@ -141,6 +172,8 @@ export class QuizzesListComponent {
     'actions',
   ];
   public store = inject(QuizzesStore);
+  private dialog = inject(Dialog);
+  public auth = inject(webStore.AuthStore);
 
   public getCurrentPage(pagination: { pageSize: number; start: number }): void {
     const { start, pageSize } = pagination;
@@ -151,6 +184,14 @@ export class QuizzesListComponent {
     patchState(this.store, {
       sortColumn: sort.active,
       sortDirection: sort.direction,
+    });
+  }
+
+  public assignQuiz(quizId?: string): void {
+    this.dialog.open(AssignationFormComponent, {
+      data: { quizId },
+      width: '48rem',
+      maxWidth: '90%',
     });
   }
 }

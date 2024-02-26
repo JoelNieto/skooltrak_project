@@ -51,12 +51,12 @@
           {
             "blankLine": "always",
             "prev": "*",
-            "next": "return"
+            "next": ["return", "if"]
           },
           {
-            "blankLine": "always",
-            "prev": "*",
-            "next": "if"
+            "blankLine": "any",
+            "prev": ["const", "let"],
+            "next": ["const", "let"]
           }
         ]
       }

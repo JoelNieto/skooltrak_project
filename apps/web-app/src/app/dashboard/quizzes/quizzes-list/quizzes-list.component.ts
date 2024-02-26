@@ -137,6 +137,14 @@ import { QuizzesStore } from '../quizzes.store';
               <mat-icon color="primary">event_available</mat-icon>
               <span>{{ 'QUIZZES.ASSIGN' | translate }}</span>
             </button>
+            <button
+              mat-menu-item
+              routerLink="../preview"
+              [queryParams]="{ quizId: item.id }"
+            >
+              <mat-icon color="accent">preview</mat-icon>
+              <span>{{ 'ACTIONS.PREVIEW' | translate }}</span>
+            </button>
             @if (item.user_id === auth.userId()) {
               <a
                 mat-menu-item

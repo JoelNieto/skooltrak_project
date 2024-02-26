@@ -4,6 +4,7 @@
     "DETAILS": "Detalles",
     "EDIT": "Editar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
+    "PREVIEW": "Vista previa",
     "RELOAD": "Recargar",
     "TITLE": "Acciones"
   },
@@ -113,6 +114,7 @@
     "minLength": "Se necesitan al menos {{ length }} caracteres",
     "required": "Campo requerido"
   },
+  "FALSE": "Falso",
   "Father name": "Apellido paterno",
   "Female": "Femenino",
   "Files": "Archivos",
@@ -241,6 +243,9 @@
   },
   "QUIZZES": {
     "ADD_QUESTION": "Agregar pregunta",
+    "ANSWER_PLACEHOLDER": "Ingrese texto",
+    "ANSWER_SELECTION": "Elija la respuesta correcta",
+    "ANSWER_TEXT": "Respuesta",
     "ASSIGN": "Asignar",
     "ASSIGNATION": "Asignar quizz",
     "ASSIGNATIONS": "Asignaciones",
@@ -358,6 +363,7 @@
   "Select school": "Elija una escuela",
   "Students": "Estudiantes",
   "TEACHER": "Docente",
+  "TRUE": " Verdadero",
   "TYPE": "Tipo",
   "Teacher": {
     "Details": "Datos del docente"

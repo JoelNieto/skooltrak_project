@@ -1,13 +1,15 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import { ButtonDirective, CardComponent } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 import { DegreesFormStore } from './degrees-form.store';
 
@@ -19,12 +21,14 @@ import { DegreesFormStore } from './degrees-form.store';
     CardComponent,
     TranslateModule,
     NgIconComponent,
-    ButtonDirective,
     MatSelect,
     MatInput,
     MatFormField,
     MatLabel,
     MatOption,
+    MatButton,
+    MatIconButton,
+    MatIcon,
   ],
   providers: [DegreesFormStore, provideIcons({ heroXMark })],
   template: `<sk-card>
@@ -34,12 +38,8 @@ import { DegreesFormStore } from './degrees-form.store';
       >
         {{ 'DEGREES.DETAILS' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form
@@ -60,7 +60,12 @@ import { DegreesFormStore } from './degrees-form.store';
         </mat-select>
       </mat-form-field>
       <div class="flex justify-end">
-        <button skButton color="sky" type="submit" [disabled]="form.invalid">
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
           {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>

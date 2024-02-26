@@ -1,23 +1,11 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  Component,
-  DestroyRef,
-  OnInit,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
@@ -32,28 +20,25 @@ import { SchoolPeopleFormStore } from './people-form.store';
   imports: [
     CardComponent,
     TranslateModule,
-    NgIconComponent,
     ReactiveFormsModule,
     AvatarComponent,
     MatFormField,
     MatLabel,
     MatSelect,
     MatOption,
+    MatIconButton,
+    MatIcon,
   ],
-  providers: [provideIcons({ heroXMark }), SchoolPeopleFormStore],
+  providers: [SchoolPeopleFormStore],
   template: `<sk-card
-    ><div class="flex items-start justify-between" header>
+    ><div class="flex items-center justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'PEOPLE.EDIT' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form [formGroup]="form" class="flex flex-col space-y-1">
@@ -129,6 +114,7 @@ export class SchoolPeopleFormComponent implements OnInit {
   constructor() {
     effect(() => {
       const group = this.store.currentGroupId();
+
       if (!group) return;
 
       this.groupControl.disable();
@@ -141,6 +127,7 @@ export class SchoolPeopleFormComponent implements OnInit {
     const { status, role, user_id } = this.data;
     patchState(this.store, { userId: user_id });
     this.form.patchValue({ status, role });
+
     if (role === 'STUDENT') {
       this.store.fetchGroups();
       this.store.fetchStudentGroup();
@@ -156,6 +143,7 @@ export class SchoolPeopleFormComponent implements OnInit {
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: ({ status, role }) => {
         this.store.savePerson({ status, role, user_id });
+
         if (role === 'STUDENT') {
           this.store.fetchGroups();
         }

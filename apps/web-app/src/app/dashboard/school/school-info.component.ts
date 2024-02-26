@@ -1,9 +1,9 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { ButtonDirective } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { SchoolFormComponent } from '../../components/school-form/school-form.component';
@@ -15,7 +15,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
     AvatarComponent,
     TranslateModule,
     DatePipe,
-    ButtonDirective,
+    MatButton,
     DialogModule,
     SchoolFormComponent,
   ],
@@ -41,7 +41,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
         {{ school()?.full_name }}
       </h4>
       <div>
-        <button skButton color="green" (click)="editInfo()">
+        <button mat-flat-button color="accent" (click)="editInfo()">
           {{ 'EDIT' | translate }}
         </button>
       </div>

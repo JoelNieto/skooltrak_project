@@ -45,7 +45,7 @@ export const SchoolConnectorStore = signalStore(
             showCancelButton: true,
             cancelButtonText: 'Not',
             confirmButtonText: 'Yes, confirm',
-            color: 'green',
+            color: 'accent',
           })
           .pipe(filter((response) => !!response))
           .subscribe({ next: () => this.addSchoolConnection(data) });
@@ -54,6 +54,7 @@ export const SchoolConnectorStore = signalStore(
         const { error } = await supabase.client
           .from(Table.SchoolUsers)
           .insert([{ role: role(), school_id: request.id }]);
+
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));

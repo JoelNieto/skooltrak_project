@@ -41,6 +41,7 @@ export class AvatarComponent {
           this.fileName(),
           this.bucket(),
         );
+
         if (data.publicUrl) {
           this.avatarUrl.set(data.publicUrl);
         }

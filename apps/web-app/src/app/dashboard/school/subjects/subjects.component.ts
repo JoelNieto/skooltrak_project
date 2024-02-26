@@ -3,7 +3,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatFormField,
   MatLabel,
@@ -12,16 +12,13 @@ import {
 } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  ConfirmationService,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
 import { debounceTime } from 'rxjs';
 
 import { SubjectsFormComponent } from './subjects-form.component';
@@ -31,7 +28,7 @@ import { SchoolSubjectsStore } from './subjects.store';
   selector: 'sk-school-subjects',
   standalone: true,
   imports: [
-    ButtonDirective,
+    MatButton,
     PaginatorComponent,
     DialogModule,
     NgClass,
@@ -48,24 +45,24 @@ import { SchoolSubjectsStore } from './subjects.store';
     MatTableModule,
     MatSortModule,
     MatIconButton,
+    MatMenuModule,
   ],
   providers: [SchoolSubjectsStore, ConfirmationService],
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
-      <div>
-        <mat-form-field>
-          <mat-label>{{ 'SEARCH_ITEMS' | translate }}</mat-label>
-          <mat-icon matPrefix>search</mat-icon>
-          <input
-            type="text"
-            [formControl]="textSearch"
-            [placeholder]="'SEARCH_ITEMS' | translate"
-            matInput
-          />
-        </mat-form-field>
-      </div>
-      <button skButton color="green" (click)="newSubject()">
-        {{ 'NEW' | translate }}
+      <mat-form-field class="w-96">
+        <mat-label>{{ 'SEARCH_ITEMS' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          type="text"
+          [formControl]="textSearch"
+          [placeholder]="'SEARCH_ITEMS' | translate"
+          matInput
+        />
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="newSubject()">
+        <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
     <table
@@ -107,16 +104,21 @@ import { SchoolSubjectsStore } from './subjects.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'ACTIONS.TITLE' | translate }}
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
-          <button mat-icon-button (click)="editSubject(item)">
-            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button (click)="deleteSubject(item)">
-            <mat-icon class="text-red-600">delete</mat-icon>
-          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editSubject(item)">
+              <mat-icon color="accent">edit_square</mat-icon>
+              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="deleteSubject(item)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
@@ -143,7 +145,7 @@ export class SchoolSubjectsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.textSearch.valueChanges
-      .pipe(debounceTime(800), takeUntilDestroyed(this.destroy))
+      .pipe(debounceTime(500), takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (queryText) => patchState(this.store, { queryText }),
       });
@@ -198,13 +200,14 @@ export class SchoolSubjectsComponent implements OnInit {
 
   public deleteSubject(subject: Subject): void {
     const { id } = subject;
+
     if (!id) return;
     this.confirmation
       .openDialog({
         title: 'CONFIRMATION.DELETE.TITLE',
         description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'heroTrash',
-        color: 'red',
+        icon: 'delete',
+        color: 'warn',
         confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,

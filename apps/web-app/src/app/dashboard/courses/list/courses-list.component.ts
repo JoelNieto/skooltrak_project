@@ -1,11 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -15,12 +11,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  CardComponent,
-  PaginatorComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { CardComponent, PaginatorComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
@@ -56,7 +47,7 @@ import { CoursesStore } from '../courses.store';
         {{ 'COURSES.TITLE' | translate }}
       </h2>
     </div>
-    <div class="relative overflow-x-auto">
+    <div class="relative ">
       <div class="flex justify-between px-1 py-3.5">
         <mat-form-field class="w-full lg:w-96">
           <mat-label for="table-search">Search</mat-label>

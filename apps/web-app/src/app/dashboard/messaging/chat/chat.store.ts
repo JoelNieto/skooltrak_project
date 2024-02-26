@@ -64,6 +64,7 @@ export const ChatStore = signalStore(
           .insert([{ chat_id: chatId(), text }])
           .select('id, user_id, text, user:users(*), sent_at')
           .single();
+
         if (error) {
           console.error(error);
 

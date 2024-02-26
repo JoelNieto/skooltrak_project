@@ -34,3 +34,11 @@ export enum PaymentMethodEnum {
   TRANSFER = 'TRANSFER',
   OTHER = 'OTHER',
 }
+
+export enum QuestionTypeEnum {
+  SHORT_TEXT = 'SHORT_TEXT',
+  LONG_TEXT = 'LONG_TEXT',
+  SELECTION = 'SELECTION',
+  BOOLEAN = 'BOOLEAN',
+  MATCH = 'MATCH',
+}

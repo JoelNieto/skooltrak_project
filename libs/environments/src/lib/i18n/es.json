@@ -1,6 +1,10 @@
 {
   "ACTIONS": {
+    "DELETE": "Eliminar",
+    "DETAILS": "Detalles",
+    "EDIT": "Editar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
+    "PREVIEW": "Vista previa",
     "RELOAD": "Recargar",
     "TITLE": "Acciones"
   },
@@ -110,6 +114,7 @@
     "minLength": "Se necesitan al menos {{ length }} caracteres",
     "required": "Campo requerido"
   },
+  "FALSE": "Falso",
   "Father name": "Apellido paterno",
   "Female": "Femenino",
   "Files": "Archivos",
@@ -141,6 +146,7 @@
   },
   "Gender": "Genero",
   "Go back": "Volver",
+  "HIDDEN": "Oculto",
   "HOME": "Inicio",
   "Home": "Inicio",
   "IMAGE_CROPPER": {
@@ -228,6 +234,37 @@
     "TITLE": "Datos personales"
   },
   "Polls": "Encuestas",
+  "QUESTION_TYPE": {
+    "BOOLEAN": "Cierto/Falso",
+    "LONG_TEXT": "Texto largo",
+    "MATCH": "Pareo",
+    "SELECTION": "Seleccion",
+    "SHORT_TEXT": "Texto corto"
+  },
+  "QUIZZES": {
+    "ADD_QUESTION": "Agregar pregunta",
+    "ANSWER_PLACEHOLDER": "Ingrese texto",
+    "ANSWER_SELECTION": "Elija la respuesta correcta",
+    "ANSWER_TEXT": "Respuesta",
+    "ASSIGN": "Asignar",
+    "ASSIGNATION": "Asignar quizz",
+    "ASSIGNATIONS": "Asignaciones",
+    "COURSE": "Curso",
+    "DESCRIPTION": "Descripción",
+    "DETAILS": "Datos del quiz",
+    "END_DATE": "Fecha final",
+    "IS_CORRECT": "Respuesta correcta",
+    "ITEM": "Quiz",
+    "NAME": "Nombre del quiz",
+    "OPTION": "Opción",
+    "OPTIONS": "Opciones",
+    "QUESTION": "Pregunta",
+    "QUESTION_TEXT": "Texto de la pregunta",
+    "QUESTION_TYPE": "Tipo pregunta",
+    "START_DATE": "Fecha inicio",
+    "TIME": "Duración (min)",
+    "TITLE": "Quizes"
+  },
   "RESET_PASSWORD": {
     "SEND_REQUEST": "Enviar solicitud",
     "SUBTITLE": "Ingresa tu correo electrónico y te enviaremos un enlace para que recuperes el acceso a tu cuenta.",
@@ -273,6 +310,10 @@
     "OTHER": "Otro",
     "PRIVATE": "Privado",
     "PUBLIC": "Oficial"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Ingrese texto a buscar",
+    "TITLE": "Buscar"
   },
   "SEARCH_ITEMS": "Buscar elementos",
   "SELECT": {
@@ -322,11 +363,14 @@
   "Select school": "Elija una escuela",
   "Students": "Estudiantes",
   "TEACHER": "Docente",
+  "TRUE": " Verdadero",
   "TYPE": "Tipo",
   "Teacher": {
     "Details": "Datos del docente"
   },
   "Teachers": "Docentes",
+  "UPDATED_AT": "Actualizado",
+  "USER": "Usuario",
   "USERS_SELECTOR": {
     "NOT_FOUND": "Sin usuarios encontrados",
     "PLACEHOLDER": "Elegir usuarios",

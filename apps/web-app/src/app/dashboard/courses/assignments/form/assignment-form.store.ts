@@ -149,6 +149,7 @@ export const AssignmentFormStore = signalStore(
         const { error } = await supabase.client
           .from(Table.GroupAssignments)
           .upsert(groups);
+
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));

@@ -44,6 +44,7 @@ export const SchoolPeopleFormStore = signalStore(
             'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
           )
           .eq('school_id', schoolId());
+
         if (error) {
           console.error(error);
 
@@ -88,6 +89,7 @@ export const SchoolPeopleFormStore = signalStore(
         const { error } = await supabase.client
           .from(Table.GroupStudents)
           .upsert([{ group_id, school_id: schoolId(), user_id: userId() }]);
+
         if (error) {
           console.error(error);
 

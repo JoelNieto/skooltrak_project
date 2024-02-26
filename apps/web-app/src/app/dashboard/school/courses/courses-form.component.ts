@@ -1,26 +1,16 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Table, User } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-  SelectComponent,
-} from '@skooltrak/ui';
+import { ButtonDirective, CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
 
 import { PictureComponent } from '../../../components/picture/picture.component';
 import { UsersSelectorComponent } from '../../../components/users-selector/users-selector.component';
@@ -31,12 +21,10 @@ import { CoursesFormStore } from './courses-form.store';
   imports: [
     CardComponent,
     TranslateModule,
-    NgIconComponent,
     ReactiveFormsModule,
     SelectComponent,
     ButtonDirective,
     UsersSelectorComponent,
-
     NgOptimizedImage,
     PictureComponent,
     MatFormField,
@@ -44,21 +32,20 @@ import { CoursesFormStore } from './courses-form.store';
     MatInput,
     MatSelect,
     MatOption,
+    MatIconButton,
+    MatIcon,
+    MatButton,
   ],
-  providers: [CoursesFormStore, provideIcons({ heroXMark })],
+  providers: [CoursesFormStore],
   template: `<sk-card>
-    <div class="flex items-start justify-between" header>
+    <div class="flex items-center justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'COURSES.DETAILS' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
+      <button (click)="dialogRef.close()" mat-icon-button>
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form
@@ -67,10 +54,10 @@ import { CoursesFormStore } from './courses-form.store';
       (ngSubmit)="saveChanges()"
     >
       @if (data?.id) {
-        <div class="col-span-2 rounded cursor-pointer hover:opacity-70">
+        <div class="col-span-2 rounded cursor-pointer hover:opacity-70 mb-4">
           <sk-picture
             [bucket]="bucket()"
-            class="rounded"
+            class="rounded w-64"
             [pictureURL]="pictureUrl()"
             (click)="changePicture()"
           />
@@ -116,7 +103,12 @@ import { CoursesFormStore } from './courses-form.store';
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
       <div class="flex justify-end col-span-2">
-        <button skButton color="sky" type="submit" [disabled]="form.invalid">
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
           {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
@@ -177,22 +169,26 @@ export class SchoolCoursesFormComponent implements OnInit {
           if (!res) return;
           const { cropImgPreview, imageFile } = res;
           this.pictureUrl.set(cropImgPreview);
+
           if (!imageFile) {
             return;
           }
           const { data, error: uploadError } =
             await this.supabase.uploadPicture(imageFile, 'courses');
+
           if (uploadError) {
             console.error('upload', uploadError);
 
             return;
           }
           this.pictureUrl.set(data.path);
+
           if (data.path) {
             const { error } = await this.supabase.client
               .from(Table.Courses)
               .update({ picture_url: data.path })
               .eq('id', this.data?.id);
+
             if (error) {
               console.error(error);
 

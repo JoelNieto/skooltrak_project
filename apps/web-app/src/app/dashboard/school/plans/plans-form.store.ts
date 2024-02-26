@@ -20,6 +20,7 @@ export const PlansFormStore = signalStore(
         .from(Table.Degrees)
         .select('id, name, level_id')
         .eq('school_id', schoolId());
+
       if (error) {
         console.error(error);
 

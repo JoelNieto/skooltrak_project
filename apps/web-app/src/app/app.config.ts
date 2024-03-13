@@ -2,15 +2,22 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-MX';
-import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
+import {
+  ApplicationConfig,
+  LOCALE_ID,
+  importProvidersFrom,
+} from '@angular/core';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import {
-  provideRouter,
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
+import {
   TitleStrategy,
+  provideRouter,
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
   withRouterConfig,
@@ -24,6 +31,7 @@ import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { es } from 'date-fns/locale';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { QuillModule } from 'ngx-quill';
 
 import { appRoutes } from './app.routes';
@@ -36,7 +44,6 @@ const translateLoader = (http: HttpClient): TranslateLoader =>
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
-
     { provide: TitleStrategy, useClass: PageTitleStrategy },
     provideRouter(
       appRoutes,
@@ -46,6 +53,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideAnimations(),
+    provideCharts(withDefaultRegisterables()),
     importProvidersFrom(
       QuillModule.forRoot(),
       BrowserModule,

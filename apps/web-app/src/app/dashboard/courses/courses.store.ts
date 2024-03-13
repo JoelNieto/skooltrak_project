@@ -1,12 +1,5 @@
 import { computed, inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
@@ -31,7 +24,7 @@ const initialState: State = {
   pageSize: 5,
   start: 0,
   loading: false,
-  sortColumn: '',
+  sortColumn: 'subject(name)',
   sortDirection: '',
 };
 

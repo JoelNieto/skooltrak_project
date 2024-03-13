@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
@@ -15,7 +15,11 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import { EmptyTableComponent, LoadingComponent, PaginatorComponent } from '@skooltrak/ui';
+import {
+  EmptyTableComponent,
+  LoadingComponent,
+  PaginatorComponent,
+} from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
@@ -133,12 +137,12 @@ import { SchoolPeopleStore } from './people.store';
           {{ item.role | translate }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="status">
+      <ng-container matColumnDef="group(name)">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'PEOPLE.STATUS' | translate }}
+          {{ 'GROUPS.NAME' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
-          {{ item.status | translate }}
+          {{ item.group?.name }}
         </td>
       </ng-container>
       <ng-container matColumnDef="created_at">
@@ -150,9 +154,7 @@ import { SchoolPeopleStore } from './people.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'ACTIONS.TITLE' | translate }}
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
@@ -166,6 +168,16 @@ import { SchoolPeopleStore } from './people.store';
               <mat-icon class="text-red-600">delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
+            @if (item.role === 'STUDENT') {
+              <a
+                mat-menu-item
+                routerLink="/app/student-profile"
+                [queryParams]="{ studentId: item.user_id }"
+              >
+                <mat-icon color="primary">badge</mat-icon>
+                <span>{{ 'STUDENTS.REPORT' | translate }}</span>
+              </a>
+            }
           </mat-menu>
         </td>
       </ng-container>
@@ -187,7 +199,7 @@ export class SchoolPeopleComponent implements OnInit {
     'user(first_name)',
     'user(document_id)',
     'role',
-    'status',
+    'group(name)',
     'created_at',
     'actions',
   ];

@@ -99,7 +99,7 @@ import { QuizzesStore } from '../quizzes.store';
             <div
               class="px-3 py-1.5 rounded-full  text-xs"
               [ngClass]="{
-                'bg-emerald-100 text-emerald-600':
+                'bg-emerald-100 text-emerald-600 border border-emerald-500':
                   item.user_id === auth.userId()
               }"
             >

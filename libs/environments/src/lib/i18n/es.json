@@ -137,6 +137,7 @@
     "TYPE": "Tipo de calificación"
   },
   "GROUPS": {
+    "ALL": "Todos",
     "DATES": "Fechas",
     "DEGREE": "Nivel",
     "DETAILS": "Detalles del grupo",
@@ -159,6 +160,7 @@
     "INVALID": "Campo invalido",
     "REQUIRED": "Campo requerido"
   },
+  "INVITE": "Invitar",
   "LEVEL": "Nivel",
   "LOADING": {
     "WAITING": "Por favor espere"
@@ -222,12 +224,14 @@
     "YEAR": "Año"
   },
   "PROFILE": {
+    "AGE": "Edad",
     "BIRTH_DATE": "Fecha de nacimiento",
     "DOCUMENT_ID": "Nro. Documento",
     "EMAIL": "Correo electrónico",
     "FATHER_NAME": "Apellido",
     "FIRST_NAME": "Primer nombre",
     "GENDER": "Genero",
+    "GROUP": "Grupo",
     "MIDDLE_NAME": "Segundo nombre",
     "MOTHER_NAME": "Apellido materno",
     "NAME": "Perfil",
@@ -352,6 +356,16 @@
     "TITLE": "Registrarse"
   },
   "STUDENT": "Estudiante",
+  "STUDENTS": {
+    "ATTENDANCE": "Asistencia",
+    "FULL_NAME": "Nombre completo",
+    "GRADES": "Calificaciones",
+    "INCIDENTS": "Incidentes",
+    "INFO": "Información",
+    "PROFILE": "Perfil del estudiante",
+    "REPORT": "Ver reporte",
+    "TITLE": "Estudiantes"
+  },
   "SUBJECTS": {
     "DETAILS": "Detalles de asignatura",
     "LABEL": "Asignatura",

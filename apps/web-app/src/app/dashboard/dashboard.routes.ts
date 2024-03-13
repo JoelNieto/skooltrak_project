@@ -53,6 +53,14 @@ export const dashboardRoutes: Routes = [
           import('./settings/settings.routes').then((x) => x.settingRoutes),
       },
       {
+        path: 'student-profile',
+        title: 'STUDENTS.PROFILE',
+        loadComponent: () =>
+          import(
+            '../components/student-profile/student-profile.component'
+          ).then((x) => x.StudentProfileComponent),
+      },
+      {
         path: 'school',
         title: 'SCHOOL.SETTINGS',
         // canActivateChild: [(): boolean => inject(webStore.AuthStore).isAdmin()],

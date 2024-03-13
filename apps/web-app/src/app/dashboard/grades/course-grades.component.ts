@@ -1,14 +1,14 @@
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroPencil } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
-import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
+import { SelectComponent } from '@skooltrak/ui';
 
 import { CourseDetailsStore } from '../courses/details/course-details.store';
 import { GradeItemFormComponent } from '../grade-item-form/grade-item-form.component';
@@ -20,9 +20,9 @@ import { CourseGradesStore } from './course-grades.store';
   selector: 'sk-course-grades',
   imports: [
     TranslateModule,
-    NgIconComponent,
+    MatIcon,
     SelectComponent,
-    ButtonDirective,
+    MatButton,
     DialogModule,
     ReactiveFormsModule,
     GradeItemFormComponent,
@@ -30,6 +30,7 @@ import { CourseGradesStore } from './course-grades.store';
     MatSelect,
     MatLabel,
     MatOption,
+    MatIconButton,
   ],
   styles: [
     `
@@ -42,7 +43,7 @@ import { CourseGradesStore } from './course-grades.store';
       }
     `,
   ],
-  providers: [CourseGradesStore, provideIcons({ heroPencil })],
+  providers: [CourseGradesStore],
   template: `
     <div class="mb-4 mt-2 flex justify-between items-baseline">
       <mat-form-field class="w-64">
@@ -53,8 +54,8 @@ import { CourseGradesStore } from './course-grades.store';
           }
         </mat-select>
       </mat-form-field>
-      <button skButton color="green" (click)="newGrade()">
-        + {{ 'GRADES.NEW' | translate }}
+      <button mat-flat-button color="accent" (click)="newGrade()">
+        <mat-icon>add</mat-icon> {{ 'GRADES.NEW' | translate }}
       </button>
     </div>
     <div class="max-h-96 w-auto overflow-auto">
@@ -77,12 +78,8 @@ import { CourseGradesStore } from './course-grades.store';
                   <div class="overflow-hidden text-ellipsis whitespace-nowrap">
                     {{ grade.title }}
                   </div>
-                  <button>
-                    <ng-icon
-                      name="heroPencil"
-                      size="16"
-                      class="text-green-600"
-                    />
+                  <button mat-icon-button>
+                    <mat-icon color="accent"> edit </mat-icon>
                   </button>
                 </div>
               </th>

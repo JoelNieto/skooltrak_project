@@ -51,7 +51,7 @@ export const coursesRoutes: Routes = [
           {
             path: 'students',
             loadComponent: () =>
-              import('../students/students.component').then(
+              import('./students/students.component').then(
                 (x) => x.CoursesComponent,
               ),
           },

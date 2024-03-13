@@ -112,7 +112,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       </div>
     </nav>
     <main
-      class="relative mt-[4rem] flex flex-col items-center bg-slate-50 p-8 font-sans dark:bg-gray-900"
+      class="relative mt-[4rem] flex flex-col items-center bg-white p-8 font-sans dark:bg-gray-900"
     >
       <div class="w-full max-w-7xl">
         <router-outlet />

@@ -15,7 +15,7 @@ export const schoolRoutes: Routes = [
         path: 'courses',
         loadComponent: () =>
           import('./courses/courses.component').then(
-            (x) => x.SchoolCoursesComponent
+            (x) => x.SchoolCoursesComponent,
           ),
       },
       {
@@ -27,35 +27,35 @@ export const schoolRoutes: Routes = [
         path: 'subjects',
         loadComponent: () =>
           import('./subjects/subjects.component').then(
-            (x) => x.SchoolSubjectsComponent
+            (x) => x.SchoolSubjectsComponent,
           ),
       },
       {
         path: 'degrees',
         loadComponent: () =>
           import('./degrees/degrees.component').then(
-            (x) => x.SchoolDegreesComponent
+            (x) => x.SchoolDegreesComponent,
           ),
       },
       {
         path: 'groups',
         loadComponent: () =>
           import('./groups/groups.component').then(
-            (x) => x.SchoolGroupsComponent
+            (x) => x.SchoolGroupsComponent,
           ),
       },
       {
         path: 'periods',
         loadComponent: () =>
           import('./periods/periods.component').then(
-            (x) => x.SchoolPeriodsComponent
+            (x) => x.SchoolPeriodsComponent,
           ),
       },
       {
         path: 'people',
         loadComponent: () =>
           import('./people/people.component').then(
-            (x) => x.SchoolPeopleComponent
+            (x) => x.SchoolPeopleComponent,
           ),
       },
       { path: '', redirectTo: 'info', pathMatch: 'full' },

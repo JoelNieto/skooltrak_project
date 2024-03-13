@@ -1,4 +1,4 @@
-import { Person, RoleEnum, StatusEnum } from '@skooltrak/models';
+import { ClassGroup, Person, RoleEnum, School, StatusEnum } from '@skooltrak/models';
 
 export type User = Partial<Person> & {
   id?: string;
@@ -15,4 +15,13 @@ export type SchoolProfile = {
   status: StatusEnum;
   created_at: Date;
   user: Partial<User>;
+};
+
+export type UserProfile = Partial<SchoolProfile> & {
+  group_id?: string;
+};
+
+export type StudentProfile = Partial<Person> & {
+  id: string;
+  profile: { group: ClassGroup; school: Partial<School> }[];
 };

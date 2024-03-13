@@ -1,20 +1,13 @@
 import { computed, inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { RoleEnum, SchoolProfile, StatusEnum, Table } from '@skooltrak/models';
+import { RoleEnum, StatusEnum, Table, UserProfile } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, pipe, tap } from 'rxjs';
 
 type State = {
   loading: boolean;
-  people: SchoolProfile[];
+  people: UserProfile[];
   selectedStatus: StatusEnum | 'all';
   selectedRole: RoleEnum | 'all';
   count: number;
@@ -85,7 +78,7 @@ export const SchoolPeopleStore = signalStore(
         let query = supabase.client
           .from(Table.SchoolUsers)
           .select(
-            'user_id, role, status, created_at, user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
+            'user_id, role, status, created_at, group_id, group:school_groups(name), user:users(first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
             {
               count: 'exact',
             },
@@ -113,7 +106,7 @@ export const SchoolPeopleStore = signalStore(
           return;
         }
         patchState(state, {
-          people: data as SchoolProfile[],
+          people: data as UserProfile[],
           count: count ?? 0,
           loading: false,
         });

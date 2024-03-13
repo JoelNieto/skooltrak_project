@@ -2,24 +2,17 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { CardComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolGroupsFormComponent } from './groups-form.component';
@@ -32,7 +25,7 @@ import { SchoolGroupsStore } from './groups.store';
     TranslateModule,
     CardComponent,
     PaginatorComponent,
-    ButtonDirective,
+    MatButton,
     DatePipe,
     UserChipComponent,
     DialogModule,
@@ -44,10 +37,11 @@ import { SchoolGroupsStore } from './groups.store';
     MatTableModule,
     MatSortModule,
     MatIconButton,
+    MatMenuModule,
   ],
   providers: [SchoolGroupsStore],
   template: `
-    <div class="relative overflow-x-auto">
+    <div class="relative ">
       <div class="flex justify-between items-baseline px-1">
         <mat-form-field class="w-full lg:w-96">
           <mat-label for="table-search">Search</mat-label>
@@ -60,8 +54,8 @@ import { SchoolGroupsStore } from './groups.store';
           />
         </mat-form-field>
 
-        <button skButton color="green" (click)="newGroup()">
-          {{ 'NEW' | translate }}
+        <button mat-flat-button color="primary" (click)="newGroup()">
+          <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
         </button>
       </div>
       <table
@@ -119,12 +113,19 @@ import { SchoolGroupsStore } from './groups.store';
             {{ 'ACTIONS.TITLE' | translate }}
           </th>
           <td mat-cell *matCellDef="let item">
-            <button type="button" mat-icon-button (click)="editGroup(item)">
-              <mat-icon class="text-emerald-600">edit_square</mat-icon>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
             </button>
-            <button type="button" mat-icon-button>
-              <mat-icon class="text-red-600">delete</mat-icon>
-            </button>
+            <mat-menu #menu="matMenu">
+              <button type="button" mat-menu-item (click)="editGroup(item)">
+                <mat-icon color="accent">edit_square</mat-icon>
+                <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+              </button>
+              <button type="button" mat-menu-item>
+                <mat-icon color="warn">delete</mat-icon>
+                <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+              </button>
+            </mat-menu>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

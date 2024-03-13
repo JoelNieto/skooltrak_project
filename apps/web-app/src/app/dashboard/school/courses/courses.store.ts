@@ -118,6 +118,7 @@ export const SchoolCoursesStore = signalStore(
           });
         }
         const { data, error, count } = await request;
+
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
@@ -153,6 +154,7 @@ export const SchoolCoursesStore = signalStore(
             school_id: school_id(),
           },
         ]);
+
         if (error) {
           toast.error(translate.instant('ALERT.FAILURE'));
 
@@ -180,6 +182,7 @@ export const SchoolCoursesStore = signalStore(
         const { error } = await supabase.client
           .from(Table.CourseTeachers)
           .upsert(items);
+
         if (error) console.error(error);
       }
 

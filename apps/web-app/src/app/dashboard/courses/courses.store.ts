@@ -1,12 +1,5 @@
 import { computed, inject } from '@angular/core';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
@@ -31,7 +24,7 @@ const initialState: State = {
   pageSize: 5,
   start: 0,
   loading: false,
-  sortColumn: '',
+  sortColumn: 'subject(name)',
   sortDirection: '',
 };
 
@@ -83,6 +76,7 @@ export const CoursesStore = signalStore(
       );
       async function fetchCourses(): Promise<void> {
         patchState(state, { loading: true });
+
         if (isTeacher()) {
           fetchTeacherCourses();
 
@@ -138,6 +132,7 @@ export const CoursesStore = signalStore(
         }
 
         const { data, error, count } = await query;
+
         if (error) {
           logError(error);
 
@@ -156,6 +151,7 @@ export const CoursesStore = signalStore(
           .eq('school_id', schoolId())
           .range(start(), end())
           .filter('teachers.id', 'eq', userId());
+
         if (error) {
           logError(error);
 

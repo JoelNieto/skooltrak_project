@@ -1,10 +1,16 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { Component, inject, input, OnInit } from '@angular/core';
+import {
+  MatButton,
+  MatFabButton,
+  MatIconButton,
+  MatMiniFabButton,
+} from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { AssignmentView } from '@skooltrak/models';
-import { ButtonDirective } from '@skooltrak/ui';
 import {
   CalendarDateFormatter,
   CalendarEvent,
@@ -34,25 +40,29 @@ import { CalendarStore } from './calendar.store';
     CalendarModule,
     DialogModule,
     TranslateModule,
-    ButtonDirective,
     RouterLink,
+    MatButton,
+    MatIcon,
+    MatIconButton,
+    MatFabButton,
+    MatMiniFabButton,
   ],
   providers: [
     { provide: DateAdapter, useFactory: adapterFactory },
     CalendarDateFormatter,
     CalendarStore,
   ],
-  template: ` <a
-      skButton
-      color="green"
+  template: ` <button
+      mat-flat-button
+      color="accent"
       class="fixed bottom-12 right-12 z-50"
       routerLink="/app/courses/assignments"
       [queryParams]="{ course_id: queryValue() }"
     >
       {{ 'CALENDAR.NEW_ASSIGNMENT' | translate }}
-    </a>
+    </button>
     <div class="my-4 flex w-full items-center justify-around text-center">
-      <div class=" flex flex-1 rounded-md" role="group">
+      <div class=" flex flex-1 gap-1 items-center rounded-md" role="group">
         <button
           type="button"
           mwlCalendarPreviousView
@@ -60,35 +70,34 @@ import { CalendarStore } from './calendar.store';
           [view]="view"
           [(viewDate)]="viewDate"
           (viewDateChange)="fetchEvents()"
-          skButton
-          color="green"
-          class="rounded-e-none"
+          mat-mini-fab
+          color="accent"
+          class="rounded-e-md"
         >
-          {{ 'CALENDAR.PREVIOUS' | translate }}
+          <mat-icon>navigate_before</mat-icon>
         </button>
         <button
           type="button"
-          skButton
+          mat-flat-button
           mwlCalendarToday
           [(viewDate)]="viewDate"
-          color="sky"
-          class="rounded-none"
+          color="primary"
           (viewDateChange)="fetchEvents()"
         >
           {{ 'CALENDAR.TODAY' | translate }}
         </button>
         <button
           type="button"
-          skButton
+          mat-mini-fab
           mwlCalendarNextView
           [excludeDays]="excludeDays"
           [view]="view"
           [(viewDate)]="viewDate"
           (viewDateChange)="fetchEvents()"
-          color="green"
-          class="disabled rounded-s-none"
+          color="accent"
+          class="disabled rounded-s-md"
         >
-          {{ 'CALENDAR.NEXT' | translate }}
+          <mat-icon>navigate_next</mat-icon>
         </button>
       </div>
       <div class="flex-1">
@@ -105,11 +114,11 @@ import { CalendarStore } from './calendar.store';
           }}
         </h3>
       </div>
-      <div class="flex flex-1 justify-end rounded-md" role="group">
+      <div class="flex flex-1 gap-1 justify-end rounded-md" role="group">
         <button
           type="button"
-          skButton
-          color="purple"
+          mat-flat-button
+          color="primary"
           [disabled]="view === CalendarView.Month"
           class="rounded-e-none"
           (click)="setView(CalendarView.Month)"
@@ -118,8 +127,8 @@ import { CalendarStore } from './calendar.store';
         </button>
         <button
           type="button"
-          skButton
-          color="purple"
+          mat-flat-button
+          color="primary"
           class="rounded-none"
           [disabled]="view === CalendarView.Week"
           (click)="setView(CalendarView.Week)"
@@ -128,8 +137,8 @@ import { CalendarStore } from './calendar.store';
         </button>
         <button
           type="button"
-          skButton
-          color="purple"
+          mat-flat-button
+          color="primary"
           class="rounded-s-none"
           [disabled]="view === CalendarView.Day"
           (click)="setView(CalendarView.Day)"

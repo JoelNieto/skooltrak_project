@@ -40,6 +40,7 @@ export const SchoolFormStore = signalStore(
           .from(Table.Countries)
           .select('*')
           .order('name', { ascending: true });
+
         if (error) {
           console.error(error);
 
@@ -51,6 +52,7 @@ export const SchoolFormStore = signalStore(
       async uploadCrest(request: File): Promise<void> {
         patchState(state, { loading: true });
         const { data, error } = await supabase.uploadPicture(request, 'crests');
+
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
@@ -68,6 +70,7 @@ export const SchoolFormStore = signalStore(
         const { error } = await supabase.client
           .from(Table.Schools)
           .upsert([request]);
+
         if (error) {
           toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);

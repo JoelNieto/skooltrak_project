@@ -103,6 +103,7 @@ export const SchoolGroupsStore = signalStore(
         const { error } = await supabase.client
           .from(Table.Groups)
           .upsert([{ ...request, school_id: schoolId() }]);
+
         if (error) {
           console.error(error);
           toast.error(translate.instant('ALERT.FAILURE'));
@@ -117,6 +118,7 @@ export const SchoolGroupsStore = signalStore(
           .from(Table.Groups)
           .delete()
           .eq('id', id);
+
         if (error) {
           toast.error(translate.instant('ALERT.FAILURE'));
           console.error(error);

@@ -1,7 +1,11 @@
 {
   "ACTIONS": {
     "ADD": "Agregar",
+    "DELETE": "Eliminar",
+    "DETAILS": "Detalles",
+    "EDIT": "Editar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
+    "PREVIEW": "Vista previa",
     "RELOAD": "Recargar",
     "SEARCH": "Buscar",
     "TITLE": "Acciones"
@@ -113,6 +117,7 @@
     "minLength": "Se necesitan al menos {{ length }} caracteres",
     "required": "Campo requerido"
   },
+  "FALSE": "Falso",
   "Father name": "Apellido paterno",
   "Female": "Femenino",
   "Files": "Archivos",
@@ -135,6 +140,7 @@
     "TYPE": "Tipo de calificación"
   },
   "GROUPS": {
+    "ALL": "Todos",
     "DATES": "Fechas",
     "DEGREE": "Nivel",
     "DETAILS": "Detalles del grupo",
@@ -144,6 +150,7 @@
   },
   "Gender": "Genero",
   "Go back": "Volver",
+  "HIDDEN": "Oculto",
   "HOME": "Inicio",
   "Home": "Inicio",
   "IMAGE_CROPPER": {
@@ -156,6 +163,7 @@
     "INVALID": "Campo invalido",
     "REQUIRED": "Campo requerido"
   },
+  "INVITE": "Invitar",
   "LEVEL": "Nivel",
   "LOADING": {
     "WAITING": "Por favor espere"
@@ -222,12 +230,14 @@
     "YEAR": "Año"
   },
   "PROFILE": {
+    "AGE": "Edad",
     "BIRTH_DATE": "Fecha de nacimiento",
     "DOCUMENT_ID": "Nro. Documento",
     "EMAIL": "Correo electrónico",
     "FATHER_NAME": "Apellido",
     "FIRST_NAME": "Primer nombre",
     "GENDER": "Genero",
+    "GROUP": "Grupo",
     "MIDDLE_NAME": "Segundo nombre",
     "MOTHER_NAME": "Apellido materno",
     "NAME": "Perfil",
@@ -248,6 +258,37 @@
     "TITLE": "Titulo de la publicación"
   },
   "Polls": "Encuestas",
+  "QUESTION_TYPE": {
+    "BOOLEAN": "Cierto/Falso",
+    "LONG_TEXT": "Texto largo",
+    "MATCH": "Pareo",
+    "SELECTION": "Seleccion",
+    "SHORT_TEXT": "Texto corto"
+  },
+  "QUIZZES": {
+    "ADD_QUESTION": "Agregar pregunta",
+    "ANSWER_PLACEHOLDER": "Ingrese texto",
+    "ANSWER_SELECTION": "Elija la respuesta correcta",
+    "ANSWER_TEXT": "Respuesta",
+    "ASSIGN": "Asignar",
+    "ASSIGNATION": "Asignar quizz",
+    "ASSIGNATIONS": "Asignaciones",
+    "COURSE": "Curso",
+    "DESCRIPTION": "Descripción",
+    "DETAILS": "Datos del quiz",
+    "END_DATE": "Fecha final",
+    "IS_CORRECT": "Respuesta correcta",
+    "ITEM": "Quiz",
+    "NAME": "Nombre del quiz",
+    "OPTION": "Opción",
+    "OPTIONS": "Opciones",
+    "QUESTION": "Pregunta",
+    "QUESTION_TEXT": "Texto de la pregunta",
+    "QUESTION_TYPE": "Tipo pregunta",
+    "START_DATE": "Fecha inicio",
+    "TIME": "Duración (min)",
+    "TITLE": "Quizes"
+  },
   "RESET_PASSWORD": {
     "SEND_REQUEST": "Enviar solicitud",
     "SUBTITLE": "Ingresa tu correo electrónico y te enviaremos un enlace para que recuperes el acceso a tu cuenta.",
@@ -294,6 +335,10 @@
     "PRIVATE": "Privado",
     "PUBLIC": "Oficial"
   },
+  "SEARCH": {
+    "PLACEHOLDER": "Ingrese texto a buscar",
+    "TITLE": "Buscar"
+  },
   "SEARCH_ITEMS": "Buscar elementos",
   "SELECT": {
     "NOT_FOUND": "Sin elementos encontrados",
@@ -331,6 +376,16 @@
     "TITLE": "Registrarse"
   },
   "STUDENT": "Estudiante",
+  "STUDENTS": {
+    "ATTENDANCE": "Asistencia",
+    "FULL_NAME": "Nombre completo",
+    "GRADES": "Calificaciones",
+    "INCIDENTS": "Incidentes",
+    "INFO": "Información",
+    "PROFILE": "Perfil del estudiante",
+    "REPORT": "Ver reporte",
+    "TITLE": "Estudiantes"
+  },
   "SUBJECTS": {
     "DETAILS": "Detalles de asignatura",
     "LABEL": "Asignatura",
@@ -342,11 +397,14 @@
   "Select school": "Elija una escuela",
   "Students": "Estudiantes",
   "TEACHER": "Docente",
+  "TRUE": " Verdadero",
   "TYPE": "Tipo",
   "Teacher": {
     "Details": "Datos del docente"
   },
   "Teachers": "Docentes",
+  "UPDATED_AT": "Actualizado",
+  "USER": "Usuario",
   "USERS_SELECTOR": {
     "NOT_FOUND": "Sin usuarios encontrados",
     "PLACEHOLDER": "Elegir usuarios",

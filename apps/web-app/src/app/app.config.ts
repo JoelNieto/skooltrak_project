@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BrowserModule } from '@angular/platform-browser';
 import {
   BrowserAnimationsModule,
@@ -30,6 +31,7 @@ import { PageTitleStrategy } from '@skooltrak/ui';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { es } from 'date-fns/locale';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { QuillModule } from 'ngx-quill';
 
 import { appRoutes } from './app.routes';
@@ -42,7 +44,6 @@ const translateLoader = (http: HttpClient): TranslateLoader =>
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
-
     { provide: TitleStrategy, useClass: PageTitleStrategy },
     provideRouter(
       appRoutes,
@@ -52,6 +53,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideAnimations(),
+    provideCharts(withDefaultRegisterables()),
     importProvidersFrom(
       QuillModule.forRoot(),
       BrowserModule,
@@ -73,6 +75,10 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_CONFIG, useValue: environment },
     { provide: LOCALE_ID, useValue: 'es-MX' },
     { provide: MAT_DATE_LOCALE, useValue: es },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
     provideDateFnsAdapter(),
     provideHotToastConfig(),
   ],

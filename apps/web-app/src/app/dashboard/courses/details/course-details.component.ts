@@ -1,16 +1,11 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroVideoCamera } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  ButtonDirective,
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { CourseMeetingComponent } from '../../../components/course-meeting/course-meeting.component';
 import { CourseDetailsStore } from './course-details.store';
@@ -26,10 +21,10 @@ import { CourseDetailsStore } from './course-details.store';
     TabsComponent,
     TabsItemComponent,
     RouterOutlet,
-    NgIconComponent,
-    ButtonDirective,
+    MatButton,
+    MatIcon,
   ],
-  providers: [provideIcons({ heroVideoCamera }), CourseDetailsStore],
+  providers: [CourseDetailsStore],
   template: `
     <div>
       <sk-card>
@@ -48,8 +43,8 @@ import { CourseDetailsStore } from './course-details.store';
               </h4>
             </div>
             <div>
-              <button skButton color="blue" (click)="showMeeting()">
-                <ng-icon name="heroVideoCamera" size="20" />
+              <button mat-flat-button color="primary" (click)="showMeeting()">
+                <mat-icon>videocam</mat-icon>
                 {{ 'COURSES.OPEN_CLASS' | translate }}
               </button>
             </div>

@@ -198,6 +198,7 @@ export class ProfileComponent implements OnInit {
         next: (result) => {
           if (!result) return;
           const { imageFile } = result;
+
           if (imageFile) this.store.uploadAvatar(imageFile);
         },
       });

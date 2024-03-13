@@ -2,7 +2,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatFormField,
   MatLabel,
@@ -18,7 +18,6 @@ import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
 import {
-  ButtonDirective,
   ConfirmationService,
   EmptyTableComponent,
   LoadingComponent,
@@ -36,7 +35,7 @@ import { SchoolDegreesStore } from './degrees.store';
     TranslateModule,
     DatePipe,
     PaginatorComponent,
-    ButtonDirective,
+    MatButton,
     DialogModule,
     LoadingComponent,
     EmptyTableComponent,
@@ -54,7 +53,7 @@ import { SchoolDegreesStore } from './degrees.store';
     provideIcons({ heroPencilSquare, heroTrash }),
     ConfirmationService,
   ],
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-96">
         <mat-label for="table-search">Search</mat-label>
@@ -67,8 +66,8 @@ import { SchoolDegreesStore } from './degrees.store';
         />
       </mat-form-field>
 
-      <button skButton color="green" (click)="newDegree()">
-        {{ 'NEW' | translate }}
+      <button mat-flat-button color="primary" (click)="newDegree()">
+        <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
     <table
@@ -168,8 +167,8 @@ export class SchoolDegreesComponent {
       .openDialog({
         title: 'CONFIRMATION.DELETE.TITLE',
         description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'heroTrash',
-        color: 'red',
+        icon: 'delete',
+        color: 'warn',
         confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,

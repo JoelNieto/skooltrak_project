@@ -31,4 +31,10 @@ export enum Table {
   PublicationDegrees = 'publication_degrees',
   PublicationPlans = 'publication_plans',
   PublicationRoles = 'publication_roles',
+  Quizzes = 'quizzes',
+  Questions = 'questions',
+  QuizQuestions = 'quiz_questions',
+  QuestionOptions = 'question_options',
+  QuizAssignations = 'quiz_assignations',
+  StudentGrades = 'student_grades',
 }

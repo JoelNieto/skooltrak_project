@@ -66,6 +66,7 @@ export const StudentGradesStore = signalStore(
           )
           .eq('grade.course_id', courseId())
           .eq('student_id', userId());
+
         if (error) {
           console.error(error);
           patchState(state, { loading: false, error: true });

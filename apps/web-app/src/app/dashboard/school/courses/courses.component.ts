@@ -3,8 +3,9 @@ import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import {
   MatFormField,
   MatLabel,
@@ -44,9 +45,11 @@ import { SchoolCoursesStore } from './courses.store';
     MatIcon,
     MatIconButton,
     MatSortModule,
+    MatMenuModule,
+    MatButton,
   ],
   providers: [UtilService, SchoolCoursesStore],
-  template: ` <div class="relative overflow-x-auto">
+  template: ` <div class="relative ">
     <div class="flex flex-nowrap justify-between items-baseline gap-4 px-1">
       <mat-form-field class="w-96">
         <mat-label>{{ 'COURSES.SELECT_PLAN' | translate }}</mat-label>
@@ -63,8 +66,8 @@ import { SchoolCoursesStore } from './courses.store';
           }
         </mat-select>
       </mat-form-field>
-      <button skButton color="green" (click)="createCourse()">
-        {{ 'NEW' | translate }}
+      <button mat-flat-button color="primary" (click)="createCourse()">
+        <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
     <table
@@ -110,26 +113,30 @@ import { SchoolCoursesStore } from './courses.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'ACTIONS.TITLE' | translate }}
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
-          <button
-            mat-icon-button
-            routerLink="../../courses/details"
-            [queryParams]="{ course_id: item.id }"
-          >
-            <mat-icon class="text-sky-600">visibility</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button type="button" mat-icon-button (click)="editCourse(item)">
-            <mat-icon class="text-emerald-600">edit_square</mat-icon>
-          </button>
+          <mat-menu #menu="matMenu">
+            <a
+              mat-menu-item
+              routerLink="../../courses/details"
+              [queryParams]="{ course_id: item.id }"
+            >
+              <mat-icon color="primary">visibility</mat-icon>
+              <span>{{ 'ACTIONS.DETAILS' | translate }}</span>
+            </a>
+            <button type="button" mat-menu-item (click)="editCourse(item)">
+              <mat-icon color="accent">edit_square</mat-icon>
+              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-
     <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
   </div>`,
 })
@@ -186,7 +193,7 @@ export class SchoolCoursesComponent implements OnInit {
           if (!request) {
             return;
           }
-          const { course, teachers } = request;
+          const { course } = request;
           !!course && this.store.saveCourse(course);
         },
       });
@@ -207,7 +214,7 @@ export class SchoolCoursesComponent implements OnInit {
       .subscribe({
         next: (request) => {
           if (request) {
-            const { course, teachers } = request;
+            const { course } = request;
             !!course && this.store.saveCourse({ ...course, id: item.id });
           }
         },
@@ -216,6 +223,7 @@ export class SchoolCoursesComponent implements OnInit {
 
   public deleteCourse(course: Course): void {
     const { id } = course;
+
     if (!id) return;
   }
 }

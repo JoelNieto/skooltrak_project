@@ -22,7 +22,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   template: `<li class="mr-2">
     <a
       routerLink="{{ link() }}"
-      routerLinkActive="active"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [class.active]="rla.isActive"
       queryParamsHandling="preserve"
       class="link flex items-center gap-2 font-sans"
     >

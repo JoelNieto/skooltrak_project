@@ -37,3 +37,11 @@ export type GradeItem = Readonly<
     comments: string;
   }
 >;
+
+export type StudentGrade = {
+  student_id: string;
+  subject: string;
+  period_id?: string;
+  period?: string;
+  score: number;
+};

@@ -7,6 +7,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -48,14 +49,16 @@ import { SchoolPeopleStore } from './people.store';
     MatTableModule,
     MatSortModule,
     MatIconButton,
+    MatMenuModule,
   ],
   providers: [SchoolPeopleStore],
   styles: `
 
     `,
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between gap-4 px-1">
       <mat-form-field class="flex-1">
+        <mat-label>{{ 'ROLE' | translate }}</mat-label>
         <mat-select [formControl]="roleControl">
           <mat-option value="all">{{
             'PEOPLE.ALL_ROLES' | translate
@@ -68,6 +71,7 @@ import { SchoolPeopleStore } from './people.store';
         </mat-select>
       </mat-form-field>
       <mat-form-field class="flex-1">
+        <mat-label>{{ 'PEOPLE.STATUS' | translate }}</mat-label>
         <mat-select [formControl]="statusControl">
           <mat-option value="all">{{
             'PEOPLE.ALL_STATUS' | translate
@@ -133,12 +137,12 @@ import { SchoolPeopleStore } from './people.store';
           {{ item.role | translate }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="status">
+      <ng-container matColumnDef="group(name)">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'PEOPLE.STATUS' | translate }}
+          {{ 'GROUPS.NAME' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
-          {{ item.status | translate }}
+          {{ item.group?.name }}
         </td>
       </ng-container>
       <ng-container matColumnDef="created_at">
@@ -150,16 +154,31 @@ import { SchoolPeopleStore } from './people.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'ACTIONS.TITLE' | translate }}
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
-          <button type="button" mat-icon-button (click)="editPeople(item)">
-            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button type="button" mat-icon-button>
-            <mat-icon class="text-red-600">delete</mat-icon>
-          </button>
+          <mat-menu #menu="matMenu">
+            <button type="button" mat-menu-item (click)="editPeople(item)">
+              <mat-icon class="text-emerald-600">edit_square</mat-icon>
+              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+            </button>
+            <button type="button" mat-menu-item>
+              <mat-icon class="text-red-600">delete</mat-icon>
+              <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+            </button>
+            @if (item.role === 'STUDENT') {
+              <a
+                mat-menu-item
+                routerLink="/app/student-profile"
+                [queryParams]="{ studentId: item.user_id }"
+              >
+                <mat-icon color="primary">badge</mat-icon>
+                <span>{{ 'STUDENTS.REPORT' | translate }}</span>
+              </a>
+            }
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
@@ -180,7 +199,7 @@ export class SchoolPeopleComponent implements OnInit {
     'user(first_name)',
     'user(document_id)',
     'role',
-    'status',
+    'group(name)',
     'created_at',
     'actions',
   ];

@@ -56,8 +56,8 @@ import { CoursesStore } from '../courses.store';
         {{ 'COURSES.TITLE' | translate }}
       </h2>
     </div>
-    <div class="relative overflow-x-auto">
-      <div class="flex justify-between px-1 py-3.5">
+    <div class="relative">
+      <div class="flex justify-between">
         <mat-form-field class="w-full lg:w-96">
           <mat-label for="table-search">Search</mat-label>
           <mat-icon matPrefix>search</mat-icon>
@@ -120,7 +120,6 @@ import { CoursesStore } from '../courses.store';
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-
       <sk-paginator
         [count]="store.count()"
         (paginate)="getCurrentPage($event)"

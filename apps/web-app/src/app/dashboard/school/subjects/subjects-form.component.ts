@@ -1,46 +1,38 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ButtonDirective, CardComponent } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-school-subjects-form',
   standalone: true,
   imports: [
     CardComponent,
-    NgIconComponent,
-    ButtonDirective,
+    MatButton,
     ReactiveFormsModule,
     TranslateModule,
+    MatIconButton,
     MatFormField,
     MatLabel,
+    MatIcon,
     MatInput,
   ],
-  providers: [provideIcons({ heroXMark })],
+  providers: [],
   template: `<sk-card>
-    <div class="flex items-start justify-between" header>
+    <div class="flex items-baseline justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'SUBJECTS.DETAILS' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          class="text-gray-700 dark:text-gray-100"
-          size="24"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form
@@ -65,7 +57,12 @@ import { ButtonDirective, CardComponent } from '@skooltrak/ui';
         <textarea rows="3" formControlName="description" matInput></textarea>
       </mat-form-field>
       <div class="flex justify-end">
-        <button skButton color="sky" type="submit" [disabled]="form.invalid">
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
           {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>

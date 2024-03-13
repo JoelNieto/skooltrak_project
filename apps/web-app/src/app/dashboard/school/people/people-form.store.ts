@@ -1,28 +1,20 @@
 import { computed, inject } from '@angular/core';
 import { HotToastService } from '@ngneat/hot-toast';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { ClassGroup, SchoolProfile, Table } from '@skooltrak/models';
+import { ClassGroup, Table, UserProfile } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 
 type State = {
   loading: boolean;
   groups: Partial<ClassGroup>[];
   userId: string | undefined;
-  currentGroupId: string | undefined;
 };
 
 const initialState: State = {
   loading: false,
   groups: [],
   userId: undefined,
-  currentGroupId: undefined,
 };
 
 export const SchoolPeopleFormStore = signalStore(
@@ -44,6 +36,7 @@ export const SchoolPeopleFormStore = signalStore(
             'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
           )
           .eq('school_id', schoolId());
+
         if (error) {
           console.error(error);
 
@@ -51,12 +44,12 @@ export const SchoolPeopleFormStore = signalStore(
         }
         patchState(state, { groups: data as Partial<ClassGroup>[] });
       },
-      async savePerson(request: Partial<SchoolProfile>): Promise<void> {
-        const { status, role, user_id } = request;
+      async savePerson(request: Partial<UserProfile>): Promise<void> {
+        const { status, role, group_id } = request;
         const { error } = await supabase.client
           .from(Table.SchoolUsers)
-          .update({ status, role })
-          .eq('user_id', user_id)
+          .update({ status, role, group_id })
+          .eq('user_id', userId())
           .eq('school_id', schoolId());
 
         if (error) {
@@ -67,34 +60,6 @@ export const SchoolPeopleFormStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
-      },
-      async fetchStudentGroup(): Promise<void> {
-        const { data, error } = await supabase.client
-          .from(Table.GroupStudents)
-          .select('group_id, user_id, created_at')
-          .eq('school_id', schoolId())
-          .eq('user_id', userId());
-
-        if (error) {
-          console.error(error);
-
-          return;
-        }
-
-        patchState(state, { currentGroupId: data[0]?.group_id });
-      },
-
-      async saveGroup(group_id: string): Promise<void> {
-        const { error } = await supabase.client
-          .from(Table.GroupStudents)
-          .upsert([{ group_id, school_id: schoolId(), user_id: userId() }]);
-        if (error) {
-          console.error(error);
-
-          return;
-        }
-
-        patchState(state, { currentGroupId: group_id });
       },
     }),
   ),

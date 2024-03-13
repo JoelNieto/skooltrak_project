@@ -2,7 +2,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatFormField,
   MatLabel,
@@ -10,12 +10,13 @@ import {
 } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
 import {
-  ButtonDirective,
   ConfirmationService,
   EmptyTableComponent,
   LoadingComponent,
@@ -33,7 +34,7 @@ import { SchoolPlansStore } from './plans.store';
     PaginatorComponent,
     DatePipe,
     DialogModule,
-    ButtonDirective,
+    MatButton,
     LoadingComponent,
     EmptyTableComponent,
     MatFormField,
@@ -43,9 +44,13 @@ import { SchoolPlansStore } from './plans.store';
     MatIcon,
     MatTableModule,
     MatIconButton,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatSortModule,
   ],
   providers: [SchoolPlansStore, ConfirmationService],
-  template: `<div class="relative overflow-x-auto">
+  template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-full lg:w-72 ">
         <mat-label for="table-search">Search</mat-label>
@@ -57,11 +62,16 @@ import { SchoolPlansStore } from './plans.store';
           matInput
         />
       </mat-form-field>
-      <button skButton color="green" (click)="newStudyPlan()">
-        {{ 'NEW' | translate }}
+      <button mat-flat-button color="primary" (click)="newStudyPlan()">
+        <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
-    <table mat-table [dataSource]="store.plans()">
+    <table
+      mat-table
+      [dataSource]="store.plans()"
+      matSort
+      (matSortChange)="changeSort($event)"
+    >
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'PLANS.NAME' | translate }}
@@ -70,7 +80,7 @@ import { SchoolPlansStore } from './plans.store';
           {{ item.name }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="level">
+      <ng-container matColumnDef="level(name)">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'PLANS.LEVEL' | translate }}
         </th>
@@ -78,7 +88,7 @@ import { SchoolPlansStore } from './plans.store';
           {{ item.level.name }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="degree">
+      <ng-container matColumnDef="degree(name)">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'PLANS.DEGREE' | translate }}
         </th>
@@ -87,7 +97,7 @@ import { SchoolPlansStore } from './plans.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="created_at">
-        <th mat-header-cell *matHeaderCellDef m>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'CREATED_AT' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
@@ -95,16 +105,21 @@ import { SchoolPlansStore } from './plans.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'ACTIONS.TITLE' | translate }}
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
-          <button type="button" mat-icon-button (click)="editStudyPlan(item)">
-            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button type="button" mat-icon-button (click)="deletePlan(item)">
-            <mat-icon class="text-red-600">delete</mat-icon>
-          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editStudyPlan(item)">
+              <mat-icon color="accent">edit_square</mat-icon>
+              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="deletePlan(item)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
@@ -119,11 +134,24 @@ export class StudyPlansComponent {
   private dialog = inject(Dialog);
   private confirmation = inject(ConfirmationService);
   private destroy = inject(DestroyRef);
-  public displayedCols = ['name', 'level', 'degree', 'created_at', 'actions'];
+  public displayedCols = [
+    'name',
+    'level(name)',
+    'degree(name)',
+    'created_at',
+    'actions',
+  ];
 
   public getCurrentPage(pagination: { start: number; pageSize: number }): void {
     const { start, pageSize } = pagination;
     patchState(this.store, { start, pageSize });
+  }
+
+  public changeSort(sort: Sort): void {
+    patchState(this.store, {
+      sortColumn: sort.active,
+      sortDirection: sort.direction,
+    });
   }
 
   public newStudyPlan(): void {
@@ -160,14 +188,15 @@ export class StudyPlansComponent {
 
   public deletePlan(plan: StudyPlan): void {
     const { id } = plan;
+
     if (!id) return;
 
     this.confirmation
       .openDialog({
         title: 'CONFIRMATION.DELETE.TITLE',
         description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'heroTrash',
-        color: 'red',
+        icon: 'delete',
+        color: 'warn',
         confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
         cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
         showCancelButton: true,

@@ -4,6 +4,9 @@
   "plugins": ["@nx", "rxjs", "deprecation"],
   "overrides": [
     {
+      "parserOptions": {
+        "project": ["tsconfig.*?.json"]
+      },
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
         "deprecation/deprecation": "warn",

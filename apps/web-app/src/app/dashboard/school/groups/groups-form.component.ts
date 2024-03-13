@@ -1,21 +1,16 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
+import { CardComponent, SelectComponent } from '@skooltrak/ui';
 
 import { GroupsFormStore } from './groups-form.store';
 
@@ -25,36 +20,33 @@ import { GroupsFormStore } from './groups-form.store';
   imports: [
     CardComponent,
     TranslateModule,
-    NgIconComponent,
     ReactiveFormsModule,
     SelectComponent,
-    ButtonDirective,
+    MatButton,
     MatFormField,
     MatSelect,
     MatInput,
     MatLabel,
     MatOption,
+    MatIcon,
+    MatIconButton,
   ],
-  providers: [GroupsFormStore, provideIcons({ heroXMark })],
+  providers: [GroupsFormStore],
 
   template: `<sk-card>
-    <div class="flex items-start justify-between" header>
+    <div class="flex items-center justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'GROUPS.DETAILS' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form
       [formGroup]="form"
-      class="flex flex-col space-y-3"
+      class="flex flex-col space-y-1"
       (ngSubmit)="saveChanges()"
     >
       <mat-form-field>
@@ -78,8 +70,13 @@ import { GroupsFormStore } from './groups-form.store';
         </mat-select>
       </mat-form-field>
       <div class="flex justify-end">
-        <button skButton color="sky" type="submit" [disabled]="form.invalid">
-          {{ 'Save changes' | translate }}
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          {{ 'SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

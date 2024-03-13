@@ -1,5 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
@@ -8,7 +9,7 @@ import {
   heroBookOpen,
   heroBuildingLibrary,
   heroCalendarDays,
-  heroClipboardDocument,
+  heroClipboardDocumentList,
   heroCog6Tooth,
   heroHome,
   heroUserGroup,
@@ -31,13 +32,14 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
+    MatIcon,
   ],
   providers: [
     provideIcons({
       heroHome,
       heroArrowRightOnRectangle,
       heroBookmarkSquare,
-      heroClipboardDocument,
+      heroClipboardDocumentList,
       heroCalendarDays,
       heroUserGroup,
       heroBuildingLibrary,
@@ -66,6 +68,13 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
           <a routerLink="courses" class="link" routerLinkActive="active"
             ><ng-icon name="heroBookOpen" size="24" />{{
               'COURSES.TITLE' | translate
+            }}</a
+          >
+        </li>
+        <li>
+          <a routerLink="quizzes" class="link" routerLinkActive="active"
+            ><ng-icon name="heroClipboardDocumentList" size="24" />{{
+              'QUIZZES.TITLE' | translate
             }}</a
           >
         </li>
@@ -110,7 +119,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
       </div>
     </nav>
     <main
-      class="relative mt-[4rem] flex flex-col items-center bg-slate-50 p-8 font-sans dark:bg-gray-900"
+      class="relative mt-[4rem] flex flex-col items-center bg-white p-8 font-sans dark:bg-gray-900"
     >
       <div class="w-full max-w-7xl">
         <router-outlet />

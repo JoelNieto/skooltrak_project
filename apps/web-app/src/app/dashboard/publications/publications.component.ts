@@ -1,35 +1,20 @@
-import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonDirective, CardComponent, InputDirective } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
-import { UserChipComponent } from '../../components/user-chip/user-chip.component';
+import { PublicationItemComponent } from '../../components/publication-item/publication-item.component';
 import { PublicationsStore } from './publications.store';
 
 @Component({
   selector: 'sk-publications',
   standalone: true,
   providers: [PublicationsStore],
-  imports: [
-    CardComponent,
-    InputDirective,
-    TranslateModule,
-    ReactiveFormsModule,
-    ButtonDirective,
-    DatePipe,
-    UserChipComponent,
-    MatFormField,
-    MatInput,
-    MatLabel,
-  ],
   template: `<div class="flex gap-6 w-full">
     <sk-card class="w-72">
       <div header>
@@ -46,38 +31,80 @@ import { PublicationsStore } from './publications.store';
           >
             {{ 'PUBLICATIONS.NEW' | translate }}
           </h2>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="newPost()">
           <mat-form-field class="w-full">
             <textarea
-              [formControl]="textControl"
+              formControlName="body"
               type="text"
               matInput
+              rows="3"
               [placeholder]="'PUBLICATIONS.BODY' | translate"
             ></textarea>
           </mat-form-field>
-        </div>
-        <div class="flex justify-end" footer>
-          <button skButton color="sky">
-            {{ 'PUBLICATIONS.PUBLISH' | translate }}
-          </button>
-        </div>
+          <div class="flex justify-between items-start">
+            <mat-form-field class="w-3/5">
+              <mat-label>{{ 'PUBLICATIONS.COURSE' | translate }}</mat-label>
+              <mat-select formControlName="course_id">
+                <mat-option>{{
+                  'PUBLICATIONS.PUBLIC_FILTER' | translate
+                }}</mat-option>
+                @for (course of store.courses(); track course.id) {
+                  <mat-option [value]="course.id"
+                    >{{ course.subject?.name }} -
+                    {{ course.plan?.name }}</mat-option
+                  >
+                }
+              </mat-select>
+            </mat-form-field>
+            <button
+              type="submit"
+              mat-flat-button
+              color="primary"
+              [disabled]="form.invalid"
+            >
+              {{ 'PUBLICATIONS.PUBLISH' | translate }}
+            </button>
+          </div>
+        </form>
       </sk-card>
       <div class="flex flex-col gap-4">
         @for (publication of store.publications(); track publication.id) {
-          <sk-card>
-            <div header>
-              <div class="flex"><sk-user-chip [user]="publication.user" /></div>
-              <h3 class="font-semibold font-title text-gray-700 text-lg">
-                {{ publication.title }}
-              </h3>
-              <p class="text-gray-400 text-sm">
-                {{ publication.created_at | date: 'medium' }}
-              </p>
-            </div>
-            <p
-              class="text-sm font-sans text-gray-700"
-              [innerText]="publication.body"
-            ></p>
-          </sk-card>
+          <sk-publication-item
+            [post]="publication"
+            (deleted)="store.removePublication($event)"
+          />
+        } @empty {
+          @if (store.loading()) {
+            <sk-card>
+              <div class="animate-pulse">
+                <div class="flex-1 space-y-6 py-1">
+                  <div class="h-2 bg-slate-200 rounded"></div>
+                  <div class="space-y-3">
+                    <div class="grid grid-cols-3 gap-4">
+                      <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+                      <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                    </div>
+                    <div class="h-2 bg-slate-200 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </sk-card>
+            <sk-card>
+              <div class="animate-pulse">
+                <div class="flex-1 space-y-6 py-1">
+                  <div class="h-2 bg-slate-200 rounded"></div>
+                  <div class="space-y-3">
+                    <div class="grid grid-cols-3 gap-4">
+                      <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+                      <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                    </div>
+                    <div class="h-2 bg-slate-200 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </sk-card>
+          }
         }
       </div>
     </div>
@@ -85,14 +112,49 @@ import { PublicationsStore } from './publications.store';
   </div> `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CardComponent,
+    TranslateModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    PublicationItemComponent,
+  ],
 })
 export class PublicationsComponent implements OnInit {
-  public textControl = new FormControl('', { nonNullable: true });
+  public form = new FormGroup({
+    body: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    course_id: new FormControl<string | undefined>(undefined, {
+      nonNullable: true,
+    }),
+  });
+  public textControl = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required],
+  });
   public store = inject(PublicationsStore);
 
   public ngOnInit(): void {
     setTimeout(() => {
       this.store.getPublications();
     }, 1000);
+  }
+
+  public newPost(): void {
+    this.store.savePublication({
+      request: this.form.getRawValue(),
+    });
+
+    setTimeout(() => {
+      this.form.reset();
+      this.form.setErrors(null);
+    }, 500);
   }
 }

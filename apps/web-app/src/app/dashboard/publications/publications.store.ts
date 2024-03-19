@@ -1,13 +1,16 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { PublicationObject, Table } from '@skooltrak/models';
+import { HotToastService } from '@ngneat/hot-toast';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { TranslateService } from '@ngx-translate/core';
+import { Course, Publication, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 
 type State = {
   loading: boolean;
-  publications: PublicationObject[];
+  publications: Publication[];
   start: number;
   pageSize: number;
+  courses: Partial<Course>[];
 };
 
 const initial: State = {
@@ -15,6 +18,7 @@ const initial: State = {
   publications: [],
   start: 0,
   pageSize: 10,
+  courses: [],
 };
 
 export const PublicationsStore = signalStore(
@@ -29,6 +33,8 @@ export const PublicationsStore = signalStore(
     (
       { schoolId, start, end, pageSize, ...state },
       supabase = inject(SupabaseService),
+      toast = inject(HotToastService),
+      translate = inject(TranslateService),
     ) => {
       async function getPublications(): Promise<void> {
         patchState(state, { loading: true });
@@ -36,7 +42,7 @@ export const PublicationsStore = signalStore(
         const { data, error } = await supabase.client
           .from(Table.Publications)
           .select(
-            'id, title, body, created_at, school_id, user_id, roles:publication_roles!inner(role), user:users(id, first_name, father_name, avatar_url)',
+            'id, body, created_at, school_id, user_id, is_pinned, user:users(id, first_name, father_name, avatar_url), course:courses(id, plan:school_plans(id, name), subject:school_subjects(id, name))',
           )
           .eq('school_id', schoolId())
           .range(start(), end())
@@ -51,10 +57,7 @@ export const PublicationsStore = signalStore(
 
         patchState(state, {
           loading: false,
-          publications: [
-            ...state.publications(),
-            ...(data as PublicationObject[]),
-          ],
+          publications: [...state.publications(), ...(data as Publication[])],
         });
       }
       function paginate(): void {
@@ -62,7 +65,71 @@ export const PublicationsStore = signalStore(
         getPublications();
       }
 
-      return { getPublications, paginate };
+      async function getCourses(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Courses)
+          .select(
+            'id, plan:school_plans(id, name, year), subject:school_subjects(id, name)',
+          )
+          .order('subject(name)', { ascending: true })
+          .order('plan(year)', { ascending: true });
+
+        if (error) {
+          console.error(error);
+
+          return;
+        }
+
+        patchState(state, { courses: data as unknown as Course[] });
+      }
+
+      async function savePublication({
+        request,
+      }: {
+        request: Partial<Publication>;
+      }): Promise<void> {
+        patchState(state, { loading: true });
+
+        const { error, data } = await supabase.client
+          .from(Table.Publications)
+          .insert([{ school_id: schoolId(), ...request }])
+          .select(
+            'id, body, created_at, school_id, user_id, is_pinned, user:users(id, first_name, father_name, avatar_url)',
+          )
+          .single();
+
+        if (error) {
+          toast.error(translate.instant('ALERT.FAILURE'));
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+        toast.success(translate.instant('PUBLICATIONS.SUCCESS'));
+        patchState(state, {
+          loading: false,
+          publications: [...[data as Publication], ...state.publications()],
+        });
+      }
+
+      function removePublication(id: string): void {
+        patchState(state, {
+          publications: state.publications().filter((x) => x.id !== id),
+        });
+      }
+
+      return {
+        getPublications,
+        paginate,
+        savePublication,
+        getCourses,
+        removePublication,
+      };
     },
   ),
+  withHooks({
+    onInit({ getCourses }) {
+      getCourses();
+    },
+  }),
 );

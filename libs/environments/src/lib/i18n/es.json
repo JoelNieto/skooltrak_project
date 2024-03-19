@@ -12,6 +12,7 @@
   },
   "ADMIN": "Administrador",
   "ALERT": {
+    "DELETED": "Elemento eliminado exitosamente",
     "FAILURE": "Algo salio mal!",
     "SUCCESS": "Cambios realizados exitosamente",
     "TRY_AGAIN": "Por favor, intente nuevamente"
@@ -245,6 +246,7 @@
   },
   "PUBLICATIONS": {
     "BODY": "Que esta pasando?",
+    "COURSE": "Curso",
     "DEGREE": "Nivel",
     "DETAILS": "Publicación",
     "NEW": "Nueva publicación",

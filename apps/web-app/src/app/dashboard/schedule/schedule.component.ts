@@ -9,9 +9,9 @@ import { CalendarComponent } from '../../components/calendar/calendar.component'
   selector: 'sk-schedule',
   imports: [CalendarComponent, CardComponent, TranslateModule],
   template: `<sk-card>
-    <div header>
+    <div header class="pb-2">
       <h2
-        class="font-title mb-2 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
+        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
         {{ 'SCHEDULE' | translate }}
       </h2>

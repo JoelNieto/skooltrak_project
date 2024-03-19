@@ -27,7 +27,7 @@ import {
 } from '@ionic/angular/standalone';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { PublicationObject } from '@skooltrak/models';
+import { Publication } from '@skooltrak/models';
 import { mobileStore } from '@skooltrak/store';
 import { addIcons } from 'ionicons';
 import { add } from 'ionicons/icons';
@@ -158,7 +158,7 @@ export class NewsPage {
     !!data && patchState(this.store, { news: [...data, ...this.store.news()] });
   }
 
-  public async showPublication(publication: PublicationObject): Promise<void> {
+  public async showPublication(publication: Publication): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: PublicationsDetailsComponent,
       componentProps: { publication },

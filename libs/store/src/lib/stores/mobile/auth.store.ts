@@ -1,27 +1,9 @@
 import { computed, inject } from '@angular/core';
-import {
-  AlertController,
-  NavController,
-  ToastController,
-} from '@ionic/angular';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  ClassGroup,
-  RoleEnum,
-  SchoolUser,
-  SignUpCredentials,
-  Table,
-  User,
-} from '@skooltrak/models';
+import { ClassGroup, RoleEnum, SchoolUser, SignUpCredentials, Table, User } from '@skooltrak/models';
 import { Session } from '@supabase/supabase-js';
 import { distinctUntilChanged, filter, map, pipe, tap } from 'rxjs';
 
@@ -68,6 +50,7 @@ export const AuthStore = signalStore(
     const isAdmin = computed(() => roles().includes(RoleEnum.Administrator));
     const isTeacher = computed(() => roles().includes(RoleEnum.Teacher));
     const isStudent = computed(() => roles().includes(RoleEnum.Student));
+    const currentRole = computed(() => roles()[0]);
 
     return {
       userId,
@@ -77,6 +60,7 @@ export const AuthStore = signalStore(
       isAdmin,
       isTeacher,
       isStudent,
+      currentRole,
     };
   }),
   withMethods(

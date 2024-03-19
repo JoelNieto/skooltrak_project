@@ -1,15 +1,18 @@
 {
   "ACTIONS": {
+    "ADD": "Agregar",
     "DELETE": "Eliminar",
     "DETAILS": "Detalles",
     "EDIT": "Editar",
     "ERROR": "Algo salio mal. Pruebe nuevamente",
     "PREVIEW": "Vista previa",
     "RELOAD": "Recargar",
+    "SEARCH": "Buscar",
     "TITLE": "Acciones"
   },
   "ADMIN": "Administrador",
   "ALERT": {
+    "DELETED": "Elemento eliminado exitosamente",
     "FAILURE": "Algo salio mal!",
     "SUCCESS": "Cambios realizados exitosamente",
     "TRY_AGAIN": "Por favor, intente nuevamente"
@@ -26,6 +29,7 @@
     "PLAN": "Nivel",
     "TEACHER": "Docente",
     "TITLE": "Tareas",
+    "TODAY": "Tareas de hoy",
     "TYPE": "Tipo",
     "UPLOAD_FILE": "Subir archivo",
     "WORK": "Trabajo"
@@ -184,6 +188,9 @@
   "Mother name": "Apellido materno",
   "NAME": "Nombre",
   "NEW": "Nuevo",
+  "NEWS": {
+    "TITLE": "Noticias"
+  },
   "NO_ITEMS": "Sin  elementos para este filtro",
   "News": "Novedades",
   "Other": "Otro",
@@ -236,6 +243,21 @@
     "MOTHER_NAME": "Apellido materno",
     "NAME": "Perfil",
     "TITLE": "Datos personales"
+  },
+  "PUBLICATIONS": {
+    "BODY": "Que esta pasando?",
+    "COURSE": "Curso",
+    "DEGREE": "Nivel",
+    "DETAILS": "Publicación",
+    "NEW": "Nueva publicación",
+    "PERSONAL_FILTER": "Mis notificaciones",
+    "PLAN": "Grado",
+    "PUBLIC": "Visible para toda la escuela",
+    "PUBLIC_FILTER": "Publico",
+    "PUBLISH": "Publicar",
+    "ROLES": "Roles",
+    "SUCCESS": "Anuncio publicado exitosamente!",
+    "TITLE": "Titulo de la publicación"
   },
   "Polls": "Encuestas",
   "QUESTION_TYPE": {

@@ -3,7 +3,8 @@ import { NgClass } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
@@ -17,12 +18,14 @@ import { CourseDetailsStore } from './course-details.store';
     CardComponent,
     NgClass,
     RouterLink,
+    RouterLinkActive,
     TranslateModule,
     TabsComponent,
     TabsItemComponent,
     RouterOutlet,
     MatButton,
     MatIcon,
+    MatTabsModule,
   ],
   providers: [CourseDetailsStore],
   template: `
@@ -50,32 +53,68 @@ import { CourseDetailsStore } from './course-details.store';
             </div>
           </div>
         </div>
-        <sk-tabs>
-          <sk-tabs-item link="news">{{ 'News' | translate }}</sk-tabs-item>
-          <sk-tabs-item link="schedule">{{
-            'SCHEDULE' | translate
-          }}</sk-tabs-item>
-          <sk-tabs-item link="grades">{{
-            'GRADES.TITLE' | translate
-          }}</sk-tabs-item>
-          <sk-tabs-item link="files">{{ 'File' | translate }}</sk-tabs-item>
-          <sk-tabs-item link="students">
-            {{ 'Students' | translate }}</sk-tabs-item
+        <nav mat-tab-nav-bar [tabPanel]="panel">
+          <nav
+            mat-tab-link
+            routerLink="news"
+            routerLinkActive
+            #news="routerLinkActive"
+            [active]="news.isActive"
           >
-        </sk-tabs>
-        <router-outlet />
+            {{ 'News' | translate }}
+          </nav>
+          <nav
+            mat-tab-link
+            routerLink="schedule"
+            routerLinkActive
+            #schedule="routerLinkActive"
+            [active]="schedule.isActive"
+          >
+            {{ 'SCHEDULE' | translate }}
+          </nav>
+          <nav
+            mat-tab-link
+            routerLink="grades"
+            routerLinkActive
+            #grades="routerLinkActive"
+            [active]="grades.isActive"
+          >
+            {{ 'GRADES.TITLE' | translate }}
+          </nav>
+          <nav
+            mat-tab-link
+            routerLink="files"
+            routerLinkActive
+            #files="routerLinkActive"
+            [active]="files.isActive"
+          >
+            {{ 'File' | translate }}
+          </nav>
+          <nav
+            mat-tab-link
+            routerLink="students"
+            routerLinkActive
+            #students="routerLinkActive"
+            [active]="students.isActive"
+          >
+            {{ 'Students' | translate }}
+          </nav>
+        </nav>
+        <mat-tab-nav-panel #panel>
+          <router-outlet />
+        </mat-tab-nav-panel>
       </sk-card>
     </div>
   `,
 })
 export class CourseDetailsComponent implements OnInit {
-  private course_id = input.required<string>();
+  private courseId = input.required<string>();
   public store = inject(CourseDetailsStore);
 
   private dialog = inject(Dialog);
 
   public ngOnInit(): void {
-    this.store.fetchCourse(this.course_id());
+    this.store.fetchCourse(this.courseId());
   }
 
   public showMeeting(): void {

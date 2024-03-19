@@ -1,11 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -72,7 +67,6 @@ import { CardComponent } from '@skooltrak/ui';
                   matInput
                 />
               </mat-form-field>
-
               <mat-form-field class="w-full">
                 <mat-label>{{ 'SIGN_IN.PASSWORD' | translate }}</mat-label>
                 <input

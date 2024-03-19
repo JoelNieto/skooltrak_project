@@ -6,16 +6,14 @@ export const routes: Routes = [
     loadComponent: () => import('./tabs.page').then((x) => x.TabsPage),
     children: [
       {
-        path: 'home',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('../pages/courses/course.routes').then(
-                (m) => m.courseRoutes,
-              ),
-          },
-        ],
+        path: 'news',
+        loadComponent: () =>
+          import('../pages/news/news.page').then((x) => x.NewsPage),
+      },
+      {
+        path: 'courses',
+        loadChildren: () =>
+          import('../pages/courses/course.routes').then((m) => m.courseRoutes),
       },
       {
         path: 'messages',
@@ -37,7 +35,7 @@ export const routes: Routes = [
 
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'news',
         pathMatch: 'full',
       },
     ],

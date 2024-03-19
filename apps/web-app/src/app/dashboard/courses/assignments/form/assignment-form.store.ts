@@ -117,7 +117,7 @@ export const AssignmentFormStore = signalStore(
 
         patchState(state, { assignment: data, loading: false });
       },
-      async saveAssignment(request: Assignment): Promise<void> {
+      async saveAssignment(request: Partial<Assignment>): Promise<void> {
         patchState(state, { loading: false });
         const { data, error } = await supabase.client
           .from(Table.Assignments)

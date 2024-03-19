@@ -8,9 +8,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import {
+  appsOutline,
   calendarOutline,
   chatbubblesOutline,
   homeOutline,
+  newspaperOutline,
   personOutline,
 } from 'ionicons/icons';
 
@@ -27,11 +29,14 @@ import {
   ],
   template: `<ion-tabs>
     <ion-tab-bar id="app-tab-bar" slot="bottom">
-      <ion-tab-button tab="home">
-        <ion-icon aria-hidden="true" name="home-outline" />
-        {{ 'HOME' | translate }}
+      <ion-tab-button tab="news">
+        <ion-icon aria-hidden="true" name="newspaper-outline" />
+        {{ 'NEWS.TITLE' | translate }}
       </ion-tab-button>
-
+      <ion-tab-button tab="courses">
+        <ion-icon aria-hidden="true" name="apps-outline" />
+        {{ 'COURSES.TITLE' | translate }}
+      </ion-tab-button>
       <ion-tab-button tab="schedule">
         <ion-icon aria-hidden="true" name="calendar-outline" />
         {{ 'SCHEDULE' | translate }}
@@ -54,6 +59,8 @@ export class TabsPage {
       calendarOutline,
       chatbubblesOutline,
       personOutline,
+      newspaperOutline,
+      appsOutline,
     });
   }
 }

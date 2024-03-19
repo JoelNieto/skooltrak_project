@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { RouterOutlet } from '@angular/router';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'sk-root',
@@ -11,5 +12,6 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   constructor(iconRegistry: MatIconRegistry) {
     iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
+    Chart.defaults.font.family = '"Space Mono", monospace';
   }
 }

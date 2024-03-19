@@ -9,7 +9,6 @@ import {
   ElementRef,
   HostListener,
   OnInit,
-  ViewChild,
   booleanAttribute,
   effect,
   forwardRef,
@@ -17,6 +16,7 @@ import {
   input,
   isDevMode,
   signal,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -168,9 +168,10 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
   public searchText = new FormControl('', { nonNullable: true });
 
   public placeholder = 'Select value';
-  @ViewChild(CdkPortal) public container!: CdkPortal;
-  @ViewChild('select') public select!: ElementRef;
-  @ViewChild('searchInput') public searchInput!: ElementRef;
+  public container = viewChild.required(CdkPortal);
+  public select = viewChild.required<ElementRef>('select');
+  public searchInput = viewChild.required<ElementRef>('searchInput');
+
   @HostListener('window:resize')
   public onWinResize(): void {
     this.syncWidth();
@@ -226,7 +227,7 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
       return;
     }
     const refRectWidth =
-      this.select.nativeElement.getBoundingClientRect().width;
+      this.select().nativeElement.getBoundingClientRect().width;
     this.overlayRef.updateSize({ width: refRectWidth });
   };
 
@@ -259,7 +260,7 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
     new OverlayConfig({
       positionStrategy: this.overlay
         .position()
-        .flexibleConnectedTo(this.select.nativeElement)
+        .flexibleConnectedTo(this.select().nativeElement)
         .withPush(true)
         .withPositions([
           {
@@ -293,7 +294,7 @@ export class UsersSelectorComponent implements OnInit, ControlValueAccessor {
     });
 
     this.cdr.detectChanges();
-    this.searchInput.nativeElement.focus();
+    this.searchInput().nativeElement.focus();
     this.IS_OPEN.set(true);
   };
 }

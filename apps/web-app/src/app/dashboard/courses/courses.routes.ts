@@ -21,7 +21,7 @@ export const coursesRoutes: Routes = [
           ),
       },
       {
-        path: 'details',
+        path: ':courseId',
         loadComponent: () =>
           import('./details/course-details.component').then(
             (x) => x.CourseDetailsComponent,

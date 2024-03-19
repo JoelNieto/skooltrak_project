@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -91,10 +92,13 @@ export class CoursesComponent implements OnInit {
   });
   public state = inject(CourseStudentsStore);
   public displayedColumns = ['name', 'actions'];
+  private destroy = inject(DestroyRef);
 
   public ngOnInit(): void {
-    this.groupControl.valueChanges.subscribe({
-      next: (groupId) => patchState(this.state, { groupId }),
-    });
+    this.groupControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (groupId) => patchState(this.state, { groupId }),
+      });
   }
 }

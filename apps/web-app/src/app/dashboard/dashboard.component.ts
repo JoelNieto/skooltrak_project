@@ -2,18 +2,6 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import {
-  heroArrowRightOnRectangle,
-  heroBookOpen,
-  heroBookmarkSquare,
-  heroBuildingLibrary,
-  heroCalendarDays,
-  heroClipboardDocumentList,
-  heroCog6Tooth,
-  heroHome,
-  heroUserGroup,
-} from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 
@@ -27,48 +15,58 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
   imports: [
     NavbarComponent,
     AvatarComponent,
-    NgIconComponent,
     TranslateModule,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
     MatIcon,
   ],
-  providers: [
-    provideIcons({
-      heroHome,
-      heroArrowRightOnRectangle,
-      heroBookmarkSquare,
-      heroClipboardDocumentList,
-      heroCalendarDays,
-      heroUserGroup,
-      heroBuildingLibrary,
-      heroCog6Tooth,
-      heroBookOpen,
-    }),
-  ],
+  providers: [],
   template: `<sk-navbar />
     <nav
       class="sticky top-[4rem] z-10 flex w-full items-center justify-between border-b border-gray-200 bg-white px-12 dark:border-gray-600 dark:bg-gray-700"
     >
       <ul class="flex gap-8">
         <li>
-          <a routerLink="home" class="link" routerLinkActive="active"
-            ><ng-icon name="heroHome" size="24" />{{ 'HOME' | translate }}</a
+          <a
+            routerLink="home"
+            class="link"
+            routerLinkActive="active"
+            #home="routerLinkActive"
+            ><mat-icon [color]="home.isActive ? 'primary' : ''">house</mat-icon>
+            {{ 'HOME' | translate }}</a
           >
         </li>
         <li>
-          <a routerLink="courses" class="link" routerLinkActive="active"
-            ><ng-icon name="heroBookOpen" size="24" />{{
-              'COURSES.TITLE' | translate
-            }}</a
+          <a
+            routerLink="schedule"
+            class="link"
+            routerLinkActive="active"
+            #schedule="routerLinkActive"
+            ><mat-icon [color]="schedule.isActive ? 'primary' : ''"
+              >calendar_month</mat-icon
+            >{{ 'SCHEDULE' | translate }}</a
           >
         </li>
         <li>
-          <a routerLink="quizzes" class="link" routerLinkActive="active"
-            ><ng-icon name="heroClipboardDocumentList" size="24" />{{
-              'QUIZZES.TITLE' | translate
-            }}</a
+          <a
+            routerLink="courses"
+            class="link"
+            routerLinkActive="active"
+            #courses="routerLinkActive"
+            ><mat-icon [color]="courses.isActive ? 'primary' : ''">dvr</mat-icon
+            >{{ 'COURSES.TITLE' | translate }}</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="quizzes"
+            class="link"
+            routerLinkActive="active"
+            #quizzes="routerLinkActive"
+            ><mat-icon [color]="quizzes.isActive ? 'primary' : ''"
+              >quiz</mat-icon
+            >{{ 'QUIZZES.TITLE' | translate }}</a
           >
         </li>
       </ul>
@@ -95,17 +93,13 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
           @if (auth.isAdmin()) {
             <li>
               <a routerLink="school" class="link" routerLinkActive="active"
-                ><ng-icon name="heroBuildingLibrary" size="24" />{{
-                  'SCHOOL.TITLE' | translate
-                }}</a
+                ><mat-icon>domain</mat-icon>{{ 'SCHOOL.TITLE' | translate }}</a
               >
             </li>
           }
           <li>
             <button class="link" (click)="auth.signOut()">
-              <ng-icon name="heroArrowRightOnRectangle" size="24" />{{
-                'SIGN_OUT.TITLE' | translate
-              }}
+              <mat-icon>logout</mat-icon>{{ 'SIGN_OUT.TITLE' | translate }}
             </button>
           </li>
         </ul>
@@ -128,9 +122,6 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
         @apply mt-1 flex items-center gap-3 border-b-4 border-white px-4 py-3 font-sans text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
         &.active {
           @apply border-sky-600 text-gray-800 dark:text-gray-500;
-          ng-icon {
-            @apply text-sky-600;
-          }
         }
       }
     `,

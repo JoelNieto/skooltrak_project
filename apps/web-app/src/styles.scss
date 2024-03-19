@@ -87,8 +87,8 @@ select:focus {
   font-variation-settings:
     'FILL' 0,
     'wght' 300,
-    'GRAD' 0,
-    'opsz' 24;
+    'GRAD' 200,
+    'opsz' 48;
 }
 
 [multiple] {
@@ -117,4 +117,8 @@ select:focus {
 .mdc-button {
   @apply px-5 py-2.5 uppercase rounded-lg #{!important};
   height: unset !important;
+}
+
+.mdc-tab__text-label {
+  @apply uppercase;
 }

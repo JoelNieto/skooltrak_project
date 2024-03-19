@@ -10,14 +10,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
       class="w-100 rounded-xl bg-white border border-gray-300 p-5 dark:border-gray-700 dark:bg-gray-800 relative"
       [class.opacity-20]="loading()"
     >
-      <div>
+      <div class="pb-2">
         <ng-content select="[header]"></ng-content>
       </div>
       @if (loading()) {
         <mat-spinner class="absolute z-50 top-1/3 left-1/2 h-16 w-16" />
       }
 
-      <div class="py-4">
+      <div>
         <ng-content></ng-content>
       </div>
 

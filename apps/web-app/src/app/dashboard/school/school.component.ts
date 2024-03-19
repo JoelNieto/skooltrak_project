@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 @Component({
   standalone: true,
@@ -9,9 +10,10 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
   imports: [
     RouterOutlet,
     CardComponent,
-    TabsComponent,
-    TabsItemComponent,
     TranslateModule,
+    MatTabsModule,
+    RouterLink,
+    RouterLinkActive,
   ],
   template: `<sk-card>
     <div header>
@@ -22,33 +24,77 @@ import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
       </h2>
     </div>
     <div>
-      <sk-tabs>
-        <sk-tabs-item link="info">{{ 'SCHOOL.INFO' | translate }}</sk-tabs-item>
-        <sk-tabs-item link="courses">{{
-          'COURSES.TITLE' | translate
-        }}</sk-tabs-item>
-        <sk-tabs-item link="plans">{{
-          'PLANS.TITLE' | translate
-        }}</sk-tabs-item>
-        <sk-tabs-item link="subjects">{{
-          'SUBJECTS.TITLE' | translate
-        }}</sk-tabs-item>
-        <sk-tabs-item link="degrees">{{
-          'DEGREES.TITLE' | translate
-        }}</sk-tabs-item>
-        <sk-tabs-item link="groups">{{
-          'GROUPS.TITLE' | translate
-        }}</sk-tabs-item>
-        <sk-tabs-item link="periods">{{
-          'PERIODS.TITLE' | translate
-        }}</sk-tabs-item>
-        <sk-tabs-item link="people">{{
-          'PEOPLE.TITLE' | translate
-        }}</sk-tabs-item>
-      </sk-tabs>
-      <div class="p-4">
-        <router-outlet />
-      </div>
+      <nav mat-tab-nav-bar [tabPanel]="panel">
+        <a
+          mat-tab-link
+          routerLink="info"
+          routerLinkActive
+          #info="routerLinkActive"
+          [active]="info.isActive"
+          >{{ 'SCHOOL.INFO' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="courses"
+          routerLinkActive
+          #courses="routerLinkActive"
+          [active]="courses.isActive"
+          >{{ 'COURSES.TITLE' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="plans"
+          routerLinkActive
+          #plans="routerLinkActive"
+          [active]="plans.isActive"
+          >{{ 'PLANS.TITLE' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="subjects"
+          routerLinkActive
+          #subjects="routerLinkActive"
+          [active]="subjects.isActive"
+          >{{ 'SUBJECTS.TITLE' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="degrees"
+          routerLinkActive
+          #degrees="routerLinkActive"
+          [active]="degrees.isActive"
+          >{{ 'DEGREES.TITLE' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="groups"
+          routerLinkActive
+          #groups="routerLinkActive"
+          [active]="groups.isActive"
+          >{{ 'GROUPS.TITLE' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="periods"
+          routerLinkActive
+          #periods="routerLinkActive"
+          [active]="periods.isActive"
+          >{{ 'PERIODS.TITLE' | translate }}</a
+        >
+        <a
+          mat-tab-link
+          routerLink="people"
+          routerLinkActive
+          #people="routerLinkActive"
+          [active]="people.isActive"
+          >{{ 'PEOPLE.TITLE' | translate }}</a
+        >
+      </nav>
+      <mat-tab-nav-panel #panel>
+        <div class="p-4">
+          <router-outlet />
+        </div>
+      </mat-tab-nav-panel>
     </div>
   </sk-card>`,
 })

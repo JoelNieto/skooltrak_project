@@ -2,11 +2,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
@@ -44,7 +40,7 @@ import { QuizzesStore } from '../quizzes.store';
     NgClass,
   ],
   template: `<sk-card>
-    <div header>
+    <div header class="pb-2">
       <h2
         class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >

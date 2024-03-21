@@ -1,11 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -15,12 +11,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  CardComponent,
-  PaginatorComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
+import { CardComponent, PaginatorComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
@@ -49,7 +40,7 @@ import { CoursesStore } from '../courses.store';
   ],
   providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
   template: ` <sk-card>
-    <div header>
+    <div header class="pb-2">
       <h2
         class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
@@ -59,13 +50,15 @@ import { CoursesStore } from '../courses.store';
     <div class="relative">
       <div class="flex justify-between">
         <mat-form-field class="w-full lg:w-96">
-          <mat-label for="table-search">Search</mat-label>
+          <mat-label for="table-search">{{
+            'SEARCH.TITLE' | translate
+          }}</mat-label>
           <mat-icon matPrefix>search</mat-icon>
           <input
             type="text"
             id="table-search"
             matInput
-            placeholder="Search for items"
+            [placeholder]="'SEARCH.PLACEHOLDER' | translate"
           />
         </mat-form-field>
       </div>
@@ -108,11 +101,7 @@ import { CoursesStore } from '../courses.store';
             {{ 'ACTIONS.TITLE' | translate }}
           </th>
           <td mat-cell *matCellDef="let item">
-            <a
-              mat-icon-button
-              routerLink="../details"
-              [queryParams]="{ course_id: item.id }"
-            >
+            <a mat-icon-button [routerLink]="['/app/courses', item.id]">
               <mat-icon class="text-sky-600">visibility</mat-icon>
             </a>
           </td>

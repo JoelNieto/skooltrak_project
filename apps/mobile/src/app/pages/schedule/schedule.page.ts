@@ -49,8 +49,8 @@ import { ScheduleStore } from './schedule.store';
   ],
   providers: [ScheduleStore],
   template: `<ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>
+      <ion-toolbar color="primary">
+        <ion-title size="large">
           {{ 'SCHEDULE' | translate }}
         </ion-title>
       </ion-toolbar>

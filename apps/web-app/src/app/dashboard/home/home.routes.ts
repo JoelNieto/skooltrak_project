@@ -7,14 +7,13 @@ export const homeRoutes: Routes = [
       import('./home.component').then((x) => x.HomeComponent),
     children: [
       {
-        path: 'schedule',
+        path: 'publications',
         loadComponent: () =>
-          import('./schedule/schedule.component').then(
-            (x) => x.ScheduleComponent
+          import('../publications/publications.component').then(
+            (x) => x.PublicationsComponent,
           ),
       },
-      { path: '', pathMatch: 'full', redirectTo: 'schedule' },
+      { path: '', pathMatch: 'full', redirectTo: 'publications' },
     ],
   },
 ];
-[];

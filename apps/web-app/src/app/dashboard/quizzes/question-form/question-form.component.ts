@@ -1,20 +1,7 @@
 import { JsonPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  input,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconButton, MatMiniFabButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -50,7 +37,7 @@ import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
     ReactiveFormsModule,
   ],
   template: `<sk-card>
-    <div header>
+    <div header class="pb-4">
       <h3 class="text-lg font-title text-gray-600">
         {{ 'QUIZZES.QUESTION' | translate }} {{ index() + 1 }} /
         {{ store.questionsCount() }}

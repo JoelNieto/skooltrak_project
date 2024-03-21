@@ -48,9 +48,9 @@
     "zone.js": "0.14.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "17.2.0",
-    "@angular-devkit/core": "17.2.0",
-    "@angular-devkit/schematics": "17.2.0",
+    "@angular-devkit/build-angular": "17.3.0",
+    "@angular-devkit/core": "17.3.0",
+    "@angular-devkit/schematics": "17.3.0",
     "@angular-eslint/eslint-plugin": "17.2.1",
     "@angular-eslint/eslint-plugin-template": "17.2.1",
     "@angular-eslint/template-parser": "17.2.1",
@@ -111,4 +111,3 @@
   },
   "version": "0.0.0"
 }
-

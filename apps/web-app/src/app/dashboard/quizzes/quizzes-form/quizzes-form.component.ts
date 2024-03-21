@@ -1,20 +1,7 @@
 import { JsonPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  input,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -38,7 +25,7 @@ import { QuizzesFormStore } from './quizzes-form.store';
     <div class="flex justify-center">
       <div class="flex flex-col gap-5 w-full lg:w-3/5">
         <sk-card>
-          <div header>
+          <div header class="pb-4">
             <h1 class="text-2xl font-title text-gray-700">
               {{ 'QUIZZES.DETAILS' | translate }}
             </h1>

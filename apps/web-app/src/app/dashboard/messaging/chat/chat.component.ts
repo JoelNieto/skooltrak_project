@@ -49,9 +49,9 @@ import { ChatStore } from './chat.store';
               }
               <div
                 [ngClass]="{
-                  'bg-blue-600 text-white dark:bg-blue-900 dark:text-blue-200 rounded-ee-sm':
+                  'bg-blue-600 text-white dark:bg-sky-900 dark:text-blue-200 rounded-ee-sm':
                     message.mine,
-                  'bg-blue-100 text-blue-700 dark:bg-blue-600 dark:text-blue-100 rounded-es-sm':
+                  'bg-blue-100 text-sky-700 dark:bg-sky-600 dark:text-blue-100 rounded-es-sm':
                     !message.mine
                 }"
                 class="px-4 py-3 rounded-2xl relative chat-item"

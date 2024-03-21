@@ -79,26 +79,19 @@ import { ProfileEditPage } from './profile-edit.page';
     `,
   ],
   template: `
-    <ion-header [translucent]="true" class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>
+    <ion-header class="ion-no-border">
+      <ion-toolbar color="primary">
+        <ion-title size="large">
           {{ 'PROFILE.NAME' | translate }}
         </ion-title>
         <ion-buttons slot="primary">
-          <ion-button color="primary" (click)="editProfile()">
+          <ion-button (click)="editProfile()">
             {{ 'EDIT' | translate }}
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content [fullscreen]="true" color="light">
-      <ion-header collapse="condense">
-        <ion-toolbar color="light">
-          <ion-title size="large">
-            {{ 'PROFILE.NAME' | translate }}
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
       <ion-list inset="true">
         <ion-item>
           <ion-avatar slot="start">

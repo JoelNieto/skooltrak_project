@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -38,6 +39,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
   selector: 'skooltrak-messages',
   standalone: true,
   imports: [
+    JsonPipe,
     TranslateModule,
     DateAgoPipe,
     RouterLink,
@@ -80,30 +82,32 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
         --border-radius: 9999px;
         --background: var(--ion-color-light);
       }
+
+      .wrap-text {
+        overflow: hidden;
+        max-height: 1rem;
+        display: block;
+        text-overflow: ellipsis;
+      }
     `,
   ],
   template: `
-    <ion-header [translucent]="true">
-      <ion-toolbar>
-        <ion-title> {{ 'MESSAGING.TITLE' | translate }} </ion-title>
+    <ion-header class="ion-no-border">
+      <ion-toolbar color="primary">
+        <ion-title size="large">
+          {{ 'MESSAGING.TITLE' | translate }}
+        </ion-title>
         <ion-buttons slot="primary">
           <ion-button slot="icon-only" (click)="searchUser()">
-            <ion-icon name="add-circle" size="large" color="primary" />
+            <ion-icon name="add-circle" size="large" />
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
+      <ion-toolbar color="primary">
+        <ion-searchbar inputmode="search"></ion-searchbar>
+      </ion-toolbar>
     </ion-header>
-    <ion-content [fullscreen]="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">
-            {{ 'MESSAGING.TITLE' | translate }}</ion-title
-          >
-        </ion-toolbar>
-        <ion-toolbar>
-          <ion-searchbar inputmode="search"></ion-searchbar>
-        </ion-toolbar>
-      </ion-header>
+    <ion-content fullscreen="true">
       <ion-list>
         @for (chat of store.sortedChats(); track chat.id) {
           <ion-item-sliding>
@@ -123,8 +127,15 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
                   ><strong
                     >{{ member.user.first_name }}
                     {{ member.user.father_name }}</strong
-                  > </ion-label
-                ><ion-note color="medium">
+                  >
+                  <ion-note
+                    class="wrap-text"
+                    [innerHTML]="chat.message[0].text"
+                  >
+                  </ion-note>
+                </ion-label>
+
+                <ion-note color="medium">
                   {{ chat.last_message | dateAgo }}</ion-note
                 >
               }

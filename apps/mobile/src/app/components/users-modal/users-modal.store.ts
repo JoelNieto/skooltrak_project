@@ -1,9 +1,16 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Table, User } from '@skooltrak/models';
-import { mobileStore, SupabaseService } from '@skooltrak/store';
+import { SupabaseService, mobileStore } from '@skooltrak/store';
 import { debounceTime, from, map, pipe, switchMap, tap } from 'rxjs';
 
 type State = {
@@ -36,6 +43,7 @@ export const UsersModalStore = signalStore(
             ).pipe(
               map(({ error, data }) => {
                 if (error) throw new Error(error.message);
+
                 return data as Partial<User>[];
               }),
               tapResponse({

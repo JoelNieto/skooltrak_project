@@ -46,9 +46,11 @@ export const MessagesStore = signalStore(
         const { data, error } = await supabase.client
           .from(Table.Chats)
           .select(
-            '*, members:chat_members(user_id, user:users(*), created_at), messages!inner(id, text, sent_at)',
+            '*, members:chat_members(user_id, user:users(*), created_at), message:messages!inner(id, text, sent_at)',
           )
-          .order('last_message', { ascending: false });
+          .order('last_message', { ascending: false })
+          .order('sent_at', { referencedTable: 'messages', ascending: false })
+          .limit(1, { foreignTable: 'messages' });
         if (error) {
           console.error(error);
           patchState(state, { loading: false });

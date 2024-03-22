@@ -1,8 +1,13 @@
-import { ClassGroup, Person, RoleEnum, School, StatusEnum } from '@skooltrak/models';
+import {
+  ClassGroup,
+  Person,
+  RoleEnum,
+  School,
+  StatusEnum,
+} from '@skooltrak/models';
 
 export type User = Partial<Person> & {
   id?: string;
-  full_name?: string;
   email: string;
   updated_at?: Date;
   avatar_url: string;

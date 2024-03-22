@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   Assignment,
   AssignmentType,
+  Attachment,
   ClassGroup,
   Course,
   GroupAssignment,
@@ -142,6 +143,35 @@ export const AssignmentFormStore = signalStore(
           return;
         }
         this.saveGroupsDate(data.id);
+      },
+      async saveFiles(files: File[]): Promise<void> {
+        const items: Partial<Attachment>[] = [];
+
+        files.forEach(async (file) => {
+          const { data, error } = await supabase.uploadFile({
+            file,
+            folder: schoolId()!,
+          });
+          items.push({
+            file_name: file.name,
+            file_path: data?.path,
+            file_size: file.size,
+            file_type: file.type,
+          });
+
+          if (error) {
+            throw new Error(error.message);
+          }
+        });
+
+        const { error } = await supabase.client
+          .from(Table.Attachments)
+          .upsert(items);
+
+        if (error) {
+          console.error(error);
+          throw new Error(error.message);
+        }
       },
       async saveGroupsDate(id: string): Promise<void> {
         const groups = dates().map((x) => ({ ...x, assignment_id: id }));

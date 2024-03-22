@@ -25,6 +25,8 @@
     "@ngrx/operators": "17.1.0",
     "@ngrx/signals": "17.1.0",
     "@ngrx/store-devtools": "17.1.0",
+    "@ngx-dropzone/cdk": "^17.2.0",
+    "@ngx-dropzone/material": "^17.2.0",
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@nx/angular": "18.1.2",
@@ -111,4 +113,3 @@
   },
   "version": "0.0.0"
 }
-

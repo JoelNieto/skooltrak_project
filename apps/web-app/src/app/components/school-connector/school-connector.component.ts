@@ -6,6 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatFormField,
   MatHint,
@@ -13,16 +15,10 @@ import {
   MatLabel,
 } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum } from '@skooltrak/models';
-import {
-  ButtonDirective,
-  CardComponent,
-  ConfirmationService,
-} from '@skooltrak/ui';
+import { CardComponent, ConfirmationService } from '@skooltrak/ui';
 
 import { SchoolConnectorStore } from './school-connector.store';
 
@@ -31,9 +27,9 @@ import { SchoolConnectorStore } from './school-connector.store';
   selector: 'sk-school-connector',
   imports: [
     CardComponent,
-    NgIconComponent,
+    MatIcon,
     TranslateModule,
-    ButtonDirective,
+    MatButton,
     ReactiveFormsModule,
     MatInput,
     MatFormField,
@@ -42,27 +38,19 @@ import { SchoolConnectorStore } from './school-connector.store';
     MatSelect,
     MatOption,
   ],
-  providers: [
-    SchoolConnectorStore,
-    provideIcons({ heroXMark }),
-    ConfirmationService,
-  ],
+  providers: [SchoolConnectorStore, ConfirmationService],
   styles: `
 
   `,
   template: `<sk-card>
-    <div class="flex items-start justify-between" header>
+    <div class="flex items-center justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <form [formGroup]="form" (ngSubmit)="validateCode()">
@@ -91,8 +79,14 @@ import { SchoolConnectorStore } from './school-connector.store';
         </mat-form-field>
       </div>
       <div class="mt-4 flex justify-end">
-        <button skButton color="green" type="submit" [disabled]="!form.valid">
-          + {{ 'ACTIONS.ADD' | translate }}
+        <button
+          mat-flat-button
+          color="accent"
+          type="submit"
+          [disabled]="!form.valid"
+        >
+          <mat-icon>add_circle</mat-icon>
+          <span>{{ 'ACTIONS.ADD' | translate }}</span>
         </button>
       </div>
     </form>

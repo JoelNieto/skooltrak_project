@@ -1,15 +1,22 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Grade } from '@skooltrak/models';
-import { ButtonDirective, CardComponent, SelectComponent } from '@skooltrak/ui';
+import { CardComponent, SelectComponent } from '@skooltrak/ui';
 
 import { GradesFormStore } from './grades-form.store';
 
@@ -18,10 +25,10 @@ import { GradesFormStore } from './grades-form.store';
   imports: [
     CardComponent,
     TranslateModule,
-    ButtonDirective,
+    MatButtonModule,
+    MatIcon,
     SelectComponent,
     ReactiveFormsModule,
-    NgIconComponent,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -30,18 +37,14 @@ import { GradesFormStore } from './grades-form.store';
   providers: [GradesFormStore, provideIcons({ heroXMark })],
   template: `<form [formGroup]="gradeForm" (ngSubmit)="saveGrade()">
     <sk-card>
-      <div class="flex items-start justify-between" header>
+      <div class="flex  justify-between items-center" header>
         <h3
           class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
         >
           {{ 'GRADES.DETAILS' | translate }}
         </h3>
-        <button (click)="dialogRef.close()">
-          <ng-icon
-            name="heroXMark"
-            size="24"
-            class="text-gray-700 dark:text-gray-100"
-          />
+        <button mat-icon-button (click)="dialogRef.close()">
+          <mat-icon>close</mat-icon>
         </button>
       </div>
       <div>
@@ -111,8 +114,8 @@ import { GradesFormStore } from './grades-form.store';
       </div>
       <div footer class="flex justify-end pt-6">
         <button
-          skButton
-          color="green"
+          mat-flat-button
+          color="accent"
           type="submit"
           [disabled]="gradeForm.invalid"
         >

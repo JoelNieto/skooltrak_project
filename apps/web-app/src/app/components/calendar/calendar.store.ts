@@ -51,6 +51,7 @@ export const CalendarStore = signalStore(
       fetchAssignments: rxMethod<typeof queryData>(
         pipe(
           tap(() => patchState(state, { loading: true })),
+          tap(() => console.log(queryValue())),
           filter(() => !!queryItem() && !!queryValue()),
           switchMap(() =>
             from(

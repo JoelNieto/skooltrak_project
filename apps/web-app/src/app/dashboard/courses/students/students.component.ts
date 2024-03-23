@@ -11,7 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonDirective, SelectComponent } from '@skooltrak/ui';
+import { SelectComponent } from '@skooltrak/ui';
 
 import { CourseDetailsStore } from '../details/course-details.store';
 import { CourseStudentsStore } from './students.store';
@@ -24,7 +24,6 @@ import { CourseStudentsStore } from './students.store';
     RouterLink,
     SelectComponent,
     TranslateModule,
-    ButtonDirective,
     MatButton,
     MatSelectModule,
     MatFormFieldModule,

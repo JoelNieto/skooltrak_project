@@ -1,5 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -85,7 +92,7 @@ export class PublicationItemComponent {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: async (res) => {
-          if (res) return;
+          if (!res) return;
           const { error } = await this.supabase.client
             .from(Table.Publications)
             .delete()

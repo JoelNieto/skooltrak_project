@@ -2,13 +2,12 @@ import { Dialog, DialogModule, DialogRef } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 import {
-  ButtonDirective,
   CardComponent,
   ConfirmationService,
   defaultConfirmationOptions,
@@ -24,29 +23,23 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
   imports: [
     CardComponent,
     TranslateModule,
-    NgIconComponent,
     AvatarComponent,
     NgClass,
-    ButtonDirective,
+    MatIconButton,
+    MatIcon,
+    MatButton,
     DialogModule,
   ],
-  providers: [
-    provideIcons({ heroXMark, heroLink, heroPlus }),
-    ConfirmationService,
-  ],
+  providers: [ConfirmationService],
   template: `<sk-card>
-    <div class="flex items-start justify-between" header>
+    <div class="flex items-center justify-between" header>
       <h3
         class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
       >
         {{ 'SCHOOL_CONNECTOR.TITLE' | translate }}
       </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
+      <button mat-icon-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
     <div>
@@ -91,13 +84,13 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
       </div>
     </div>
     <div class="flex justify-end gap-4 pt-4" footer>
-      <button skButton color="green" (click)="addSchoolConnection()">
-        <ng-icon name="heroLink" size="16" />
-        {{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}
+      <button mat-flat-button color="accent" (click)="addSchoolConnection()">
+        <mat-icon>link</mat-icon>
+        <span>{{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}</span>
       </button>
-      <button skButton color="blue" (click)="createSchool()">
-        <ng-icon name="heroPlus" size="16" />
-        {{ 'SCHOOL_CONNECTOR.CREATE' | translate }}
+      <button mat-flat-button color="primary" (click)="createSchool()">
+        <mat-icon>add_circle</mat-icon>
+        <span>{{ 'SCHOOL_CONNECTOR.CREATE' | translate }}</span>
       </button>
     </div>
   </sk-card>`,

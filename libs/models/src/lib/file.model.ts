@@ -6,6 +6,6 @@ export type Attachment = {
   file_path: string;
   file_type: string;
   file_size: number;
-  owner: Partial<User>;
+  user: Partial<User>;
   created_at: Date;
 };

@@ -134,7 +134,7 @@ export class DashboardComponent {
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {
-      width: '36rem',
+      width: '38rem',
       maxWidth: '90%',
     });
   }

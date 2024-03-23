@@ -1,7 +1,12 @@
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -10,7 +15,11 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Table, User } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
-import { ButtonDirective, CardComponent, ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
+import {
+  CardComponent,
+  ImageCropperComponent,
+  SelectComponent,
+} from '@skooltrak/ui';
 
 import { PictureComponent } from '../../../components/picture/picture.component';
 import { UsersSelectorComponent } from '../../../components/users-selector/users-selector.component';
@@ -23,7 +32,6 @@ import { CoursesFormStore } from './courses-form.store';
     TranslateModule,
     ReactiveFormsModule,
     SelectComponent,
-    ButtonDirective,
     UsersSelectorComponent,
     NgOptimizedImage,
     PictureComponent,

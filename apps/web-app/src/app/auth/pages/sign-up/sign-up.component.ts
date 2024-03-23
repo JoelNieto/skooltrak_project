@@ -6,11 +6,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { ButtonDirective, CardComponent } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-up',
@@ -20,7 +21,7 @@ import { ButtonDirective, CardComponent } from '@skooltrak/ui';
     CardComponent,
     TranslateModule,
     NgOptimizedImage,
-    ButtonDirective,
+    MatButton,
     MatInput,
     MatFormField,
     MatLabel,
@@ -104,8 +105,8 @@ import { ButtonDirective, CardComponent } from '@skooltrak/ui';
         <div class="md:col-span-2">
           <button
             class="w-full md:w-auto"
-            skButton
-            color="green"
+            mat-flat-button
+            color="accent"
             type="submit"
             [disabled]="form.invalid"
           >

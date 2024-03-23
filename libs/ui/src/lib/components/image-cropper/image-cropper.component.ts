@@ -1,14 +1,15 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
-import { ButtonDirective } from '../../directives/button/button.directive';
 import { CardComponent } from '../card/card.component';
 
 @Component({
@@ -16,8 +17,8 @@ import { CardComponent } from '../card/card.component';
   standalone: true,
   imports: [
     ImageCropperModule,
-    ButtonDirective,
-    NgIconComponent,
+    MatButton,
+    MatIcon,
     CardComponent,
     NgStyle,
     TranslateModule,
@@ -30,15 +31,11 @@ import { CardComponent } from '../card/card.component';
         >
           {{ 'IMAGE_CROPPER.TITLE' | translate }}
         </h3>
-        <button (click)="dialogRef.close()">
-          <ng-icon
-            name="heroXMark"
-            size="24"
-            class="text-gray-700 dark:text-gray-100"
-          />
+        <button mat-icon-button (click)="dialogRef.close()">
+          <mat-icon>close</mat-icon>
         </button>
       </div>
-      <button skButton color="green" (click)="fileInput.click()">
+      <button mat-flat-button color="accent" (click)="fileInput.click()">
         {{ 'IMAGE_CROPPER.CHOOSE_PICTURE' | translate }}
       </button>
       <div class="space-4 mt-2 flex flex-col">
@@ -73,8 +70,8 @@ import { CardComponent } from '../card/card.component';
       </div>
       <div class="flex justify-end" footer>
         <button
-          skButton
-          color="blue"
+          mat-flat-button
+          color="primary"
           class="w-full"
           [disabled]="!imageFile"
           (click)="dialogRef.close({ imageFile, cropImgPreview })"

@@ -103,8 +103,20 @@ import { AssignmentFormStore } from './assignment-form.store';
               'ASSIGNMENTS.UPLOAD_FILE' | translate
             }}</mat-slide-toggle>
           </div>
+
           <mat-form-field class="col-span-2">
-            <mat-label>Drop anything!</mat-label>
+            <mat-label for="description">{{
+              'DESCRIPTION' | translate
+            }}</mat-label>
+            <textarea
+              formControlName="description"
+              theme="snow"
+              matInput
+              rows="5"
+            ></textarea>
+          </mat-form-field>
+          <mat-form-field class="col-span-2">
+            <mat-label>{{ 'ASSIGNMENTS.ATTACHMENTS' | translate }}</mat-label>
             <ngx-mat-dropzone>
               <input
                 type="file"
@@ -122,17 +134,6 @@ import { AssignmentFormStore } from './assignment-form.store';
               }
             </ngx-mat-dropzone>
             <mat-icon matSuffix color="primary">cloud_upload</mat-icon>
-          </mat-form-field>
-          <mat-form-field class="col-span-2">
-            <mat-label for="description">{{
-              'DESCRIPTION' | translate
-            }}</mat-label>
-            <textarea
-              formControlName="description"
-              theme="snow"
-              matInput
-              rows="5"
-            ></textarea>
           </mat-form-field>
         </div>
         <div footer class="flex justify-end pt-6">
@@ -300,9 +301,7 @@ export class AssignmentFormComponent implements OnInit {
   }
 
   public saveAssignment(): void {
-    /*  const value = this.assignmentForm.getRawValue();
-    this.store.saveAssignment(value); */
-
-    this.store.saveFiles(this.files);
+    const value = this.assignmentForm.getRawValue();
+    this.store.saveAssignment({ request: value, files: this.files });
   }
 }

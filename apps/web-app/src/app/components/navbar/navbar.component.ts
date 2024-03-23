@@ -1,7 +1,8 @@
 import { DialogModule } from '@angular/cdk/dialog';
-import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
@@ -23,10 +24,11 @@ import { AvatarComponent } from '../avatar/avatar.component';
   standalone: true,
   imports: [
     CommonModule,
-    CdkMenuModule,
+    MatMenuModule,
     RouterLink,
     RouterLinkActive,
     TranslateModule,
+    MatDivider,
     AvatarComponent,
     NgIconComponent,
     DialogModule,
@@ -42,7 +44,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
       heroChatBubbleLeftRight,
     }),
   ],
-  template: `<nav class="fixed top-0 z-50 w-full bg-blue-500 dark:bg-gray-800">
+  template: `<nav
+    class="fixed top-0 z-50 w-full bg-white border-b border-gray-300 dark:bg-gray-800"
+  >
     <div class="px-4 py-3 lg:px-12">
       <div class="flex items-center justify-between">
         <div class="flex flex-1 items-center justify-start">
@@ -67,7 +71,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
           </button>
           <a routerLink="home" class="ml-2 flex md:mr-8">
             <img
-              src="assets/images/skooltrak-white.svg"
+              src="assets/images/skooltrak.svg"
               class="mr-2 h-7"
               alt="Skooltrak Logo"
             />
@@ -77,22 +81,22 @@ import { AvatarComponent } from '../avatar/avatar.component';
           <button routerLink="messaging">
             <ng-icon
               name="heroChatBubbleLeftRight"
-              class="text-white"
+              class="text-sky-900"
               size="24"
             />
           </button>
           <button>
-            <ng-icon name="heroCog6Tooth" class="text-white" size="24" />
+            <ng-icon name="heroCog6Tooth" class="text-sky-800" size="24" />
           </button>
           <button>
-            <ng-icon name="heroBell" class="text-white" size="24" />
+            <ng-icon name="heroBell" class="text-sky-800" size="24" />
           </button>
           <div class="ml-3 flex items-center">
             <div>
               <button
                 type="button"
                 class="flex items-center justify-center gap-2 rounded p-1 text-sm"
-                [cdkMenuTriggerFor]="menu"
+                [matMenuTriggerFor]="menu"
               >
                 <span class="sr-only">Open user menu</span>
                 <sk-avatar
@@ -103,54 +107,36 @@ import { AvatarComponent } from '../avatar/avatar.component';
 
                 <div class="flex flex-col items-start">
                   <p
-                    class="font-sans text-sm font-semibold text-gray-50 dark:text-white"
+                    class="font-sans text-sm font-semibold text-sky-900 dark:text-sky-800"
                   >
                     {{ user()?.first_name }} {{ user()?.father_name }}
                   </p>
                 </div>
               </button>
             </div>
-            <ng-template #menu>
-              <div
-                class="my-4 list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
-                id="dropdown-user"
-                cdkMenu
-              >
-                <div class="px-4 py-3" role="none">
-                  <p
-                    class="text-sm font-bold text-blue-700 dark:text-white"
-                    role="none"
-                  >
-                    {{ user()?.first_name }} {{ user()?.father_name }}
-                  </p>
-                  <p
-                    class="truncate font-sans text-sm text-gray-500 dark:text-gray-300"
-                    role="none"
-                  >
-                    {{ user()?.email }}
-                  </p>
-                </div>
-                <ul class="py-1" role="none">
-                  <li>
-                    <a
-                      routerLink="profile"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      cdkMenuItem
-                      >{{ 'PROFILE.TITLE' | translate }}</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      routerLink="change-password"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      cdkMenuItem
-                    >
-                      {{ 'CHANGE_PASSWORD.TITLE' | translate }}</a
-                    >
-                  </li>
-                </ul>
+            <mat-menu #menu="matMenu">
+              <div mat-menu-item class="py-2">
+                <p
+                  class="text-sm font-bold text-blue-700 dark:text-sky-800"
+                  role="none"
+                >
+                  {{ user()?.first_name }} {{ user()?.father_name }}
+                </p>
+                <p
+                  class="truncate font-sans text-sm text-gray-500 dark:text-gray-300"
+                  role="none"
+                >
+                  {{ user()?.email }}
+                </p>
               </div>
-            </ng-template>
+              <mat-divider />
+              <a mat-menu-item routerLink="profile">{{
+                'PROFILE.TITLE' | translate
+              }}</a>
+              <a mat-menu-item routerLink="change-password">
+                {{ 'CHANGE_PASSWORD.TITLE' | translate }}</a
+              >
+            </mat-menu>
           </div>
         </div>
       </div>
@@ -158,10 +144,10 @@ import { AvatarComponent } from '../avatar/avatar.component';
   </nav>`,
   styles: `
       .menu-item {
-        @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white;
+        @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-sky-800;
       }
       .link {
-        @apply flex gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:border-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500;
+        @apply flex gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-sky-800 dark:hover:bg-gray-700 dark:hover:text-sky-800 md:border-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500;
         &.active {
           @apply flex gap-2 rounded-lg bg-blue-200 px-4 py-2 font-semibold text-blue-700;
         }

@@ -7,17 +7,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  ImageCropperComponent,
-} from '@skooltrak/ui';
+import { CardComponent, ImageCropperComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
@@ -29,7 +26,7 @@ import { ProfileFormStore } from './profile.store';
     ReactiveFormsModule,
     CardComponent,
     TranslateModule,
-    ButtonDirective,
+    MatButton,
     AvatarComponent,
     DialogModule,
     MatFormField,
@@ -125,8 +122,8 @@ import { ProfileFormStore } from './profile.store';
             <div class="mt-2 md:col-span-4">
               <button
                 type="submit"
-                skButton
-                color="sky"
+                mat-flat-button
+                color="accent"
                 [disabled]="this.form.invalid || this.form.pristine"
               >
                 {{ 'SAVE_CHANGES' | translate }}

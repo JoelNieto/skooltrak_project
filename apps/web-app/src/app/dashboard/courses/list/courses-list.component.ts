@@ -1,17 +1,20 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroEye, heroMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, PaginatorComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import { PaginatorComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
@@ -20,11 +23,7 @@ import { CoursesStore } from '../courses.store';
   standalone: true,
   selector: 'sk-courses-list',
   imports: [
-    CardComponent,
     TranslateModule,
-    TabsComponent,
-    TabsItemComponent,
-    NgIconComponent,
     UserChipComponent,
     RouterLink,
     PaginatorComponent,
@@ -36,18 +35,17 @@ import { CoursesStore } from '../courses.store';
     MatPrefix,
     MatTableModule,
     MatIconButton,
+    MatCardModule,
     MatSortModule,
   ],
-  providers: [provideIcons({ heroMagnifyingGlass, heroEye })],
-  template: ` <sk-card>
-    <div header class="pb-2">
-      <h2
-        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
-      >
+  providers: [],
+  template: ` <mat-card>
+    <mat-card-header>
+      <mat-card-title class="font-title">
         {{ 'COURSES.TITLE' | translate }}
-      </h2>
-    </div>
-    <div class="relative">
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="relative">
       <div class="flex justify-between">
         <mat-form-field class="w-full lg:w-96">
           <mat-label for="table-search">{{
@@ -113,8 +111,8 @@ import { CoursesStore } from '../courses.store';
         [count]="store.count()"
         (paginate)="getCurrentPage($event)"
       />
-    </div>
-  </sk-card>`,
+    </mat-card-content>
+  </mat-card>`,
 })
 export class CoursesListComponent {
   public store = inject(CoursesStore);

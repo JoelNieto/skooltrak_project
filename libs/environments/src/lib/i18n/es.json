@@ -412,6 +412,15 @@
     "PLACEHOLDER": "Elegir usuarios",
     "SEARCH": "Buscar usuarios"
   },
+  "WEEK_DAYS": {
+    "FRIDAY": "Viernes",
+    "MONDAY": "Lunes",
+    "SATURDAY": "Sabado",
+    "SUNDAY": "Domingo",
+    "THURSDAY": "Jueves",
+    "TUESDAY": "Martes",
+    "WEDNESDAY": "Miercoles"
+  },
   "WELCOME": "Bienvenido, {{ name }} 👋",
   "YES": "Si"
 }

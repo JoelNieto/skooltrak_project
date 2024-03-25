@@ -3,7 +3,7 @@
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
-
+@use '@angular/material-experimental' as matx;
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
@@ -20,38 +20,27 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$skooltrak-primary: mat.define-palette(mat.$blue-palette);
-$skooltrak-accent: mat.define-palette(mat.$teal-palette, 600, 700, 800);
-$skooltrak-secondary: mat.define-palette(mat.$blue-palette, 600, 700, 800);
-
-// The warn palette is optional (defaults to red).
-$skooltrak-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$skooltrak-theme: mat.define-light-theme(
+$light-theme: matx.define-theme(
   (
     color: (
-      primary: $skooltrak-primary,
-      accent: $skooltrak-accent,
-      secondary: $skooltrak-secondary,
-      warn: $skooltrak-warn,
+      theme-type: light,
+      primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-rose-palette,
     ),
   )
 );
+// Plus imports for other components in your app.
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($skooltrak-theme);
-
-/* You can add global styles to this file, and also import other style files */
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
 
 html,
 body {
   height: 100%;
   font-weight: 400;
-  @apply bg-white dark:bg-gray-800;
+  @include mat.all-component-themes($light-theme);
 }
 body {
   margin: 0;
@@ -114,11 +103,22 @@ select:focus {
   border-right: 0 !important;
 }
 
+mat-card {
+  @include mat.elevation(0);
+}
+
 .mdc-button {
-  @apply px-5 py-2.5 uppercase rounded-lg #{!important};
-  height: unset !important;
+  @apply uppercase;
 }
 
 .mdc-tab__text-label {
   @apply uppercase;
+}
+
+mat-card-header {
+  margin-bottom: 1rem;
+}
+
+mat-card-footer {
+  @apply p-4;
 }

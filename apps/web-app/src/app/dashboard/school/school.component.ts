@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent } from '@skooltrak/ui';
 
 @Component({
   standalone: true,
   selector: 'sk-school',
   imports: [
     RouterOutlet,
-    CardComponent,
+    MatCardModule,
     TranslateModule,
     MatTabsModule,
     RouterLink,
     RouterLinkActive,
   ],
-  template: `<sk-card>
-    <div header>
-      <h2
+  template: `<mat-card>
+    <mat-card-header header>
+      <mat-card-title
         class="font-title mb-3 flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
       >
         {{ 'SCHOOL.ADMINISTRATION' | translate }}
-      </h2>
-    </div>
-    <div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
       <nav mat-tab-nav-bar [tabPanel]="panel">
         <a
           mat-tab-link
@@ -95,7 +95,7 @@ import { CardComponent } from '@skooltrak/ui';
           <router-outlet />
         </div>
       </mat-tab-nav-panel>
-    </div>
-  </sk-card>`,
+    </mat-card-content>
+  </mat-card>`,
 })
 export class SchoolComponent {}

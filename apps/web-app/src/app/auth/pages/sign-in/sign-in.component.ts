@@ -1,13 +1,18 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { CardComponent } from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-sign-in',
@@ -18,15 +23,13 @@ import { CardComponent } from '@skooltrak/ui';
     NgOptimizedImage,
     MatButton,
     RouterLink,
-    CardComponent,
+    MatCardModule,
     MatFormField,
     MatLabel,
     MatInput,
   ],
   template: `<div class="w-min-screen flex h-screen">
-    <section
-      class="w-full flex-none bg-white font-sans dark:bg-gray-800 md:w-1/2 lg:w-1/3"
-    >
+    <section class="w-full flex-none font-sans  md:w-1/2 lg:w-1/3">
       <div
         class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0"
       >
@@ -42,15 +45,15 @@ import { CardComponent } from '@skooltrak/ui';
             alt="logo"
           />
         </a>
-        <sk-card class="w-full">
-          <div header>
-            <h1
+        <mat-card class="w-full">
+          <mat-card-header>
+            <mat-card-title
               class="font-title text-xl leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl"
             >
               {{ 'SIGN_IN.TITLE' | translate }}
-            </h1>
-          </div>
-          <div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
             <form class="space-y-2" [formGroup]="form" (ngSubmit)="signIn()">
               <mat-form-field class="w-full">
                 <mat-label>
@@ -105,8 +108,8 @@ import { CardComponent } from '@skooltrak/ui';
                 >
               </p>
             </form>
-          </div>
-        </sk-card>
+          </mat-card-content>
+        </mat-card>
       </div>
     </section>
     <div class="bg grow"></div>

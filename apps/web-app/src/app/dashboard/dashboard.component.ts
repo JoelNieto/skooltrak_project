@@ -105,9 +105,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
         </ul>
       </div>
     </nav>
-    <main
-      class="relative mt-[4rem] flex flex-col items-center bg-white p-8 font-sans dark:bg-gray-900"
-    >
+    <main class="relative mt-[4rem] flex flex-col items-center p-8 font-sans">
       <div class="w-full max-w-7xl">
         <router-outlet />
       </div>

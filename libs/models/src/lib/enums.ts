@@ -42,3 +42,13 @@ export enum QuestionTypeEnum {
   BOOLEAN = 'BOOLEAN',
   MATCH = 'MATCH',
 }
+
+export const WeekDays = [
+  'MONDAY',
+  'TUESDAY',
+  'WEDNESDAY',
+  'THURSDAY',
+  'FRIDAY',
+  'SATURDAY',
+  'SUNDAY',
+];

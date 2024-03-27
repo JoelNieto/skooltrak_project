@@ -1,11 +1,17 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { PublicationObject, Table } from '@skooltrak/models';
-import { mobileStore, SupabaseService } from '@skooltrak/store';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { Publication, Table } from '@skooltrak/models';
+import { SupabaseService, mobileStore } from '@skooltrak/store';
 
 type State = {
   loading: boolean;
-  news: PublicationObject[];
+  news: Publication[];
   start: number;
   pageSize: number;
   filterText: string;
@@ -61,7 +67,7 @@ export const NewsStore = signalStore(
 
         patchState(state, {
           loading: false,
-          news: [...state.news(), ...(data as PublicationObject[])],
+          news: [...state.news(), ...(data as unknown as Publication[])],
         });
       }
 

@@ -1,34 +1,27 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-password-reset',
   standalone: true,
   imports: [
-    CardComponent,
+    MatCardModule,
     TranslateModule,
     NgOptimizedImage,
-    InputDirective,
-    LabelDirective,
+    MatFormFieldModule,
+    MatInputModule,
     ReactiveFormsModule,
-    ButtonDirective,
+    MatButtonModule,
   ],
-  template: `<div
-    class="flex min-h-screen w-screen flex-col items-center justify-center bg-gray-100 px-8 dark:bg-gray-700"
-  >
-    <a
-      href="#"
-      class=" mb-6 flex items-center text-2xl text-gray-900 dark:text-gray-100"
-    >
+  template: `<div class="flex flex-col items-center justify-center pt-24">
+    <a href="#" class=" mb-6">
       <img
         width="240"
         height="40"
@@ -37,36 +30,42 @@ import {
         alt="logo"
       />
     </a>
-    <sk-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/3 ">
-      <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
-        {{ 'RESET_PASSWORD.TITLE' | translate }}
-      </h1>
-      <h3 class="font-sans text-gray-400 dark:text-gray-100" header>
-        {{ 'RESET_PASSWORD.SUBTITLE' | translate }}
-      </h3>
-      <div>
-        <label for="email" skLabel>{{ 'PROFILE.EMAIL' | translate }}</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="user@domain.com"
-          [formControl]="emailControl"
-          skInput
-        />
-      </div>
-      <div class="flex justify-end pt-2" footer>
-        <button
-          class="w-full md:w-auto"
-          skButton
-          color="green"
-          type="submit"
-          [disabled]="emailControl.invalid"
-          (click)="requestPasswordRecovery()"
-        >
-          {{ 'RESET_PASSWORD.SEND_REQUEST' | translate }}
-        </button>
-      </div>
-    </sk-card>
+    <mat-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/4 ">
+      <mat-card-header>
+        <mat-card-title>
+          {{ 'RESET_PASSWORD.TITLE' | translate }}
+        </mat-card-title>
+        <mat-card-subtitle r>
+          {{ 'RESET_PASSWORD.SUBTITLE' | translate }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field class="w-full">
+          <mat-label for="email">{{ 'PROFILE.EMAIL' | translate }}</mat-label>
+          <input
+            type="email"
+            name="email"
+            placeholder="user@domain.com"
+            [formControl]="emailControl"
+            matInput
+          />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          <button
+            class="w-full md:w-auto"
+            mat-flat-button
+            class="tertiary"
+            type="submit"
+            [disabled]="emailControl.invalid"
+            (click)="requestPasswordRecovery()"
+          >
+            {{ 'RESET_PASSWORD.SEND_REQUEST' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
   </div>`,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,

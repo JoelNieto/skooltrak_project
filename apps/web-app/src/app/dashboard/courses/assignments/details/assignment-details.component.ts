@@ -1,94 +1,93 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  ButtonDirective,
-  CardComponent,
-  TabsComponent,
-  TabsItemComponent,
-} from '@skooltrak/ui';
 
+import { AssignmentGradesComponent } from '../grades/assignment-grades.component';
+import { AssignmentInstructionsComponent } from '../instructions/assignment-instructions.component';
+import { AssignmentStudentsWorkComponent } from '../students-work/assignment-students-work.component';
 import { AssignmentDetailsStore } from './assignment-details.store';
 
 @Component({
   standalone: true,
   selector: 'sk-assignment-details',
   imports: [
-    CardComponent,
     DatePipe,
     TranslateModule,
-    ButtonDirective,
-    TabsItemComponent,
+    MatButtonModule,
     RouterOutlet,
-    TabsComponent,
+    MatTabsModule,
     RouterLink,
+    AssignmentInstructionsComponent,
+    AssignmentStudentsWorkComponent,
+    AssignmentGradesComponent,
   ],
   providers: [AssignmentDetailsStore],
   template: `
-    <div class="flex gap-4">
-      <sk-card class="flex-1">
+    <div class="flex gap-8">
+      <div class="flex-1">
         <div header class="flex items-start justify-between">
           <div>
-            <h3
-              class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
-            >
+            <h1 class="mat-headline-2">
               {{ store.assignment()?.title }}
-            </h3>
+            </h1>
             <a
-              class="font-title text-gray-500 dark:text-gray-100"
+              class="mat-subtitle"
               routerLink="/app/courses/details/"
               [queryParams]="{ course_id: store.assignment()?.course_id }"
             >
               {{ store.assignment()?.course?.subject?.name }} /
               {{ store.assignment()?.course?.plan?.name }}
             </a>
-            <p class="mb-4 font-sans text-sky-600 dark:text-gray-100">
+            <p class="mat-body">
               {{ store.assignment()?.type?.name }}
             </p>
           </div>
-          <a skButton color="green" routerLink="edit">{{
-            'Edit' | translate
-          }}</a>
+          <button mat-flat-button class="tertiary" routerLink="edit">
+            {{ 'Edit' | translate }}
+          </button>
         </div>
         <div>
-          <sk-tabs>
-            <sk-tabs-item link="instructions">{{
-              'ASSIGNMENTS.INSTRUCTIONS' | translate
-            }}</sk-tabs-item>
-            <sk-tabs-item link="students-work">{{
-              'ASSIGNMENTS.WORK' | translate
-            }}</sk-tabs-item>
-            <sk-tabs-item link="grades">{{
-              'ASSIGNMENTS.GRADES' | translate
-            }}</sk-tabs-item>
-          </sk-tabs>
-          <router-outlet />
+          <mat-tab-group>
+            <mat-tab [label]="'ASSIGNMENTS.INSTRUCTIONS' | translate">
+              <ng-template matTabContent>
+                <sk-assignments-instructions />
+              </ng-template>
+            </mat-tab>
+            <mat-tab [label]="'ASSIGNMENTS.WORK' | translate">
+              <ng-template matTabContent>
+                <sk-assignment-students-work />
+              </ng-template>
+            </mat-tab>
+            <mat-tab [label]="'ASSIGNMENTS.GRADES' | translate">
+              <ng-template matTabContent>
+                <sk-assignment-grades />
+              </ng-template>
+            </mat-tab>
+          </mat-tab-group>
         </div>
-      </sk-card>
-      <sk-card class="w-72 ">
+      </div>
+      <div class="w-72 ">
         <div header>
-          <h2
-            class="font-title mb-3 flex text-lg leading-tight tracking-tight text-gray-700 dark:text-white"
-          >
+          <h2 class="mat-headline-4">
             {{ 'Groups' | translate }}
           </h2>
         </div>
         <div>
           @for (date of store.assignment()?.dates; track date.group.id) {
             <div class="mb-2 flex flex-col ">
-              <div
-                class="font-sans font-semibold text-gray-700 dark:text-gray-200"
-              >
+              <h4 class="mat-subtitle font-semibold">
                 {{ date.group.name }}
-              </div>
-              <div class="font-sans text-gray-500 dark:text-gray-100">
+              </h4>
+              <p class="mat-body">
                 {{ date.date | date: 'mediumDate' }}
-              </div>
+              </p>
             </div>
           }
         </div>
-      </sk-card>
+      </div>
     </div>
   `,
 })

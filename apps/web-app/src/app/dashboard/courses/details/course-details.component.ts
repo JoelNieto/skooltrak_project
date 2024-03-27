@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import { TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { CourseMeetingComponent } from '../../../components/course-meeting/course-meeting.component';
 import { CourseDetailsStore } from './course-details.store';
@@ -15,7 +15,6 @@ import { CourseDetailsStore } from './course-details.store';
   standalone: true,
   selector: 'sk-course-details',
   imports: [
-    CardComponent,
     NgClass,
     RouterLink,
     RouterLinkActive,
@@ -30,80 +29,73 @@ import { CourseDetailsStore } from './course-details.store';
   providers: [CourseDetailsStore],
   template: `
     <div>
-      <sk-card>
-        <div header>
-          <div class="justify-between md:flex">
-            <div class="mb-2">
-              <h2
-                class="font-title mb-1 text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
-              >
-                {{ store.course()?.subject?.name }}
-              </h2>
-              <h4
-                class="flex font-sans text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-gray-300"
-              >
-                {{ store.course()?.plan?.name }}
-              </h4>
-            </div>
-            <div>
-              <button mat-flat-button color="primary" (click)="showMeeting()">
-                <mat-icon>videocam</mat-icon>
-                {{ 'COURSES.OPEN_CLASS' | translate }}
-              </button>
-            </div>
-          </div>
+      <div class="justify-between md:flex">
+        <div class="mb-2">
+          <h2 class="mat-headline-3">
+            {{ store.course()?.subject?.name }}
+          </h2>
+          <h4 class="mat-subtitle">
+            {{ store.course()?.plan?.name }}
+          </h4>
         </div>
-        <nav mat-tab-nav-bar [tabPanel]="panel">
-          <nav
-            mat-tab-link
-            routerLink="news"
-            routerLinkActive
-            #news="routerLinkActive"
-            [active]="news.isActive"
-          >
-            {{ 'News' | translate }}
-          </nav>
-          <nav
-            mat-tab-link
-            routerLink="schedule"
-            routerLinkActive
-            #schedule="routerLinkActive"
-            [active]="schedule.isActive"
-          >
-            {{ 'SCHEDULE' | translate }}
-          </nav>
-          <nav
-            mat-tab-link
-            routerLink="grades"
-            routerLinkActive
-            #grades="routerLinkActive"
-            [active]="grades.isActive"
-          >
-            {{ 'GRADES.TITLE' | translate }}
-          </nav>
-          <nav
-            mat-tab-link
-            routerLink="files"
-            routerLinkActive
-            #files="routerLinkActive"
-            [active]="files.isActive"
-          >
-            {{ 'File' | translate }}
-          </nav>
-          <nav
-            mat-tab-link
-            routerLink="students"
-            routerLinkActive
-            #students="routerLinkActive"
-            [active]="students.isActive"
-          >
-            {{ 'Students' | translate }}
-          </nav>
+        <div>
+          <button mat-flat-button color="primary" (click)="showMeeting()">
+            <mat-icon>videocam</mat-icon>
+            {{ 'COURSES.OPEN_CLASS' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <nav mat-tab-nav-bar [tabPanel]="panel">
+        <nav
+          mat-tab-link
+          routerLink="news"
+          routerLinkActive
+          #news="routerLinkActive"
+          [active]="news.isActive"
+        >
+          {{ 'News' | translate }}
         </nav>
-        <mat-tab-nav-panel #panel>
-          <router-outlet />
-        </mat-tab-nav-panel>
-      </sk-card>
+        <nav
+          mat-tab-link
+          routerLink="schedule"
+          routerLinkActive
+          #schedule="routerLinkActive"
+          [active]="schedule.isActive"
+        >
+          {{ 'SCHEDULE' | translate }}
+        </nav>
+        <nav
+          mat-tab-link
+          routerLink="grades"
+          routerLinkActive
+          #grades="routerLinkActive"
+          [active]="grades.isActive"
+        >
+          {{ 'GRADES.TITLE' | translate }}
+        </nav>
+        <nav
+          mat-tab-link
+          routerLink="files"
+          routerLinkActive
+          #files="routerLinkActive"
+          [active]="files.isActive"
+        >
+          {{ 'File' | translate }}
+        </nav>
+        <nav
+          mat-tab-link
+          routerLink="students"
+          routerLinkActive
+          #students="routerLinkActive"
+          [active]="students.isActive"
+        >
+          {{ 'Students' | translate }}
+        </nav>
+      </nav>
+      <mat-tab-nav-panel #panel>
+        <router-outlet />
+      </mat-tab-nav-panel>
     </div>
   `,
 })

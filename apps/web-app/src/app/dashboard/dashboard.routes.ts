@@ -16,8 +16,8 @@ export const dashboardRoutes: Routes = [
         path: 'schedule',
         title: 'SCHEDULE',
         loadComponent: () =>
-          import('./schedule/schedule.component').then(
-            (x) => x.ScheduleComponent,
+          import('./home/schedule/home-schedule.component').then(
+            (x) => x.HomeScheduleComponent,
           ),
       },
       {
@@ -54,12 +54,7 @@ export const dashboardRoutes: Routes = [
         loadChildren: () =>
           import('./messaging/messaging.routes').then((x) => x.messagingRoutes),
       },
-      {
-        path: 'settings',
-        title: 'Settings',
-        loadChildren: () =>
-          import('./settings/settings.routes').then((x) => x.settingRoutes),
-      },
+
       {
         path: 'student-profile',
         title: 'STUDENTS.PROFILE',

@@ -46,7 +46,7 @@ export const SchoolConnectorStore = signalStore(
             showCancelButton: true,
             cancelButtonText: 'Not',
             confirmButtonText: 'Yes, confirm',
-            color: 'accent',
+            color: 'tertiary',
           })
           .pipe(filter((response) => !!response))
           .subscribe({ next: () => this.addSchoolConnection(data) });

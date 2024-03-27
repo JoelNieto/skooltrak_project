@@ -1,141 +1,259 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgClass } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
+import { ConfirmationService } from '@skooltrak/ui';
+import { filter, tap } from 'rxjs';
 
 import { AvatarComponent } from '../components/avatar/avatar.component';
-import { NavbarComponent } from '../components/navbar/navbar.component';
 import { SchoolSelectorComponent } from '../components/school-selector/school-selector.component';
 
 @Component({
   selector: 'sk-dashboard',
   standalone: true,
   imports: [
-    NavbarComponent,
     AvatarComponent,
     TranslateModule,
     RouterOutlet,
+    NgClass,
     RouterLink,
     RouterLinkActive,
-    MatIcon,
+    MatListModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatSidenavModule,
   ],
   providers: [],
-  template: `<sk-navbar />
-    <nav
-      class="sticky top-[4rem] z-10 flex w-full items-center justify-between border-b border-gray-200 bg-white px-12 dark:border-gray-600 dark:bg-gray-700"
-    >
-      <ul class="flex gap-8">
-        <li>
-          <a
-            routerLink="home"
-            class="link"
-            routerLinkActive="active"
-            #home="routerLinkActive"
-            ><mat-icon [color]="home.isActive ? 'primary' : ''">house</mat-icon>
-            {{ 'HOME' | translate }}</a
-          >
-        </li>
-        <li>
-          <a
-            routerLink="schedule"
-            class="link"
-            routerLinkActive="active"
-            #schedule="routerLinkActive"
-            ><mat-icon [color]="schedule.isActive ? 'primary' : ''"
-              >calendar_month</mat-icon
-            >{{ 'SCHEDULE' | translate }}</a
-          >
-        </li>
-        <li>
-          <a
-            routerLink="courses"
-            class="link"
-            routerLinkActive="active"
-            #courses="routerLinkActive"
-            ><mat-icon [color]="courses.isActive ? 'primary' : ''">dvr</mat-icon
-            >{{ 'COURSES.TITLE' | translate }}</a
-          >
-        </li>
-        <li>
-          <a
-            routerLink="quizzes"
-            class="link"
-            routerLinkActive="active"
-            #quizzes="routerLinkActive"
-            ><mat-icon [color]="quizzes.isActive ? 'primary' : ''"
-              >quiz</mat-icon
-            >{{ 'QUIZZES.TITLE' | translate }}</a
-          >
-        </li>
-      </ul>
-      <div>
-        <ul class="flex text-sm items-center">
-          <li>
-            <button
-              class="flex w-full items-center gap-3 rounded-lg px-4 py-2 font-sans text-sm dark:text-gray-100"
-              (click)="changeSchool()"
-            >
-              @if (auth.currentSchool()?.crest_url) {
+  template: `
+    <mat-toolbar class="fixed top-0 z-10 toolbar flex justify-between">
+      <div class="flex items-center">
+        <button aria-label="Menu icon" (click)="toggleMenu()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <a routerLink="home">
+          <img
+            src="assets/images/skooltrak-white.svg"
+            class="ml-3 h-7"
+            alt="Skooltrak Logo"
+          />
+        </a>
+      </div>
+      <div class="flex gap-2">
+        <button mat-raised-button (click)="changeSchool()">
+          @if (auth.currentSchool(); as school) {
+            <div class="flex items-center gap-2">
+              @if (school.crest_url) {
                 <sk-avatar
                   [fileName]="auth.currentSchool()?.crest_url!"
                   bucket="crests"
                   class="h-8"
                 />
+              } @else {
+                <img
+                  src="assets/images/skooltrak-logo.svg"
+                  class="h-8"
+                  alt="Skooltrak Logo"
+                />
               }
-              {{
-                auth.currentSchool()?.short_name ??
-                  ('Select school' | translate)
-              }}
-            </button>
-          </li>
-          @if (auth.isAdmin()) {
-            <li>
-              <a routerLink="school" class="link" routerLinkActive="active"
-                ><mat-icon>domain</mat-icon>{{ 'SCHOOL.TITLE' | translate }}</a
-              >
-            </li>
+              {{ school?.short_name ?? ('Select school' | translate) }}
+            </div>
           }
-          <li>
-            <button class="link" (click)="auth.signOut()">
-              <mat-icon>logout</mat-icon>{{ 'SIGN_OUT.TITLE' | translate }}
-            </button>
-          </li>
-        </ul>
+        </button>
+        <button mat-icon-button routerLink="messaging">
+          <mat-icon>chat</mat-icon>
+        </button>
       </div>
-    </nav>
-    <main
-      class="relative mt-[4rem] flex flex-col items-center bg-white p-8 font-sans dark:bg-gray-900"
-    >
-      <div class="w-full max-w-7xl">
-        <router-outlet />
-      </div>
-    </main> `,
-  styles: [
-    `
-      main {
-        min-height: calc(100vh - 8rem);
-      }
+    </mat-toolbar>
+    <mat-sidenav-container autosize class="h-full">
+      <mat-sidenav
+        [mode]="isMobile() ? 'over' : 'side'"
+        [opened]="!isMobile()"
+        [ngClass]="isCollapsed() ? 'w-20' : 'w-48'"
+      >
+        <div
+          class="flex flex-col justify-between h-screen pt-16 pb-4 px-2 pr-3 "
+        >
+          <div>
+            @if (auth.user(); as user) {
+              <div
+                class="flex flex-col items-center p-3 cursor-pointer"
+                [matMenuTriggerFor]="menu"
+              >
+                <sk-avatar
+                  [fileName]="user.avatar_url"
+                  bucket="avatars"
+                  [rounded]="true"
+                  class="h-10 w-10"
+                />
+                @if (!isCollapsed()) {
+                  <p class="mat-subtitle-2">
+                    {{ user.first_name }} {{ user.father_name }}
+                  </p>
+                  <p class="mat-caption">{{ user.email }}</p>
+                }
+              </div>
+              <mat-menu #menu="matMenu">
+                <a mat-menu-item routerLink="profile"
+                  ><mat-icon>account_circle</mat-icon>
+                  {{ 'PROFILE.TITLE' | translate }}</a
+                >
+                <a mat-menu-item routerLink="change-password">
+                  <mat-icon>password</mat-icon>
+                  {{ 'CHANGE_PASSWORD.TITLE' | translate }}</a
+                >
+                <button mat-menu-item (click)="logout()">
+                  <mat-icon>logout</mat-icon>
+                  {{ 'AUTH.LOGOUT' | translate }}
+                </button>
+              </mat-menu>
+            }
+            <mat-nav-list>
+              <a
+                mat-list-item
+                routerLink="home"
+                routerLinkActive="active"
+                #home="routerLinkActive"
+                [activated]="home.isActive"
+                ><mat-icon matListItemIcon>house</mat-icon>
+                @if (!isCollapsed()) {
+                  <div matListItemTitle>{{ 'HOME' | translate }}</div>
+                }
+              </a>
+              <a
+                mat-list-item
+                routerLink="schedule"
+                routerLinkActive="active"
+                #schedule="routerLinkActive"
+                [activated]="schedule.isActive"
+                ><mat-icon matListItemIcon>calendar_month</mat-icon>
+                @if (!isCollapsed()) {
+                  <div matListItemTitle>{{ 'SCHEDULE' | translate }}</div>
+                }
+              </a>
+              <a
+                mat-list-item
+                routerLink="courses"
+                routerLinkActive="active"
+                #courses="routerLinkActive"
+                [activated]="courses.isActive"
+                ><mat-icon matListItemIcon>dvr</mat-icon>
+                @if (!isCollapsed()) {
+                  <div matListItemTitle>{{ 'COURSES.TITLE' | translate }}</div>
+                }
+              </a>
+              <a
+                mat-list-item
+                routerLink="quizzes"
+                routerLinkActive="active"
+                #quizzes="routerLinkActive"
+                [activated]="quizzes.isActive"
+                ><mat-icon matListItemIcon>quiz</mat-icon>
+                @if (!isCollapsed()) {
+                  <div matListItemTitle>{{ 'QUIZZES.TITLE' | translate }}</div>
+                }
+              </a>
+            </mat-nav-list>
+          </div>
 
-      .link {
-        @apply mt-1 flex items-center gap-3 border-b-4 border-white px-4 py-3 font-sans text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white;
-        &.active {
-          @apply border-sky-600 text-gray-800 dark:text-gray-500;
-        }
-      }
-    `,
-  ],
+          <mat-nav-list>
+            @if (auth.isAdmin()) {
+              <a
+                mat-list-item
+                routerLink="school"
+                routerLinkActive="active"
+                #school="routerLinkActive"
+                [activated]="school.isActive"
+                ><mat-icon matListItemIcon>domain</mat-icon>
+                <div matListItemTitle>{{ 'SCHOOL.TITLE' | translate }}</div></a
+              >
+            }
+          </mat-nav-list>
+        </div>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <main class="pt-14">
+          <div class="mx-auto p-4 xl:p-6">
+            <router-outlet />
+          </div>
+        </main>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  `,
+  styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   public auth = inject(webStore.AuthStore);
   private dialog = inject(Dialog);
+  private sidenav = viewChild.required(MatSidenav);
+  private observer = inject(BreakpointObserver);
+  public isMobile = signal(true);
+  public isCollapsed = signal(false);
+  private confirmation = inject(ConfirmationService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
+
+  public ngOnInit(): void {
+    this.observer.observe(['(max-width: 800px)']).subscribe({
+      next: (screenSize) => {
+        this.isMobile.set(screenSize.matches);
+      },
+    });
+  }
 
   public changeSchool(): void {
     this.dialog.open(SchoolSelectorComponent, {
       width: '38rem',
       maxWidth: '90%',
     });
+  }
+
+  public toggleMenu(): void {
+    if (this.isMobile()) {
+      this.sidenav().toggle();
+      this.isCollapsed.set(false);
+
+      return;
+    }
+    this.sidenav().open();
+    this.isCollapsed.update((value) => !value);
+  }
+
+  public logout(): void {
+    this.confirmation
+      .openDialog({ title: 'AUTH.LOGOUT_QUESTION', showCancelButton: true })
+      .pipe(
+        filter((res) => !!res),
+        tap(() =>
+          this.snackBar.open(this.translate.instant('AUTH.LOGGED_OUT')),
+        ),
+      )
+      .subscribe({ next: () => this.router.navigate(['/']) });
   }
 }

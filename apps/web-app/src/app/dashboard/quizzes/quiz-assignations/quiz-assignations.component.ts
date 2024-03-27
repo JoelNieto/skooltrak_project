@@ -13,7 +13,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { QuizAssignation } from '@skooltrak/models';
-import { CardComponent, ConfirmationService } from '@skooltrak/ui';
+import { ConfirmationService } from '@skooltrak/ui';
 
 import { AssignationFormComponent } from '../assignation-form/assignation-form.component';
 import { QuizAssignationsStore } from './quiz-assignations.store';
@@ -22,7 +22,6 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
   selector: 'sk-quiz-assignations',
   standalone: true,
   imports: [
-    CardComponent,
     TranslateModule,
     MatButton,
     MatIcon,
@@ -32,19 +31,15 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
     MatMenuModule,
   ],
   providers: [QuizAssignationsStore],
-  template: `<sk-card
-    ><div header>
-      <h2
-        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
-      >
+  template: `<div class="flex items-center justify-between">
+      <h2 class="mat-headline-3">
         {{ 'QUIZZES.ASSIGNATIONS' | translate }}
       </h2>
-    </div>
-    <div class="flex justify-end">
       <button mat-flat-button color="accent" (click)="newAssignation()">
         <mat-icon>add</mat-icon>{{ 'NEW' | translate }}
       </button>
     </div>
+
     <table mat-table [dataSource]="state.assignations()">
       <ng-container matColumnDef="quiz">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -112,8 +107,7 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-  </sk-card>`,
+    </table> `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

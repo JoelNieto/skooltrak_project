@@ -11,6 +11,7 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
@@ -20,7 +21,6 @@ import {
   ConfirmationService,
   EmptyTableComponent,
   LoadingComponent,
-  PaginatorComponent,
 } from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './plans-form.component';
@@ -31,7 +31,7 @@ import { SchoolPlansStore } from './plans.store';
   standalone: true,
   imports: [
     TranslateModule,
-    PaginatorComponent,
+    MatPaginatorModule,
     DatePipe,
     DialogModule,
     MatButton,
@@ -126,7 +126,14 @@ import { SchoolPlansStore } from './plans.store';
       <tr mat-row *matRowDef="let row; columns: displayedCols"></tr>
     </table>
 
-    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
+    <mat-paginator
+      [length]="store.count()"
+      [pageIndex]="store.start()"
+      [pageSize]="store.pageSize()"
+      [pageSizeOptions]="[5, 10, 15]"
+      [showFirstLastButtons]="true"
+      (page)="pageEvent($event)"
+    />
   </div>`,
 })
 export class StudyPlansComponent {
@@ -142,9 +149,9 @@ export class StudyPlansComponent {
     'actions',
   ];
 
-  public getCurrentPage(pagination: { start: number; pageSize: number }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { start, pageSize });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public changeSort(sort: Sort): void {

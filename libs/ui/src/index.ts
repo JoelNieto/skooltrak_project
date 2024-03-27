@@ -4,7 +4,6 @@ export * from './lib/components/confirmation/confirmation.type';
 export * from './lib/components/empty-table/empty-table.component';
 export * from './lib/components/image-cropper/image-cropper.component';
 export * from './lib/components/loading/loading.component';
-export * from './lib/components/paginator/paginator.component';
 export * from './lib/components/select/select.component';
 export * from './lib/components/tabs-item/tabs-item.component';
 export * from './lib/components/tabs/tabs.component';

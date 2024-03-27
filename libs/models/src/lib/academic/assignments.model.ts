@@ -1,4 +1,4 @@
-import { Course, EntityBase, User } from '@skooltrak/models';
+import { ClassGroup, Course, EntityBase, User } from '@skooltrak/models';
 
 export type AssignmentType = {
   id: string;
@@ -6,6 +6,14 @@ export type AssignmentType = {
   is_urgent: boolean;
   is_summative: string;
 };
+
+export type GroupAssignments = {
+  group_id: string;
+  assignment: Partial<Assignment>;
+  group: ClassGroup;
+  date: Date;
+  created_at: string;
+}[];
 
 export type Assignment = EntityBase & {
   type_id: string;

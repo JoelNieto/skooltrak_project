@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -16,18 +17,16 @@ import { provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course, Grade } from '@skooltrak/models';
-import { CardComponent, SelectComponent } from '@skooltrak/ui';
 
 import { GradesFormStore } from './grades-form.store';
 
 @Component({
   standalone: true,
   imports: [
-    CardComponent,
+    MatCardModule,
     TranslateModule,
     MatButtonModule,
     MatIcon,
-    SelectComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -36,18 +35,18 @@ import { GradesFormStore } from './grades-form.store';
   ],
   providers: [GradesFormStore, provideIcons({ heroXMark })],
   template: `<form [formGroup]="gradeForm" (ngSubmit)="saveGrade()">
-    <sk-card>
-      <div class="flex  justify-between items-center" header>
-        <h3
-          class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
-        >
-          {{ 'GRADES.DETAILS' | translate }}
-        </h3>
-        <button mat-icon-button (click)="dialogRef.close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-      <div>
+    <mat-card>
+      <mat-card-header>
+        <div class="flex items-start justify-between w-full">
+          <mat-card-title>
+            {{ 'GRADES.DETAILS' | translate }}
+          </mat-card-title>
+          <button mat-icon-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
         <div class="grid grid-cols-2 gap-2">
           <mat-form-field>
             <mat-label for="title">{{ 'GRADES.NAME' | translate }}</mat-label>
@@ -111,18 +110,15 @@ import { GradesFormStore } from './grades-form.store';
             ></textarea>
           </mat-form-field>
         </div>
-      </div>
-      <div footer class="flex justify-end pt-6">
-        <button
-          mat-flat-button
-          color="accent"
-          type="submit"
-          [disabled]="gradeForm.invalid"
-        >
-          {{ 'GRADES.SAVE_CHANGES' | translate }}
-        </button>
-      </div>
-    </sk-card>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          <button mat-flat-button type="submit" [disabled]="gradeForm.invalid">
+            {{ 'GRADES.SAVE_CHANGES' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
   </form>`,
 })
 export class GradesFormComponent implements OnInit {

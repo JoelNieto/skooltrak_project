@@ -37,7 +37,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
         />
       }
 
-      <h4 class="font-title text-xl text-gray-700 dark:text-gray-100">
+      <h4 class="mat-headline-5">
         {{ school()?.full_name }}
       </h4>
       <div>

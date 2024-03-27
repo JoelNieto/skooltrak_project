@@ -1,55 +1,66 @@
 import { DIALOG_DATA, DialogModule, DialogRef } from '@angular/cdk/dialog';
+import { NgClass } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { CardComponent } from '../card/card.component';
 import { ConfirmationOptions } from './confirmation.type';
 
 @Component({
   selector: 'sk-confirmation',
   standalone: true,
-  imports: [CardComponent, TranslateModule, DialogModule, MatButton, MatIcon],
+  imports: [
+    MatCardModule,
+    TranslateModule,
+    DialogModule,
+    MatButton,
+    MatIcon,
+    NgClass,
+  ],
   providers: [],
   styles: `
     .mat-icon{
       transform: scale(2);
     }`,
   template: `
-    <sk-card>
-      <div class="flex justify-center">
-        <mat-icon [color]="options.color">{{ options.icon }}</mat-icon>
-      </div>
-      <p
-        class="font-title my-3 text-center text-lg font-semibold text-gray-600 dark:text-gray-100"
-        [innerHTML]="options.title | translate"
-      ></p>
-      <p
-        class="my-3 text-center text-sm text-gray-400 dark:text-gray-300"
-        [innerHTML]="options.description ?? '' | translate"
-      ></p>
-      <div footer class="my-3 flex justify-around px-4">
-        @if (options.showCancelButton) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title
+          [innerHTML]="options.title | translate"
+        ></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p
+          class="mat-body"
+          [innerHTML]="options.description ?? '' | translate"
+        ></p>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          @if (options.showCancelButton) {
+            <button
+              mat-stroked-button
+              [ngClass]="options.color"
+              cdkFocusInitial
+              (click)="dialogRef.close(false)"
+            >
+              {{
+                options.cancelButtonText ?? 'Confirmation.Cancel' | translate
+              }}
+            </button>
+          }
           <button
-            mat-button
-            [color]="options.color"
-            cdkFocusInitial
-            (click)="dialogRef.close(false)"
+            mat-flat-button
+            (click)="dialogRef.close(true)"
+            [ngClass]="options.color"
           >
-            {{ options.cancelButtonText ?? 'Confirmation.Cancel' | translate }}
+            {{ options.confirmButtonText ?? 'Confirm' | translate }}
           </button>
-        }
-        <button
-          mat-flat-button
-          class="rounded-full px-5 py-2.5 font-sans text-white"
-          [color]="options.color"
-          (click)="dialogRef.close(true)"
-        >
-          {{ options.confirmButtonText ?? 'Confirm' | translate }}
-        </button>
-      </div>
-    </sk-card>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
   `,
 })
 export class ConfirmationComponent implements OnInit {

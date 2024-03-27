@@ -7,13 +7,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
-import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { CardComponent } from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './plans-form.store';
@@ -23,77 +24,71 @@ import { PlansFormStore } from './plans-form.store';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CardComponent,
+    MatCardModule,
     TranslateModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatButton,
-    MatIconButton,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
     MatIcon,
   ],
   providers: [PlansFormStore],
-  template: `<sk-card>
-    <div class="flex items-baseline justify-between" header>
-      <h3
-        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
-      >
-        {{ 'PLANS.DETAILS' | translate }}
-      </h3>
-      <button mat-icon-button (click)="dialogRef.close()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <form
-      [formGroup]="form"
-      class="flex flex-col space-y-1"
-      (ngSubmit)="saveChanges()"
-    >
-      <mat-form-field>
-        <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
-        <input type="text" formControlName="name" matInput />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label for="degree_id">{{ 'PLANS.DEGREE' | translate }}</mat-label>
-        <mat-select formControlName="degree_id">
-          @for (degree of store.degrees(); track degree.id) {
-            <mat-option [value]="degree.id">{{ degree.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label for="year">{{ 'PLANS.YEAR' | translate }}</mat-label>
-        <mat-select label="name" formControlName="year">
-          <mat-option [value]="-1">Pre-Kinder</mat-option>
-          <mat-option [value]="0">Kinder</mat-option>
-          <mat-option [value]="1">1</mat-option>
-          <mat-option [value]="2">2</mat-option>
-          <mat-option [value]="3">3</mat-option>
-          <mat-option [value]="4">4</mat-option>
-          <mat-option [value]="5">5</mat-option>
-          <mat-option [value]="6">6</mat-option>
-          <mat-option [value]="7">7</mat-option>
-          <mat-option [value]="8">8</mat-option>
-          <mat-option [value]="9">9</mat-option>
-          <mat-option [value]="10">10</mat-option>
-          <mat-option [value]="11">11</mat-option>
-          <mat-option [value]="12">12</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div class="flex justify-end">
-        <button
-          mat-flat-button
-          color="accent"
-          type="submit"
-          [disabled]="form.invalid"
-        >
-          {{ 'SAVE_CHANGES' | translate }}
-        </button>
-      </div>
-    </form>
-  </sk-card>`,
+  template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          {{ 'PLANS.DETAILS' | translate }}
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="flex flex-col space-y-1">
+        <mat-form-field>
+          <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
+          <input type="text" formControlName="name" matInput />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label for="degree_id">{{
+            'PLANS.DEGREE' | translate
+          }}</mat-label>
+          <mat-select formControlName="degree_id">
+            @for (degree of store.degrees(); track degree.id) {
+              <mat-option [value]="degree.id">{{ degree.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label for="year">{{ 'PLANS.YEAR' | translate }}</mat-label>
+          <mat-select label="name" formControlName="year">
+            <mat-option [value]="-1">Pre-Kinder</mat-option>
+            <mat-option [value]="0">Kinder</mat-option>
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="6">6</mat-option>
+            <mat-option [value]="7">7</mat-option>
+            <mat-option [value]="8">8</mat-option>
+            <mat-option [value]="9">9</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="11">11</mat-option>
+            <mat-option [value]="12">12</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          <button mat-stroked-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+            {{ 'CONFIRMATION.CANCEL' | translate }}
+          </button>
+          <button mat-flat-button type="submit" [disabled]="form.invalid">
+            {{ 'SAVE_CHANGES' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
+  </form>`,
 })
 export class StudyPlansFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<StudyPlan>>);

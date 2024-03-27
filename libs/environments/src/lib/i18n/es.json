@@ -37,6 +37,8 @@
   },
   "AUTH": {
     "LOGGED_OUT": "Sesión finalizada",
+    "LOGOUT": "Cerrar sesión",
+    "LOGOUT_QUESTION": "Desea cerrar sesión?",
     "WRONG_CREDENTIALS": "Credenciales incorrectas"
   },
   "AUTH_FAILURE": {
@@ -412,6 +414,15 @@
     "NOT_FOUND": "Sin usuarios encontrados",
     "PLACEHOLDER": "Elegir usuarios",
     "SEARCH": "Buscar usuarios"
+  },
+  "WEEK_DAYS": {
+    "FRIDAY": "Viernes",
+    "MONDAY": "Lunes",
+    "SATURDAY": "Sabado",
+    "SUNDAY": "Domingo",
+    "THURSDAY": "Jueves",
+    "TUESDAY": "Martes",
+    "WEDNESDAY": "Miercoles"
   },
   "WELCOME": "Bienvenido, {{ name }} 👋",
   "YES": "Si"

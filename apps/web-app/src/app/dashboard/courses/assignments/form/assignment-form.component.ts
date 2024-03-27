@@ -22,7 +22,6 @@ import { MatButton } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
@@ -31,7 +30,6 @@ import { DropzoneCdkModule, FileInputValue } from '@ngx-dropzone/cdk';
 import { DropzoneMaterialModule } from '@ngx-dropzone/material';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 import { asapScheduler } from 'rxjs';
 
 import { AssignmentFormStore } from './assignment-form.store';
@@ -40,10 +38,7 @@ import { AssignmentFormStore } from './assignment-form.store';
   selector: 'sk-assignment-form',
   standalone: true,
   imports: [
-    CardComponent,
     TranslateModule,
-    TabsComponent,
-    TabsItemComponent,
     MatButton,
     MatIconModule,
     ReactiveFormsModule,
@@ -61,15 +56,13 @@ import { AssignmentFormStore } from './assignment-form.store';
   providers: [AssignmentFormStore],
   template: `
     <form
-      class="flex gap-4"
+      class="flex gap-8"
       [formGroup]="assignmentForm"
       (ngSubmit)="saveAssignment()"
     >
-      <sk-card class="flex-1">
+      <div class="flex-1">
         <div class="flex items-start justify-between" header>
-          <h3
-            class="font-title mb-4 text-2xl  text-gray-700 dark:text-gray-100"
-          >
+          <h3 class="mat-headline-3">
             {{ (id() ? 'ASSIGNMENTS.EDIT' : 'ASSIGNMENTS.NEW') | translate }}
           </h3>
         </div>
@@ -146,12 +139,10 @@ import { AssignmentFormStore } from './assignment-form.store';
             {{ 'SAVE_CHANGES' | translate }}
           </button>
         </div>
-      </sk-card>
-      <sk-card class="w-72 flex-none">
-        <div header>
-          <h2
-            class="font-title mb-1 flex text-lg leading-tight tracking-tight text-gray-700 dark:text-white"
-          >
+      </div>
+      <div class="w-72 flex-none">
+        <div>
+          <h2 class="mat-headline-4">
             {{ 'GROUPS.DATES' | translate }}
           </h2>
         </div>
@@ -171,7 +162,7 @@ import { AssignmentFormStore } from './assignment-form.store';
             </ng-container>
           }
         </div>
-      </sk-card>
+      </div>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

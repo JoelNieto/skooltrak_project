@@ -6,6 +6,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import {
   MatFormField,
   MatLabel,
@@ -17,7 +18,7 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { PaginatorComponent, UtilService } from '@skooltrak/ui';
+import { UtilService } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolCoursesFormComponent } from './courses-form.component';
@@ -29,7 +30,7 @@ import { SchoolCoursesStore } from './courses.store';
   imports: [
     TranslateModule,
     UserChipComponent,
-    PaginatorComponent,
+    MatPaginatorModule,
     DatePipe,
     RouterLink,
     MatSelectModule,
@@ -114,11 +115,7 @@ import { SchoolCoursesStore } from './courses.store';
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <a
-              mat-menu-item
-              routerLink="../../courses/details"
-              [queryParams]="{ course_id: item.id }"
-            >
+            <a mat-menu-item [routerLink]="['/app/courses', item.id]">
               <mat-icon color="primary">visibility</mat-icon>
               <span>{{ 'ACTIONS.DETAILS' | translate }}</span>
             </a>
@@ -132,7 +129,14 @@ import { SchoolCoursesStore } from './courses.store';
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
+    <mat-paginator
+      [length]="store.count()"
+      [pageIndex]="store.start()"
+      [pageSize]="store.pageSize()"
+      [pageSizeOptions]="[5, 10, 15]"
+      [showFirstLastButtons]="true"
+      (page)="pageEvent($event)"
+    />
   </div>`,
 })
 export class SchoolCoursesComponent implements OnInit {
@@ -166,9 +170,9 @@ export class SchoolCoursesComponent implements OnInit {
     });
   }
 
-  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { start, pageSize });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public createCourse(): void {

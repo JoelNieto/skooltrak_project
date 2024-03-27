@@ -5,76 +5,76 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  InputDirective,
-  LabelDirective,
-} from '@skooltrak/ui';
 
 @Component({
   selector: 'sk-change-password',
   standalone: true,
   imports: [
-    CardComponent,
+    MatCardModule,
     ReactiveFormsModule,
-    ButtonDirective,
-    InputDirective,
-    LabelDirective,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
     TranslateModule,
   ],
-  template: `<div
-    class="flex min-h-screen w-screen flex-col items-center justify-center bg-gray-100 px-8 dark:bg-gray-700"
-  >
-    <sk-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/3 ">
-      <h1 class="font-title text-2xl text-gray-700 dark:text-gray-100" header>
-        {{ 'CHANGE_PASSWORD.TITLE' | translate }}
-      </h1>
-      <h3 class="font-sans text-gray-400 dark:text-gray-100" header>
-        {{ 'CHANGE_PASSWORD.SUBTITLE' | translate }}
-      </h3>
-      <form [formGroup]="form" class="flex flex-col gap-2 mb-3">
-        <div>
-          <label for="new_password" skLabel>{{
-            'CHANGE_PASSWORD.NEW_PASSWORD' | translate
-          }}</label>
-          <input
-            formControlName="newPassword"
-            type="password"
-            name="new_password"
-            placeholder="*******"
-            skInput
-          />
-        </div>
-        <div>
-          <label for="confirm_password" skLabel>{{
-            'CHANGE_PASSWORD.CONFIRM_PASSWORD' | translate
-          }}</label>
-          <input
-            formControlName="confirmPassword"
-            type="password"
-            name="confirm_password"
-            placeholder="*******"
-            skInput
-          />
-        </div>
-      </form>
-
-      <div class="flex justify-end pt-2" footer>
-        <button
-          class="w-full md:w-auto"
-          skButton
-          color="green"
-          [disabled]="form.invalid"
-          type="submit"
-          (click)="changePassword()"
-        >
-          {{ 'CHANGE_PASSWORD.SET_PASSWORD' | translate }}
-        </button>
-      </div>
-    </sk-card>
+  template: `<div class="flex flex-col items-center justify-center">
+    <mat-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/3 ">
+      <mat-card-header>
+        <mat-card-title>
+          {{ 'CHANGE_PASSWORD.TITLE' | translate }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ 'CHANGE_PASSWORD.SUBTITLE' | translate }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" class="flex flex-col gap-2">
+          <mat-form-field>
+            <mat-label for="new_password">{{
+              'CHANGE_PASSWORD.NEW_PASSWORD' | translate
+            }}</mat-label>
+            <input
+              formControlName="newPassword"
+              type="password"
+              name="new_password"
+              placeholder="*******"
+              matInput
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label for="confirm_password">{{
+              'CHANGE_PASSWORD.CONFIRM_PASSWORD' | translate
+            }}</mat-label>
+            <input
+              formControlName="confirmPassword"
+              type="password"
+              name="confirm_password"
+              placeholder="*******"
+              matInput
+            />
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions>
+          <button
+            class="w-full md:w-auto"
+            mat-flat-button
+            [disabled]="form.invalid"
+            type="submit"
+            (click)="changePassword()"
+          >
+            {{ 'CHANGE_PASSWORD.SET_PASSWORD' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
   </div>`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

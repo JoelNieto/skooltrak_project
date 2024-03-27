@@ -2,17 +2,21 @@ import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { CardComponent, PaginatorComponent } from '@skooltrak/ui';
 
 import { AssignationFormComponent } from '../assignation-form/assignation-form.component';
 import { QuizzesStore } from '../quizzes.store';
@@ -21,7 +25,6 @@ import { QuizzesStore } from '../quizzes.store';
   selector: 'sk-quizzes-list',
   standalone: true,
   imports: [
-    CardComponent,
     MatButton,
     MatFormField,
     MatLabel,
@@ -35,18 +38,15 @@ import { QuizzesStore } from '../quizzes.store';
     MatMenuModule,
     MatIconButton,
     RouterLink,
-    PaginatorComponent,
     MatSortModule,
     NgClass,
+    MatPaginatorModule,
   ],
-  template: `<sk-card>
-    <div header class="pb-2">
-      <h2
-        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
-      >
-        {{ 'QUIZZES.TITLE' | translate }}
-      </h2>
-    </div>
+  template: `
+    <h1 class="mat-headline-3">
+      {{ 'QUIZZES.TITLE' | translate }}
+    </h1>
+
     <div class="flex justify-between items-baseline">
       <mat-form-field class="w-96" appearance="outline">
         <mat-label>{{ 'SEARCH.TITLE' | translate }}</mat-label>
@@ -58,11 +58,11 @@ import { QuizzesStore } from '../quizzes.store';
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
       <div class="flex gap-3">
-        <button mat-flat-button color="primary" routerLink="../assignations">
+        <button mat-stroked-button routerLink="../assignations">
           <mat-icon>event_available</mat-icon>
           {{ 'QUIZZES.ASSIGNATIONS' | translate }}
         </button>
-        <button mat-flat-button color="accent" routerLink="../new">
+        <button mat-flat-button routerLink="../new">
           <mat-icon>add</mat-icon>
           {{ 'NEW' | translate }}
         </button>
@@ -121,9 +121,7 @@ import { QuizzesStore } from '../quizzes.store';
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'ACTIONS.TITLE' | translate }}
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
@@ -161,8 +159,15 @@ import { QuizzesStore } from '../quizzes.store';
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
-  </sk-card>`,
+    <mat-paginator
+      [length]="store.count()"
+      [pageIndex]="store.start()"
+      [pageSize]="store.pageSize()"
+      [pageSizeOptions]="[5, 10, 15]"
+      [showFirstLastButtons]="true"
+      (page)="pageEvent($event)"
+    />
+  `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -179,9 +184,9 @@ export class QuizzesListComponent {
   private dialog = inject(Dialog);
   public auth = inject(webStore.AuthStore);
 
-  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { start, pageSize });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public changeSort(sort: Sort): void {

@@ -32,9 +32,7 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
   ],
   providers: [QuizAssignationsStore],
   template: `<div class="flex items-center justify-between">
-      <h2
-        class="font-title flex text-2xl leading-tight tracking-tight text-gray-700 dark:text-white"
-      >
+      <h2 class="mat-headline-3">
         {{ 'QUIZZES.ASSIGNATIONS' | translate }}
       </h2>
       <button mat-flat-button color="accent" (click)="newAssignation()">

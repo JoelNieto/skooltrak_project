@@ -1,17 +1,29 @@
-import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatIconButton, MatMiniFabButton } from '@angular/material/button';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import { MatOption, MatSelect } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
 import { Question, QuestionOption, QuestionTypeEnum } from '@skooltrak/models';
-import { CardComponent } from '@skooltrak/ui';
 import { combineLatest, filter } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,83 +33,88 @@ import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
   selector: 'sk-question-form',
   standalone: true,
   imports: [
-    CardComponent,
+    MatCardModule,
     TranslateModule,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatInput,
-    MatIconButton,
-    MatMiniFabButton,
-    MatIcon,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
     MatListModule,
     MatSlideToggle,
-    JsonPipe,
     ReactiveFormsModule,
   ],
-  template: `<sk-card>
-    <div header class="pb-4">
-      <h3 class="text-lg font-title text-gray-600">
-        {{ 'QUIZZES.QUESTION' | translate }} {{ index() + 1 }} /
-        {{ store.questionsCount() }}
-      </h3>
-    </div>
-    <form [formGroup]="form" class="">
-      <div class="flex gap-8 w-full">
-        <mat-form-field class="w-full">
-          <mat-label>{{ 'QUIZZES.QUESTION_TEXT' | translate }}</mat-label>
-          <input matInput type="text" formControlName="text" />
-        </mat-form-field>
-        <mat-form-field class="w-full">
-          <mat-label>{{ 'QUIZZES.QUESTION_TYPE' | translate }}</mat-label>
-          <mat-select formControlName="type">
-            @for (type of types; track type) {
-              <mat-option [value]="type">{{
-                'QUESTION_TYPE.' + type | translate
-              }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-      @if (form.get('type')?.value === 'SELECTION') {
-        <div formArrayName="options">
-          <h3 class="font-title text-gray-400 text-sm mb-2">
-            {{ 'QUIZZES.OPTIONS' | translate }}
-          </h3>
-          @for (option of options.controls; track option; let i = $index) {
-            <div class="flex w-full gap-3" [formGroupName]="i">
-              <mat-form-field class="w-full">
-                <mat-label
-                  >{{ 'QUIZZES.OPTION' | translate }} {{ i + 1 }}</mat-label
-                >
-                <input type="text" matInput formControlName="text" />
-              </mat-form-field>
-              <mat-slide-toggle
-                class="w-full flex items-baseline mt-2"
-                formControlName="is_correct"
-              >
-                {{ 'QUIZZES.IS_CORRECT' | translate }}
-              </mat-slide-toggle>
-              <div class="w-full flex items-baseline">
-                <button mat-mini-fab color="warn" (click)="removeOptions(i)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-          }
-          <button mat-mini-fab color="accent" (click)="addOptions()">
-            <mat-icon>playlist_add</mat-icon>
-          </button>
+  template: `<form [formGroup]="form" class="">
+    <mat-card>
+      <mat-card-header header class="pb-4">
+        <mat-card-title>
+          {{ 'QUIZZES.QUESTION' | translate }} {{ index() + 1 }} /
+          {{ store.questionsCount() }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex gap-8 w-full">
+          <mat-form-field class="w-full">
+            <mat-label>{{ 'QUIZZES.QUESTION_TEXT' | translate }}</mat-label>
+            <input matInput type="text" formControlName="text" />
+          </mat-form-field>
+          <mat-form-field class="w-full">
+            <mat-label>{{ 'QUIZZES.QUESTION_TYPE' | translate }}</mat-label>
+            <mat-select formControlName="type">
+              @for (type of types; track type) {
+                <mat-option [value]="type">{{
+                  'QUESTION_TYPE.' + type | translate
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
         </div>
-      }
-    </form>
-    <div footer class="flex justify-end">
-      <button mat-icon-button (click)="store.removeQuestion(index())">
-        <mat-icon class="text-red-600">delete</mat-icon>
-      </button>
-    </div>
-  </sk-card>`,
+        @if (form.get('type')?.value === 'SELECTION') {
+          <div formArrayName="options">
+            <mat-card-subtitle>
+              {{ 'QUIZZES.OPTIONS' | translate }}
+            </mat-card-subtitle>
+            @for (option of options.controls; track option; let i = $index) {
+              <div class="flex w-full gap-3" [formGroupName]="i">
+                <mat-form-field class="w-full">
+                  <mat-label
+                    >{{ 'QUIZZES.OPTION' | translate }} {{ i + 1 }}</mat-label
+                  >
+                  <input type="text" matInput formControlName="text" />
+                </mat-form-field>
+                <mat-slide-toggle
+                  class="w-full flex items-baseline mt-2"
+                  formControlName="is_correct"
+                >
+                  {{ 'QUIZZES.IS_CORRECT' | translate }}
+                </mat-slide-toggle>
+                <div class="w-full flex items-baseline">
+                  <button mat-mini-fab class="warn" (click)="removeOptions(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            }
+            <button mat-mini-fab color="accent" (click)="addOptions()">
+              <mat-icon>playlist_add</mat-icon>
+            </button>
+          </div>
+        }
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          <button
+            mat-stroked-button
+            class="warn"
+            (click)="store.removeQuestion(index())"
+          >
+            <mat-icon>delete</mat-icon>
+            {{ 'ACTIONS.DELETE' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
+  </form>`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

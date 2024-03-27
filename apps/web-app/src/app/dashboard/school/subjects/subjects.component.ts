@@ -13,12 +13,13 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
-import { ConfirmationService, PaginatorComponent } from '@skooltrak/ui';
+import { ConfirmationService } from '@skooltrak/ui';
 import { debounceTime } from 'rxjs';
 
 import { SubjectsFormComponent } from './subjects-form.component';
@@ -29,7 +30,7 @@ import { SchoolSubjectsStore } from './subjects.store';
   standalone: true,
   imports: [
     MatButton,
-    PaginatorComponent,
+    MatPaginatorModule,
     DialogModule,
     NgClass,
     SubjectsFormComponent,
@@ -111,11 +112,11 @@ import { SchoolSubjectsStore } from './subjects.store';
           </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="editSubject(item)">
-              <mat-icon color="accent">edit_square</mat-icon>
+              <mat-icon>edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
             <button mat-menu-item (click)="deleteSubject(item)">
-              <mat-icon color="warn">delete</mat-icon>
+              <mat-icon>delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
           </mat-menu>
@@ -125,7 +126,14 @@ import { SchoolSubjectsStore } from './subjects.store';
       <tr mat-row *matRowDef="let row; columns: displayedCols"></tr>
     </table>
 
-    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
+    <mat-paginator
+      [length]="store.count()"
+      [pageIndex]="store.start()"
+      [pageSize]="store.pageSize()"
+      [pageSizeOptions]="[5, 10, 15]"
+      [showFirstLastButtons]="true"
+      (page)="pageEvent($event)"
+    />
   </div>`,
 })
 export class SchoolSubjectsComponent implements OnInit {
@@ -158,13 +166,9 @@ export class SchoolSubjectsComponent implements OnInit {
     });
   }
 
-  public getCurrentPage(pagination: {
-    currentPage: number;
-    start: number;
-    pageSize: number;
-  }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { start, pageSize });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public newSubject(): void {

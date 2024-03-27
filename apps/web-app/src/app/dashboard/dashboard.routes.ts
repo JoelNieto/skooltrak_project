@@ -54,12 +54,7 @@ export const dashboardRoutes: Routes = [
         loadChildren: () =>
           import('./messaging/messaging.routes').then((x) => x.messagingRoutes),
       },
-      {
-        path: 'settings',
-        title: 'Settings',
-        loadChildren: () =>
-          import('./settings/settings.routes').then((x) => x.settingRoutes),
-      },
+
       {
         path: 'student-profile',
         title: 'STUDENTS.PROFILE',

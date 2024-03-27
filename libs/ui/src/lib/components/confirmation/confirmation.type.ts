@@ -4,8 +4,8 @@ export type ConfirmationOptions = {
   showCancelButton: boolean;
   confirmButtonText?: string;
   cancelButtonText?: string;
-  color: 'accent' | 'primary' | 'warn';
-  icon: string;
+  color?: 'tertiary' | 'primary' | 'warn';
+  icon?: string;
 };
 
 export const defaultConfirmationOptions: ConfirmationOptions = {

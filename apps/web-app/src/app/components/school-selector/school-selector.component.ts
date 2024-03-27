@@ -2,17 +2,13 @@ import { Dialog, DialogModule, DialogRef } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroLink, heroPlus, heroXMark } from '@ng-icons/heroicons/outline';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import {
-  ButtonDirective,
-  CardComponent,
-  ConfirmationService,
-  defaultConfirmationOptions,
-} from '@skooltrak/ui';
+import { ConfirmationService, defaultConfirmationOptions } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolConnectorComponent } from '../school-connector/school-connector.component';
@@ -22,34 +18,27 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
   standalone: true,
   selector: 'sk-school-selector',
   imports: [
-    CardComponent,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
     TranslateModule,
-    NgIconComponent,
     AvatarComponent,
     NgClass,
-    ButtonDirective,
     DialogModule,
   ],
-  providers: [
-    provideIcons({ heroXMark, heroLink, heroPlus }),
-    ConfirmationService,
-  ],
-  template: `<sk-card>
-    <div class="flex items-start justify-between" header>
-      <h3
-        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
-      >
-        {{ 'SCHOOL_CONNECTOR.TITLE' | translate }}
-      </h3>
-      <button (click)="dialogRef.close()">
-        <ng-icon
-          name="heroXMark"
-          size="24"
-          class="text-gray-700 dark:text-gray-100"
-        />
-      </button>
-    </div>
-    <div>
+  providers: [ConfirmationService],
+  template: `<mat-card>
+    <mat-card-header header>
+      <div class="flex items-start justify-between w-full">
+        <mat-card-title>
+          {{ 'SCHOOL_CONNECTOR.TITLE' | translate }}
+        </mat-card-title>
+        <button mat-icon-button (click)="dialogRef.close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
       <div class="flex flex-col gap-2">
         @for (school of schools(); track school.id) {
           <div
@@ -89,18 +78,20 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
           </div>
         }
       </div>
-    </div>
-    <div class="flex justify-end gap-4 pt-4" footer>
-      <button skButton color="green" (click)="addSchoolConnection()">
-        <ng-icon name="heroLink" size="16" />
-        {{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}
-      </button>
-      <button skButton color="blue" (click)="createSchool()">
-        <ng-icon name="heroPlus" size="16" />
-        {{ 'SCHOOL_CONNECTOR.CREATE' | translate }}
-      </button>
-    </div>
-  </sk-card>`,
+    </mat-card-content>
+    <mat-card-footer class="flex justify-end gap-4 pt-4" footer>
+      <mat-card-actions align="end" class="gap-2">
+        <button mat-stroked-button (click)="addSchoolConnection()">
+          <mat-icon>link</mat-icon>
+          <span>{{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}</span>
+        </button>
+        <button mat-flat-button color="blue" (click)="createSchool()">
+          <mat-icon>add</mat-icon>
+          <span>{{ 'SCHOOL_CONNECTOR.CREATE' | translate }}</span>
+        </button>
+      </mat-card-actions>
+    </mat-card-footer>
+  </mat-card>`,
 })
 export class SchoolSelectorComponent {
   private auth = inject(webStore.AuthStore);
@@ -134,7 +125,7 @@ export class SchoolSelectorComponent {
         title: this.translate.instant('SCHOOL_CONNECTOR.CREATE_TITLE'),
         description: this.translate.instant('SCHOOL_CONNECTOR.CREATE_MESSAGE'),
         confirmButtonText: this.translate.instant('YES'),
-        color: 'accent',
+        color: 'tertiary',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

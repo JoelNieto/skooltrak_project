@@ -36,6 +36,8 @@
   },
   "AUTH": {
     "LOGGED_OUT": "Sesión finalizada",
+    "LOGOUT": "Cerrar sesión",
+    "LOGOUT_QUESTION": "Desea cerrar sesión?",
     "WRONG_CREDENTIALS": "Credenciales incorrectas"
   },
   "AUTH_FAILURE": {

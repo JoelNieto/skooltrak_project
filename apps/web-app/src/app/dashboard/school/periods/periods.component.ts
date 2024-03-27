@@ -11,7 +11,6 @@ import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Period } from '@skooltrak/models';
-import { EmptyTableComponent, LoadingComponent } from '@skooltrak/ui';
 
 import { SchoolPeriodsFormComponent } from './periods-form.component';
 import { SchoolPeriodsStore } from './periods.store';
@@ -23,8 +22,6 @@ import { SchoolPeriodsStore } from './periods.store';
     MatButton,
     DatePipe,
     DialogModule,
-    EmptyTableComponent,
-    LoadingComponent,
     MatFormField,
     MatInput,
     MatLabel,
@@ -102,11 +99,11 @@ import { SchoolPeriodsStore } from './periods.store';
           </button>
           <mat-menu #menu="matMenu">
             <button type="button" mat-menu-item (click)="editPeriod(item)">
-              <mat-icon color="accent">edit_square</mat-icon>
+              <mat-icon>edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
             <button type="button" mat-menu-item>
-              <mat-icon class="text-red-600">delete</mat-icon>
+              <mat-icon>delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
           </mat-menu>

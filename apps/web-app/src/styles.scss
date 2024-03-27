@@ -25,7 +25,31 @@ $light-theme: matx.define-theme(
     color: (
       theme-type: light,
       primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-cyan-palette,
+    ),
+    typography: (
+      brand-family: 'Gabarito',
+      plain-family: 'Inter',
+      bold-weight: 900,
+    ),
+  )
+);
+$dark-theme: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-azure-palette,
       tertiary: matx.$m3-rose-palette,
+    ),
+  )
+);
+
+$light-warn-theme: matx.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: matx.$m3-rose-palette,
+      tertiary: matx.$m3-magenta-palette,
     ),
   )
 );
@@ -41,9 +65,34 @@ body {
   height: 100%;
   font-weight: 400;
   @include mat.all-component-themes($light-theme);
+  @include mat.typography-hierarchy($light-theme, $back-compat: true);
 }
 body {
   margin: 0;
+}
+
+.toolbar {
+  background: mat.get-theme-color($light-theme, primary) !important;
+  color: mat.get-theme-color($light-theme, on-primary) !important;
+  --mat-toolbar-container-text-color: mat.get-theme-color(
+    $light-theme,
+    on-primary
+  );
+  .mat-icon-button-icon-color {
+    color: mat.get-theme-color($light-theme, on-primary) !important;
+  }
+}
+
+button.secondary {
+  @include mat.button-color($light-theme, $color-variant: secondary);
+}
+
+button.tertiary {
+  @include mat.button-color($light-theme, $color-variant: tertiary);
+}
+
+button.warn {
+  @include mat.button-color($light-warn-theme, $color-variant: primary);
 }
 
 .ql-container {
@@ -69,7 +118,7 @@ select:focus {
 }
 
 .mat-mdc-header-row {
-  @apply font-semibold uppercase text-slate-800 leading-tight border-b-0 font-title #{!important};
+  @apply uppercase;
 }
 
 .material-symbols-rounded {
@@ -120,5 +169,9 @@ mat-card-header {
 }
 
 mat-card-footer {
-  @apply p-4;
+  @apply p-2;
+}
+
+.mdc-card__actions {
+  @apply gap-2;
 }

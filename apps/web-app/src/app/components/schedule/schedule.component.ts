@@ -1,8 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { WeekDays } from '@skooltrak/models';
 
@@ -17,6 +23,7 @@ import { ScheduleStore } from './schedule.store';
     DatePipe,
     MatCardModule,
     TranslateModule,
+    RouterLink,
   ],
   providers: [ScheduleStore],
   template: `
@@ -58,7 +65,10 @@ import { ScheduleStore } from './schedule.store';
             @for (item of store.assignments(); track item) {
               <mat-card>
                 <mat-card-header>
-                  <mat-card-title>{{ item.assignment.title }}</mat-card-title>
+                  <mat-card-title
+                    [routerLink]="['/app/assignments', item.assignment.id]"
+                    >{{ item.assignment.title }}</mat-card-title
+                  >
                 </mat-card-header>
                 <mat-card-content>
                   <p [innerHTML]="item.assignment.description"></p>

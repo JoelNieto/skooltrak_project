@@ -7,12 +7,13 @@ import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field'
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { CardComponent, PaginatorComponent } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolGroupsFormComponent } from './groups-form.component';
@@ -24,7 +25,7 @@ import { SchoolGroupsStore } from './groups.store';
   imports: [
     TranslateModule,
     CardComponent,
-    PaginatorComponent,
+    MatPaginatorModule,
     MatButton,
     DatePipe,
     UserChipComponent,
@@ -118,11 +119,11 @@ import { SchoolGroupsStore } from './groups.store';
             </button>
             <mat-menu #menu="matMenu">
               <button type="button" mat-menu-item (click)="editGroup(item)">
-                <mat-icon color="accent">edit_square</mat-icon>
+                <mat-icon>edit_square</mat-icon>
                 <span>{{ 'ACTIONS.EDIT' | translate }}</span>
               </button>
               <button type="button" mat-menu-item>
-                <mat-icon color="warn">delete</mat-icon>
+                <mat-icon>delete</mat-icon>
                 <span>{{ 'ACTIONS.DELETE' | translate }}</span>
               </button>
             </mat-menu>
@@ -131,9 +132,13 @@ import { SchoolGroupsStore } from './groups.store';
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-      <sk-paginator
-        [count]="store.count()"
-        (paginate)="getCurrentPage($event)"
+      <mat-paginator
+        [length]="store.count()"
+        [pageIndex]="store.start()"
+        [pageSize]="store.pageSize()"
+        [pageSizeOptions]="[5, 10, 15]"
+        [showFirstLastButtons]="true"
+        (page)="pageEvent($event)"
       />
     </div>
   `,
@@ -151,9 +156,9 @@ export class SchoolGroupsComponent {
     'actions',
   ];
 
-  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { pageSize, start });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public sortChange(sort: Sort): void {

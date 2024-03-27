@@ -1,28 +1,19 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Degree } from '@skooltrak/models';
-import {
-  ConfirmationService,
-  EmptyTableComponent,
-  LoadingComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { ConfirmationService } from '@skooltrak/ui';
 
 import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
@@ -31,28 +22,18 @@ import { SchoolDegreesStore } from './degrees.store';
   selector: 'sk-school-degrees',
   standalone: true,
   imports: [
-    NgIconComponent,
     TranslateModule,
     DatePipe,
-    PaginatorComponent,
-    MatButton,
-    DialogModule,
-    LoadingComponent,
-    EmptyTableComponent,
-    MatFormField,
-    MatLabel,
-    MatInput,
+    MatPaginatorModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatIcon,
-    MatPrefix,
     MatTableModule,
     MatSortModule,
-    MatIconButton,
   ],
-  providers: [
-    SchoolDegreesStore,
-    provideIcons({ heroPencilSquare, heroTrash }),
-    ConfirmationService,
-  ],
+  providers: [SchoolDegreesStore, ConfirmationService],
   template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-96">
@@ -66,7 +47,7 @@ import { SchoolDegreesStore } from './degrees.store';
         />
       </mat-form-field>
 
-      <button mat-flat-button color="primary" (click)="newDegree()">
+      <button mat-flat-button (click)="newDegree()">
         <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
@@ -105,15 +86,28 @@ import { SchoolDegreesStore } from './degrees.store';
           {{ 'ACTIONS.TITLE' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
-          <button mat-icon-button (click)="editDegree(item)">
-            <mat-icon class="text-emerald-600">edit_square</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editDegree(item)">
+              <mat-icon>edit_square</mat-icon>
+              <span>{{ 'ACTIONS.EDIT' | translate }}</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedCols"></tr>
     </table>
-    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
+    <mat-paginator
+      [length]="store.count()"
+      [pageIndex]="store.start()"
+      [pageSize]="store.pageSize()"
+      [pageSizeOptions]="[5, 10, 15]"
+      [showFirstLastButtons]="true"
+      (page)="pageEvent($event)"
+    />
   </div>`,
 })
 export class SchoolDegreesComponent {
@@ -123,9 +117,9 @@ export class SchoolDegreesComponent {
   private destroyRef = inject(DestroyRef);
   public displayedCols = ['name', 'level(name)', 'created_at', 'actions'];
 
-  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { start, pageSize });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public changeSort(sort: Sort): void {

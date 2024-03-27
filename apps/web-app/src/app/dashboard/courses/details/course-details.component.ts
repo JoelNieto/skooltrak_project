@@ -31,14 +31,10 @@ import { CourseDetailsStore } from './course-details.store';
     <div>
       <div class="justify-between md:flex">
         <div class="mb-2">
-          <h2
-            class="font-title mb-1 text-xl leading-tight tracking-tight text-gray-700 dark:text-gray-50"
-          >
+          <h2 class="mat-headline-3">
             {{ store.course()?.subject?.name }}
           </h2>
-          <h4
-            class="flex font-sans text-lg font-semibold leading-tight tracking-tight text-gray-400 dark:text-gray-300"
-          >
+          <h4 class="mat-subtitle">
             {{ store.course()?.plan?.name }}
           </h4>
         </div>

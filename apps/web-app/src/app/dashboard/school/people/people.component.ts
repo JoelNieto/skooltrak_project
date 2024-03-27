@@ -8,6 +8,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -15,11 +16,7 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import {
-  EmptyTableComponent,
-  LoadingComponent,
-  PaginatorComponent,
-} from '@skooltrak/ui';
+import { EmptyTableComponent, LoadingComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
@@ -32,7 +29,7 @@ import { SchoolPeopleStore } from './people.store';
   imports: [
     TranslateModule,
     ReactiveFormsModule,
-    PaginatorComponent,
+    MatPaginatorModule,
     UserChipComponent,
     RouterLink,
     DatePipe,
@@ -161,11 +158,11 @@ import { SchoolPeopleStore } from './people.store';
           </button>
           <mat-menu #menu="matMenu">
             <button type="button" mat-menu-item (click)="editPeople(item)">
-              <mat-icon class="text-emerald-600">edit_square</mat-icon>
+              <mat-icon>edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
             <button type="button" mat-menu-item>
-              <mat-icon class="text-red-600">delete</mat-icon>
+              <mat-icon>delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
             @if (item.role === 'STUDENT') {
@@ -184,7 +181,14 @@ import { SchoolPeopleStore } from './people.store';
       <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedCols"></tr>
     </table>
-    <sk-paginator [count]="store.count()" (paginate)="getCurrentPage($event)" />
+    <mat-paginator
+      [length]="store.count()"
+      [pageIndex]="store.start()"
+      [pageSize]="store.pageSize()"
+      [pageSizeOptions]="[5, 10, 15]"
+      [showFirstLastButtons]="true"
+      (page)="pageEvent($event)"
+    />
   </div>`,
 })
 export class SchoolPeopleComponent implements OnInit {
@@ -234,9 +238,9 @@ export class SchoolPeopleComponent implements OnInit {
     });
   }
 
-  public getCurrentPage(pagination: { pageSize: number; start: number }): void {
-    const { start, pageSize } = pagination;
-    patchState(this.store, { pageSize, start });
+  public pageEvent(e: PageEvent): void {
+    const { pageIndex, pageSize } = e;
+    patchState(this.store, { start: pageIndex, pageSize });
   }
 
   public editPeople(person: SchoolProfile): void {

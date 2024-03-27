@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
+import { webStore } from '@skooltrak/store';
 
 import { PublicationItemComponent } from '../../components/publication-item/publication-item.component';
 import { PublicationsStore } from './publications.store';
@@ -25,28 +26,28 @@ import { PublicationsStore } from './publications.store';
   selector: 'sk-publications',
   standalone: true,
   providers: [PublicationsStore],
-  template: `<div class="flex gap-6 w-full">
-    <div class="w-72">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title
-            class="text-xl font-semibold font-title text-gray-700"
-          >
-            {{ 'ASSIGNMENTS.TODAY' | translate }}
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content></mat-card-content>
-      </mat-card>
-    </div>
+  template: `<h1 class="mat-headline-3">
+      {{ 'WELCOME' | translate: { name: auth.user()?.first_name } }}
+    </h1>
+    <div class="flex gap-6 w-full">
+      <div class="w-72">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title
+              class="text-xl font-semibold font-title text-gray-700"
+            >
+              {{ 'ASSIGNMENTS.TODAY' | translate }}
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content></mat-card-content>
+        </mat-card>
+      </div>
 
-    <div class="flex-1 flex flex-col gap-4">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title class="font-title ">
+      <div class="flex-1 flex flex-col gap-4">
+        <div>
+          <h3 class="mat-headline-5">
             {{ 'PUBLICATIONS.NEW' | translate }}
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
+          </h3>
           <form [formGroup]="form" (ngSubmit)="newPost()">
             <mat-form-field class="w-full">
               <textarea
@@ -82,50 +83,49 @@ import { PublicationsStore } from './publications.store';
               </button>
             </div>
           </form>
-        </mat-card-content>
-      </mat-card>
-      <div class="flex flex-col gap-4">
-        @for (publication of store.publications(); track publication.id) {
-          <sk-publication-item
-            [post]="publication"
-            (deleted)="store.removePublication($event)"
-          />
-        } @empty {
-          @if (store.loading()) {
-            <mat-card>
-              <mat-card-content class="animate-pulse">
-                <div class="flex-1 space-y-6 py-1">
-                  <div class="h-2 bg-slate-200 rounded"></div>
-                  <div class="space-y-3">
-                    <div class="grid grid-cols-3 gap-4">
-                      <div class="h-2 bg-slate-200 rounded col-span-2"></div>
-                      <div class="h-2 bg-slate-200 rounded col-span-1"></div>
-                    </div>
+        </div>
+        <div class="flex flex-col gap-4">
+          @for (publication of store.publications(); track publication.id) {
+            <sk-publication-item
+              [post]="publication"
+              (deleted)="store.removePublication($event)"
+            />
+          } @empty {
+            @if (store.loading()) {
+              <mat-card>
+                <mat-card-content class="animate-pulse">
+                  <div class="flex-1 space-y-6 py-1">
                     <div class="h-2 bg-slate-200 rounded"></div>
-                  </div>
-                </div>
-              </mat-card-content>
-            </mat-card>
-            <mat-card>
-              <mat-card-content class="animate-pulse">
-                <div class="flex-1 space-y-6 py-1">
-                  <div class="h-2 bg-slate-200 rounded"></div>
-                  <div class="space-y-3">
-                    <div class="grid grid-cols-3 gap-4">
-                      <div class="h-2 bg-slate-200 rounded col-span-2"></div>
-                      <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                    <div class="space-y-3">
+                      <div class="grid grid-cols-3 gap-4">
+                        <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+                        <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                      </div>
+                      <div class="h-2 bg-slate-200 rounded"></div>
                     </div>
-                    <div class="h-2 bg-slate-200 rounded"></div>
                   </div>
-                </div>
-              </mat-card-content>
-            </mat-card>
+                </mat-card-content>
+              </mat-card>
+              <mat-card>
+                <mat-card-content class="animate-pulse">
+                  <div class="flex-1 space-y-6 py-1">
+                    <div class="h-2 bg-slate-200 rounded"></div>
+                    <div class="space-y-3">
+                      <div class="grid grid-cols-3 gap-4">
+                        <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+                        <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                      </div>
+                      <div class="h-2 bg-slate-200 rounded"></div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
           }
-        }
+        </div>
       </div>
-    </div>
-    <div class="w-72"></div>
-  </div> `,
+      <div class="w-72"></div>
+    </div> `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -142,6 +142,7 @@ import { PublicationsStore } from './publications.store';
   ],
 })
 export class PublicationsComponent implements OnInit {
+  public auth = inject(webStore.AuthStore);
   public form = new FormGroup({
     body: new FormControl('', {
       nonNullable: true,

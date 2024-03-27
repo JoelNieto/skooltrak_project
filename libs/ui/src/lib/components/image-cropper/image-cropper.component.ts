@@ -1,88 +1,86 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
-
-import { ButtonDirective } from '../../directives/button/button.directive';
-import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'sk-image-cropper',
   standalone: true,
   imports: [
     ImageCropperModule,
-    ButtonDirective,
-    NgIconComponent,
-    CardComponent,
+    MatButtonModule,
+    MatCardModule,
     NgStyle,
     TranslateModule,
+    MatIcon,
   ],
   providers: [provideIcons({ heroXMark })],
-  template: `<sk-card>
-      <div class="flex items-start justify-between" header>
-        <h3
-          class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
-        >
+  template: `<mat-card>
+      <mat-card-header>
+        <mat-card-title>
           {{ 'IMAGE_CROPPER.TITLE' | translate }}
-        </h3>
-        <button (click)="dialogRef.close()">
-          <ng-icon
-            name="heroXMark"
-            size="24"
-            class="text-gray-700 dark:text-gray-100"
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-flat-button class="tertiary" (click)="fileInput.click()">
+          {{ 'IMAGE_CROPPER.CHOOSE_PICTURE' | translate }}
+        </button>
+        <div class="space-4 mt-2 flex flex-col">
+          <image-cropper
+            [imageChangedEvent]="imgChangeEvt"
+            [maintainAspectRatio]="options.fixedRatio"
+            [containWithinAspectRatio]="true"
+            [imageQuality]="100"
+            [aspectRatio]="options.ratio"
+            [resizeToHeight]="256"
+            [format]="options.format"
+            (imageCropped)="cropImg($event)"
+            (imageLoaded)="imgLoad()"
+            (cropperReady)="initCropper()"
+            (loadImageFailed)="imgFailed()"
           />
-        </button>
-      </div>
-      <button skButton color="green" (click)="fileInput.click()">
-        {{ 'IMAGE_CROPPER.CHOOSE_PICTURE' | translate }}
-      </button>
-      <div class="space-4 mt-2 flex flex-col">
-        <image-cropper
-          [imageChangedEvent]="imgChangeEvt"
-          [maintainAspectRatio]="options.fixedRatio"
-          [containWithinAspectRatio]="true"
-          [imageQuality]="100"
-          [aspectRatio]="options.ratio"
-          [resizeToHeight]="256"
-          [format]="options.format"
-          (imageCropped)="cropImg($event)"
-          (imageLoaded)="imgLoad()"
-          (cropperReady)="initCropper()"
-          (loadImageFailed)="imgFailed()"
-        />
-        @if (cropImgPreview) {
-          <div class="my-4 flex ">
-            <div>
-              <span class="font-sans font-semibold text-gray-600">{{
-                'IMAGE_CROPPER.PREVIEW' | translate
-              }}</span>
-              <br />
-              <img
-                [src]="cropImgPreview"
-                class="border border-gray-400"
-                [style.max-height]="'6rem'"
-              />
+          @if (cropImgPreview) {
+            <div class="my-4 flex ">
+              <div>
+                <span class="font-sans font-semibold text-gray-600">{{
+                  'IMAGE_CROPPER.PREVIEW' | translate
+                }}</span>
+                <br />
+                <img
+                  [src]="cropImgPreview"
+                  class="border border-gray-400"
+                  [style.max-height]="'6rem'"
+                />
+              </div>
             </div>
-          </div>
-        }
-      </div>
-      <div class="flex justify-end" footer>
-        <button
-          skButton
-          color="blue"
-          class="w-full"
-          [disabled]="!imageFile"
-          (click)="dialogRef.close({ imageFile, cropImgPreview })"
-        >
-          {{ 'IMAGE_CROPPER.CONFIRM' | translate }}
-        </button>
-      </div>
-    </sk-card>
+          }
+        </div>
+      </mat-card-content>
+
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          <button mat-stroked-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+            {{ 'CONFIRMATION.CANCEL' | translate }}
+          </button>
+          <button
+            mat-flat-button
+            [disabled]="!imageFile"
+            (click)="dialogRef.close({ imageFile, cropImgPreview })"
+          >
+            {{ 'IMAGE_CROPPER.CONFIRM' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
     <input
       hidden
       type="file"

@@ -7,10 +7,8 @@ import { ScheduleComponent } from '../../../components/schedule/schedule.compone
   standalone: true,
   selector: 'sk-home-schedule',
   template: `<div>
-    <h1>
-      <h1 class="font-title text-2xl">
-        {{ 'SCHEDULE' | translate }}
-      </h1>
+    <h1 class="mat-headline-3">
+      {{ 'SCHEDULE' | translate }}
     </h1>
 
     <sk-schedule />

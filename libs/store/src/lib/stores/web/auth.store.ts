@@ -192,7 +192,7 @@ export const AuthStore = signalStore(
             description: 'Please, check your email to confirm',
             showCancelButton: false,
             icon: 'heroCheckCircle',
-            color: 'accent',
+            color: 'tertiary',
           })
           .subscribe();
       },

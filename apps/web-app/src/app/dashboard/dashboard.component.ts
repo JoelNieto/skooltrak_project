@@ -52,7 +52,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
   template: `
     <mat-toolbar class="fixed top-0 z-10 toolbar flex justify-between">
       <div class="flex items-center">
-        <button aria-label="Menu icon" (click)="toggleMenu()">
+        <button aria-label="Menu icon" mat-icon-button (click)="toggleMenu()">
           <mat-icon>menu</mat-icon>
         </button>
         <a routerLink="home">

@@ -18,16 +18,14 @@ import { StudentProfileStore } from './student-profile.store';
   selector: 'sk-student-profile',
   standalone: true,
   providers: [StudentProfileStore],
-  template: `<mat-card>
-    <mat-card-header>
-      <mat-card-subtitle>
-        {{ 'STUDENTS.PROFILE' | translate }}
-      </mat-card-subtitle>
-      <mat-card-title>
-        {{ state.student()?.father_name }}, {{ state.student()?.first_name }}
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  template: `
+    <h3 class="mat-subtitle">
+      {{ 'STUDENTS.PROFILE' | translate }}
+    </h3>
+    <h1 class="mat-headline-3">
+      {{ state.student()?.father_name }}, {{ state.student()?.first_name }}
+    </h1>
+    <div>
       <mat-tab-group>
         <mat-tab [label]="'STUDENTS.INFO' | translate">
           <ng-template matTabContent>
@@ -111,8 +109,8 @@ import { StudentProfileStore } from './student-profile.store';
         <mat-tab [label]="'STUDENTS.INCIDENTS' | translate"></mat-tab>
         <mat-tab [label]="'STUDENTS.ATTENDANCE' | translate"></mat-tab>
       </mat-tab-group>
-    </mat-card-content>
-  </mat-card>`,
+    </div>
+  `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [

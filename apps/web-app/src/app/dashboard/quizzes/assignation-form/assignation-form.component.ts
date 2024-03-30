@@ -43,81 +43,76 @@ import { QuizAssignationStore } from './assignation-form.store';
     MatSlideToggle,
     MatButton,
   ],
-  template: `<mat-card>
-    <mat-card-header>
-      <div class="flex items-center justify-between w-full">
+  template: `<form [formGroup]="form" (ngSubmit)="saveAssignation()">
+    <mat-card>
+      <mat-card-header>
         <mat-card-title>
           {{ 'QUIZZES.ASSIGNATION' | translate }}
         </mat-card-title>
-        <button mat-icon-button (click)="dialogRef.close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </mat-card-header>
-    <mat-card-content>
-      <form
-        [formGroup]="form"
-        (ngSubmit)="saveAssignation()"
-        class="grid lg:grid-cols-2 gap-4"
-      >
-        <mat-form-field>
-          <mat-label>{{ 'QUIZZES.COURSE' | translate }}</mat-label>
-          <mat-select formControlName="course_id">
-            @for (course of state.courses(); track course.id) {
-              <mat-option [value]="course.id"
-                >{{ course.subject?.name }} - {{ course.plan.name }}</mat-option
-              >
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>{{ 'QUIZZES.ITEM' | translate }}</mat-label>
-          <mat-select formControlName="quiz_id">
-            @for (quiz of state.quizzes(); track quiz.id) {
-              <mat-option [value]="quiz.id">{{ quiz.title }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>{{ 'QUIZZES.START_DATE' | translate }}</mat-label>
-          <input
-            matInput
-            formControlName="start_date"
-            [matDatepicker]="start"
-          />
-          <mat-datepicker-toggle matIconSuffix [for]="start" />
-          <mat-datepicker #start />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>{{ 'QUIZZES.END_DATE' | translate }}</mat-label>
-          <input matInput formControlName="end_date" [matDatepicker]="end" />
-          <mat-datepicker-toggle matIconSuffix [for]="end" />
-          <mat-datepicker #end />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>
-            {{ 'QUIZZES.TIME' | translate }}
-          </mat-label>
-          <input type="number" formControlName="minutes" matInput />
-        </mat-form-field>
-        <div class="flex items-baseline pb-3">
-          <mat-slide-toggle formControlName="hidden">{{
-            'HIDDEN' | translate
-          }}</mat-slide-toggle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="grid lg:grid-cols-2 gap-4">
+          <mat-form-field>
+            <mat-label>{{ 'QUIZZES.COURSE' | translate }}</mat-label>
+            <mat-select formControlName="course_id">
+              @for (course of state.courses(); track course.id) {
+                <mat-option [value]="course.id"
+                  >{{ course.subject?.name }} -
+                  {{ course.plan.name }}</mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ 'QUIZZES.ITEM' | translate }}</mat-label>
+            <mat-select formControlName="quiz_id">
+              @for (quiz of state.quizzes(); track quiz.id) {
+                <mat-option [value]="quiz.id">{{ quiz.title }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ 'QUIZZES.START_DATE' | translate }}</mat-label>
+            <input
+              matInput
+              formControlName="start_date"
+              [matDatepicker]="start"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="start" />
+            <mat-datepicker #start />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ 'QUIZZES.END_DATE' | translate }}</mat-label>
+            <input matInput formControlName="end_date" [matDatepicker]="end" />
+            <mat-datepicker-toggle matIconSuffix [for]="end" />
+            <mat-datepicker #end />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>
+              {{ 'QUIZZES.TIME' | translate }}
+            </mat-label>
+            <input type="number" formControlName="minutes" matInput />
+          </mat-form-field>
+          <div class="flex items-baseline pb-3">
+            <mat-slide-toggle formControlName="hidden">{{
+              'HIDDEN' | translate
+            }}</mat-slide-toggle>
+          </div>
         </div>
-        <div footer class="flex col-span-2 justify-end">
-          <button
-            mat-flat-button
-            type="submit"
-            [disabled]="form.invalid"
-            color="accent"
-          >
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-actions align="end">
+          <button mat-stroked-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+            {{ 'CONFIRMATION.CANCEL' | translate }}
+          </button>
+          <button mat-flat-button type="submit" [disabled]="form.invalid">
             {{ 'SAVE_CHANGES' | translate }}
           </button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>`,
+        </mat-card-actions>
+      </mat-card-footer>
+    </mat-card>
+  </form> `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

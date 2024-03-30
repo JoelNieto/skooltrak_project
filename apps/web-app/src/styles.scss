@@ -34,12 +34,18 @@ $light-theme: matx.define-theme(
     ),
   )
 );
+
 $dark-theme: matx.define-theme(
   (
     color: (
       theme-type: dark,
       primary: matx.$m3-azure-palette,
       tertiary: matx.$m3-rose-palette,
+    ),
+    typography: (
+      brand-family: 'Gabarito',
+      plain-family: 'Inter',
+      bold-weight: 900,
     ),
   )
 );
@@ -74,11 +80,7 @@ body {
 .toolbar {
   background: mat.get-theme-color($light-theme, primary) !important;
   color: mat.get-theme-color($light-theme, on-primary) !important;
-  --mat-toolbar-container-text-color: mat.get-theme-color(
-    $light-theme,
-    on-primary
-  );
-  .mat-icon-button-icon-color {
+  mat-icon {
     color: mat.get-theme-color($light-theme, on-primary) !important;
   }
 }
@@ -117,10 +119,6 @@ select:focus {
   box-shadow: none;
 }
 
-.mat-mdc-header-row {
-  @apply uppercase;
-}
-
 .material-symbols-rounded {
   font-variation-settings:
     'FILL' 0,
@@ -144,24 +142,12 @@ select:focus {
   --tw-shadow: 0 0 #0000;
 }
 
-.mat-mdc-optgroup-label {
-  @apply text-gray-400;
-}
-
 .mdc-notched-outline__notch {
   border-right: 0 !important;
 }
 
 mat-card {
   @include mat.elevation(0);
-}
-
-.mdc-button {
-  @apply uppercase;
-}
-
-.mdc-tab__text-label {
-  @apply uppercase;
 }
 
 mat-card-header {

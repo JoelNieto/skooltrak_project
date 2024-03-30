@@ -56,7 +56,7 @@ import { CalendarStore } from './calendar.store';
       mat-flat-button
       color="accent"
       class="fixed bottom-12 right-12 z-50"
-      routerLink="/app/courses/assignments"
+      routerLink="/app/assignments"
       [queryParams]="{ course_id: queryValue() }"
     >
       {{ 'CALENDAR.NEW_ASSIGNMENT' | translate }}

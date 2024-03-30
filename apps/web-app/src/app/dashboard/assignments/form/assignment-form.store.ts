@@ -150,7 +150,7 @@ export const AssignmentFormStore = signalStore(
         }
         try {
           await this.saveGroupsDate(data.id);
-          await this.saveFiles(files);
+          await this.saveAttachments({ files, assignment_id: data.id });
         } catch (error) {
           console.error(error);
           patchState(state, { loading: false });
@@ -163,7 +163,13 @@ export const AssignmentFormStore = signalStore(
         router.navigate(['app', 'courses', 'assignments', data.id]);
         patchState(state, { loading: false });
       },
-      async saveFiles(files: File[]): Promise<void> {
+      async saveAttachments({
+        files,
+        assignment_id,
+      }: {
+        files: File[];
+        assignment_id: string;
+      }): Promise<void> {
         if (!files.length) {
           return;
         }
@@ -197,6 +203,16 @@ export const AssignmentFormStore = signalStore(
         if (error) {
           console.error(error);
           throw new Error(error.message);
+        }
+
+        const { error: failure } = await supabase.client
+          .from(Table.AssignmentAttachments)
+          .insert(data.map((x) => ({ attachment_id: x.id, assignment_id })));
+
+        if (failure) {
+          console.error(failure);
+
+          return;
         }
       },
       async saveGroupsDate(id: string): Promise<void> {

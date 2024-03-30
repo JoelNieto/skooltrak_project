@@ -108,7 +108,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
   `,
 })
 export class AssignmentDetailsComponent implements OnInit {
-  private id = input.required<string>();
+  public readonly id = input.required<string>();
 
   public store = inject(AssignmentDetailsStore);
   public supabase = inject(SupabaseService);

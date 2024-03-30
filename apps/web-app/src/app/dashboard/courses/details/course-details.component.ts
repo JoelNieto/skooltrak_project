@@ -100,7 +100,7 @@ import { CourseDetailsStore } from './course-details.store';
   `,
 })
 export class CourseDetailsComponent implements OnInit {
-  private courseId = input.required<string>();
+  public readonly courseId = input.required<string>();
   public store = inject(CourseDetailsStore);
 
   private dialog = inject(Dialog);

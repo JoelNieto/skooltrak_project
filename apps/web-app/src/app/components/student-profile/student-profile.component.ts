@@ -124,8 +124,8 @@ import { StudentProfileStore } from './student-profile.store';
   ],
 })
 export class StudentProfileComponent implements OnInit {
-  private studentId = input.required<string>();
-  public state = inject(StudentProfileStore);
+  public readonly studentId = input.required<string>();
+  public readonly state = inject(StudentProfileStore);
 
   public ngOnInit(): void {
     this.state.fetchProfile(this.studentId());

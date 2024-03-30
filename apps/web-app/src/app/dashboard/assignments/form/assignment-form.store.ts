@@ -160,7 +160,7 @@ export const AssignmentFormStore = signalStore(
         }
 
         toast.success(translate.instant('ALERT.SUCCESS'));
-        router.navigate(['app', 'courses', 'assignments', data.id]);
+        router.navigate(['app', 'assignments', data.id]);
         patchState(state, { loading: false });
       },
       async saveAttachments({

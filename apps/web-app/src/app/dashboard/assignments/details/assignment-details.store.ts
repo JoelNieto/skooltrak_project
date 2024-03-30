@@ -21,7 +21,7 @@ export const AssignmentDetailsStore = signalStore(
       const { data, error } = await supabase.client
         .from(Table.Assignments)
         .select(
-          'id, title, course_id, description, type_id, type:assignment_types(*), dates:group_assignments(group:school_groups(id, name), date), course:courses(id, subject:school_subjects(*), plan:school_plans(*)), created_at, updated_at, user:users(email, first_name, father_name)',
+          'id, title, course_id, description, type_id, type:assignment_types(*), dates:group_assignments(group:school_groups(id, name), date), attachments!assignment_attachments(*), course:courses(id, subject:school_subjects(*), plan:school_plans(*)), created_at, updated_at, user:users(email, first_name, father_name)',
         )
         .eq('id', id)
         .single();

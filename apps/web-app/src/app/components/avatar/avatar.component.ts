@@ -37,13 +37,10 @@ export class AvatarComponent {
   constructor() {
     effect(
       () => {
-        const { data } = this.supabase.getFileURL(
-          this.fileName(),
-          this.bucket(),
-        );
+        const url = this.supabase.getFileURL(this.fileName(), this.bucket());
 
-        if (data.publicUrl) {
-          this.avatarUrl.set(data.publicUrl);
+        if (url) {
+          this.avatarUrl.set(url);
         }
       },
       { allowSignalWrites: true },

@@ -75,7 +75,7 @@ export class SupabaseService {
   }
 
   public getFileURL(path: string, bucket: string) {
-    return this.client.storage.from(bucket).getPublicUrl(path);
+    return this.client.storage.from(bucket).getPublicUrl(path).data.publicUrl;
   }
 
   public createBucket(name: string) {

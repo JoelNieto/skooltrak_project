@@ -37,7 +37,6 @@ import { ScheduleStore } from './schedule.store';
     </button>
     <div class="flex w-full justify-evenly mb-3">
       <div class="flex-1"></div>
-
       <div class="flex flex-1 justify-center gap-4 items-center">
         <button mat-icon-button (click)="store.previousWeek()">
           <mat-icon>arrow_back</mat-icon>
@@ -76,10 +75,19 @@ import { ScheduleStore } from './schedule.store';
               @for (item of store.assignments(); track item) {
                 <mat-card>
                   <mat-card-header>
-                    <mat-card-title
-                      [routerLink]="['/app/assignments', item.assignment.id]"
-                      >{{ item.assignment.title }}</mat-card-title
-                    >
+                    <mat-card-title>
+                      <a
+                        [routerLink]="[
+                          '/',
+                          'app',
+                          'assignments',
+                          item.assignment.id
+                        ]"
+                      >
+                        {{ item.assignment.title }}
+                      </a>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{ item.group.name }}</mat-card-subtitle>
                   </mat-card-header>
                   <mat-card-content>
                     <p [innerHTML]="item.assignment.description"></p>

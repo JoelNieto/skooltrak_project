@@ -21,6 +21,13 @@ export const dashboardRoutes: Routes = [
           ),
       },
       {
+        path: 'assignments',
+        loadChildren: () =>
+          import('./assignments/assignments.routes').then(
+            (x) => x.assignmentsRoutes,
+          ),
+      },
+      {
         path: 'courses',
         title: 'COURSES.TITLE',
         loadChildren: () =>

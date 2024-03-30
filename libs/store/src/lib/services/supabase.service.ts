@@ -75,7 +75,7 @@ export class SupabaseService {
   }
 
   public getFileURL(path: string, bucket: string) {
-    return this.client.storage.from(bucket).getPublicUrl(path);
+    return this.client.storage.from(bucket).getPublicUrl(path).data.publicUrl;
   }
 
   public createBucket(name: string) {
@@ -84,6 +84,15 @@ export class SupabaseService {
 
   public deleteImage(bucket: string, path: string) {
     this.client.storage.from(bucket).remove([path]);
+  }
+
+  public uploadFile({ file, folder }: { file: File; folder: string }) {
+    return this.client.storage
+      .from('files')
+      .upload(`${folder}/${file.name}`, file, {
+        cacheControl: '3600',
+        upsert: true,
+      });
   }
 
   public uploadPicture(file: File, bucket: string) {

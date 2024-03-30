@@ -14,13 +14,6 @@ export const coursesRoutes: Routes = [
           ),
       },
       {
-        path: 'assignments',
-        loadChildren: () =>
-          import('./assignments/assignments.routes').then(
-            (x) => x.assignmentsRoutes,
-          ),
-      },
-      {
         path: ':courseId',
         loadComponent: () =>
           import('./details/course-details.component').then(

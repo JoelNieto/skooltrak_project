@@ -27,9 +27,16 @@ import { ScheduleStore } from './schedule.store';
   ],
   providers: [ScheduleStore],
   template: `
+    <button
+      mat-flat-button
+      color="accent"
+      class="fixed bottom-12 right-12 z-50"
+      routerLink="/app/assignments"
+    >
+      {{ 'CALENDAR.NEW_ASSIGNMENT' | translate }}
+    </button>
     <div class="flex w-full justify-evenly mb-3">
       <div class="flex-1"></div>
-
       <div class="flex flex-1 justify-center gap-4 items-center">
         <button mat-icon-button (click)="store.previousWeek()">
           <mat-icon>arrow_back</mat-icon>
@@ -51,7 +58,7 @@ import { ScheduleStore } from './schedule.store';
       </div>
     </div>
     <div
-      class="overflow-x-scroll whitespace-nowrap *:w-60 *:max-w-60 *:p-2 *:flex-col border-t border-b rounded-b rounded-t *:gap-3 *:inline-table  *:border-r max-h-[60vh] *:max-h-[60vh] *:overflow-y-scroll *:overflow-x-scroll [&>*:first-child]:border-l [&>*:first-child]:rounded-tl"
+      class="overflow-x-scroll whitespace-nowrap *:w-60 *:max-w-60 *:p-2 *:flex-col border-t border-b rounded-b rounded-t *:gap-3 *:inline-table  *:border-r *:overflow-x-scroll [&>*:first-child]:border-l [&>*:first-child]:rounded-tl"
     >
       @for (day of store.days(); track day.day; let idx = $index) {
         <div>
@@ -62,19 +69,32 @@ import { ScheduleStore } from './schedule.store';
               </div>
               <span class="font-mono text-3xl text-sky-900">{{ day.day }}</span>
             </div>
-            @for (item of store.assignments(); track item) {
-              <mat-card>
-                <mat-card-header>
-                  <mat-card-title
-                    [routerLink]="['/app/assignments', item.assignment.id]"
-                    >{{ item.assignment.title }}</mat-card-title
-                  >
-                </mat-card-header>
-                <mat-card-content>
-                  <p [innerHTML]="item.assignment.description"></p>
-                </mat-card-content>
-              </mat-card>
-            }
+            <div
+              class="max-h-[60vh] *:max-h-[60vh] overflow-y-scroll overflow-x-hidden"
+            >
+              @for (item of store.assignments(); track item) {
+                <mat-card>
+                  <mat-card-header>
+                    <mat-card-title>
+                      <a
+                        [routerLink]="[
+                          '/',
+                          'app',
+                          'assignments',
+                          item.assignment.id
+                        ]"
+                      >
+                        {{ item.assignment.title }}
+                      </a>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{ item.group.name }}</mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p [innerHTML]="item.assignment.description"></p>
+                  </mat-card-content>
+                </mat-card>
+              }
+            </div>
           </div>
         </div>
       }

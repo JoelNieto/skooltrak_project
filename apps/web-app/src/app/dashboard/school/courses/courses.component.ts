@@ -18,7 +18,7 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
-import { ButtonDirective, UtilService } from '@skooltrak/ui';
+import { UtilService } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolCoursesFormComponent } from './courses-form.component';
@@ -33,7 +33,6 @@ import { SchoolCoursesStore } from './courses.store';
     MatPaginatorModule,
     DatePipe,
     RouterLink,
-    ButtonDirective,
     MatSelectModule,
     MatFormField,
     MatLabel,

@@ -1,4 +1,10 @@
-import { ClassGroup, Course, EntityBase, User } from '@skooltrak/models';
+import {
+  Attachment,
+  ClassGroup,
+  Course,
+  EntityBase,
+  User,
+} from '@skooltrak/models';
 
 export type AssignmentType = {
   id: string;
@@ -28,6 +34,7 @@ export type Assignment = EntityBase & {
   user?: Partial<User>;
   created_at?: Date;
   updated_at?: Date;
+  attachments?: Attachment[];
 };
 
 export type AssignmentView = {

@@ -12,8 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum } from '@skooltrak/models';
@@ -34,11 +32,7 @@ import { SchoolConnectorStore } from './school-connector.store';
     MatFormFieldModule,
     MatSelectModule,
   ],
-  providers: [
-    SchoolConnectorStore,
-    provideIcons({ heroXMark }),
-    ConfirmationService,
-  ],
+  providers: [SchoolConnectorStore, ConfirmationService],
   styles: `
 
   `,

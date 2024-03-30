@@ -19,12 +19,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { patchState } from '@ngrx/signals';
+import { DropzoneCdkModule, FileInputValue } from '@ngx-dropzone/cdk';
+import { DropzoneMaterialModule } from '@ngx-dropzone/material';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import { asapScheduler } from 'rxjs';
@@ -37,6 +41,7 @@ import { AssignmentFormStore } from './assignment-form.store';
   imports: [
     TranslateModule,
     MatButton,
+    MatIconModule,
     ReactiveFormsModule,
     NgClass,
     MatFormFieldModule,
@@ -44,6 +49,9 @@ import { AssignmentFormStore } from './assignment-form.store';
     MatSelectModule,
     MatSlideToggle,
     MatDatepickerModule,
+    DropzoneCdkModule,
+    DropzoneMaterialModule,
+    MatChipsModule,
   ],
   styles: [],
   providers: [AssignmentFormStore],
@@ -89,6 +97,7 @@ import { AssignmentFormStore } from './assignment-form.store';
               'ASSIGNMENTS.UPLOAD_FILE' | translate
             }}</mat-slide-toggle>
           </div>
+
           <mat-form-field class="col-span-2">
             <mat-label for="description">{{
               'DESCRIPTION' | translate
@@ -99,6 +108,26 @@ import { AssignmentFormStore } from './assignment-form.store';
               matInput
               rows="5"
             ></textarea>
+          </mat-form-field>
+          <mat-form-field class="col-span-2">
+            <mat-label>{{ 'ASSIGNMENTS.ATTACHMENTS' | translate }}</mat-label>
+            <ngx-mat-dropzone>
+              <input
+                type="file"
+                multiple
+                fileInput
+                [formControl]="fileControl"
+              />
+              @for (file of files; track file) {
+                <mat-chip-row (removed)="removeFile(file)" color="accent">
+                  {{ file.name }}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+            </ngx-mat-dropzone>
+            <mat-icon matSuffix color="primary">cloud_upload</mat-icon>
           </mat-form-field>
         </div>
         <div footer class="flex justify-end pt-6">
@@ -145,6 +174,27 @@ export class AssignmentFormComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
   public store = inject(AssignmentFormStore);
+  public fileControl = new FormControl<FileInputValue>(null);
+
+  get files(): File[] {
+    const files = this.fileControl.value;
+
+    if (!files) return [];
+
+    return Array.isArray(files) ? files : [files];
+  }
+
+  public removeFile(file: File): void {
+    if (Array.isArray(this.fileControl.value)) {
+      this.fileControl.setValue(
+        this.fileControl.value.filter((i) => i !== file),
+      );
+
+      return;
+    }
+
+    this.fileControl.setValue(null);
+  }
 
   public assignmentForm = new FormGroup({
     title: new FormControl<string>('', {
@@ -244,6 +294,6 @@ export class AssignmentFormComponent implements OnInit {
 
   public saveAssignment(): void {
     const value = this.assignmentForm.getRawValue();
-    this.store.saveAssignment(value);
+    this.store.saveAssignment({ request: value, files: this.files });
   }
 }

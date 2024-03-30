@@ -95,7 +95,7 @@ export class PublicationItemComponent {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: async (res) => {
-          if (res) return;
+          if (!res) return;
           const { error } = await this.supabase.client
             .from(Table.Publications)
             .delete()

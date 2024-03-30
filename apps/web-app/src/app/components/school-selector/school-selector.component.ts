@@ -79,8 +79,8 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
         }
       </div>
     </mat-card-content>
-    <mat-card-footer class="flex justify-end gap-4 pt-4" footer>
-      <mat-card-actions align="end" class="gap-2">
+    <mat-card-footer>
+      <mat-card-actions align="end">
         <button mat-stroked-button (click)="addSchoolConnection()">
           <mat-icon>link</mat-icon>
           <span>{{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}</span>

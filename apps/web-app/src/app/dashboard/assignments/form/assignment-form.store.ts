@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   Assignment,
   AssignmentType,
+  Attachment,
   ClassGroup,
   Course,
   GroupAssignment,
@@ -117,7 +118,13 @@ export const AssignmentFormStore = signalStore(
 
         patchState(state, { assignment: data, loading: false });
       },
-      async saveAssignment(request: Partial<Assignment>): Promise<void> {
+      async saveAssignment({
+        request,
+        files,
+      }: {
+        request: Partial<Assignment>;
+        files: File[];
+      }): Promise<void> {
         patchState(state, { loading: false });
         const { data, error } = await supabase.client
           .from(Table.Assignments)
@@ -141,7 +148,72 @@ export const AssignmentFormStore = signalStore(
 
           return;
         }
-        this.saveGroupsDate(data.id);
+        try {
+          await this.saveGroupsDate(data.id);
+          await this.saveAttachments({ files, assignment_id: data.id });
+        } catch (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+          toast.error(translate.instant('ALERT.FAILURE'));
+
+          return;
+        }
+
+        toast.success(translate.instant('ALERT.SUCCESS'));
+        router.navigate(['app', 'assignments', data.id]);
+        patchState(state, { loading: false });
+      },
+      async saveAttachments({
+        files,
+        assignment_id,
+      }: {
+        files: File[];
+        assignment_id: string;
+      }): Promise<void> {
+        if (!files.length) {
+          return;
+        }
+        const items: Partial<Attachment>[] = [];
+
+        await Promise.all(
+          files.map(async (file) => {
+            const { data, error } = await supabase.uploadFile({
+              file,
+              folder: schoolId()!,
+            });
+            items.push({
+              file_name: file.name,
+              file_path: data?.path,
+              file_size: file.size,
+              file_type: file.type,
+            });
+
+            if (error) {
+              console.error(error);
+              throw new Error(error.message);
+            }
+          }),
+        );
+
+        const { error, data } = await supabase.client
+          .from(Table.Attachments)
+          .insert(items)
+          .select('id');
+
+        if (error) {
+          console.error(error);
+          throw new Error(error.message);
+        }
+
+        const { error: failure } = await supabase.client
+          .from(Table.AssignmentAttachments)
+          .insert(data.map((x) => ({ attachment_id: x.id, assignment_id })));
+
+        if (failure) {
+          console.error(failure);
+
+          return;
+        }
       },
       async saveGroupsDate(id: string): Promise<void> {
         const groups = dates().map((x) => ({ ...x, assignment_id: id }));
@@ -151,15 +223,8 @@ export const AssignmentFormStore = signalStore(
           .upsert(groups);
 
         if (error) {
-          console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
-
-          return;
+          throw new Error(error.message);
         }
-
-        toast.success(translate.instant('ALERT.SUCCESS'));
-        router.navigate(['app', 'courses', 'assignments', id]);
-        patchState(state, { loading: false });
       },
       fetchGroups: rxMethod<Course | undefined>(
         pipe(

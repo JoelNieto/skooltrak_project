@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { SupabaseService } from '@skooltrak/store';
 
 import { AssignmentGradesComponent } from '../grades/assignment-grades.component';
 import { AssignmentInstructionsComponent } from '../instructions/assignment-instructions.component';
@@ -19,6 +21,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
     MatButtonModule,
     RouterOutlet,
     MatTabsModule,
+    MatChipsModule,
     RouterLink,
     AssignmentInstructionsComponent,
     AssignmentStudentsWorkComponent,
@@ -35,8 +38,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
             </h1>
             <a
               class="mat-subtitle"
-              routerLink="/app/courses/details/"
-              [queryParams]="{ course_id: store.assignment()?.course_id }"
+              [routerLink]="['/app', 'courses', store.assignment()?.course_id]"
             >
               {{ store.assignment()?.course?.subject?.name }} /
               {{ store.assignment()?.course?.plan?.name }}
@@ -45,14 +47,28 @@ import { AssignmentDetailsStore } from './assignment-details.store';
               {{ store.assignment()?.type?.name }}
             </p>
           </div>
-          <button mat-flat-button class="tertiary" routerLink="edit">
-            {{ 'Edit' | translate }}
+          <button mat-stroked-button class="tertiary" routerLink="edit">
+            {{ 'ACTIONS.EDIT' | translate }}
           </button>
         </div>
         <div>
           <mat-tab-group>
             <mat-tab [label]="'ASSIGNMENTS.INSTRUCTIONS' | translate">
               <ng-template matTabContent>
+                <mat-chip-set>
+                  @for (
+                    file of store.assignment()?.attachments;
+                    track file.file_name
+                  ) {
+                    <a
+                      [href]="supabase.getFileURL(file.file_path, 'files')"
+                      [download]="file.file_name"
+                      target="_blank"
+                    >
+                      <mat-chip>{{ file.file_name }}</mat-chip>
+                    </a>
+                  }
+                </mat-chip-set>
                 <sk-assignments-instructions />
               </ng-template>
             </mat-tab>
@@ -95,6 +111,7 @@ export class AssignmentDetailsComponent implements OnInit {
   private id = input.required<string>();
 
   public store = inject(AssignmentDetailsStore);
+  public supabase = inject(SupabaseService);
 
   public ngOnInit(): void {
     this.store.fetchAssignment(this.id());

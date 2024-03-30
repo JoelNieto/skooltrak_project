@@ -7,14 +7,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
-import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import { SelectComponent } from '@skooltrak/ui';
 import { filter } from 'rxjs';
 
 import { PlansFormStore } from './plans-form.store';
@@ -26,14 +26,10 @@ import { PlansFormStore } from './plans-form.store';
     ReactiveFormsModule,
     MatCardModule,
     TranslateModule,
-    SelectComponent,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatButton,
-    MatIconButton,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
     MatIcon,
   ],
   providers: [PlansFormStore],

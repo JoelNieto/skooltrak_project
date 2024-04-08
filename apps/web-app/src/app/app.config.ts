@@ -1,24 +1,17 @@
-import { DialogModule } from '@angular/cdk/dialog';
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-MX';
-import {
-  ApplicationConfig,
-  LOCALE_ID,
-  importProvidersFrom,
-} from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
-import { MAT_CARD_CONFIG } from '@angular/material/card';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import {
-  BrowserAnimationsModule,
-  provideAnimations,
-} from '@angular/platform-browser/animations';
-import {
-  TitleStrategy,
   provideRouter,
+  TitleStrategy,
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
   withRouterConfig,
@@ -33,7 +26,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { es } from 'date-fns/locale';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { QuillModule } from 'ngx-quill';
+import { provideQuillConfig } from 'ngx-quill';
 
 import { appRoutes } from './app.routes';
 
@@ -55,8 +48,33 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideCharts(withDefaultRegisterables()),
+    provideQuillConfig({
+      modules: {
+        syntax: true,
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+          ['blockquote', 'code-block'],
+
+          [{ header: 1 }, { header: 2 }], // custom button values
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+          [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+          [{ direction: 'rtl' }], // text direction
+
+          [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+          [{ font: [] }],
+          [{ align: [] }],
+
+          ['clean'], // remove formatting button
+
+          ['link', 'image', 'video'],
+        ],
+      },
+    }),
     importProvidersFrom(
-      QuillModule.forRoot(),
       BrowserModule,
       BrowserAnimationsModule,
       TranslateModule.forRoot({
@@ -71,12 +89,15 @@ export const appConfig: ApplicationConfig = {
         provide: DateAdapter,
         useFactory: adapterFactory,
       }),
-      DialogModule,
+      MatDialogModule,
     ),
     { provide: APP_CONFIG, useValue: environment },
     { provide: LOCALE_ID, useValue: 'es-MX' },
     { provide: MAT_DATE_LOCALE, useValue: es },
-    { provide: MAT_CARD_CONFIG, useValue: { appearance: 'outlined' } },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { verticalPosition: 'top', duration: 3_000 },
+    },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline' },

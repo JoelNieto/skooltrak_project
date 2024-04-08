@@ -8,7 +8,6 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { Grade } from '@skooltrak/models';
-import { SelectComponent } from '@skooltrak/ui';
 
 import { CourseDetailsStore } from '../courses/details/course-details.store';
 import { GradeItemFormComponent } from '../grade-item-form/grade-item-form.component';
@@ -21,7 +20,6 @@ import { CourseGradesStore } from './course-grades.store';
   imports: [
     TranslateModule,
     MatIcon,
-    SelectComponent,
     MatButton,
     DialogModule,
     ReactiveFormsModule,

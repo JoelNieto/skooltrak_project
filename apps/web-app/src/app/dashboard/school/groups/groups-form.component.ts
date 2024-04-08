@@ -16,7 +16,6 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { SelectComponent } from '@skooltrak/ui';
 
 import { GroupsFormStore } from './groups-form.store';
 
@@ -27,7 +26,6 @@ import { GroupsFormStore } from './groups-form.store';
     MatCardModule,
     TranslateModule,
     ReactiveFormsModule,
-    SelectComponent,
     MatButton,
     MatFormField,
     MatSelect,

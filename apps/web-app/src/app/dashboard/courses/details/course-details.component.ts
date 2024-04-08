@@ -6,7 +6,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TabsComponent, TabsItemComponent } from '@skooltrak/ui';
 
 import { CourseMeetingComponent } from '../../../components/course-meeting/course-meeting.component';
 import { CourseDetailsStore } from './course-details.store';
@@ -19,8 +18,6 @@ import { CourseDetailsStore } from './course-details.store';
     RouterLink,
     RouterLinkActive,
     TranslateModule,
-    TabsComponent,
-    TabsItemComponent,
     RouterOutlet,
     MatButton,
     MatIcon,

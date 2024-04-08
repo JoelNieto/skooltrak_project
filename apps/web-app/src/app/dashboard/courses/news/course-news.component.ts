@@ -27,31 +27,27 @@ import { CourseNewsStore } from './course-news.store';
       </mat-card>
     </div>
     <div class="flex-1 flex flex-col gap-2">
-      <mat-card>
-        <mat-card-content>
-          <form [formGroup]="form" (ngSubmit)="newPost()">
-            <mat-form-field class="w-full">
-              <textarea
-                formControlName="body"
-                type="text"
-                matInput
-                rows="3"
-                [placeholder]="'PUBLICATIONS.BODY' | translate"
-              ></textarea>
-            </mat-form-field>
-            <div class="flex justify-between items-start">
-              <button
-                type="submit"
-                mat-flat-button
-                color="primary"
-                [disabled]="form.invalid"
-              >
-                {{ 'PUBLICATIONS.PUBLISH' | translate }}
-              </button>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
+      <form [formGroup]="form" (ngSubmit)="newPost()">
+        <mat-form-field class="w-full">
+          <textarea
+            formControlName="body"
+            type="text"
+            matInput
+            rows="3"
+            [placeholder]="'PUBLICATIONS.BODY' | translate"
+          ></textarea>
+        </mat-form-field>
+        <div class="flex justify-end mb-4 ">
+          <button
+            type="submit"
+            mat-flat-button
+            color="primary"
+            [disabled]="form.invalid"
+          >
+            {{ 'PUBLICATIONS.PUBLISH' | translate }}
+          </button>
+        </div>
+      </form>
       <div class="flex flex-col gap-4">
         @for (publication of store.publications(); track publication.id) {
           <sk-publication-item [post]="publication" />

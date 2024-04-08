@@ -18,11 +18,12 @@
     "TRY_AGAIN": "Por favor, intente nuevamente"
   },
   "ASSIGNMENTS": {
-    "ATTACHMENTS": "Adjuntos",
+    "ATTACHMENTS": "Archivos adjuntos",
     "CREATED": "Creada",
     "DATE": "Fecha",
     "DETAILS": "Detalles de la tarea",
     "EDIT": "Datos de la asignación",
+    "EMPTY": "Sin tareas",
     "GRADES": "Calificaciones",
     "INSTRUCTIONS": "Instrucciones",
     "ITEM_TITLE": "Titulo",
@@ -197,9 +198,6 @@
   "NO_ITEMS": "Sin  elementos para este filtro",
   "News": "Novedades",
   "Other": "Otro",
-  "PAGINATOR": {
-    "SHOWING": "Mostrando <span class=\"font-semibold text-gray-900 dark:text-white\">{{start}}-{{end}}</span> de <span class=\"font-semibold text-gray-900 dark:text-white\">{{count}}</span>"
-  },
   "PARENT": "Acudiente",
   "PEOPLE": {
     "ADMIN": "Administrativo",
@@ -410,6 +408,9 @@
   "Teachers": "Docentes",
   "UPDATED_AT": "Actualizado",
   "USER": "Usuario",
+  "USERS_SEARCH": {
+    "TITLE": "Búsqueda de usuarios"
+  },
   "USERS_SELECTOR": {
     "NOT_FOUND": "Sin usuarios encontrados",
     "PLACEHOLDER": "Elegir usuarios",

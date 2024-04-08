@@ -1,12 +1,12 @@
 import { Component, input } from '@angular/core';
 
-import { CalendarComponent } from '../../../components/calendar/calendar.component';
+import { ScheduleComponent } from '../../../components/schedule/schedule.component';
 
 @Component({
   standalone: true,
   selector: 'sk-course-schedule',
-  imports: [CalendarComponent],
-  template: `<sk-calendar [queryValue]="course_id()" queryItem="course_id" />`,
+  imports: [ScheduleComponent],
+  template: `<div class="mt-2"><sk-schedule /></div>`,
 })
 export class CourseScheduleComponent {
   public course_id = input<string>();

@@ -1,8 +1,17 @@
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Chat, Table } from '@skooltrak/models';
 import { orderBy } from 'lodash';
+import { filter, pipe, tap } from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
 import { AuthStore } from './auth.store';
@@ -34,8 +43,8 @@ export const MessagesStore = signalStore(
       { chats, userId, ...state },
       supabase = inject(SupabaseService),
       router = inject(Router),
-    ) => ({
-      async fetchChats() {
+    ) => {
+      async function getChats() {
         patchState(state, { loading: true, hasError: false });
         const { data, error } = await supabase.client
           .from(Table.Chats)
@@ -50,15 +59,23 @@ export const MessagesStore = signalStore(
         }
 
         patchState(state, { loading: false, chats: data });
-      },
-      async newChat(ids: string[]) {
+      }
+
+      const fetchChats = rxMethod<string | undefined>(
+        pipe(
+          filter(() => !!userId()),
+          tap(() => getChats()),
+        ),
+      );
+
+      async function newChat(ids: string[]) {
         patchState(state, { loading: true });
         const existing = chats().find(
           (x) => x.members.length === 1 && ids.includes(x.members[0].user_id),
         );
 
         if (existing) {
-          this.navigateToChat(existing.id);
+          navigateToChat(existing.id);
           patchState(state, { loading: false });
 
           return;
@@ -74,15 +91,22 @@ export const MessagesStore = signalStore(
           return;
         }
 
-        this.fetchChats();
-        this.navigateToChat(data.id);
+        getChats();
+        navigateToChat(data.id);
         patchState(state, { loading: false });
-      },
-      navigateToChat(id: string) {
+      }
+      function navigateToChat(id: string) {
         router.navigate(['/app/messaging/inbox/chat'], {
           queryParams: { chat_id: id },
         });
-      },
-    }),
+      }
+
+      return { getChats, newChat, navigateToChat, fetchChats };
+    },
   ),
+  withHooks({
+    onInit({ fetchChats, userId }) {
+      fetchChats(userId);
+    },
+  }),
 );

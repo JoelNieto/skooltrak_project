@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SupabaseService } from '@skooltrak/store';
+import { ConfirmationService } from '@skooltrak/ui';
 
 import { AssignmentGradesComponent } from '../grades/assignment-grades.component';
 import { AssignmentInstructionsComponent } from '../instructions/assignment-instructions.component';
@@ -36,25 +37,44 @@ import { AssignmentDetailsStore } from './assignment-details.store';
             <h1 class="mat-headline-2">
               {{ store.assignment()?.title }}
             </h1>
-            <a
-              class="mat-subtitle"
-              [routerLink]="['/app', 'courses', store.assignment()?.course_id]"
-            >
-              {{ store.assignment()?.course?.subject?.name }} /
-              {{ store.assignment()?.course?.plan?.name }}
-            </a>
-            <p class="mat-body">
-              {{ store.assignment()?.type?.name }}
-            </p>
+            <mat-chip-set>
+              <mat-chip class="primary"
+                >{{ store.assignment()?.course?.subject?.name }}
+              </mat-chip>
+              <a
+                [routerLink]="[
+                  '/app',
+                  'courses',
+                  store.assignment()?.course_id
+                ]"
+              >
+                <mat-chip class="secondary">
+                  {{ store.assignment()?.course?.plan?.name }}</mat-chip
+                ></a
+              >
+              <mat-chip>{{ store.assignment()?.type?.name }}</mat-chip>
+              <mat-chip class="tertiary"
+                >{{ store.assignment()?.user?.first_name }}
+                {{ store.assignment()?.user?.father_name }}</mat-chip
+              >
+            </mat-chip-set>
           </div>
-          <button mat-stroked-button class="tertiary" routerLink="edit">
-            {{ 'ACTIONS.EDIT' | translate }}
-          </button>
+          <div class="flex gap-2">
+            <button mat-stroked-button color="accent" routerLink="edit">
+              {{ 'ACTIONS.EDIT' | translate }}
+            </button>
+            <button mat-flat-button color="warn" (click)="deleteAssignment()">
+              {{ 'ACTIONS.DELETE' | translate }}
+            </button>
+          </div>
         </div>
         <div>
           <mat-tab-group>
             <mat-tab [label]="'ASSIGNMENTS.INSTRUCTIONS' | translate">
               <ng-template matTabContent>
+                <h3 class="mat-headline-4">
+                  {{ 'ASSIGNMENTS.ATTACHMENTS' | translate }}
+                </h3>
                 <mat-chip-set>
                   @for (
                     file of store.assignment()?.attachments;
@@ -65,7 +85,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
                       [download]="file.file_name"
                       target="_blank"
                     >
-                      <mat-chip>{{ file.file_name }}</mat-chip>
+                      <mat-chip class="tertiary">{{ file.file_name }}</mat-chip>
                     </a>
                   }
                 </mat-chip-set>
@@ -86,7 +106,7 @@ import { AssignmentDetailsStore } from './assignment-details.store';
         </div>
       </div>
       <div class="w-72 ">
-        <div header>
+        <div>
           <h2 class="mat-headline-4">
             {{ 'Groups' | translate }}
           </h2>
@@ -112,8 +132,22 @@ export class AssignmentDetailsComponent implements OnInit {
 
   public store = inject(AssignmentDetailsStore);
   public supabase = inject(SupabaseService);
+  private confirmation = inject(ConfirmationService);
 
   public ngOnInit(): void {
     this.store.fetchAssignment(this.id());
+  }
+
+  public deleteAssignment(): void {
+    this.confirmation
+      .openDialog({
+        title: 'CONFIRMATION.DELETE.TITLE',
+        showCancelButton: true,
+      })
+      .subscribe({
+        next: (res) => {
+          res && this.store.deleteAssignment(this.id());
+        },
+      });
   }
 }

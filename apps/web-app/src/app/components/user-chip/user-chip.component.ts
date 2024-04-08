@@ -1,34 +1,50 @@
-import { Component, EventEmitter, input, Output } from '@angular/core';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
+import {
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
 import { User } from '@skooltrak/models';
-
-import { AvatarComponent } from '../avatar/avatar.component';
+import { SupabaseService } from '@skooltrak/store';
 
 @Component({
   selector: 'sk-user-chip',
   standalone: true,
-  imports: [AvatarComponent, NgIconComponent],
-  providers: [provideIcons({ heroXMark })],
-  template: `<div
-    class="flex p-1 pr-2 items-center text-xs gap-2 rounded-full font-sans font-semibold bg-emerald-100 text-emerald-600 border border-emerald-400 dark:bg-emerald-700 dark:text-gray-200"
-  >
-    <sk-avatar
-      [fileName]="user().avatar_url ?? 'default_avatar.jpg'"
-      class="h-6"
-      [rounded]="true"
-    />
+  imports: [MatChipsModule, MatIcon],
+  providers: [],
+  template: `<mat-chip class="tertiary">
+    <img [src]="avatarUrl()" matChipAvatar class="rounded-full" />
+
     {{ user().first_name }}
     {{ user().father_name }}
     @if (removable()) {
-      <button (click)="remove.emit(user())">
-        <ng-icon name="heroXMark" size="16" />
+      <button
+        matChipRemove
+        [attr.aria-label]="'remove '"
+        (click)="remove.emit(user())"
+      >
+        <mat-icon>cancel</mat-icon>
       </button>
     }
-  </div>`,
+  </mat-chip>`,
 })
-export class UserChipComponent {
+export class UserChipComponent implements OnInit {
   public user = input.required<Partial<User>>();
+  public avatarUrl = signal<string | undefined>(undefined);
   public removable = input(false);
-  @Output() public remove = new EventEmitter<Partial<User>>();
+  private supabase = inject(SupabaseService);
+  public remove = output<Partial<User>>();
+
+  public ngOnInit(): void {
+    this.avatarUrl.set(
+      this.supabase.getFileURL(
+        this.user().avatar_url ?? 'default_avatar.jpg',
+        'avatars',
+      ),
+    );
+  }
 }

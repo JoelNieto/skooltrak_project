@@ -35,7 +35,7 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
       <h2 class="mat-headline-3">
         {{ 'QUIZZES.ASSIGNATIONS' | translate }}
       </h2>
-      <button mat-flat-button color="accent" (click)="newAssignation()">
+      <button mat-flat-button color="primary" (click)="newAssignation()">
         <mat-icon>add</mat-icon>{{ 'NEW' | translate }}
       </button>
     </div>

@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatQuillComponent } from './mat-quill.component';
 
-import { SelectComponent } from './select.component';
-
-describe('SelectComponent', () => {
-  let component: SelectComponent;
-  let fixture: ComponentFixture<SelectComponent>;
+describe('MatQuillComponent', () => {
+  let component: MatQuillComponent;
+  let fixture: ComponentFixture<MatQuillComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectComponent],
+      imports: [MatQuillComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SelectComponent);
+    fixture = TestBed.createComponent(MatQuillComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -84,9 +84,9 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
             </div>
           }
         </button>
-        <button mat-icon-button routerLink="messaging">
+        <a mat-icon-button routerLink="communications">
           <mat-icon>chat</mat-icon>
-        </button>
+        </a>
       </div>
     </mat-toolbar>
     <mat-sidenav-container autosize class="h-full">

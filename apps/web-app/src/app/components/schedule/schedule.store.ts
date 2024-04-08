@@ -1,11 +1,20 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Course, GroupAssignments, Table } from '@skooltrak/models';
-import { SupabaseService } from '@skooltrak/store';
+import { SupabaseService, webStore } from '@skooltrak/store';
 import {
   addDays,
   addWeeks,
   endOfDay,
+  format,
   getDate,
   isBefore,
   isMonday,
@@ -17,6 +26,7 @@ import {
   startOfDay,
   subWeeks,
 } from 'date-fns';
+import { filter, pipe, tap } from 'rxjs';
 
 type State = {
   loading: boolean;
@@ -36,39 +46,50 @@ const initial: State = {
 
 export const ScheduleStore = signalStore(
   withState(initial),
-  withComputed(({ currentDate }) => {
-    const start = computed(() => {
-      if (isMonday(currentDate())) {
-        return startOfDay(currentDate());
-      }
-
-      if (isWeekend(currentDate())) {
-        return startOfDay(nextMonday(currentDate()));
-      }
-
-      return startOfDay(previousMonday(currentDate()));
-    });
-
-    const end = computed(() => endOfDay(nextSunday(start())));
-    const days = computed(() => {
-      {
-        let current = start();
-        const dayList = [];
-        while (isBefore(current, end())) {
-          dayList.push({ date: current, day: getDate(current) });
-          current = addDays(current, 1);
+  withComputed(
+    ({ currentDate, courseId }, auth = inject(webStore.AuthStore)) => {
+      const start = computed(() => {
+        if (isMonday(currentDate())) {
+          return startOfDay(currentDate());
         }
 
-        return dayList;
-      }
-    });
+        if (isWeekend(currentDate())) {
+          return startOfDay(nextMonday(currentDate()));
+        }
 
-    const isToday = computed(() => isSameDay(new Date(), currentDate()));
+        return startOfDay(previousMonday(currentDate()));
+      });
 
-    return { start, end, days, isToday };
-  }),
+      const end = computed(() => endOfDay(nextSunday(start())));
+      const days = computed(() => {
+        {
+          let current = start();
+          const dayList = [];
+          while (isBefore(current, end())) {
+            dayList.push({ date: current, day: getDate(current) });
+            current = addDays(current, 1);
+          }
+
+          return dayList;
+        }
+      });
+      const schoolId = computed(() => auth.schoolId());
+
+      const isToday = computed(() => isSameDay(new Date(), currentDate()));
+      const fetchData = computed(() => ({
+        start: start(),
+        courseId: courseId(),
+        schoolId: auth.schoolId(),
+      }));
+
+      return { start, end, days, isToday, fetchData, schoolId };
+    },
+  ),
   withMethods(
-    ({ currentDate, ...state }, supabase = inject(SupabaseService)) => {
+    (
+      { currentDate, start, end, fetchData, schoolId, ...state },
+      supabase = inject(SupabaseService),
+    ) => {
       function nextWeek(): void {
         patchState(state, { currentDate: addWeeks(currentDate(), 1) });
       }
@@ -86,8 +107,11 @@ export const ScheduleStore = signalStore(
         const { data, error } = await supabase.client
           .from(Table.GroupAssignments)
           .select(
-            'group_id, group:school_groups(id, name), assignment:assignments(*), date, created_at',
-          );
+            'group_id, group:school_groups(id, name), assignment:assignments!inner(id, title, description, type:assignment_types(id, name), course:courses!inner(id, subject:school_subjects(id, name), school_id), user:users(id, first_name, father_name)), date, created_at',
+          )
+          .eq('assignment.course.school_id', schoolId())
+          .gte('date', format(start(), 'yyyy-MM-dd HH:mm:ss'))
+          .lte('date', format(end(), 'yyyy-MM-dd HH:mm:ss'));
 
         if (error) {
           console.error(error);
@@ -98,6 +122,13 @@ export const ScheduleStore = signalStore(
 
         patchState(state, { assignments: data as unknown as GroupAssignments });
       }
+
+      const fetchAssignments = rxMethod<typeof fetchData>(
+        pipe(
+          filter(() => !!schoolId()),
+          tap(() => getAssignments()),
+        ),
+      );
 
       /*  fetchAssignments: rxMethod<typeof queryData>(
       pipe(
@@ -135,7 +166,12 @@ export const ScheduleStore = signalStore(
       ),
     ), */
 
-      return { nextWeek, previousWeek, getAssignments, goToday };
+      return { nextWeek, previousWeek, fetchAssignments, goToday };
     },
   ),
+  withHooks({
+    onInit({ fetchAssignments, fetchData }) {
+      fetchAssignments(fetchData);
+    },
+  }),
 );

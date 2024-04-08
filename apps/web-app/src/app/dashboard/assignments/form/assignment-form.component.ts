@@ -104,7 +104,6 @@ import { AssignmentFormStore } from './assignment-form.store';
             }}</mat-label>
             <textarea
               formControlName="description"
-              theme="snow"
               matInput
               rows="5"
             ></textarea>
@@ -141,7 +140,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           </button>
         </div>
       </div>
-      <div class="w-72 flex-none">
+      <div class="w-80 flex-none">
         <div>
           <h2 class="mat-headline-4">
             {{ 'GROUPS.DATES' | translate }}

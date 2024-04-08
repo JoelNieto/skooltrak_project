@@ -71,6 +71,7 @@ body {
   height: 100%;
   font-weight: 400;
   @include mat.all-component-themes($light-theme);
+  @include matx.color-variants-back-compat($light-theme);
   @include mat.typography-hierarchy($light-theme, $back-compat: true);
 }
 body {
@@ -95,6 +96,48 @@ button.tertiary {
 
 button.warn {
   @include mat.button-color($light-warn-theme, $color-variant: primary);
+}
+
+mat-chip.primary {
+  background: mat.get-theme-color($light-theme, primary-fixed-dim) !important;
+  color: mat.get-theme-color($light-theme, primary) !important;
+  border-color: mat.get-theme-color($light-theme, primary) !important;
+  --mdc-chip-label-text-color: mat.get-theme-color(
+    $light-theme,
+    primary
+  ) !important;
+  --mdc-chip-outline-color: mat.get-theme-color(
+    $light-theme,
+    outline
+  ) !important;
+}
+
+mat-chip.secondary {
+  background: mat.get-theme-color($light-theme, secondary-fixed-dim) !important;
+  color: mat.get-theme-color($light-theme, secondary) !important;
+  border-color: mat.get-theme-color($light-theme, secondary) !important;
+  --mdc-chip-label-text-color: mat.get-theme-color(
+    $light-theme,
+    secondary
+  ) !important;
+  --mdc-chip-outline-color: mat.get-theme-color(
+    $light-theme,
+    secondary
+  ) !important;
+}
+
+mat-chip.tertiary {
+  background: mat.get-theme-color($light-theme, tertiary-fixed-dim) !important;
+  color: mat.get-theme-color($light-theme, tertiary) !important;
+  border-color: mat.get-theme-color($light-theme, tertiary) !important;
+  --mdc-chip-label-text-color: mat.get-theme-color(
+    $light-theme,
+    tertiary
+  ) !important;
+  --mdc-chip-outline-color: mat.get-theme-color(
+    $light-theme,
+    tertiary
+  ) !important;
 }
 
 .ql-container {
@@ -160,4 +203,12 @@ mat-card-footer {
 
 .mdc-card__actions {
   @apply gap-2;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title + .mat-mdc-dialog-content {
+  padding-top: 0.5rem !important;
 }

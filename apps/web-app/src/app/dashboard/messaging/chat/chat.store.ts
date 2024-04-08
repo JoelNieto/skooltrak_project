@@ -1,6 +1,13 @@
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Message, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
@@ -73,7 +80,7 @@ export const ChatStore = signalStore(
         patchState(state, {
           messages: [{ mine: true, ...(data as Message) }, ...messages()],
         });
-        messaging.fetchChats();
+        messaging.getChats();
       },
     }),
   ),

@@ -3,14 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  OnInit,
+  input,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { WeekDays } from '@skooltrak/models';
+import { GroupAssignments, WeekDays } from '@skooltrak/models';
+import { getDay } from 'date-fns';
 
 import { ScheduleStore } from './schedule.store';
 
@@ -21,6 +23,7 @@ import { ScheduleStore } from './schedule.store';
     MatButtonModule,
     MatIconModule,
     DatePipe,
+    MatChipsModule,
     MatCardModule,
     TranslateModule,
     RouterLink,
@@ -58,7 +61,7 @@ import { ScheduleStore } from './schedule.store';
       </div>
     </div>
     <div
-      class="overflow-x-scroll whitespace-nowrap *:w-60 *:max-w-60 *:p-2 *:flex-col border-t border-b rounded-b rounded-t *:gap-3 *:inline-table  *:border-r *:overflow-x-scroll [&>*:first-child]:border-l [&>*:first-child]:rounded-tl"
+      class="overflow-x-scroll whitespace-nowrap *:w-60 *:max-w-60 *:p-2 *:flex-col border-t border-b rounded-b rounded-t *:gap-3 *:inline-table *:border-r *:overflow-x-scroll [&>*:first-child]:border-l [&>*:first-child]:rounded-tl"
     >
       @for (day of store.days(); track day.day; let idx = $index) {
         <div>
@@ -69,10 +72,8 @@ import { ScheduleStore } from './schedule.store';
               </div>
               <span class="font-mono text-3xl text-sky-900">{{ day.day }}</span>
             </div>
-            <div
-              class="max-h-[60vh] *:max-h-[60vh] overflow-y-scroll overflow-x-hidden"
-            >
-              @for (item of store.assignments(); track item) {
+            <div class="h-[60vh] overflow-y-scroll px-2 overflow-x-hidden">
+              @for (item of filteredItems(idx); track item) {
                 <mat-card>
                   <mat-card-header>
                     <mat-card-title>
@@ -83,16 +84,39 @@ import { ScheduleStore } from './schedule.store';
                           'assignments',
                           item.assignment.id
                         ]"
+                        class="text-wrap"
                       >
                         {{ item.assignment.title }}
                       </a>
                     </mat-card-title>
-                    <mat-card-subtitle>{{ item.group.name }}</mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <mat-chip-set
+                        ><mat-chip class="primary">{{
+                          item.group.name
+                        }}</mat-chip>
+                        <mat-chip class="tertiary">{{
+                          item.assignment.course?.subject?.name
+                        }}</mat-chip>
+                        <mat-chip
+                          >{{ item.assignment.user?.first_name }}
+                          {{ item.assignment.user?.father_name }}</mat-chip
+                        >
+                      </mat-chip-set>
+                    </mat-card-subtitle>
                   </mat-card-header>
                   <mat-card-content>
-                    <p [innerHTML]="item.assignment.description"></p>
+                    <p
+                      class="truncate"
+                      [innerHTML]="item.assignment.description"
+                    ></p>
                   </mat-card-content>
                 </mat-card>
+              } @empty {
+                <div class="flex items-center justify-center h-full">
+                  <h3 class="mat-hint">
+                    {{ 'ASSIGNMENTS.EMPTY' | translate }}
+                  </h3>
+                </div>
               }
             </div>
           </div>
@@ -107,11 +131,16 @@ import { ScheduleStore } from './schedule.store';
     `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleComponent implements OnInit {
+export class ScheduleComponent {
   public store = inject(ScheduleStore);
+  public course_id = input<string>();
   public WeekDays = WeekDays;
 
-  public ngOnInit(): void {
-    this.store.getAssignments();
+  public weekDay(date: Date): number {
+    return getDay(date);
+  }
+
+  public filteredItems(idx: number): GroupAssignments {
+    return this.store.assignments().filter((x) => this.weekDay(x.date) === idx);
   }
 }

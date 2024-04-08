@@ -8,7 +8,6 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'sk-school',
   imports: [
     RouterOutlet,
-
     TranslateModule,
     MatTabsModule,
     RouterLink,

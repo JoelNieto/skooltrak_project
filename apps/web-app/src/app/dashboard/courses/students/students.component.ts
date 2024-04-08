@@ -1,8 +1,9 @@
-import { JsonPipe } from '@angular/common';
+import { Dialog } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -11,8 +12,8 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { SelectComponent } from '@skooltrak/ui';
 
+import { UsersSearchComponent } from '../../../components/users-search/users-search.component';
 import { CourseDetailsStore } from '../details/course-details.store';
 import { CourseStudentsStore } from './students.store';
 
@@ -22,17 +23,16 @@ import { CourseStudentsStore } from './students.store';
   providers: [CourseStudentsStore],
   imports: [
     RouterLink,
-    SelectComponent,
     TranslateModule,
     MatButton,
     MatSelectModule,
     MatFormFieldModule,
     MatIconModule,
     ReactiveFormsModule,
-    JsonPipe,
     MatTableModule,
     MatMenuModule,
     MatIconButton,
+    MatDialogModule,
   ],
   template: `
     <div class="mb-4 mt-2 flex justify-between items-center">
@@ -48,7 +48,7 @@ import { CourseStudentsStore } from './students.store';
         </mat-select>
       </mat-form-field>
 
-      <button mat-flat-button color="accent">
+      <button mat-flat-button color="accent" (click)="inviteStudents()">
         <mat-icon>add</mat-icon>{{ 'INVITE' | translate }}
       </button>
     </div>
@@ -92,6 +92,7 @@ export class CoursesComponent implements OnInit {
   public state = inject(CourseStudentsStore);
   public displayedColumns = ['name', 'actions'];
   private destroy = inject(DestroyRef);
+  private dialog = inject(Dialog);
 
   public ngOnInit(): void {
     this.groupControl.valueChanges
@@ -99,5 +100,11 @@ export class CoursesComponent implements OnInit {
       .subscribe({
         next: (groupId) => patchState(this.state, { groupId }),
       });
+  }
+
+  public inviteStudents(): void {
+    this.dialog.open(UsersSearchComponent, {
+      width: '64rem',
+    });
   }
 }

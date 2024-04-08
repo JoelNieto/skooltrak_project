@@ -158,11 +158,11 @@ import { SchoolPeopleStore } from './people.store';
           </button>
           <mat-menu #menu="matMenu">
             <button type="button" mat-menu-item (click)="editPeople(item)">
-              <mat-icon>edit_square</mat-icon>
+              <mat-icon color="accent">edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
             <button type="button" mat-menu-item>
-              <mat-icon>delete</mat-icon>
+              <mat-icon color="warn">delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
             @if (item.role === 'STUDENT') {

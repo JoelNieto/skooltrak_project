@@ -1,23 +1,30 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { SelectComponent } from '@skooltrak/ui';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { StudentGradesStore } from './student-grades.store';
 
 @Component({
   standalone: true,
   selector: 'sk-student-grades',
-  imports: [SelectComponent, ReactiveFormsModule],
+  imports: [
+    MatSelectModule,
+    MatFormFieldModule,
+    TranslateModule,
+    ReactiveFormsModule,
+  ],
   providers: [StudentGradesStore],
   template: `<div class="mb-4 mt-2 flex justify-between">
-    <div class="w-64">
-      <sk-select
-        [formControl]="periodControl"
-        [items]="store.periods()"
-        label="name"
-        [search]="false"
-      />
-    </div>
+    <mat-form-field class="w-64">
+      <mat-label>{{ 'PERIODS.TITLE' | translate }}</mat-label>
+      <mat-select [formControl]="periodControl">
+        @for (period of store.periods(); track period.id) {
+          <mat-option [value]="period.id">{{ period.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
   </div> `,
 })
 export class StudentGradesComponent {

@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { CardComponent, TabsComponent, TabsItemComponent } from '@skooltrak/ui';
+import { CardComponent } from '@skooltrak/ui';
 
 import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
 
@@ -25,16 +25,11 @@ import { ChatsLoadingComponent } from './chats-loading/chats-loading.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TranslateModule,
-    TabsItemComponent,
-    TabsComponent,
     CardComponent,
     RouterOutlet,
     ChatsLoadingComponent,
   ],
 })
-export class MessagingComponent implements OnInit {
+export class MessagingComponent {
   public readonly store = inject(webStore.MessagesStore);
-  public ngOnInit(): void {
-    this.store.fetchChats();
-  }
 }

@@ -1,14 +1,11 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -25,20 +22,18 @@ import { QuizzesStore } from '../quizzes.store';
   selector: 'sk-quizzes-list',
   standalone: true,
   imports: [
-    MatButton,
-    MatFormField,
-    MatLabel,
-    MatInput,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
     RouterLink,
     TranslateModule,
-    MatIcon,
-    MatPrefix,
+    MatIconModule,
     MatTableModule,
     DatePipe,
     MatMenuModule,
-    MatIconButton,
     RouterLink,
     MatSortModule,
+    MatChipsModule,
     NgClass,
     MatPaginatorModule,
   ],
@@ -91,17 +86,15 @@ import { QuizzesStore } from '../quizzes.store';
           {{ 'USER' | translate }}
         </th>
         <td mat-cell *matCellDef="let item">
-          <div class="flex">
-            <div
-              class="px-3 py-1.5 rounded-full  text-xs"
+          <mat-chip-set>
+            <mat-chip
               [ngClass]="{
-                'bg-emerald-100 text-emerald-600 border border-emerald-500':
-                  item.user_id === auth.userId()
+                tertiary: item.user_id === auth.userId()
               }"
             >
               {{ item.user.first_name }} {{ item.user.father_name }}
-            </div>
-          </div>
+            </mat-chip>
+          </mat-chip-set>
         </td>
       </ng-container>
       <ng-container matColumnDef="created_at">

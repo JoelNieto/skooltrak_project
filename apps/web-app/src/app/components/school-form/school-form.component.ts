@@ -1,22 +1,9 @@
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -26,7 +13,7 @@ import { heroXMark } from '@ng-icons/heroicons/outline';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { School, SchoolTypeEnum } from '@skooltrak/models';
-import { ImageCropperComponent, SelectComponent } from '@skooltrak/ui';
+import { ImageCropperComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolFormStore } from './school-form.store';
@@ -36,11 +23,10 @@ import { SchoolFormStore } from './school-form.store';
   selector: 'sk-school-form',
   imports: [
     ReactiveFormsModule,
-    MatCardModule,
+    MatDialogModule,
     MatButton,
     AvatarComponent,
     TranslateModule,
-    SelectComponent,
     MatIcon,
     MatFormField,
     MatLabel,
@@ -50,111 +36,105 @@ import { SchoolFormStore } from './school-form.store';
   ],
   providers: [SchoolFormStore, provideIcons({ heroXMark })],
   template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          {{ 'SCHOOL.INFO' | translate }}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        @if (store.school()?.id) {
-          <div class="flex flex-col items-center justify-center space-y-4">
-            @if (store.school()?.crest_url) {
-              <sk-avatar
-                [fileName]="store.school()?.crest_url!"
-                (click)="uploadCrest()"
-                bucket="crests"
-                class="h-24 rounded-md"
-              />
-            } @else {
-              <img
-                (click)="uploadCrest()"
-                src="assets/images/skooltrak-logo.svg"
-                class="h-24"
-                alt="Skooltrak Logo"
-              />
-            }
-          </div>
-        }
-        <div class="mt-8 lg:grid gap-2">
-          <mat-form-field class="w-full">
-            <mat-label for="short_name">{{
-              'SCHOOL.SHORT_NAME' | translate
-            }}</mat-label>
-            <input type="text" formControlName="short_name" matInput />
-          </mat-form-field>
-          <mat-form-field class="w-full">
-            <mat-label for="full_name">{{
-              'SCHOOL.FULL_NAME' | translate
-            }}</mat-label>
-            <input type="text" formControlName="full_name" matInput />
-          </mat-form-field>
-          <mat-form-field class="w-full">
-            <mat-label for="type">{{ 'SCHOOL.TYPE' | translate }}</mat-label>
-            <mat-select formControlName="type" matInput>
-              @for (type of types(); track type) {
-                <mat-option [value]="type">
-                  {{ 'SCHOOL_TYPE.' + type | translate }}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="w-full">
-            <mat-label for="country_id">{{
-              'SCHOOL.COUNTRY' | translate
-            }}</mat-label>
-            <mat-select formControlName="country_id">
-              @for (country of store.countries(); track country.id) {
-                <mat-option [value]="country.id">{{ country.name }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="w-full">
-            <mat-label for="address">{{
-              'SCHOOL.ADDRESS' | translate
-            }}</mat-label>
-            <input type="text" formControlName="address" matInput />
-          </mat-form-field>
-          <mat-form-field class="w-full">
-            <mat-label for="contact_email">{{
-              'SCHOOL.EMAIL' | translate
-            }}</mat-label>
-            <input type="email" formControlName="contact_email" matInput />
-          </mat-form-field>
-          <mat-form-field class="w-full">
-            <mat-label for="contact_phone">{{
-              'SCHOOL.PHONE' | translate
-            }}</mat-label>
-            <input type="tel" formControlName="contact_phone" matInput />
-          </mat-form-field>
-          <mat-form-field class="col-span-2">
-            <mat-label for="motto">{{ 'SCHOOL.MOTTO' | translate }}</mat-label>
-            <input type="text" formControlName="motto" matInput />
-          </mat-form-field>
+    <h2 mat-dialog-title>
+      {{ 'SCHOOL.INFO' | translate }}
+    </h2>
+
+    <mat-dialog-content>
+      @if (store.school()?.id) {
+        <div class="flex flex-col items-center justify-center space-y-4">
+          @if (store.school()?.crest_url) {
+            <sk-avatar
+              [fileName]="store.school()?.crest_url!"
+              (click)="uploadCrest()"
+              bucket="crests"
+              class="h-24 rounded-md"
+            />
+          } @else {
+            <img
+              (click)="uploadCrest()"
+              src="assets/images/skooltrak-logo.svg"
+              class="h-24"
+              alt="Skooltrak Logo"
+            />
+          }
         </div>
-      </mat-card-content>
-      <mat-card-footer>
-        <mat-card-actions align="end">
-          <button mat-stroked-button (click)="dialogRef.close()">
-            <mat-icon>close</mat-icon>
-            {{ 'CONFIRMATION.CANCEL' | translate }}
-          </button>
-          <button type="submit" mat-flat-button [disabled]="this.form.invalid">
-            {{ 'SAVE_CHANGES' | translate }}
-          </button>
-        </mat-card-actions>
-      </mat-card-footer>
-    </mat-card>
+      }
+      <div class="mt-8 lg:grid gap-2">
+        <mat-form-field class="w-full">
+          <mat-label for="short_name">{{
+            'SCHOOL.SHORT_NAME' | translate
+          }}</mat-label>
+          <input type="text" formControlName="short_name" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label for="full_name">{{
+            'SCHOOL.FULL_NAME' | translate
+          }}</mat-label>
+          <input type="text" formControlName="full_name" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label for="type">{{ 'SCHOOL.TYPE' | translate }}</mat-label>
+          <mat-select formControlName="type" matInput>
+            @for (type of types(); track type) {
+              <mat-option [value]="type">
+                {{ 'SCHOOL_TYPE.' + type | translate }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label for="country_id">{{
+            'SCHOOL.COUNTRY' | translate
+          }}</mat-label>
+          <mat-select formControlName="country_id">
+            @for (country of store.countries(); track country.id) {
+              <mat-option [value]="country.id">{{ country.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label for="address">{{
+            'SCHOOL.ADDRESS' | translate
+          }}</mat-label>
+          <input type="text" formControlName="address" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label for="contact_email">{{
+            'SCHOOL.EMAIL' | translate
+          }}</mat-label>
+          <input type="email" formControlName="contact_email" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label for="contact_phone">{{
+            'SCHOOL.PHONE' | translate
+          }}</mat-label>
+          <input type="tel" formControlName="contact_phone" matInput />
+        </mat-form-field>
+        <mat-form-field class="col-span-2">
+          <mat-label for="motto">{{ 'SCHOOL.MOTTO' | translate }}</mat-label>
+          <input type="text" formControlName="motto" matInput />
+        </mat-form-field>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-stroked-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+        {{ 'CONFIRMATION.CANCEL' | translate }}
+      </button>
+      <button type="submit" mat-flat-button [disabled]="this.form.invalid">
+        {{ 'SAVE_CHANGES' | translate }}
+      </button>
+    </mat-dialog-actions>
   </form>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchoolFormComponent implements OnInit {
   public store = inject(SchoolFormStore);
   private dialog = inject(Dialog);
-  public dialogRef = inject(DialogRef);
   private destroyRef = inject(DestroyRef);
 
-  private data: School | undefined = inject(DIALOG_DATA);
+  private data: School | undefined = inject(MAT_DIALOG_DATA);
   public types = signal(Object.values(SchoolTypeEnum));
 
   public form = new FormGroup({

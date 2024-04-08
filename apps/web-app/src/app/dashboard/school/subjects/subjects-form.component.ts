@@ -1,13 +1,7 @@
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -18,7 +12,7 @@ import { Subject } from '@skooltrak/models';
   selector: 'sk-school-subjects-form',
   standalone: true,
   imports: [
-    MatCardModule,
+    MatDialogModule,
     MatButton,
     ReactiveFormsModule,
     TranslateModule,
@@ -30,62 +24,43 @@ import { Subject } from '@skooltrak/models';
   ],
   providers: [],
   template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          {{ 'SUBJECTS.DETAILS' | translate }}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content
-        ><div class="flex flex-col space-y-1">
-          <mat-form-field>
-            <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
-            <input type="text" formControlName="name" matInput />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label for="short_name">{{
-              'SHORT_NAME' | translate
-            }}</mat-label>
-            <input type="text" formControlName="short_name" matInput />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label for="code">{{ 'CODE' | translate }}</mat-label>
-            <input type="text" formControlName="code" matInput />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label for="description">{{
-              'DESCRIPTION' | translate
-            }}</mat-label>
-            <textarea
-              rows="3"
-              formControlName="description"
-              matInput
-            ></textarea>
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-      <mat-card-footer>
-        <mat-card-actions align="end">
-          <button mat-stroked-button (click)="dialogRef.close()">
-            <mat-icon>close</mat-icon>
-            {{ 'CONFIRMATION.CANCEL' | translate }}
-          </button>
-          <button
-            mat-flat-button
-            color="accent"
-            type="submit"
-            [disabled]="form.invalid"
-          >
-            {{ 'SAVE_CHANGES' | translate }}
-          </button>
-        </mat-card-actions>
-      </mat-card-footer>
-    </mat-card>
+    <h2 mat-dialog-title>
+      {{ 'SUBJECTS.DETAILS' | translate }}
+    </h2>
+
+    <mat-dialog-content>
+      <mat-form-field>
+        <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
+        <input type="text" formControlName="name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="short_name">{{ 'SHORT_NAME' | translate }}</mat-label>
+        <input type="text" formControlName="short_name" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="code">{{ 'CODE' | translate }}</mat-label>
+        <input type="text" formControlName="code" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="description">{{ 'DESCRIPTION' | translate }}</mat-label>
+        <textarea rows="3" formControlName="description" matInput></textarea>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-stroked-button mat-dialog-close="">
+        <mat-icon>close</mat-icon>
+        {{ 'CONFIRMATION.CANCEL' | translate }}
+      </button>
+      <button mat-flat-button type="submit" [disabled]="form.invalid">
+        {{ 'SAVE_CHANGES' | translate }}
+      </button>
+    </mat-dialog-actions>
   </form>`,
 })
 export class SubjectsFormComponent implements AfterViewInit {
-  public dialogRef = inject(DialogRef<Partial<Subject>>);
-  private data: Subject | undefined = inject(DIALOG_DATA);
+  public dialogRef = inject(MatDialogRef<Partial<Subject>>);
+  private data: Subject | undefined = inject(MAT_DIALOG_DATA);
   public form = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,

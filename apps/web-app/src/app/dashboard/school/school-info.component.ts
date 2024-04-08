@@ -1,7 +1,8 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 
@@ -95,7 +96,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
 export class SchoolInfoComponent {
   private auth = inject(webStore.AuthStore);
   public school = this.auth.currentSchool;
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
 
   public editInfo(): void {
     this.dialog.open(SchoolFormComponent, {

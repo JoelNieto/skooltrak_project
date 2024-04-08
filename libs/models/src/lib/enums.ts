@@ -52,3 +52,5 @@ export const WeekDays = [
   'SATURDAY',
   'SUNDAY',
 ];
+
+export type FileBucket = 'crests' | 'courses' | 'avatars' | 'files';

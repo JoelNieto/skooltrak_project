@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
@@ -28,6 +29,7 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
     UserChipComponent,
     MatIconModule,
     MatMenuModule,
+    MatChipsModule,
     RouterLink,
     TranslateModule,
     DatePipe,
@@ -46,7 +48,7 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="deletePost()">
-            <mat-icon color="warn">delete</mat-icon
+            <mat-icon>delete</mat-icon
             ><span>{{ 'ACTIONS.DELETE' | translate }}</span>
           </button>
         </mat-menu>
@@ -54,19 +56,15 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
     </mat-card-header>
     <mat-card-content>
       @if (post().course; as course) {
-        <div class="mt-2">
-          <a
-            class="bg-sky-600 rounded-full text-white px-3 py-1.5 mt-2 text-xs font-sans"
-            [routerLink]="['/app/courses', course.id]"
-            >{{ course.plan?.name }} - {{ course.subject?.name }}</a
-          >
-        </div>
+        <mat-chip-set>
+          <a [routerLink]="['/app/courses', course.id]">
+            <mat-chip class="primary" highlighted color="primary"
+              >{{ course.plan?.name }} - {{ course.subject?.name }}</mat-chip
+            >
+          </a>
+        </mat-chip-set>
       }
-
-      <p
-        class="text-sm font-sans text-gray-700 py-4"
-        [innerText]="post().body"
-      ></p>
+      <p class="mat-body py-4" [innerText]="post().body"></p>
     </mat-card-content>
   </mat-card>`,
   styles: ``,

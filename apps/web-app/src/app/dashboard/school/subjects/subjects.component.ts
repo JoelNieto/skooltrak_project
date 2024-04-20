@@ -1,6 +1,6 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -58,7 +58,7 @@ import { SchoolSubjectsStore } from './subjects.store';
         />
       </mat-form-field>
 
-      <button mat-flat-button color="primary" (click)="newSubject()">
+      <button mat-flat-button color="primary" (click)="editSubject()">
         <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
@@ -111,7 +111,7 @@ import { SchoolSubjectsStore } from './subjects.store';
               <mat-icon>edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="deleteSubject(item)">
+            <button mat-menu-item (click)="deleteSubject(item.id)">
               <mat-icon>delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
@@ -135,7 +135,7 @@ import { SchoolSubjectsStore } from './subjects.store';
 export class SchoolSubjectsComponent implements OnInit {
   public store = inject(SchoolSubjectsStore);
   private dialog = inject(MatDialog);
-  private confirmation = inject(ConfirmationService);
+  private containerRef = inject(ViewContainerRef);
   private destroy = inject(DestroyRef);
   public displayedCols = [
     'name',
@@ -151,7 +151,7 @@ export class SchoolSubjectsComponent implements OnInit {
     this.textSearch.valueChanges
       .pipe(debounceTime(500), takeUntilDestroyed(this.destroy))
       .subscribe({
-        next: (queryText) => patchState(this.store, { queryText }),
+        next: (queryText) => patchState(this.store, { queryText, start: 0 }),
       });
   }
 
@@ -167,56 +167,16 @@ export class SchoolSubjectsComponent implements OnInit {
     patchState(this.store, { start: pageIndex, pageSize });
   }
 
-  public newSubject(): void {
-    const dialogRef = this.dialog.open(SubjectsFormComponent, {
+  public editSubject(item?: Subject): void {
+    this.dialog.open(SubjectsFormComponent, {
       minWidth: '36rem',
       disableClose: true,
+      viewContainerRef: this.containerRef,
+      data: item,
     });
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (request) => {
-          !!request && this.store.saveSubject(request);
-        },
-      });
   }
 
-  public editSubject(subject: Subject): void {
-    const dialogRef = this.dialog.open(SubjectsFormComponent, {
-      minWidth: '36rem',
-      disableClose: true,
-      data: subject,
-    });
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (request) => {
-          !!request && this.store.saveSubject({ ...request, id: subject.id });
-        },
-      });
-  }
-
-  public deleteSubject(subject: Subject): void {
-    const { id } = subject;
-
-    if (!id) return;
-    this.confirmation
-      .openDialog({
-        title: 'CONFIRMATION.DELETE.TITLE',
-        description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'delete',
-        color: 'warn',
-        confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
-        cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
-        showCancelButton: true,
-      })
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (res) => {
-          !!res && this.store.deleteSubject(id);
-        },
-      });
+  public deleteSubject(id: string): void {
+    this.store.deleteSubject(id);
   }
 }

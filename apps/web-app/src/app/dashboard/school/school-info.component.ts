@@ -1,4 +1,3 @@
-import { DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
@@ -17,7 +16,6 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
     TranslateModule,
     DatePipe,
     MatButton,
-    DialogModule,
     SchoolFormComponent,
   ],
   styles: `
@@ -101,7 +99,7 @@ export class SchoolInfoComponent {
   public editInfo(): void {
     this.dialog.open(SchoolFormComponent, {
       width: '64rem',
-      maxWidth: '90%',
+      maxWidth: '90vw',
       data: this.school(),
     });
   }

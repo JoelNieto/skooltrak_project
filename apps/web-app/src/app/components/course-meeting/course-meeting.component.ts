@@ -1,15 +1,9 @@
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { Course } from '@skooltrak/models';
 import { webStore } from '@skooltrak/store';
-import { CardComponent } from '@skooltrak/ui';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let JitsiMeetExternalAPI: any;
@@ -17,31 +11,27 @@ declare let JitsiMeetExternalAPI: any;
 @Component({
   selector: 'sk-course-meeting',
   standalone: true,
-  imports: [TranslateModule, CardComponent, MatButton],
-  template: `<sk-card>
-    <div header>
-      <h3
-        class="font-title text-xl font-semibold text-gray-700 dark:text-gray-100"
-      >
-        {{ 'MEETING.TITLE' | translate }}
-      </h3>
-    </div>
-    <div class="flex items-center justify-center">
+  imports: [TranslateModule, MatDialogModule, MatButtonModule],
+  template: `
+    <h2 mat-dialog-title>
+      {{ 'MEETING.TITLE' | translate }}
+    </h2>
+
+    <mat-dialog-content>
       <div id="meet"></div>
-    </div>
-    <div footer class="flex justify-end">
-      <button mat-flat-button color="warn" (click)="dialogRef.close()">
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-flat-button color="warn" mat-dialog-close>
         {{ 'MEETING.CLOSE' | translate }}
       </button>
-    </div>
-  </sk-card>`,
+    </mat-dialog-actions>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseMeetingComponent implements OnInit {
   private options: unknown;
   private api: unknown;
-  public dialogRef = inject(DialogRef);
-  private data: Course = inject(DIALOG_DATA);
+  private data: Course = inject(MAT_DIALOG_DATA);
   private auth = inject(webStore.AuthStore);
 
   public ngOnInit(): void {

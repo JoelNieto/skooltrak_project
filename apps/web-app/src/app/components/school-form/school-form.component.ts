@@ -1,9 +1,8 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -131,7 +130,7 @@ import { SchoolFormStore } from './school-form.store';
 })
 export class SchoolFormComponent implements OnInit {
   public store = inject(SchoolFormStore);
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
 
   private data: School | undefined = inject(MAT_DIALOG_DATA);
@@ -176,21 +175,21 @@ export class SchoolFormComponent implements OnInit {
   }
 
   public uploadCrest(): void {
-    const dialogRef = this.dialog.open<{
-      imageFile: File | undefined;
-      cropImgPreview: string;
-    }>(ImageCropperComponent, {
+    const dialogRef = this.dialog.open(ImageCropperComponent, {
       width: '48rem',
       maxWidth: '90%',
       data: { ratio: 2, format: 'png' },
     });
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (result) => {
-        if (!result) return;
-        const { imageFile } = result;
-        !!imageFile && this.store.uploadCrest(imageFile);
-      },
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          if (!result) return;
+          const { imageFile } = result;
+          !!imageFile && this.store.uploadCrest(imageFile);
+        },
+      });
   }
 
   public saveChanges(): void {

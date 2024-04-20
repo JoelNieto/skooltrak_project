@@ -1,9 +1,9 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -195,7 +195,8 @@ export class SchoolPeopleComponent implements OnInit {
   public roles = Object.values(RoleEnum);
   public statuses = Object.values(StatusEnum);
   private destroy = inject(DestroyRef);
-  private dialog = inject(Dialog);
+  private containerRef = inject(ViewContainerRef);
+  private dialog = inject(MatDialog);
   public roleControl = new FormControl<'all' | RoleEnum>('all', {
     nonNullable: true,
   });
@@ -244,13 +245,11 @@ export class SchoolPeopleComponent implements OnInit {
   }
 
   public editPeople(person: SchoolProfile): void {
-    const dialogRef = this.dialog.open(SchoolPeopleFormComponent, {
+    this.dialog.open(SchoolPeopleFormComponent, {
       width: '34rem',
-      maxWidth: '90%',
+      maxWidth: '90vw',
       data: person,
+      viewContainerRef: this.containerRef,
     });
-    dialogRef.closed
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({ next: () => this.store.fetchPeople(this.store.fetchData) });
   }
 }

@@ -1,10 +1,5 @@
 import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -31,8 +26,8 @@ import { ScheduleStore } from './schedule.store';
   providers: [ScheduleStore],
   template: `
     <button
-      mat-flat-button
-      color="accent"
+      mat-raised-button
+      color="primary"
       class="fixed bottom-12 right-12 z-50"
       routerLink="/app/assignments"
     >

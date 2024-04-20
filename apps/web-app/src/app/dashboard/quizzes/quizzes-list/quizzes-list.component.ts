@@ -1,8 +1,8 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -174,7 +174,7 @@ export class QuizzesListComponent {
     'actions',
   ];
   public store = inject(QuizzesStore);
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
   public auth = inject(webStore.AuthStore);
 
   public pageEvent(e: PageEvent): void {

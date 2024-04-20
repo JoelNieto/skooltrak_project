@@ -1,9 +1,8 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -92,7 +91,7 @@ export class CoursesComponent implements OnInit {
   public state = inject(CourseStudentsStore);
   public displayedColumns = ['name', 'actions'];
   private destroy = inject(DestroyRef);
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
 
   public ngOnInit(): void {
     this.groupControl.valueChanges
@@ -105,6 +104,7 @@ export class CoursesComponent implements OnInit {
   public inviteStudents(): void {
     this.dialog.open(UsersSearchComponent, {
       width: '64rem',
+      maxWidth: '90vw',
     });
   }
 }

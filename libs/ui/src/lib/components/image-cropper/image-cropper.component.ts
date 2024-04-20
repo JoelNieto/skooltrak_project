@@ -1,8 +1,8 @@
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { NgStyle } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { provideIcons } from '@ng-icons/core';
@@ -17,70 +17,64 @@ import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
   imports: [
     ImageCropperModule,
     MatButtonModule,
-    MatCardModule,
+    MatDialogModule,
     NgStyle,
     TranslateModule,
     MatIcon,
   ],
   providers: [provideIcons({ heroXMark })],
-  template: `<mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          {{ 'IMAGE_CROPPER.TITLE' | translate }}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <button mat-flat-button class="tertiary" (click)="fileInput.click()">
-          {{ 'IMAGE_CROPPER.CHOOSE_PICTURE' | translate }}
-        </button>
-        <div class="space-4 mt-2 flex flex-col">
-          <image-cropper
-            [imageChangedEvent]="imgChangeEvt"
-            [maintainAspectRatio]="options.fixedRatio"
-            [containWithinAspectRatio]="true"
-            [imageQuality]="100"
-            [aspectRatio]="options.ratio"
-            [resizeToHeight]="256"
-            [format]="options.format"
-            (imageCropped)="cropImg($event)"
-            (imageLoaded)="imgLoad()"
-            (cropperReady)="initCropper()"
-            (loadImageFailed)="imgFailed()"
-          />
-          @if (cropImgPreview) {
-            <div class="my-4 flex ">
-              <div>
-                <span class="font-sans font-semibold text-gray-600">{{
-                  'IMAGE_CROPPER.PREVIEW' | translate
-                }}</span>
-                <br />
-                <img
-                  [src]="cropImgPreview"
-                  class="border border-gray-400"
-                  [style.max-height]="'6rem'"
-                />
-              </div>
+  template: ` <h2 mat-dialog-title>
+      {{ 'IMAGE_CROPPER.TITLE' | translate }}
+    </h2>
+    <mat-dialog-content>
+      <button mat-flat-button class="tertiary" (click)="fileInput.click()">
+        {{ 'IMAGE_CROPPER.CHOOSE_PICTURE' | translate }}
+      </button>
+      <div class="space-4 mt-2 flex flex-col">
+        <image-cropper
+          [imageChangedEvent]="imgChangeEvt"
+          [maintainAspectRatio]="options.fixedRatio"
+          [containWithinAspectRatio]="true"
+          [imageQuality]="100"
+          [aspectRatio]="options.ratio"
+          [resizeToHeight]="256"
+          [format]="options.format"
+          (imageCropped)="cropImg($event)"
+          (imageLoaded)="imgLoad()"
+          (cropperReady)="initCropper()"
+          (loadImageFailed)="imgFailed()"
+        />
+        @if (cropImgPreview) {
+          <div class="my-4 flex ">
+            <div>
+              <span class="font-sans font-semibold text-gray-600">{{
+                'IMAGE_CROPPER.PREVIEW' | translate
+              }}</span>
+              <br />
+              <img
+                [src]="cropImgPreview"
+                class="border border-gray-400"
+                [style.max-height]="'6rem'"
+              />
             </div>
-          }
-        </div>
-      </mat-card-content>
+          </div>
+        }
+      </div>
+    </mat-dialog-content>
 
-      <mat-card-footer>
-        <mat-card-actions align="end">
-          <button mat-stroked-button (click)="dialogRef.close()">
-            <mat-icon>close</mat-icon>
-            {{ 'CONFIRMATION.CANCEL' | translate }}
-          </button>
-          <button
-            mat-flat-button
-            [disabled]="!imageFile"
-            (click)="dialogRef.close({ imageFile, cropImgPreview })"
-          >
-            {{ 'IMAGE_CROPPER.CONFIRM' | translate }}
-          </button>
-        </mat-card-actions>
-      </mat-card-footer>
-    </mat-card>
+    <mat-dialog-actions>
+      <button mat-stroked-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+        {{ 'CONFIRMATION.CANCEL' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="!imageFile"
+        (click)="dialogRef.close({ imageFile, cropImgPreview })"
+      >
+        {{ 'IMAGE_CROPPER.CONFIRM' | translate }}
+      </button>
+    </mat-dialog-actions>
     <input
       hidden
       type="file"
@@ -104,7 +98,7 @@ export class ImageCropperComponent implements OnInit {
   };
 
   public dialogRef = inject(
-    DialogRef<{
+    MatDialogRef<{
       imageFile: File | undefined;
       cropImgPreview: string | SafeUrl;
     }>,

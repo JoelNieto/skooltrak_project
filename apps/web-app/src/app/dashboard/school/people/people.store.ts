@@ -1,7 +1,9 @@
 import { computed, inject } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { RoleEnum, StatusEnum, Table, UserProfile } from '@skooltrak/models';
+import { TranslateService } from '@ngx-translate/core';
+import { ClassGroup, RoleEnum, StatusEnum, Table, UserProfile } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, pipe, tap } from 'rxjs';
 
@@ -15,6 +17,8 @@ type State = {
   start: number;
   sortDirection: 'asc' | 'desc' | '';
   sortColumn: string;
+  userId: string | undefined;
+  groups: Partial<ClassGroup>[];
 };
 
 const initialState: State = {
@@ -27,6 +31,8 @@ const initialState: State = {
   start: 0,
   sortColumn: '',
   sortDirection: '',
+  userId: undefined,
+  groups: [],
 };
 
 export const SchoolPeopleStore = signalStore(
@@ -62,9 +68,12 @@ export const SchoolPeopleStore = signalStore(
         sortColumn,
         sortDirection,
         start,
+        userId,
         ...state
       },
       supabase = inject(SupabaseService),
+      toast = inject(MatSnackBar),
+      translate = inject(TranslateService),
     ) => {
       const fetchPeople = rxMethod<typeof fetchData>(
         pipe(
@@ -112,7 +121,43 @@ export const SchoolPeopleStore = signalStore(
         });
       }
 
-      return { fetchPeople, getPeople };
+      async function fetchGroups(): Promise<void> {
+        const { error, data } = await supabase.client
+          .from(Table.Groups)
+          .select(
+            'id, name, plan:school_plans(*), plan_id, degree_id, teachers:users!group_teachers(id, first_name, father_name, email, avatar_url), degree:school_degrees(*), created_at, updated_at',
+          )
+          .eq('school_id', fetchData().schoolId);
+
+        if (error) {
+          console.error(error);
+
+          return;
+        }
+        patchState(state, { groups: data as Partial<ClassGroup>[] });
+      }
+      async function savePerson(request: Partial<UserProfile>): Promise<void> {
+        patchState(state, { loading: true });
+        const { status, role, group_id } = request;
+        const { error } = await supabase.client
+          .from(Table.SchoolUsers)
+          .update({ status, role, group_id })
+          .eq('user_id', userId())
+          .eq('school_id', fetchData().schoolId);
+
+        if (error) {
+          console.error(error);
+          toast.open(translate.instant('ALERT.FAILURE'));
+          patchState(state, { loading: false });
+
+          return;
+        }
+        patchState(state, { loading: false });
+        toast.open(translate.instant('ALERT.SUCCESS'));
+        getPeople();
+      }
+
+      return { fetchPeople, getPeople, fetchGroups, savePerson };
     },
   ),
   withHooks({

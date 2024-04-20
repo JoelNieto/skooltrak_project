@@ -1,7 +1,8 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { Component, OnInit, inject } from '@angular/core';
+import { DialogModule } from '@angular/cdk/dialog';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -112,7 +113,7 @@ import { CourseGradesStore } from './course-grades.store';
 })
 export class CourseGradesComponent implements OnInit {
   private courseStore = inject(CourseDetailsStore);
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
   public store = inject(CourseGradesStore);
 
   public periodControl = new FormControl<string | undefined>(
@@ -138,7 +139,8 @@ export class CourseGradesComponent implements OnInit {
         disableClose: true,
         data: { course: this.courseStore.course() },
       })
-      .closed.subscribe({ next: () => this.store.refresh() });
+      .afterClosed()
+      .subscribe({ next: () => this.store.refresh() });
   }
 
   public editGrade(grade: Partial<Grade>): void {

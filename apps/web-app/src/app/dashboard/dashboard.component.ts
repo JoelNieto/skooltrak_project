@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { NgClass } from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -47,6 +47,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     MatButtonModule,
     MatToolbarModule,
     MatSidenavModule,
+    NgOptimizedImage
   ],
   providers: [],
   template: `
@@ -75,7 +76,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 />
               } @else {
                 <img
-                  src="assets/images/skooltrak-logo.svg"
+                  ngSrc="assets/images/skooltrak-logo.svg"
                   class="h-8"
                   alt="Skooltrak Logo"
                 />
@@ -119,7 +120,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
               </div>
               <mat-menu #menu="matMenu">
                 <a mat-menu-item routerLink="profile"
-                  ><mat-icon>account_circle</mat-icon>
+                >
+                  <mat-icon>account_circle</mat-icon>
                   {{ 'PROFILE.TITLE' | translate }}</a
                 >
                 <a mat-menu-item routerLink="change-password">
@@ -139,7 +141,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #home="routerLinkActive"
                 [activated]="home.isActive"
-                ><mat-icon matListItemIcon>house</mat-icon>
+              >
+                <mat-icon matListItemIcon>house</mat-icon>
                 @if (!isCollapsed()) {
                   <div matListItemTitle>{{ 'HOME' | translate }}</div>
                 }
@@ -150,7 +153,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #schedule="routerLinkActive"
                 [activated]="schedule.isActive"
-                ><mat-icon matListItemIcon>calendar_month</mat-icon>
+              >
+                <mat-icon matListItemIcon>calendar_month</mat-icon>
                 @if (!isCollapsed()) {
                   <div matListItemTitle>{{ 'SCHEDULE' | translate }}</div>
                 }
@@ -161,7 +165,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #courses="routerLinkActive"
                 [activated]="courses.isActive"
-                ><mat-icon matListItemIcon>dvr</mat-icon>
+              >
+                <mat-icon matListItemIcon>dvr</mat-icon>
                 @if (!isCollapsed()) {
                   <div matListItemTitle>{{ 'COURSES.TITLE' | translate }}</div>
                 }
@@ -172,7 +177,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #quizzes="routerLinkActive"
                 [activated]="quizzes.isActive"
-                ><mat-icon matListItemIcon>quiz</mat-icon>
+              >
+                <mat-icon matListItemIcon>quiz</mat-icon>
                 @if (!isCollapsed()) {
                   <div matListItemTitle>{{ 'QUIZZES.TITLE' | translate }}</div>
                 }
@@ -188,8 +194,10 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #school="routerLinkActive"
                 [activated]="school.isActive"
-                ><mat-icon matListItemIcon>domain</mat-icon>
-                <div matListItemTitle>{{ 'SCHOOL.TITLE' | translate }}</div></a
+              >
+                <mat-icon matListItemIcon>domain</mat-icon>
+                <div matListItemTitle>{{ 'SCHOOL.TITLE' | translate }}</div>
+              </a
               >
             }
           </mat-nav-list>

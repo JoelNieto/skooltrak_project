@@ -1,16 +1,10 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { Degree, Table } from '@skooltrak/models';
+import { Degree, Level, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, pipe, tap } from 'rxjs';
 
@@ -21,6 +15,7 @@ type State = {
   start: number;
   loading: boolean;
   sortColumn: string;
+  levels: Partial<Level>[];
   sortDirection: 'asc' | 'desc' | '';
 };
 
@@ -31,6 +26,7 @@ const initialState: State = {
   pageSize: 5,
   start: 0,
   sortColumn: '',
+  levels: [],
   sortDirection: '',
 };
 
@@ -57,7 +53,8 @@ export const SchoolDegreesStore = signalStore(
     (
       { start, end, schoolId, sortColumn, sortDirection, fetchData, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
+      dialog = inject(MatDialog),
       translate = inject(TranslateService),
     ) => {
       async function getDegrees(): Promise<void> {
@@ -98,19 +95,22 @@ export const SchoolDegreesStore = signalStore(
         ),
       );
       async function saveDegree(request: Partial<Degree>): Promise<void> {
+        patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.Degrees)
           .upsert([{ ...request, school_id: schoolId() }]);
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          patchState(state, { loading: false });
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
 
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         fetchDegrees(fetchData);
+        dialog.closeAll();
       }
       async function deleteDegree(id: string): Promise<void> {
         const { error } = await supabase.client
@@ -119,17 +119,33 @@ export const SchoolDegreesStore = signalStore(
           .eq('id', id);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
 
           return;
         }
 
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         fetchDegrees(fetchData);
       }
 
-      return { deleteDegree, saveDegree, fetchDegrees };
+      async function fetchLevels(): Promise<void> {
+        patchState(state, { loading: true });
+        const { data, error } = await supabase.client
+          .from(Table.Levels)
+          .select('id, name')
+          .order('sort');
+
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+        patchState(state, { levels: data, loading: false });
+      }
+
+      return { deleteDegree, saveDegree, fetchDegrees, fetchLevels };
     },
   ),
   withHooks({

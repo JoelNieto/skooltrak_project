@@ -1,8 +1,8 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -47,7 +47,7 @@ import { SchoolDegreesStore } from './degrees.store';
         />
       </mat-form-field>
 
-      <button mat-flat-button (click)="newDegree()">
+      <button mat-flat-button (click)="editDegree()">
         <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
@@ -110,9 +110,10 @@ import { SchoolDegreesStore } from './degrees.store';
 })
 export class SchoolDegreesComponent {
   public store = inject(SchoolDegreesStore);
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
   private confirmation = inject(ConfirmationService);
   private destroyRef = inject(DestroyRef);
+  private containerRef = inject(ViewContainerRef);
   public displayedCols = ['name', 'level(name)', 'created_at', 'actions'];
 
   public pageEvent(e: PageEvent): void {
@@ -127,29 +128,12 @@ export class SchoolDegreesComponent {
     });
   }
 
-  public newDegree(): void {
-    const dialogRef = this.dialog.open<Partial<Degree>>(DegreesFormComponent, {
-      minWidth: '36rem',
-      disableClose: true,
-    });
-
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveDegree(request);
-      },
-    });
-  }
-
-  public editDegree(degree: Degree): void {
-    const dialogRef = this.dialog.open<Partial<Degree>>(DegreesFormComponent, {
+  public editDegree(degree?: Degree): void {
+    this.dialog.open(DegreesFormComponent, {
       minWidth: '36rem',
       disableClose: true,
       data: degree,
-    });
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveDegree({ ...request, id: degree.id });
-      },
+      viewContainerRef: this.containerRef,
     });
   }
 

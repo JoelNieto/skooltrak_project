@@ -1,17 +1,12 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
+import { ConfirmationService } from '@skooltrak/ui';
 import { filter, pipe, tap } from 'rxjs';
 
 type State = {
@@ -57,7 +52,9 @@ export const SchoolSubjectsStore = signalStore(
     (
       { fetchData, end, sortColumn, sortDirection, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      snackBar = inject(MatSnackBar),
+      dialog = inject(MatDialog),
+      confirmation = inject(ConfirmationService),
       translate = inject(TranslateService),
     ) => {
       async function getSubjects(): Promise<void> {
@@ -114,30 +111,46 @@ export const SchoolSubjectsStore = signalStore(
           .upsert([{ ...request, school_id: fetchData().schoolId }]);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
+        dialog.closeAll();
         fetchSubjects(fetchData);
       }
       async function deleteSubject(id: string): Promise<void> {
         patchState(state, { loading: true });
+        const res = await confirmation.openDialogPromise({
+          title: 'CONFIRMATION.DELETE.TITLE',
+          description: 'CONFIRMATION.DELETE.TEXT',
+          icon: 'delete',
+          color: 'warn',
+          confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
+          cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
+          showCancelButton: true,
+        });
+
+        if (!res) {
+          patchState(state, { loading: false });
+
+          return;
+        }
         const { error } = await supabase.client
           .from(Table.Subjects)
           .delete()
           .eq('id', id);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
         fetchSubjects(fetchData);
       }
 

@@ -1,15 +1,10 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, ViewContainerRef } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MatFormField,
-  MatInput,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/input';
+import { MatFormField, MatInput, MatLabel, MatPrefix } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -51,7 +46,7 @@ import { SchoolPeriodsStore } from './periods.store';
         />
       </mat-form-field>
 
-      <button mat-flat-button color="primary" (click)="createPeriod()">
+      <button mat-flat-button color="primary" (click)="editPeriod()">
         <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
@@ -119,8 +114,8 @@ import { SchoolPeriodsStore } from './periods.store';
 })
 export class SchoolPeriodsComponent {
   public store = inject(SchoolPeriodsStore);
-  private dialog = inject(Dialog);
-  private destroy = inject(DestroyRef);
+  private dialog = inject(MatDialog);
+  private containerRef = inject(ViewContainerRef);
   public displayedColumns = [
     'name',
     'start_at',
@@ -136,38 +131,13 @@ export class SchoolPeriodsComponent {
     });
   }
 
-  public createPeriod(): void {
-    const dialogRef = this.dialog.open<Partial<Period>>(
-      SchoolPeriodsFormComponent,
-      {
-        width: '32rem',
-        maxWidth: '90%',
-        disableClose: true,
-      },
-    );
-
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.savePeriod(request);
-      },
-    });
-  }
-
-  public editPeriod(period: Period): void {
-    const dialogRef = this.dialog.open<Partial<Period>>(
-      SchoolPeriodsFormComponent,
-      {
-        width: '32rem',
-        maxWidth: '90%',
-        disableClose: true,
-        data: period,
-      },
-    );
-
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.savePeriod({ ...request, id: period.id });
-      },
+  public editPeriod(period?: Period): void {
+    this.dialog.open(SchoolPeriodsFormComponent, {
+      width: '32rem',
+      maxWidth: '90vw',
+      disableClose: true,
+      data: period,
+      viewContainerRef: this.containerRef,
     });
   }
 }

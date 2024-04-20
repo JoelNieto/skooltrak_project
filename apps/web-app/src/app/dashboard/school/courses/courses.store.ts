@@ -1,10 +1,11 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { Course, Degree, StudyPlan, Table, User } from '@skooltrak/models';
+import { Course, Degree, SchoolProfile, StudyPlan, Subject, Table, User } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { pick } from 'lodash';
 import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
@@ -12,7 +13,6 @@ import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
 type State = {
   loading: boolean;
   courses: Partial<Course>[];
-  plans: Partial<StudyPlan>[];
   degrees: Partial<Degree>[];
   planId: string | undefined;
   count: number;
@@ -20,6 +20,9 @@ type State = {
   start: number;
   sortColumn: string;
   sortDirection: 'asc' | 'desc' | '';
+  subjects: Subject[];
+  plans: Partial<StudyPlan>[];
+  teachers: Partial<SchoolProfile>[];
 };
 
 const initialState: State = {
@@ -33,13 +36,15 @@ const initialState: State = {
   start: 0,
   sortColumn: '',
   sortDirection: '',
+  subjects: [],
+  teachers: [],
 };
 
 export const SchoolCoursesStore = signalStore(
   withState(initialState),
   withComputed(
     (
-      { start, pageSize, planId, sortDirection, sortColumn },
+      { start, pageSize, planId, sortDirection, sortColumn, teachers },
       auth = inject(webStore.AuthStore),
     ) => ({
       end: computed(() => start() + (pageSize() - 1)),
@@ -52,6 +57,7 @@ export const SchoolCoursesStore = signalStore(
         sortColumn: sortColumn(),
         sortDirection: sortDirection(),
       })),
+      teacherUsers: computed(() => teachers().map((x) => x.user)),
     }),
   ),
   withMethods(
@@ -67,7 +73,8 @@ export const SchoolCoursesStore = signalStore(
         ...state
       },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
+      dialog = inject(MatDialog),
       translate = inject(TranslateService),
     ) => {
       const fetchDegrees = rxMethod<string | undefined>(
@@ -156,7 +163,7 @@ export const SchoolCoursesStore = signalStore(
         ]);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           patchState(state, { loading: false });
           console.error(error);
@@ -165,9 +172,13 @@ export const SchoolCoursesStore = signalStore(
         }
 
         const { teachers, id } = request;
-        !!teachers?.length && !!id && (await saveCourseTeachers(id, teachers));
-        toast.success(translate.instant('ALERT.SUCCESS'));
+
+        if (teachers?.length && id) {
+          await saveCourseTeachers(id, teachers);
+        }
+        toast.open(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
+        dialog.closeAll();
         fetchCourses(query);
       }
 
@@ -186,12 +197,63 @@ export const SchoolCoursesStore = signalStore(
         if (error) console.error(error);
       }
 
+      async function fetchPlans(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.StudyPlans)
+          .select('id,name')
+          .eq('school_id', school_id())
+          .order('year', { ascending: true });
+
+        if (error) {
+          console.error(error);
+        }
+        patchState(state, { plans: data as Partial<StudyPlan>[] });
+      }
+      async function fetchSubjects(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Subjects)
+          .select(
+            'id,name, short_name, code, description, created_at, user:users(full_name)',
+          )
+          .eq('school_id', school_id())
+          .order('name', { ascending: true });
+
+        if (error) {
+          console.error(error);
+        }
+        patchState(state, { subjects: data as unknown as Subject[] });
+      }
+      async function fetchTeachers(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.SchoolUsers)
+          .select(
+            'user_id, role, status, created_at, user:users(id, first_name, middle_name, father_name, mother_name, document_id, email, avatar_url)',
+            {
+              count: 'exact',
+            },
+          )
+          .or('role.eq.ADMIN, role.eq.TEACHER')
+          .eq('school_id', school_id())
+          .order('user(first_name)', { ascending: true });
+
+        if (error) {
+          console.error(error);
+
+          return;
+        }
+
+        patchState(state, { teachers: data as Partial<SchoolProfile>[] });
+      }
+
       return {
         fetchCourses,
         fetchDegrees,
         saveCourse,
         saveCourseTeachers,
         getCourses,
+        fetchTeachers,
+        fetchSubjects,
+        fetchPlans,
       };
     },
   ),

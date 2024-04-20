@@ -1,29 +1,35 @@
 import { AfterViewInit, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from '@skooltrak/models';
+import { v4 } from 'uuid';
+
+import { SchoolSubjectsStore } from './subjects.store';
 
 @Component({
   selector: 'sk-school-subjects-form',
   standalone: true,
   imports: [
     MatDialogModule,
-    MatButton,
+    MatButtonModule,
     ReactiveFormsModule,
     TranslateModule,
-    MatIconButton,
-    MatFormField,
-    MatLabel,
-    MatIcon,
-    MatInput,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressBar,
   ],
   providers: [],
   template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
+    @if (store.loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
     <h2 mat-dialog-title>
       {{ 'SUBJECTS.DETAILS' | translate }}
     </h2>
@@ -48,7 +54,7 @@ import { Subject } from '@skooltrak/models';
     </mat-dialog-content>
 
     <mat-dialog-actions>
-      <button mat-stroked-button mat-dialog-close="">
+      <button mat-stroked-button mat-dialog-close>
         <mat-icon>close</mat-icon>
         {{ 'CONFIRMATION.CANCEL' | translate }}
       </button>
@@ -59,9 +65,11 @@ import { Subject } from '@skooltrak/models';
   </form>`,
 })
 export class SubjectsFormComponent implements AfterViewInit {
-  public dialogRef = inject(MatDialogRef<Partial<Subject>>);
   private data: Subject | undefined = inject(MAT_DIALOG_DATA);
+  public store = inject(SchoolSubjectsStore);
+
   public form = new FormGroup({
+    id: new FormControl(v4(), { nonNullable: true }),
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -83,6 +91,6 @@ export class SubjectsFormComponent implements AfterViewInit {
   }
 
   public saveChanges(): void {
-    this.dialogRef.close(this.form.getRawValue());
+    this.store.saveSubject(this.form.getRawValue());
   }
 }

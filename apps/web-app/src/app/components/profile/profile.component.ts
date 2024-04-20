@@ -1,14 +1,10 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { DialogModule } from '@angular/cdk/dialog';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -131,7 +127,7 @@ export class ProfileComponent implements OnInit {
   private auth = inject(webStore.AuthStore);
   public store = inject(ProfileFormStore);
   public user = this.auth.user;
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
   public currentAvatar = this.user()?.avatar_url;
 
@@ -174,15 +170,13 @@ export class ProfileComponent implements OnInit {
 
   public changeAvatar(): void {
     this.dialog
-      .open<{
-        imageFile: File | undefined;
-        cropImgPreview: string;
-      }>(ImageCropperComponent, {
+      .open(ImageCropperComponent, {
         width: '24rem',
-        maxWidth: '90%',
+        maxWidth: '90vw',
         data: { fixedRatio: true, ratio: 1 },
       })
-      .closed.pipe(takeUntilDestroyed(this.destroyRef))
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
           if (!result) return;

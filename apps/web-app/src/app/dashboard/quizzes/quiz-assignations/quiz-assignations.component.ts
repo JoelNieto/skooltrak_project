@@ -1,13 +1,8 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
@@ -35,7 +30,7 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
       <h2 class="mat-headline-3">
         {{ 'QUIZZES.ASSIGNATIONS' | translate }}
       </h2>
-      <button mat-flat-button color="primary" (click)="newAssignation()">
+      <button mat-flat-button color="primary" (click)="editAssignation()">
         <mat-icon>add</mat-icon>{{ 'NEW' | translate }}
       </button>
     </div>
@@ -122,28 +117,18 @@ export class QuizAssignationsComponent {
     'actions',
   ];
   public state = inject(QuizAssignationsStore);
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
   private confirmation = inject(ConfirmationService);
   private destroy = inject(DestroyRef);
+  private containerRef = inject(ViewContainerRef);
 
-  public newAssignation(): void {
-    this.dialog
-      .open(AssignationFormComponent, {
-        data: {},
-        width: '48rem',
-        maxWidth: '90%',
-      })
-      .closed.subscribe({ next: () => this.state.getAssignations() });
-  }
-
-  public editAssignation(assignation: QuizAssignation): void {
-    this.dialog
-      .open(AssignationFormComponent, {
-        data: { assignation },
-        width: '48rem',
-        maxWidth: '90%',
-      })
-      .closed.subscribe({ next: () => this.state.getAssignations() });
+  public editAssignation(assignation?: QuizAssignation): void {
+    this.dialog.open(AssignationFormComponent, {
+      data: assignation,
+      width: '64rem',
+      maxWidth: '80vw',
+      viewContainerRef: this.containerRef,
+    });
   }
 
   public deleteAssignation(id: string): void {

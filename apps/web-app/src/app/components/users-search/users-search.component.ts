@@ -1,9 +1,8 @@
-import { DialogRef } from '@angular/cdk/dialog';
 import { DatePipe, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -20,7 +19,7 @@ import { UsersSearchStore } from './users-search.store';
   selector: 'sk-users-search',
   standalone: true,
   imports: [
-    MatCardModule,
+    MatDialogModule,
     TranslateModule,
     MatTableModule,
     MatButtonModule,
@@ -34,11 +33,10 @@ import { UsersSearchStore } from './users-search.store';
     NgClass,
   ],
   providers: [UsersSearchStore],
-  template: `<mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ 'USERS_SEARCH.TITLE' | translate }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  template: `
+    <h2 mat-dialog-title>{{ 'USERS_SEARCH.TITLE' | translate }}</h2>
+
+    <mat-dialog-content>
       <mat-chip-set>
         @for (item of store.selected(); track item.user_id) {
           <mat-chip class="primary"
@@ -116,16 +114,15 @@ import { UsersSearchStore } from './users-search.store';
         [showFirstLastButtons]="true"
         (page)="pageEvent($event)"
       />
-    </mat-card-content>
-    <mat-card-footer>
-      <mat-card-actions align="end">
-        <button mat-stroked-button (click)="dialogRef.close()">
-          {{ 'CONFIRMATION.CANCEL' | translate }}
-        </button>
-        <button mat-flat-button>{{ 'SAVE_CHANGES' | translate }}</button>
-      </mat-card-actions>
-    </mat-card-footer>
-  </mat-card>`,
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-stroked-button mat-dialog-close>
+        {{ 'CONFIRMATION.CANCEL' | translate }}
+      </button>
+      <button mat-flat-button>{{ 'SAVE_CHANGES' | translate }}</button>
+    </mat-dialog-actions>
+  `,
   styles: `
     .selected {
       font-weight: bold;
@@ -133,7 +130,6 @@ import { UsersSearchStore } from './users-search.store';
   `,
 })
 export class UsersSearchComponent {
-  public dialogRef = inject(DialogRef);
   public store = inject(UsersSearchStore);
   public displayedCols = [
     'user(first_name)',

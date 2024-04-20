@@ -1,13 +1,9 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, ViewContainerRef } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
@@ -59,7 +55,7 @@ import { SchoolGroupsStore } from './groups.store';
           />
         </mat-form-field>
 
-        <button mat-flat-button color="primary" (click)="newGroup()">
+        <button mat-flat-button color="primary" (click)="editGroup()">
           <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
         </button>
       </div>
@@ -147,8 +143,8 @@ import { SchoolGroupsStore } from './groups.store';
 })
 export class SchoolGroupsComponent {
   public store = inject(SchoolGroupsStore);
-  private dialog = inject(Dialog);
-  private destroy = inject(DestroyRef);
+  private dialog = inject(MatDialog);
+  private containerRef = inject(ViewContainerRef);
   public displayedColumns = [
     'plan(year)',
     'name',
@@ -170,36 +166,13 @@ export class SchoolGroupsComponent {
     });
   }
 
-  public newGroup(): void {
-    const dialogRef = this.dialog.open<Partial<ClassGroup>>(
-      SchoolGroupsFormComponent,
-      {
-        minWidth: '36rem',
-        maxWidth: '55%',
-        disableClose: true,
-      },
-    );
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveGroup(request);
-      },
-    });
-  }
-
-  public editGroup(group: ClassGroup): void {
-    const dialogRef = this.dialog.open<Partial<ClassGroup>>(
-      SchoolGroupsFormComponent,
-      {
-        minWidth: '36rem',
-        maxWidth: '55%',
-        disableClose: true,
-        data: group,
-      },
-    );
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.saveGroup({ ...request, id: group.id });
-      },
+  public editGroup(group?: ClassGroup): void {
+    this.dialog.open(SchoolGroupsFormComponent, {
+      minWidth: '36rem',
+      maxWidth: '55%',
+      disableClose: true,
+      data: group,
+      viewContainerRef: this.containerRef,
     });
   }
 }

@@ -1,27 +1,18 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { Component, inject, ViewContainerRef } from '@angular/core';
+import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { StudyPlan } from '@skooltrak/models';
-import {
-  ConfirmationService,
-  EmptyTableComponent,
-  LoadingComponent,
-} from '@skooltrak/ui';
+import { ConfirmationService } from '@skooltrak/ui';
 
 import { StudyPlansFormComponent } from './plans-form.component';
 import { SchoolPlansStore } from './plans.store';
@@ -33,20 +24,13 @@ import { SchoolPlansStore } from './plans.store';
     TranslateModule,
     MatPaginatorModule,
     DatePipe,
-    DialogModule,
-    MatButton,
-    LoadingComponent,
-    EmptyTableComponent,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatPrefix,
-    MatIcon,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
     MatTableModule,
     MatIconButton,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger,
+    MatMenuModule,
     MatSortModule,
   ],
   providers: [SchoolPlansStore, ConfirmationService],
@@ -62,7 +46,7 @@ import { SchoolPlansStore } from './plans.store';
           matInput
         />
       </mat-form-field>
-      <button mat-flat-button color="primary" (click)="newStudyPlan()">
+      <button mat-flat-button color="primary" (click)="editPlan()">
         <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
@@ -111,11 +95,11 @@ import { SchoolPlansStore } from './plans.store';
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="editStudyPlan(item)">
+            <button mat-menu-item (click)="editPlan(item)">
               <mat-icon color="accent">edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="deletePlan(item)">
+            <button mat-menu-item (click)="deletePlan(item.id)">
               <mat-icon color="warn">delete</mat-icon>
               <span>{{ 'ACTIONS.DELETE' | translate }}</span>
             </button>
@@ -138,9 +122,9 @@ import { SchoolPlansStore } from './plans.store';
 })
 export class StudyPlansComponent {
   public store = inject(SchoolPlansStore);
-  private dialog = inject(Dialog);
-  private confirmation = inject(ConfirmationService);
-  private destroy = inject(DestroyRef);
+  private dialog = inject(MatDialog);
+  private containerRef = inject(ViewContainerRef);
+
   public displayedCols = [
     'name',
     'level(name)',
@@ -161,56 +145,16 @@ export class StudyPlansComponent {
     });
   }
 
-  public newStudyPlan(): void {
-    const dialogRef = this.dialog.open<Partial<StudyPlan>>(
-      StudyPlansFormComponent,
-      {
-        minWidth: '36rem',
-        disableClose: true,
-      },
-    );
-
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.savePlan(request);
-      },
+  public editPlan(plan?: StudyPlan): void {
+    this.dialog.open(StudyPlansFormComponent, {
+      minWidth: '36rem',
+      disableClose: true,
+      data: plan,
+      viewContainerRef: this.containerRef,
     });
   }
 
-  public editStudyPlan(plan: StudyPlan): void {
-    const dialogRef = this.dialog.open<Partial<StudyPlan>>(
-      StudyPlansFormComponent,
-      {
-        minWidth: '36rem',
-        disableClose: true,
-        data: plan,
-      },
-    );
-    dialogRef.closed.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (request) => {
-        !!request && this.store.savePlan({ ...request, id: plan.id });
-      },
-    });
-  }
-
-  public deletePlan(plan: StudyPlan): void {
-    const { id } = plan;
-
-    if (!id) return;
-
-    this.confirmation
-      .openDialog({
-        title: 'CONFIRMATION.DELETE.TITLE',
-        description: 'CONFIRMATION.DELETE.TEXT',
-        icon: 'delete',
-        color: 'warn',
-        confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
-        cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
-        showCancelButton: true,
-      })
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (res) => !!res && this.store.deletePlan(id),
-      });
+  public deletePlan(id: string): void {
+    this.store.deletePlan(id);
   }
 }

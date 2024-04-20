@@ -1,16 +1,10 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { QuizAssignation, Table } from '@skooltrak/models';
+import { Course, Quiz, QuizAssignation, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, pipe, tap } from 'rxjs';
 
@@ -20,7 +14,8 @@ type State = {
   count: number;
   pageSize: number;
   start: number;
-
+  courses: Course[];
+  quizzes: Partial<Quiz>[];
   sortDirection: 'asc' | 'desc' | '';
   sortColumn: string;
 };
@@ -31,6 +26,8 @@ const initial: State = {
   count: 0,
   pageSize: 5,
   start: 0,
+  courses: [],
+  quizzes: [],
   sortDirection: 'desc',
   sortColumn: 'created_at',
 };
@@ -59,7 +56,8 @@ export const QuizAssignationsStore = signalStore(
     (
       { schoolId, end, start, sortColumn, sortDirection, fetchData, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
+      dialog = inject(MatDialog),
       translate = inject(TranslateService),
     ) => {
       const fetchAssignations = rxMethod<typeof fetchData>(
@@ -102,6 +100,66 @@ export const QuizAssignationsStore = signalStore(
         });
       }
 
+      async function getCourses(): Promise<void> {
+        patchState(state, { loading: true });
+        const { data, error } = await supabase.client
+          .from(Table.Courses)
+          .select(
+            'id, subject:school_subjects(id, name), subject_id, plan:school_plans(id, name, year), plan_id',
+          )
+          .eq('school_id', schoolId())
+          .order('subject(name)', { ascending: true })
+          .order('plan(year)', { ascending: true });
+
+        if (error) {
+          console.error(error);
+          patchState(state, { loading: false });
+
+          return;
+        }
+
+        patchState(state, {
+          courses: data as unknown as Course[],
+          loading: false,
+        });
+      }
+      async function getQuizzes(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Quizzes)
+          .select('id, title')
+          .eq('school_id', schoolId())
+          .order('title', { ascending: true });
+
+        if (error) {
+          console.error(error);
+
+          return;
+        }
+
+        patchState(state, { quizzes: data });
+      }
+
+      async function saveAssignation(
+        request: Partial<QuizAssignation>,
+      ): Promise<void> {
+        patchState(state, { loading: true });
+        const { error } = await supabase.client
+          .from(Table.QuizAssignations)
+          .upsert([{ ...request, school_id: schoolId() }]);
+
+        if (error) {
+          console.error(error);
+          toast.open(translate.instant('ALERT.FAILURE'));
+          patchState(state, { loading: false });
+
+          return;
+        }
+
+        toast.open(translate.instant('ALERT.SUCCESS'));
+        patchState(state, { loading: false });
+        dialog.closeAll();
+      }
+
       async function deleteAssignation(id: string): Promise<void> {
         const { error } = await supabase.client
           .from(Table.QuizAssignations)
@@ -110,14 +168,21 @@ export const QuizAssignationsStore = signalStore(
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        toast.info(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
       }
 
-      return { fetchAssignations, deleteAssignation, getAssignations };
+      return {
+        fetchAssignations,
+        deleteAssignation,
+        getAssignations,
+        getCourses,
+        getQuizzes,
+        saveAssignation,
+      };
     },
   ),
   withHooks({

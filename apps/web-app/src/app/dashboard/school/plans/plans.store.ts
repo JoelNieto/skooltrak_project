@@ -1,10 +1,12 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { StudyPlan, Table } from '@skooltrak/models';
+import { Degree, StudyPlan, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
+import { ConfirmationService } from '@skooltrak/ui';
 import { debounceTime, filter, pipe, tap } from 'rxjs';
 
 type State = {
@@ -15,6 +17,7 @@ type State = {
   loading: boolean;
   sortDirection: 'asc' | 'desc' | '';
   sortColumn: string;
+  degrees: Degree[];
 };
 
 const initialState: State = {
@@ -25,6 +28,7 @@ const initialState: State = {
   start: 0,
   sortColumn: '',
   sortDirection: '',
+  degrees: [],
 };
 
 export const SchoolPlansStore = signalStore(
@@ -50,7 +54,9 @@ export const SchoolPlansStore = signalStore(
     (
       { start, end, fetchData, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
+      dialog = inject(MatDialog),
+      confirmation = inject(ConfirmationService),
       translate = inject(TranslateService),
     ) => {
       async function getPlans(): Promise<void> {
@@ -96,37 +102,71 @@ export const SchoolPlansStore = signalStore(
         ),
       );
       async function savePlan(request: Partial<StudyPlan>): Promise<void> {
+        patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.StudyPlans)
           .upsert([{ ...request, school_id: fetchData().schoolId }]);
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          patchState(state, { loading: true });
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
+        dialog.closeAll();
         fetchPlans(fetchData);
       }
+
       async function deletePlan(id: string): Promise<void> {
+        patchState(state, { loading: true });
+        const res = await confirmation.openDialogPromise({
+          title: 'CONFIRMATION.DELETE.TITLE',
+          description: 'CONFIRMATION.DELETE.TEXT',
+          icon: 'delete',
+          color: 'warn',
+          confirmButtonText: 'CONFIRMATION.DELETE.CONFIRM',
+          cancelButtonText: 'CONFIRMATION.DELETE.CANCEL',
+          showCancelButton: true,
+        });
+
+        if (!res) {
+          patchState(state, { loading: false });
+
+          return;
+        }
         const { error } = await supabase.client
           .from(Table.StudyPlans)
           .delete()
           .eq('id', id);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
 
           return;
         }
 
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         fetchPlans(fetchData);
       }
 
-      return { deletePlan, savePlan, fetchPlans };
+      async function fetchDegrees(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Degrees)
+          .select('id, name, level_id')
+          .eq('school_id', fetchData().schoolId);
+
+        if (error) {
+          console.error(error);
+
+          return;
+        }
+        patchState(state, { degrees: data });
+      }
+
+      return { deletePlan, savePlan, fetchPlans, fetchDegrees };
     },
   ),
   withHooks({

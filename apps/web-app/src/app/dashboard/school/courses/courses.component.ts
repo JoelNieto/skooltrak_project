@@ -1,17 +1,14 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import {
-  MatFormField,
-  MatLabel,
-  MatSelectModule,
-} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
@@ -34,15 +31,13 @@ import { SchoolCoursesStore } from './courses.store';
     DatePipe,
     RouterLink,
     MatSelectModule,
-    MatFormField,
-    MatLabel,
+    MatFormFieldModule,
     ReactiveFormsModule,
     MatTableModule,
     MatIcon,
-    MatIconButton,
     MatSortModule,
     MatMenuModule,
-    MatButton,
+    MatButtonModule,
   ],
   providers: [UtilService, SchoolCoursesStore],
   template: ` <div class="relative ">
@@ -62,7 +57,7 @@ import { SchoolCoursesStore } from './courses.store';
           }
         </mat-select>
       </mat-form-field>
-      <button mat-flat-button color="primary" (click)="createCourse()">
+      <button mat-flat-button color="primary" (click)="editCourse()">
         <mat-icon>add</mat-icon><span>{{ 'NEW' | translate }}</span>
       </button>
     </div>
@@ -123,6 +118,10 @@ import { SchoolCoursesStore } from './courses.store';
               <mat-icon color="accent">edit_square</mat-icon>
               <span>{{ 'ACTIONS.EDIT' | translate }}</span>
             </button>
+            <button type="button" mat-menu-item (click)="deleteCourse(item.id)">
+              <mat-icon>delete</mat-icon>
+              <span>{{ 'ACTIONS.DELETE' | translate }}</span>
+            </button>
           </mat-menu>
         </td>
       </ng-container>
@@ -142,7 +141,8 @@ import { SchoolCoursesStore } from './courses.store';
 export class SchoolCoursesComponent implements OnInit {
   public store = inject(SchoolCoursesStore);
   private destroyRef = inject(DestroyRef);
-  private dialog = inject(Dialog);
+  private containerRef = inject(ViewContainerRef);
+  private dialog = inject(MatDialog);
   public displayedColumns = [
     'subject(name)',
     'plan(year)',
@@ -175,49 +175,14 @@ export class SchoolCoursesComponent implements OnInit {
     patchState(this.store, { start: pageIndex, pageSize });
   }
 
-  public createCourse(): void {
-    this.dialog
-      .open<{ course: Partial<Course>; teachers: string[] }>(
-        SchoolCoursesFormComponent,
-        {
-          width: '36rem',
-          maxWidth: '75%',
-          disableClose: true,
-          data: { plan_id: this.store.planId() },
-        },
-      )
-      .closed.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (request) => {
-          if (!request) {
-            return;
-          }
-          const { course } = request;
-          !!course && this.store.saveCourse(course);
-        },
-      });
-  }
-
-  public editCourse(item: Partial<Course>): void {
-    this.dialog
-      .open<{ course: Partial<Course>; teachers: string[] }>(
-        SchoolCoursesFormComponent,
-        {
-          width: '36rem',
-          maxWidth: '75%',
-          disableClose: true,
-          data: item,
-        },
-      )
-      .closed.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (request) => {
-          if (request) {
-            const { course } = request;
-            !!course && this.store.saveCourse({ ...course, id: item.id });
-          }
-        },
-      });
+  public editCourse(item?: Partial<Course>): void {
+    this.dialog.open(SchoolCoursesFormComponent, {
+      width: '36rem',
+      maxWidth: '90vw',
+      disableClose: true,
+      data: item,
+      viewContainerRef: this.containerRef,
+    });
   }
 
   public deleteCourse(course: Course): void {

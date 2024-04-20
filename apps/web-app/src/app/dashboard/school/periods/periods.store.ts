@@ -1,14 +1,8 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { tapResponse } from '@ngrx/operators';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Period, Table } from '@skooltrak/models';
@@ -52,7 +46,8 @@ export const SchoolPeriodsStore = signalStore(
     (
       { schoolId, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
+      dialog = inject(MatDialog),
       translate = inject(TranslateService),
     ) => ({
       fetchPeriods: rxMethod<string | undefined>(
@@ -88,15 +83,16 @@ export const SchoolPeriodsStore = signalStore(
           .upsert([{ ...request, school_id: schoolId() }]);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
         this.fetchPeriods(schoolId);
+        dialog.closeAll();
       },
     }),
   ),

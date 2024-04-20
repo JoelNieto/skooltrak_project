@@ -1,13 +1,7 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { ClassGroup, Table } from '@skooltrak/models';
@@ -40,22 +34,26 @@ export const SchoolGroupsStore = signalStore(
     (
       { start, pageSize, sortColumn, sortDirection },
       auth = inject(webStore.AuthStore),
-    ) => ({
-      end: computed(() => start() + (pageSize() - 1)),
-      schoolId: computed(() => auth.schoolId()),
-      query: computed(() => ({
+    ) => {
+      const end = computed(() => start() + (pageSize() - 1));
+      const schoolId = computed(() => auth.schoolId());
+      const query = computed(() => ({
+        schoolId: schoolId(),
         pageSize: pageSize(),
         start: start(),
         sortDirection: sortDirection(),
         sortColumn: sortColumn(),
-      })),
-    }),
+      }));
+
+      return { end, schoolId, query };
+    },
   ),
   withMethods(
     (
       { start, end, schoolId, query, sortColumn, sortDirection, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
+      dialog = inject(MatDialog),
       translate = inject(TranslateService),
     ) => {
       const fetchGroups = rxMethod<typeof query>(
@@ -100,18 +98,22 @@ export const SchoolGroupsStore = signalStore(
         });
       }
       async function saveGroup(request: Partial<ClassGroup>): Promise<void> {
+        patchState(state, { loading: true });
         const { error } = await supabase.client
           .from(Table.Groups)
           .upsert([{ ...request, school_id: schoolId() }]);
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          patchState(state, { loading: false });
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
+
         fetchGroups(query);
+        dialog.closeAll();
       }
       async function deleteGroup(id: string): Promise<void> {
         const { error } = await supabase.client
@@ -120,13 +122,13 @@ export const SchoolGroupsStore = signalStore(
           .eq('id', id);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
 
           return;
         }
 
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         fetchGroups(query);
       }
 

@@ -1,7 +1,7 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { NgClass } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -100,7 +100,7 @@ export class CourseDetailsComponent implements OnInit {
   public readonly courseId = input.required<string>();
   public store = inject(CourseDetailsStore);
 
-  private dialog = inject(Dialog);
+  private dialog = inject(MatDialog);
 
   public ngOnInit(): void {
     this.store.fetchCourse(this.courseId());
@@ -108,7 +108,7 @@ export class CourseDetailsComponent implements OnInit {
 
   public showMeeting(): void {
     this.dialog.open(CourseMeetingComponent, {
-      minWidth: '90%',
+      minWidth: '90vw',
       disableClose: true,
       data: this.store.course(),
     });

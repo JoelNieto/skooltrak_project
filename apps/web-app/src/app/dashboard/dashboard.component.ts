@@ -47,59 +47,47 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     MatButtonModule,
     MatToolbarModule,
     MatSidenavModule,
-    NgOptimizedImage
+    NgOptimizedImage,
   ],
   providers: [],
   template: `
-    <mat-toolbar class="fixed top-0 z-10 toolbar flex justify-between">
-      <div class="flex items-center">
-        <button aria-label="Menu icon" mat-icon-button (click)="toggleMenu()">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <a routerLink="home">
-          <img
-            src="assets/images/skooltrak-white.svg"
-            class="ml-3 h-7"
-            alt="Skooltrak Logo"
-          />
-        </a>
-      </div>
-      <div class="flex gap-2">
-        <button mat-raised-button (click)="changeSchool()">
-          @if (auth.currentSchool(); as school) {
-            <div class="flex items-center gap-2">
-              @if (school.crest_url) {
-                <sk-avatar
-                  [fileName]="auth.currentSchool()?.crest_url!"
-                  bucket="crests"
-                  class="h-8"
-                />
-              } @else {
-                <img
-                  ngSrc="assets/images/skooltrak-logo.svg"
-                  class="h-8"
-                  alt="Skooltrak Logo"
-                />
-              }
-              {{ school?.short_name ?? ('Select school' | translate) }}
-            </div>
-          }
-        </button>
-        <a mat-icon-button routerLink="communications">
-          <mat-icon>chat</mat-icon>
-        </a>
-      </div>
-    </mat-toolbar>
+    @if (isMobile()) {
+      <mat-toolbar>
+        <div class="flex items-center">
+          <button aria-label="Menu icon" mat-icon-button (click)="toggleMenu()">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <a routerLink="home">
+            <img
+              src="assets/images/skooltrak.svg"
+              class="ml-3 h-7"
+              alt="Skooltrak Logo"
+            />
+          </a>
+        </div>
+      </mat-toolbar>
+    }
     <mat-sidenav-container autosize class="h-full">
       <mat-sidenav
+        class="main-sidenav"
         [mode]="isMobile() ? 'over' : 'side'"
         [opened]="!isMobile()"
         [ngClass]="isCollapsed() ? 'w-20' : 'w-48'"
       >
         <div
-          class="flex flex-col justify-between h-screen pt-16 pb-4 px-2 pr-3 "
+          class="flex flex-col justify-between h-screen pt-4 pb-4 px-2 pr-3 "
         >
           <div>
+            <div
+              class="flex w-full justify-between  gap-2 ps-2"
+              [class.flex-col]="isCollapsed()"
+            >
+              <button mat-icon-button (click)="toggleMenu()">
+                <mat-icon>menu</mat-icon>
+              </button>
+              <img src="assets/images/skooltrak-logo-square.svg" class="h-10" />
+            </div>
+
             @if (auth.user(); as user) {
               <div
                 class="flex flex-col items-center p-3 cursor-pointer"
@@ -118,11 +106,42 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                   <p class="mat-caption">{{ user.email }}</p>
                 }
               </div>
+              <button
+                mat-stroked-button
+                (click)="changeSchool()"
+                class="w-full"
+              >
+                @if (isCollapsed()) {
+                  <mat-icon>home_work</mat-icon>
+                } @else {
+                  @if (auth.currentSchool(); as school) {
+                    <div class="flex items-center gap-2">
+                      @if (school.crest_url) {
+                        <sk-avatar
+                          [fileName]="auth.currentSchool()?.crest_url!"
+                          bucket="crests"
+                          class="h-8"
+                        />
+                      } @else {
+                        <img
+                          ngSrc="assets/images/skooltrak-logo.svg"
+                          class="h-8"
+                          alt="Skooltrak Logo"
+                        />
+                      }
+                      {{ school?.short_name ?? ('Select school' | translate) }}
+                    </div>
+                  }
+                }
+              </button>
               <mat-menu #menu="matMenu">
-                <a mat-menu-item routerLink="profile"
-                >
+                <a mat-menu-item routerLink="profile">
                   <mat-icon>account_circle</mat-icon>
                   {{ 'PROFILE.TITLE' | translate }}</a
+                >
+                <a mat-menu-item routerLink="communications">
+                  <mat-icon>chat</mat-icon>
+                  {{ 'MESSAGING.TITLE' | translate }}</a
                 >
                 <a mat-menu-item routerLink="change-password">
                   <mat-icon>password</mat-icon>
@@ -197,14 +216,13 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
               >
                 <mat-icon matListItemIcon>domain</mat-icon>
                 <div matListItemTitle>{{ 'SCHOOL.TITLE' | translate }}</div>
-              </a
-              >
+              </a>
             }
           </mat-nav-list>
         </div>
       </mat-sidenav>
       <mat-sidenav-content>
-        <main class="pt-14">
+        <main>
           <div class="mx-auto p-4 xl:p-6">
             <router-outlet />
           </div>

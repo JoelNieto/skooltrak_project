@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -24,6 +23,7 @@ import {
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { orderBy, pick } from 'lodash';
 import { distinctUntilChanged, filter, from, map, pipe, switchMap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   assignment: Assignment | undefined;
@@ -55,7 +55,7 @@ export const AssignmentFormStore = signalStore(
     (
       { schoolId, dates, course, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
       translate = inject(TranslateService),
       router = inject(Router),
     ) => ({
@@ -144,7 +144,7 @@ export const AssignmentFormStore = signalStore(
         if (error) {
           console.error(error);
           patchState(state, { loading: false });
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
@@ -154,12 +154,12 @@ export const AssignmentFormStore = signalStore(
         } catch (error) {
           console.error(error);
           patchState(state, { loading: false });
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
 
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         router.navigate(['app', 'assignments', data.id]);
         patchState(state, { loading: false });
       },

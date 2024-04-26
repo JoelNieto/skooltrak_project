@@ -1,11 +1,11 @@
 import { inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { RoleEnum, School, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 import { ConfirmationService } from '@skooltrak/ui';
 import { filter } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   role: RoleEnum | undefined;
@@ -20,7 +20,7 @@ export const SchoolConnectorStore = signalStore(
       supabase = inject(SupabaseService),
       confirmation = inject(ConfirmationService),
       translate = inject(TranslateService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
     ) => ({
       async fetchSchoolByCode(code: string): Promise<void> {
         patchState(state, { loading: true });
@@ -32,7 +32,7 @@ export const SchoolConnectorStore = signalStore(
 
         if (error || !data) {
           console.error(error);
-          toast.error(translate.instant('SCHOOL_CONNECTOR.NOT_FOUND'));
+          toast.open(translate.instant('SCHOOL_CONNECTOR.NOT_FOUND'));
           patchState(state, { loading: false });
 
           return;
@@ -58,12 +58,12 @@ export const SchoolConnectorStore = signalStore(
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('School connected successfully!'));
+        toast.open(translate.instant('School connected successfully!'));
 
         patchState(state, { loading: false });
       },

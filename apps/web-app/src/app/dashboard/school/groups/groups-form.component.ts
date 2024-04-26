@@ -13,7 +13,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
 import { v4 } from 'uuid';
 
-import { GroupsFormStore } from './groups-form.store';
 import { SchoolGroupsStore } from './groups.store';
 
 @Component({
@@ -30,10 +29,8 @@ import { SchoolGroupsStore } from './groups.store';
     MatProgressBar,
     MatIcon,
   ],
-  providers: [GroupsFormStore],
-
   template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
-    @if (groupsStore.loading()) {
+    @if (store.loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
     <h2 mat-dialog-title>
@@ -42,11 +39,11 @@ import { SchoolGroupsStore } from './groups.store';
     <mat-dialog-content>
       <div class="flex flex-col space-y-1">
         <mat-form-field>
-          <mat-label for="name">{{ 'Name' | translate }}</mat-label>
+          <mat-label>{{ 'NAME' | translate }}</mat-label>
           <input type="text" formControlName="name" matInput />
         </mat-form-field>
         <mat-form-field>
-          <mat-label for="degree_id">{{ 'Degree' | translate }}</mat-label>
+          <mat-label>{{ 'DEGREES.ITEM' | translate }}</mat-label>
           <mat-select formControlName="degree_id">
             @for (degree of store.degrees(); track degree.id) {
               <mat-option [value]="degree.id">{{ degree.name }}</mat-option>
@@ -54,7 +51,7 @@ import { SchoolGroupsStore } from './groups.store';
           </mat-select>
         </mat-form-field>
         <mat-form-field>
-          <mat-label for="plan_id">{{ 'Plan' | translate }}</mat-label>
+          <mat-label>{{ 'PLANS.NAME' | translate }}</mat-label>
           <mat-select formControlName="plan_id">
             @for (plan of store.plans(); track plan.id) {
               <mat-option [value]="plan.id">{{ plan.name }}</mat-option>
@@ -76,8 +73,7 @@ import { SchoolGroupsStore } from './groups.store';
 })
 export class SchoolGroupsFormComponent implements OnInit {
   private data: ClassGroup | undefined = inject(MAT_DIALOG_DATA);
-  public store = inject(GroupsFormStore);
-  public groupsStore = inject(SchoolGroupsStore);
+  public store = inject(SchoolGroupsStore);
   private destroyRef = inject(DestroyRef);
 
   public form = new FormGroup({
@@ -97,6 +93,7 @@ export class SchoolGroupsFormComponent implements OnInit {
   });
 
   public ngOnInit(): void {
+    this.store.fetchDegrees()
     if (this.data) {
       this.form.patchValue(this.data);
       patchState(this.store, { degreeId: this.data?.degree_id });
@@ -111,6 +108,6 @@ export class SchoolGroupsFormComponent implements OnInit {
   }
 
   public saveChanges(): void {
-    this.groupsStore.saveGroup(this.form.getRawValue());
+    this.store.saveGroup(this.form.getRawValue());
   }
 }

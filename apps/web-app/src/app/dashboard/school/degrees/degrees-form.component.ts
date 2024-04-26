@@ -38,11 +38,11 @@ import { SchoolDegreesStore } from './degrees.store';
     <mat-dialog-content>
       <div class="flex flex-col space-y-1">
         <mat-form-field>
-          <mat-label for="name">{{ 'NAME' | translate }}</mat-label>
+          <mat-label>{{ 'NAME' | translate }}</mat-label>
           <input type="text" formControlName="name" matInput />
         </mat-form-field>
         <mat-form-field>
-          <mat-label for="level_id">{{ 'LEVEL' | translate }}</mat-label>
+          <mat-label>{{ 'LEVEL' | translate }}</mat-label>
           <mat-select formControlName="level_id">
             @for (level of store.levels(); track level.id) {
               <mat-option [value]="level.id"> {{ level.name }}</mat-option>

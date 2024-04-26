@@ -1,5 +1,4 @@
 import { inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
 import {
   patchState,
   signalStore,
@@ -10,6 +9,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Grade, GradeBucket, Period, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   grade: Partial<Grade> | undefined;
@@ -31,7 +31,7 @@ export const GradesFormStore = signalStore(
     (
       { ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      snackBar = inject(MatSnackBar),
       translate = inject(TranslateService),
       auth = inject(webStore.AuthStore),
     ) => ({
@@ -69,12 +69,12 @@ export const GradesFormStore = signalStore(
 
         if (error) {
           console.error();
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false });
       },
     }),

@@ -1,14 +1,21 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es-MX';
-import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  LOCALE_ID,
+} from '@angular/core';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import {
   provideRouter,
   TitleStrategy,
@@ -17,7 +24,6 @@ import {
   withRouterConfig,
   withViewTransitions,
 } from '@angular/router';
-import { provideHotToastConfig } from '@ngneat/hot-toast';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_CONFIG, environment } from '@skooltrak/environments';
@@ -29,6 +35,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideQuillConfig } from 'ngx-quill';
 
 import { appRoutes } from './app.routes';
+import { MAT_CARD_CONFIG } from '@angular/material/card';
 
 registerLocaleData(localeEs, 'es-MX');
 
@@ -98,11 +105,11 @@ export const appConfig: ApplicationConfig = {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: { verticalPosition: 'top', duration: 3_000 },
     },
+    { provide: MAT_CARD_CONFIG, useValue: { appearance: 'outlined' } },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline' },
     },
     provideDateFnsAdapter(),
-    provideHotToastConfig(),
   ],
 };

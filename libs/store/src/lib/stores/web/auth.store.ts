@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -24,6 +23,7 @@ import { Session } from '@supabase/supabase-js';
 import { filter, from, map, pipe, switchMap } from 'rxjs';
 
 import { SupabaseService } from '../../services/supabase.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   loading: boolean;
@@ -85,7 +85,7 @@ export const AuthStore = signalStore(
       { session, user, isSigning, ...state },
       supabase = inject(SupabaseService),
       confirmation = inject(ConfirmationService),
-      toast = inject(HotToastService),
+      snackBar = inject(MatSnackBar),
       translate = inject(TranslateService),
       router = inject(Router),
     ) => ({
@@ -131,7 +131,7 @@ export const AuthStore = signalStore(
                 next: (user) => {
                   patchState(state, { user });
                   if (isSigning()) {
-                    toast.success(
+                    snackBar.open(
                       translate.instant('WELCOME', { name: user.first_name }),
                     );
                     router.navigate(['/app']);
@@ -204,7 +204,7 @@ export const AuthStore = signalStore(
         } = await supabase.signInWithEmail(email, password);
         if (error) {
           console.error(error);
-          toast.error(translate.instant(`AUTH_FAILURE.SIGN_IN`));
+          snackBar.open(translate.instant(`AUTH_FAILURE.SIGN_IN`));
 
           return;
         }
@@ -220,40 +220,40 @@ export const AuthStore = signalStore(
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
 
         patchState(state, { user: { ...user()!, ...request }, loading: false });
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
       },
       async resetPassword(email: string) {
         const { error } = await supabase.resetPassword(email);
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
       },
       async changePassword(password: string) {
         const { error } = await supabase.updatePassword(password);
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
       },
       async signOut() {
         await supabase.signOut();
         patchState(state, initialState);
         router.navigate(['/']);
-        toast.info(translate.instant('SIGN_OUT.MESSAGE'));
+        snackBar.open(translate.instant('SIGN_OUT.MESSAGE'));
       },
     }),
   ),

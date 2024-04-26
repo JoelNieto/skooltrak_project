@@ -1,12 +1,19 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Question, QuestionTypeEnum, Quiz, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
 import { debounceTime, distinctUntilChanged, filter, pipe, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   loading: boolean;
@@ -45,7 +52,7 @@ export const QuizzesFormStore = signalStore(
     (
       { quizId, questions, title, description, fetchData, schoolId, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      snackBar = inject(MatSnackBar),
       translate = inject(TranslateService),
     ) => {
       async function getQuiz(id: string): Promise<Quiz | undefined> {
@@ -72,6 +79,7 @@ export const QuizzesFormStore = signalStore(
 
         return data;
       }
+
       function addQuestion(): void {
         patchState(state, {
           questions: [
@@ -132,7 +140,7 @@ export const QuizzesFormStore = signalStore(
 
         if (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
           patchState(state, { loading: false });
 
           return;
@@ -143,12 +151,12 @@ export const QuizzesFormStore = signalStore(
           await saveQuestionOptions();
         } catch (error) {
           console.error(error);
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        snackBar.open(translate.instant('ALERT.SUCCESS'));
         patchState(state, { loading: false, quizId: data.id });
       }
 

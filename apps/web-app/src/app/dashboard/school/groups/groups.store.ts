@@ -4,9 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { ClassGroup, Table } from '@skooltrak/models';
+import { ClassGroup, Degree, StudyPlan, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
-import { filter, pipe, tap } from 'rxjs';
+import { filter, from, map, pipe, switchMap, tap } from 'rxjs';
+import { tapResponse } from '@ngrx/operators';
 
 type State = {
   groups: ClassGroup[];
@@ -16,6 +17,9 @@ type State = {
   loading: boolean;
   sortDirection: 'asc' | 'desc' | '';
   sortColumn: string;
+  degrees: Degree[];
+  degreeId: string;
+  plans: Partial<StudyPlan>[]
 };
 
 const initialState: State = {
@@ -26,6 +30,9 @@ const initialState: State = {
   start: 0,
   sortColumn: '',
   sortDirection: '',
+  degrees: [],
+  degreeId: '',
+  plans: []
 };
 
 export const SchoolGroupsStore = signalStore(
@@ -50,7 +57,7 @@ export const SchoolGroupsStore = signalStore(
   ),
   withMethods(
     (
-      { start, end, schoolId, query, sortColumn, sortDirection, ...state },
+      { start, end, schoolId, query, sortColumn, sortDirection, degreeId, ...state },
       supabase = inject(SupabaseService),
       toast = inject(MatSnackBar),
       dialog = inject(MatDialog),
@@ -132,12 +139,51 @@ export const SchoolGroupsStore = signalStore(
         fetchGroups(query);
       }
 
-      return { fetchGroups, deleteGroup, saveGroup, getGroups };
+      async function fetchDegrees(): Promise<void> {
+        const { data, error } = await supabase.client
+          .from(Table.Degrees)
+          .select('id, name, level:levels(id, name, sort)')
+          .order('level(sort)', {ascending: true})
+          .eq('school_id', schoolId());
+
+        if (error) {
+          console.error(error);
+        }
+
+        patchState(state, {degrees: data as unknown as Degree[]})
+      }
+
+      const fetchPlans = rxMethod<string>(
+        pipe(
+          filter(() => !!degreeId()),
+          switchMap(() =>
+            from(
+              supabase.client
+                .from(Table.StudyPlans)
+                .select('id,name')
+                .eq('degree_id', degreeId()),
+            ).pipe(
+              map(({ error, data }) => {
+                if (error) throw new Error(error.message);
+
+                return data;
+              }),
+              tapResponse({
+                next: (plans) => patchState(state, { plans }),
+                error: console.error,
+              }),
+            ),
+          ),
+        ),
+      );
+
+      return { fetchGroups, fetchDegrees, fetchPlans, deleteGroup, saveGroup, getGroups };
     },
   ),
   withHooks({
-    onInit({ fetchGroups, query }) {
+    onInit({ fetchGroups, fetchPlans, degreeId, query }) {
       fetchGroups(query);
+      fetchPlans(degreeId);
     },
   }),
 );

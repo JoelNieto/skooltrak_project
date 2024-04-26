@@ -112,7 +112,8 @@
   },
   "DEGREES": {
     "DETAILS": "Detalles del certificado",
-    "TITLE": "Certificados"
+    "TITLE": "Certificados",
+    "ITEM": "Certificado"
   },
   "DESCRIPTION": "Descripción",
   "DONE": "Listo",

@@ -48,7 +48,8 @@ import { CourseStudentsStore } from './students.store';
       </mat-form-field>
 
       <button mat-flat-button color="accent" (click)="inviteStudents()">
-        <mat-icon>add</mat-icon>{{ 'INVITE' | translate }}
+        <mat-icon>add</mat-icon>
+        {{ 'INVITE' | translate }}
       </button>
     </div>
     <table mat-table [dataSource]="state.students()">
@@ -103,8 +104,9 @@ export class CoursesComponent implements OnInit {
 
   public inviteStudents(): void {
     this.dialog.open(UsersSearchComponent, {
-      width: '64rem',
+      width: '36rem',
       maxWidth: '90vw',
+      disableClose: true,
     });
   }
 }

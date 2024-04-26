@@ -22,7 +22,7 @@ export type SchoolProfile = {
   user: Partial<User>;
 };
 
-export type UserProfile = Partial<SchoolProfile> & {
+export type UserProfile = SchoolProfile & {
   group_id?: string;
 };
 

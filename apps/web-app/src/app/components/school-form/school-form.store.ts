@@ -1,5 +1,4 @@
 import { inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
 import {
   patchState,
   signalStore,
@@ -11,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Country, School, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 import { snakeCase } from 'lodash';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   loading: boolean;
@@ -33,7 +33,7 @@ export const SchoolFormStore = signalStore(
       { school, ...state },
       supabase = inject(SupabaseService),
       translate = inject(TranslateService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
     ) => ({
       async fetchCountries(): Promise<void> {
         const { data, error } = await supabase.client
@@ -72,13 +72,13 @@ export const SchoolFormStore = signalStore(
           .upsert([request]);
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('ALERT.SUCCESS'));
+        toast.open(translate.instant('ALERT.SUCCESS'));
         await supabase.createBucket(snakeCase(request.full_name));
         patchState(state, { loading: false });
       },

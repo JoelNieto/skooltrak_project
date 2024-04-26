@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HotToastService } from '@ngneat/hot-toast';
 import { TranslateService } from '@ngx-translate/core';
 import { Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
@@ -19,6 +18,7 @@ import { InputDirective } from '@skooltrak/ui';
 import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs';
 
 import { CourseGradesStore } from '../grades/course-grades.store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'sk-grade-item-form',
@@ -37,7 +37,7 @@ export class GradeItemFormComponent implements OnInit {
   public gradeId = input.required<string>();
   public studentId = input.required<string>();
   private store = inject(CourseGradesStore);
-  private toast = inject(HotToastService);
+  private toast = inject(MatSnackBar);
   private supabase = inject(SupabaseService);
   private translate = inject(TranslateService);
   private injector = inject(Injector);
@@ -98,11 +98,11 @@ export class GradeItemFormComponent implements OnInit {
       .upsert([item]);
 
     if (error) {
-      this.toast.error(this.translate.instant('ALERT_FAILURE'));
+      this.toast.open(this.translate.instant('ALERT_FAILURE'));
 
       return;
     }
     this.store.refresh();
-    this.toast.success(this.translate.instant('ALERT.SUCCESS'));
+    this.toast.open(this.translate.instant('ALERT.SUCCESS'));
   }
 }

@@ -45,7 +45,7 @@ import { SchoolGroupsStore } from './groups.store';
     <div class="relative ">
       <div class="flex justify-between items-baseline px-1">
         <mat-form-field class="w-full lg:w-96">
-          <mat-label for="table-search">Search</mat-label>
+          <mat-label>Search</mat-label>
           <mat-icon matIconPrefix>search</mat-icon>
           <input
             type="text"

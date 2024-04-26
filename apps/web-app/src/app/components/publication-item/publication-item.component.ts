@@ -13,13 +13,13 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Publication, Table } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 import { ConfirmationService } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../user-chip/user-chip.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'sk-publication-item',
@@ -34,7 +34,7 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
     TranslateModule,
     DatePipe,
   ],
-  template: `<mat-card>
+  template: ` <mat-card>
     <mat-card-header>
       <div class="flex justify-between w-full">
         <div class="flex items-center gap-2">
@@ -48,8 +48,8 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="deletePost()">
-            <mat-icon>delete</mat-icon
-            ><span>{{ 'ACTIONS.DELETE' | translate }}</span>
+            <mat-icon>delete </mat-icon>
+            <span>{{ 'ACTIONS.DELETE' | translate }}</span>
           </button>
         </mat-menu>
       </div>
@@ -59,8 +59,8 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
         <mat-chip-set>
           <a [routerLink]="['/app/courses', course.id]">
             <mat-chip class="primary" highlighted color="primary"
-              >{{ course.plan?.name }} - {{ course.subject?.name }}</mat-chip
-            >
+              >{{ course.plan?.name }} - {{ course.subject?.name }}
+            </mat-chip>
           </a>
         </mat-chip-set>
       }
@@ -75,7 +75,7 @@ export class PublicationItemComponent {
   public deleted = output<string>();
   private readonly supabase = inject(SupabaseService);
   private readonly confirmation = inject(ConfirmationService);
-  private readonly toast = inject(HotToastService);
+  private readonly toast = inject(MatSnackBar);
   private readonly translate = inject(TranslateService);
   private readonly destroy = inject(DestroyRef);
 
@@ -104,7 +104,7 @@ export class PublicationItemComponent {
 
             return;
           }
-          this.toast.info(this.translate.instant('ALERT.DELETED'));
+          this.toast.open(this.translate.instant('ALERT.DELETED'));
           this.deleted.emit(this.post().id);
         },
       });

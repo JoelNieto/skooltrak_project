@@ -1,19 +1,18 @@
-import { DatePipe, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatSortModule, Sort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserProfile } from '@skooltrak/models';
-
-import { AvatarComponent } from '../avatar/avatar.component';
 import { UsersSearchStore } from './users-search.store';
+import { MatListModule } from '@angular/material/list';
+import { FileUrlPipe } from '../../auth/pipes/file-url.pipe';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs';
+import { patchState } from '@ngrx/signals';
+import { UserProfile } from '@skooltrak/models';
 
 @Component({
   selector: 'sk-users-search',
@@ -21,136 +20,74 @@ import { UsersSearchStore } from './users-search.store';
   imports: [
     MatDialogModule,
     TranslateModule,
-    MatTableModule,
     MatButtonModule,
-    AvatarComponent,
-    DatePipe,
     MatIconModule,
-    MatMenuModule,
-    MatSortModule,
-    MatPaginatorModule,
     MatChipsModule,
-    NgClass,
+    MatListModule,
+    FileUrlPipe,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [UsersSearchStore],
   template: `
     <h2 mat-dialog-title>{{ 'USERS_SEARCH.TITLE' | translate }}</h2>
-
     <mat-dialog-content>
-      <mat-chip-set>
-        @for (item of store.selected(); track item.user_id) {
-          <mat-chip class="primary"
-            >{{ item.user?.first_name }} {{ item.user?.father_name }}</mat-chip
-          >
-        }
-      </mat-chip-set>
-      <table
-        mat-table
-        [dataSource]="store.people()"
-        matSort
-        (matSortChange)="sortChange($event)"
-      >
-        <ng-container matColumnDef="user(first_name)">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            {{ 'PEOPLE.PERSON' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let item">
-            <div class="flex items-center gap-2">
-              <sk-avatar
-                [fileName]="item.user.avatar_url ?? 'default_avatar.jpg'"
-                class="h-10"
-                [rounded]="true"
-              />
-              <div class="flex flex-col">
-                <div class="mat-subtitle-2">
-                  {{ item.user.first_name }} {{ item.user.father_name }}
-                </div>
-                <div class="mat-hint">
-                  {{ item.user.email }}
-                </div>
-              </div>
+      <mat-form-field>
+        <mat-label>{{ 'SEARCH_ITEMS' | translate }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          type="text"
+          [placeholder]="'SEARCH_ITEMS' | translate"
+          [formControl]="searchControl"
+          matInput
+        />
+      </mat-form-field>
+      <mat-selection-list [formControl]="selectedControl">
+        @for (user of store.filteredPeople(); track user.user_id) {
+          <mat-list-option>
+            <img
+              matListItemAvatar
+              [alt]="user.user?.first_name"
+              [src]="user.user!.avatar_url! | fileUrl: 'avatars'"
+            />
+            <div matListItemTitle>
+              {{ user.user?.first_name }}
+              {{ user.user?.father_name }}
             </div>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="user(document_id)">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            {{ 'PEOPLE.DOCUMENT_ID' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let item">
-            {{ item.user.document_id }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            {{ 'PEOPLE.ROLE' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let item">
-            {{ item.role | translate }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="group(name)">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            {{ 'GROUPS.NAME' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let item">
-            {{ item.group?.name }}
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
-        <tr
-          mat-row
-          class="cursor-pointer"
-          (click)="store.toggleSelected(row)"
-          [class.selected]="isSelected(row)"
-          *matRowDef="let row; columns: displayedCols"
-        ></tr>
-      </table>
-      <mat-paginator
-        [length]="store.count()"
-        [pageIndex]="store.start()"
-        [pageSize]="store.pageSize()"
-        [pageSizeOptions]="[5, 10, 15]"
-        [showFirstLastButtons]="true"
-        (page)="pageEvent($event)"
-      />
+            <div matListItemLine>
+              {{ user.role! | translate }}
+            </div>
+          </mat-list-option>
+        }
+      </mat-selection-list>
     </mat-dialog-content>
-
     <mat-dialog-actions>
       <button mat-stroked-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
         {{ 'CONFIRMATION.CANCEL' | translate }}
       </button>
-      <button mat-flat-button>{{ 'SAVE_CHANGES' | translate }}</button>
+      <button mat-flat-button (click)="saveChanges()">
+        {{ 'SAVE_CHANGES' | translate }}
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `
-    .selected {
-      font-weight: bold;
-    }
-  `,
+  styles: ``,
 })
-export class UsersSearchComponent {
+export class UsersSearchComponent implements OnInit {
   public store = inject(UsersSearchStore);
-  public displayedCols = [
-    'user(first_name)',
-    'user(document_id)',
-    'role',
-    'group(name)',
-  ];
+  public searchControl = new FormControl('', { nonNullable: true });
+  public selectedControl = new FormControl<UserProfile[]>([], {
+    nonNullable: true,
+  });
 
-  public sortChange(sort: Sort): void {
-    patchState(this.store, {
-      sortDirection: sort.direction,
-      sortColumn: sort.active,
+  public ngOnInit(): void {
+    this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe({
+      next: (searchText) => patchState(this.store, { searchText }),
     });
   }
 
-  public pageEvent(e: PageEvent): void {
-    const { pageIndex, pageSize } = e;
-    patchState(this.store, { start: pageIndex, pageSize });
-  }
-
-  public isSelected(item: UserProfile): boolean {
-    return this.store.selected().some((x) => x.user_id === item.user_id);
+  public saveChanges(): void {
+    console.info(this.selectedControl.getRawValue());
   }
 }

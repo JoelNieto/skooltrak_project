@@ -1,9 +1,16 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { Course, Publication, Table } from '@skooltrak/models';
 import { SupabaseService, webStore } from '@skooltrak/store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   loading: boolean;
@@ -33,7 +40,7 @@ export const PublicationsStore = signalStore(
     (
       { schoolId, start, end, pageSize, ...state },
       supabase = inject(SupabaseService),
-      toast = inject(HotToastService),
+      snackBar = inject(MatSnackBar),
       translate = inject(TranslateService),
     ) => {
       async function getPublications(): Promise<void> {
@@ -60,6 +67,7 @@ export const PublicationsStore = signalStore(
           publications: [...state.publications(), ...(data as Publication[])],
         });
       }
+
       function paginate(): void {
         patchState(state, { start: start() + pageSize() });
         getPublications();
@@ -99,13 +107,13 @@ export const PublicationsStore = signalStore(
           .single();
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          snackBar.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('PUBLICATIONS.SUCCESS'));
+        snackBar.open(translate.instant('PUBLICATIONS.SUCCESS'));
         patchState(state, {
           loading: false,
           publications: [...[data as Publication], ...state.publications()],

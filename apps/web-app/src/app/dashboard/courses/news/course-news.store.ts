@@ -1,5 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { HotToastService } from '@ngneat/hot-toast';
 import {
   patchState,
   signalStore,
@@ -15,6 +14,7 @@ import { SupabaseService, webStore } from '@skooltrak/store';
 import { filter, pipe, tap } from 'rxjs';
 
 import { CourseDetailsStore } from '../details/course-details.store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type State = {
   loading: boolean;
@@ -41,7 +41,7 @@ export const CourseNewsStore = signalStore(
       state,
       supabase = inject(SupabaseService),
       translate = inject(TranslateService),
-      toast = inject(HotToastService),
+      toast = inject(MatSnackBar),
     ) => {
       async function getPublications(): Promise<void> {
         patchState(state, { loading: true, error: false });
@@ -95,13 +95,13 @@ export const CourseNewsStore = signalStore(
           .single();
 
         if (error) {
-          toast.error(translate.instant('ALERT.FAILURE'));
+          toast.open(translate.instant('ALERT.FAILURE'));
           console.error(error);
           patchState(state, { loading: false });
 
           return;
         }
-        toast.success(translate.instant('PUBLICATIONS.SUCCESS'));
+        toast.open(translate.instant('PUBLICATIONS.SUCCESS'));
         patchState(state, {
           loading: false,
           publications: [...[data as Publication], ...state.publications()],

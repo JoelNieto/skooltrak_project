@@ -32,9 +32,9 @@ import { AssignmentDetailsStore } from './assignment-details.store';
   template: `
     <div class="flex gap-8">
       <div class="flex-1">
-        <div header class="flex items-start justify-between">
+        <div class="flex items-start justify-between">
           <div>
-            <h1 class="mat-headline-2">
+            <h1 class="mat-display-medium">
               {{ store.assignment()?.title }}
             </h1>
             <mat-chip-set>
@@ -49,14 +49,14 @@ import { AssignmentDetailsStore } from './assignment-details.store';
                 ]"
               >
                 <mat-chip class="secondary">
-                  {{ store.assignment()?.course?.plan?.name }}</mat-chip
-                ></a
-              >
+                  {{ store.assignment()?.course?.plan?.name }}
+                </mat-chip>
+              </a>
               <mat-chip>{{ store.assignment()?.type?.name }}</mat-chip>
               <mat-chip class="tertiary"
                 >{{ store.assignment()?.user?.first_name }}
-                {{ store.assignment()?.user?.father_name }}</mat-chip
-              >
+                {{ store.assignment()?.user?.father_name }}
+              </mat-chip>
             </mat-chip-set>
           </div>
           <div class="flex gap-2">
@@ -107,14 +107,14 @@ import { AssignmentDetailsStore } from './assignment-details.store';
       </div>
       <div class="w-72 ">
         <div>
-          <h2 class="mat-headline-4">
+          <h2 class="mat-headline-small">
             {{ 'Groups' | translate }}
           </h2>
         </div>
         <div>
           @for (date of store.assignment()?.dates; track date.group.id) {
             <div class="mb-2 flex flex-col ">
-              <h4 class="mat-subtitle font-semibold">
+              <h4 class="mat-title-medium">
                 {{ date.group.name }}
               </h4>
               <p class="mat-body">

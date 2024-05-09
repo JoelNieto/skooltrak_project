@@ -3,14 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnInit,
   inject,
+  OnInit,
   viewChild,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroPaperAirplaneSolid } from '@ng-icons/heroicons/solid';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
@@ -24,7 +22,7 @@ import { ChatStore } from './chat.store';
 @Component({
   selector: 'sk-chat',
   standalone: true,
-  template: `<div class="flex flex-col h-[32rem]">
+  template: ` <div class="flex flex-col h-[32rem]">
     @if (store.loading()) {
       <sk-chats-loading />
     } @else {
@@ -84,7 +82,6 @@ import { ChatStore } from './chat.store';
             [disabled]="messageControl.invalid"
             (click)="sendMessage()"
           >
-            <ng-icon name="heroPaperAirplaneSolid" size="32" />
             <span class="sr-only">Send message</span>
           </button>
         </div>
@@ -115,10 +112,9 @@ import { ChatStore } from './chat.store';
       }
     `,
   ],
-  providers: [ChatStore, provideIcons({ heroPaperAirplaneSolid })],
+  providers: [ChatStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIcon,
     InputDirective,
     ReactiveFormsModule,
     TranslateModule,

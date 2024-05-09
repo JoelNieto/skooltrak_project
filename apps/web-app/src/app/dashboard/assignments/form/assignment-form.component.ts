@@ -62,8 +62,8 @@ import { AssignmentFormStore } from './assignment-form.store';
       (ngSubmit)="saveAssignment()"
     >
       <div class="flex-1">
-        <div class="flex items-start justify-between" header>
-          <h3 class="mat-headline-3">
+        <div class="flex items-start justify-between">
+          <h3 class="mat-headline-large">
             {{ (id() ? 'ASSIGNMENTS.EDIT' : 'ASSIGNMENTS.NEW') | translate }}
           </h3>
         </div>
@@ -73,9 +73,9 @@ import { AssignmentFormStore } from './assignment-form.store';
             <input matInput type="text" name="title" formControlName="title" />
           </mat-form-field>
           <mat-form-field>
-            <mat-label for="course" skLabel>{{
-              'COURSES.TITLE' | translate
-            }}</mat-label>
+            <mat-label for="course" skLabel
+              >{{ 'COURSES.TITLE' | translate }}
+            </mat-label>
             <mat-select formControlName="course_id">
               @for (course of store.courses(); track course.id) {
                 <mat-option [value]="course.id">
@@ -93,15 +93,15 @@ import { AssignmentFormStore } from './assignment-form.store';
             </mat-select>
           </mat-form-field>
           <div class="flex items-baseline pb-3">
-            <mat-slide-toggle formControlName="upload_file">{{
-              'ASSIGNMENTS.UPLOAD_FILE' | translate
-            }}</mat-slide-toggle>
+            <mat-slide-toggle formControlName="upload_file"
+              >{{ 'ASSIGNMENTS.UPLOAD_FILE' | translate }}
+            </mat-slide-toggle>
           </div>
 
           <mat-form-field class="col-span-2">
-            <mat-label for="description">{{
-              'DESCRIPTION' | translate
-            }}</mat-label>
+            <mat-label for="description"
+              >{{ 'DESCRIPTION' | translate }}
+            </mat-label>
             <textarea
               formControlName="description"
               matInput
@@ -129,7 +129,7 @@ import { AssignmentFormStore } from './assignment-form.store';
             <mat-icon matSuffix color="primary">cloud_upload</mat-icon>
           </mat-form-field>
         </div>
-        <div footer class="flex justify-end pt-6">
+        <div class="flex justify-end pt-6">
           <button
             mat-flat-button
             color="accent"
@@ -142,7 +142,7 @@ import { AssignmentFormStore } from './assignment-form.store';
       </div>
       <div class="w-80 flex-none">
         <div>
-          <h2 class="mat-headline-4">
+          <h2 class="mat-title-large">
             {{ 'GROUPS.DATES' | translate }}
           </h2>
         </div>
@@ -150,7 +150,7 @@ import { AssignmentFormStore } from './assignment-form.store';
           @for (group of formGroups.controls; track group; let i = $index) {
             <ng-container>
               <mat-form-field [formGroupName]="i">
-                <mat-label for="i">{{ store.groups()[i].name }}</mat-label>
+                <mat-label>{{ store.groups()[i].name }}</mat-label>
                 <input
                   formControlName="date"
                   matInput

@@ -1,18 +1,19 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { Component, computed, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   standalone: true,
@@ -22,27 +23,24 @@ import { CoursesStore } from '../courses.store';
     UserChipComponent,
     RouterLink,
     DatePipe,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatIcon,
-    MatPrefix,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
     MatTableModule,
-    MatIconButton,
     MatSortModule,
     MatPaginatorModule,
+    MatButtonModule,
+    MatMenuModule,
   ],
   providers: [],
   template: `
-    <h1 class="mat-headline-3">
+    <h1 class="mat-display-medium">
       {{ 'COURSES.TITLE' | translate }}
     </h1>
 
     <div class="flex justify-between">
       <mat-form-field class="w-full lg:w-96">
-        <mat-label for="table-search">{{
-          'SEARCH.TITLE' | translate
-        }}</mat-label>
+        <mat-label>{{ 'SEARCH.TITLE' | translate }}</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input
           type="text"
@@ -54,7 +52,7 @@ import { CoursesStore } from '../courses.store';
     </div>
     <table
       mat-table
-      [dataSource]="store.courses()"
+      [dataSource]="dataSource()"
       matSort
       (matSortChange)="sortChange($event)"
     >
@@ -89,9 +87,15 @@ import { CoursesStore } from '../courses.store';
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
-          <a mat-icon-button [routerLink]="['/app/courses', item.id]">
-            <mat-icon class="text-sky-600">visibility</mat-icon>
-          </a>
+          <button [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <a mat-menu-item [routerLink]="['/app/courses', item.id]">
+              <mat-icon>visibility</mat-icon>
+              {{ 'ACTIONS.DETAILS' | translate }}
+            </a>
+          </mat-menu>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -115,6 +119,10 @@ export class CoursesListComponent {
     'teachers',
     'actions',
   ];
+
+  public dataSource = computed(
+    () => new MatTableDataSource(this.store.courses()),
+  );
 
   public pageEvent(e: PageEvent): void {
     const { pageIndex, pageSize } = e;

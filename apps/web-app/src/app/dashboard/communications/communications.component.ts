@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'sk-communications',
   standalone: true,
   imports: [TranslateModule, RouterOutlet],
-  template: `<h2 class="mat-headline-2">
+  template: `<h2 class="mat-display-medium">
       {{ 'MESSAGING.TITLE' | translate }}
     </h2>
     <router-outlet /> `,

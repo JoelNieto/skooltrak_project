@@ -24,6 +24,7 @@ export type SchoolProfile = {
 
 export type UserProfile = SchoolProfile & {
   group_id?: string;
+  group?: Partial<ClassGroup>;
 };
 
 export type StudentProfile = Partial<Person> & {

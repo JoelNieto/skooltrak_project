@@ -9,7 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { FileUrlPipe } from '../../auth/pipes/file-url.pipe';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { patchState } from '@ngrx/signals';
 import { UserProfile } from '@skooltrak/models';
@@ -43,20 +43,32 @@ import { UserProfile } from '@skooltrak/models';
           matInput
         />
       </mat-form-field>
+      <mat-chip-set>
+        @for (
+          selected of selectedControl.getRawValue();
+          track selected.user_id
+        ) {
+          <mat-chip
+            >{{ selected.user.first_name }}
+            {{ selected.user.father_name }}
+          </mat-chip>
+        }
+      </mat-chip-set>
       <mat-selection-list [formControl]="selectedControl">
         @for (user of store.filteredPeople(); track user.user_id) {
-          <mat-list-option>
+          <mat-list-option [value]="user">
             <img
               matListItemAvatar
-              [alt]="user.user?.first_name"
-              [src]="user.user!.avatar_url! | fileUrl: 'avatars'"
+              [alt]="user.user.first_name"
+              [src]="user.user.avatar_url! | fileUrl: 'avatars'"
             />
             <div matListItemTitle>
-              {{ user.user?.first_name }}
-              {{ user.user?.father_name }}
+              {{ user.user.first_name }}
+              {{ user.user.father_name }}
             </div>
             <div matListItemLine>
               {{ user.role! | translate }}
+              {{ user.group?.name }}
             </div>
           </mat-list-option>
         }
@@ -67,7 +79,11 @@ import { UserProfile } from '@skooltrak/models';
         <mat-icon>close</mat-icon>
         {{ 'CONFIRMATION.CANCEL' | translate }}
       </button>
-      <button mat-flat-button (click)="saveChanges()">
+      <button
+        mat-flat-button
+        [disabled]="selectedControl.invalid"
+        (click)="saveChanges()"
+      >
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </mat-dialog-actions>
@@ -79,6 +95,7 @@ export class UsersSearchComponent implements OnInit {
   public searchControl = new FormControl('', { nonNullable: true });
   public selectedControl = new FormControl<UserProfile[]>([], {
     nonNullable: true,
+    validators: [Validators.required, Validators.minLength(1)],
   });
 
   public ngOnInit(): void {

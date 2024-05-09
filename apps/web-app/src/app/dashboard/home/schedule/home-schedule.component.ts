@@ -6,13 +6,15 @@ import { ScheduleComponent } from '../../../components/schedule/schedule.compone
 @Component({
   standalone: true,
   selector: 'sk-home-schedule',
-  template: `<div>
-    <h1 class="mat-headline-3">
-      {{ 'SCHEDULE' | translate }}
-    </h1>
+  template: `
+    <div>
+      <h1 class="mat-display-medium">
+        {{ 'SCHEDULE' | translate }}
+      </h1>
 
-    <sk-schedule />
-  </div> `,
+      <sk-schedule />
+    </div>
+  `,
   imports: [TranslateModule, ScheduleComponent],
 })
 export class HomeScheduleComponent {

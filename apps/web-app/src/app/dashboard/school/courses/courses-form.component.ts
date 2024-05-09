@@ -1,8 +1,17 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -15,7 +24,6 @@ import { ImageCropperComponent } from '@skooltrak/ui';
 import { v4 } from 'uuid';
 
 import { PictureComponent } from '../../../components/picture/picture.component';
-import { UsersSelectorComponent } from '../../../components/users-selector/users-selector.component';
 import { SchoolCoursesStore } from './courses.store';
 
 @Component({
@@ -24,7 +32,6 @@ import { SchoolCoursesStore } from './courses.store';
     MatDialogModule,
     TranslateModule,
     ReactiveFormsModule,
-    UsersSelectorComponent,
     NgOptimizedImage,
     PictureComponent,
     MatFormFieldModule,
@@ -61,9 +68,9 @@ import { SchoolCoursesStore } from './courses.store';
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-label for="subject_id">{{
-          'COURSES.SUBJECT' | translate
-        }}</mat-label>
+        <mat-label for="subject_id"
+          >{{ 'COURSES.SUBJECT' | translate }}
+        </mat-label>
         <mat-select formControlName="subject_id">
           @for (subject of store.subjects(); track subject.id) {
             <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
@@ -71,9 +78,9 @@ import { SchoolCoursesStore } from './courses.store';
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-label for="weekly_hours">{{
-          'COURSES.WEEKLY_HOURS' | translate
-        }}</mat-label>
+        <mat-label for="weekly_hours"
+          >{{ 'COURSES.WEEKLY_HOURS' | translate }}
+        </mat-label>
         <input matInput formControlName="weekly_hours" />
       </mat-form-field>
       <mat-form-field>
@@ -85,8 +92,8 @@ import { SchoolCoursesStore } from './courses.store';
         >
           @for (teacher of store.teacherUsers(); track teacher?.id) {
             <mat-option [value]="teacher"
-              >{{ teacher?.first_name }} {{ teacher?.father_name }}</mat-option
-            >
+              >{{ teacher?.first_name }} {{ teacher?.father_name }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>

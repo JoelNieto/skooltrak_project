@@ -1,7 +1,12 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -40,20 +45,20 @@ import { SchoolPeopleStore } from './people.store';
         <div class="flex flex-col space-y-1">
           <div class="flex flex-col items-center justify-center gap-1">
             <sk-avatar
-              [fileName]="data.user?.avatar_url ?? 'default_avatar.jpg'"
+              [fileName]="data.user.avatar_url ?? 'default_avatar.jpg'"
               class="h-20"
               [rounded]="true"
             />
             <p class="font-sans font-semibold text-gray-600">
-              {{ data.user?.first_name }} {{ data.user?.father_name }} /
-              {{ data.user?.document_id }}
+              {{ data.user.first_name }} {{ data.user.father_name }} /
+              {{ data.user.document_id }}
             </p>
             <p class="font-mono text-sm text-sky-800 mb-2">
-              {{ data.user?.email }}
+              {{ data.user.email }}
             </p>
           </div>
           <mat-form-field>
-            <mat-label for="role">{{ 'PEOPLE.ROLE' | translate }}</mat-label>
+            <mat-label>{{ 'PEOPLE.ROLE' | translate }}</mat-label>
             <mat-select formControlName="role">
               @for (role of roles; track role) {
                 <mat-option [value]="role">
@@ -63,9 +68,7 @@ import { SchoolPeopleStore } from './people.store';
             </mat-select>
           </mat-form-field>
           <mat-form-field>
-            <mat-label for="status">{{
-              'PEOPLE.STATUS' | translate
-            }}</mat-label>
+            <mat-label>{{ 'PEOPLE.STATUS' | translate }} </mat-label>
             <mat-select formControlName="status">
               @for (status of statuses; track status) {
                 <mat-option [value]="status">
@@ -76,7 +79,7 @@ import { SchoolPeopleStore } from './people.store';
           </mat-form-field>
           @if (isStudent()) {
             <mat-form-field>
-              <mat-label for="group">{{ 'GROUPS.NAME' | translate }}</mat-label>
+              <mat-label>{{ 'GROUPS.NAME' | translate }}</mat-label>
               <mat-select formControlName="group_id">
                 @for (group of store.groups(); track group.id) {
                   <mat-option [value]="group.id">{{ group.name }}</mat-option>

@@ -1,7 +1,13 @@
 import { inject } from '@angular/core';
-import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { Gender, Table } from '@skooltrak/models';
-import { SupabaseService, webStore } from '@skooltrak/store';
+import { mobileStore, SupabaseService } from '@skooltrak/store';
 
 type State = {
   genders: Gender[];
@@ -14,7 +20,7 @@ export const ProfileEditStore = signalStore(
     (
       { ...state },
       supabase = inject(SupabaseService),
-      auth = inject(webStore.AuthStore),
+      auth = inject(mobileStore.AuthStore),
     ) => ({
       async fetchGenders(): Promise<void> {
         patchState(state, { loading: true });

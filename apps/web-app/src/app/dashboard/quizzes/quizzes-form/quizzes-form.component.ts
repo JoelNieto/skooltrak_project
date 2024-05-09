@@ -48,7 +48,7 @@ import { QuizzesFormStore } from './quizzes-form.store';
   template: `
     <div class="flex justify-center">
       <div class="flex flex-col gap-5 w-full lg:w-3/5">
-        <h1 class="mat-headline-4">
+        <h1 class="mat-headline-large">
           {{ 'QUIZZES.DETAILS' | translate }}
         </h1>
 

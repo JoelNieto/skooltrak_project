@@ -2,9 +2,9 @@ import { DatePipe, JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   inject,
   input,
+  OnInit,
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,10 +19,10 @@ import { StudentProfileStore } from './student-profile.store';
   standalone: true,
   providers: [StudentProfileStore],
   template: `
-    <h3 class="mat-subtitle">
+    <h3 class="mat-display-medium">
       {{ 'STUDENTS.PROFILE' | translate }}
     </h3>
-    <h1 class="mat-headline-3">
+    <h1 class="mat-headline-medium">
       {{ state.student()?.father_name }}, {{ state.student()?.first_name }}
     </h1>
     <div>

@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
     RouterLinkActive,
   ],
   template: `
-    <h1 class="mat-headline-3">
+    <h1 class="mat-display-medium">
       {{ 'SCHOOL.ADMINISTRATION' | translate }}
     </h1>
 

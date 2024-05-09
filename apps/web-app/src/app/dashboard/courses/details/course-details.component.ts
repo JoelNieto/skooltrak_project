@@ -27,11 +27,12 @@ import { CourseDetailsStore } from './course-details.store';
   template: `
     <div>
       <div class="justify-between md:flex">
-        <div class="mb-2">
-          <h2 class="mat-headline-3">
+        <div class="flex items-baseline gap-2">
+          <h2 class="mat-display-small">
             {{ store.course()?.subject?.name }}
+            /
           </h2>
-          <h4 class="mat-subtitle">
+          <h4 class="mat-headline-small">
             {{ store.course()?.plan?.name }}
           </h4>
         </div>

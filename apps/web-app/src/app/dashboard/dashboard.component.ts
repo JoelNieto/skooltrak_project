@@ -29,6 +29,7 @@ import { filter, tap } from 'rxjs';
 
 import { AvatarComponent } from '../components/avatar/avatar.component';
 import { SchoolSelectorComponent } from '../components/school-selector/school-selector.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'sk-dashboard',
@@ -48,6 +49,7 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     MatToolbarModule,
     MatSidenavModule,
     NgOptimizedImage,
+    MatTooltipModule,
   ],
   providers: [],
   template: `
@@ -69,10 +71,10 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
     }
     <mat-sidenav-container autosize class="h-full">
       <mat-sidenav
-        class="main-sidenav"
+        class="main-sidenav border border-slate-300"
         [mode]="isMobile() ? 'over' : 'side'"
         [opened]="!isMobile()"
-        [ngClass]="isCollapsed() ? 'w-20' : 'w-48'"
+        [ngClass]="isCollapsed() ? 'w-20' : 'w-56'"
       >
         <div
           class="flex flex-col justify-between h-screen pt-4 pb-4 px-2 pr-3 "
@@ -100,10 +102,10 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                   class="h-10 w-10"
                 />
                 @if (!isCollapsed()) {
-                  <p class="mat-subtitle-2">
+                  <p class="mat-title-medium">
                     {{ user.first_name }} {{ user.father_name }}
                   </p>
-                  <p class="mat-caption">{{ user.email }}</p>
+                  <p class="mat-title-small">{{ user.email }}</p>
                 }
               </div>
               <button
@@ -160,6 +162,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #home="routerLinkActive"
                 [activated]="home.isActive"
+                [matTooltip]="'HOME' | translate"
+                [matTooltipPosition]="'right'"
               >
                 <mat-icon matListItemIcon>house</mat-icon>
                 @if (!isCollapsed()) {
@@ -172,6 +176,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #schedule="routerLinkActive"
                 [activated]="schedule.isActive"
+                [matTooltip]="'SCHEDULE' | translate"
+                [matTooltipPosition]="'right'"
               >
                 <mat-icon matListItemIcon>calendar_month</mat-icon>
                 @if (!isCollapsed()) {
@@ -184,6 +190,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #courses="routerLinkActive"
                 [activated]="courses.isActive"
+                [matTooltip]="'COURSES.TITLE' | translate"
+                [matTooltipPosition]="'right'"
               >
                 <mat-icon matListItemIcon>dvr</mat-icon>
                 @if (!isCollapsed()) {
@@ -196,6 +204,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #quizzes="routerLinkActive"
                 [activated]="quizzes.isActive"
+                [matTooltip]="'QUIZZES.TITLE' | translate"
+                [matTooltipPosition]="'right'"
               >
                 <mat-icon matListItemIcon>quiz</mat-icon>
                 @if (!isCollapsed()) {
@@ -213,6 +223,8 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
                 routerLinkActive="active"
                 #school="routerLinkActive"
                 [activated]="school.isActive"
+                [matTooltip]="'SCHOOL.TITLE' | translate"
+                [matTooltipPosition]="'right'"
               >
                 <mat-icon matListItemIcon>domain</mat-icon>
                 <div matListItemTitle>{{ 'SCHOOL.TITLE' | translate }}</div>
@@ -239,7 +251,7 @@ export class DashboardComponent implements OnInit {
   private sidenav = viewChild.required(MatSidenav);
   private observer = inject(BreakpointObserver);
   public isMobile = signal(true);
-  public isCollapsed = signal(false);
+  public isCollapsed = signal(true);
   private confirmation = inject(ConfirmationService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);

@@ -38,7 +38,7 @@ import { QuizzesStore } from '../quizzes.store';
     MatPaginatorModule,
   ],
   template: `
-    <h1 class="mat-headline-3">
+    <h1 class="mat-display-medium">
       {{ 'QUIZZES.TITLE' | translate }}
     </h1>
 

@@ -13,7 +13,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '@angular/cdk/overlay-prebuilt.css';
 @import 'quill/dist/quill.snow.css';
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
@@ -58,37 +57,26 @@ $light-warn-theme: matx.define-theme(
       ),
     )
 );
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
 
 html,
 body {
   height: 100%;
   font-weight: 400;
   @include mat.all-component-themes($light-theme);
-  @include matx.color-variants-back-compat($light-theme);
-  @include mat.typography-hierarchy($light-theme, $back-compat: true);
+  @include mat.typography-hierarchy($light-theme);
 }
 
 body {
   margin: 0;
 }
 
-.main-sidenav {
-  @include mat.all-component-themes($dark-theme);
-}
-
-mat-toolbar, .main-sidenav {
+mat-toolbar {
   background: mat.get-theme-color($light-theme, primary) !important;
   color: mat.get-theme-color($light-theme, on-primary) !important;
   //--mat-list-active-indicator-color =
   a.mdc-list-item.mdc-list-item--activated {
     background-color: mat.get-theme-color($light-theme, primary-fixed-dim) !important;
-    
+
     .mdc-list-item__primary-text {
       color: mat.get-theme-color($light-theme, primary) !important;
     }

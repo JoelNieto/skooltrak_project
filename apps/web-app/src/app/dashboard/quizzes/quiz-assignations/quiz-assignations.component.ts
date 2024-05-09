@@ -1,5 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  ViewContainerRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,12 +32,14 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
     MatMenuModule,
   ],
   providers: [QuizAssignationsStore],
-  template: `<div class="flex items-center justify-between">
-      <h2 class="mat-headline-3">
+  template: `
+    <div class="flex items-center justify-between">
+      <h2 class="mat-display-medium">
         {{ 'QUIZZES.ASSIGNATIONS' | translate }}
       </h2>
       <button mat-flat-button color="primary" (click)="editAssignation()">
-        <mat-icon>add</mat-icon>{{ 'NEW' | translate }}
+        <mat-icon>add</mat-icon>
+        {{ 'NEW' | translate }}
       </button>
     </div>
 
@@ -102,7 +110,8 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table> `,
+    </table>
+  `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

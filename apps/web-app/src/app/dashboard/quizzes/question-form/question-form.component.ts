@@ -44,9 +44,9 @@ import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
     MatSlideToggle,
     ReactiveFormsModule,
   ],
-  template: `<form [formGroup]="form" class="">
+  template: ` <form [formGroup]="form" class="">
     <mat-card>
-      <mat-card-header header class="pb-4">
+      <mat-card-header class="pb-4">
         <mat-card-title>
           {{ 'QUIZZES.QUESTION' | translate }} {{ index() + 1 }} /
           {{ store.questionsCount() }}
@@ -62,9 +62,9 @@ import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
             <mat-label>{{ 'QUIZZES.QUESTION_TYPE' | translate }}</mat-label>
             <mat-select formControlName="type">
               @for (type of types; track type) {
-                <mat-option [value]="type">{{
-                  'QUESTION_TYPE.' + type | translate
-                }}</mat-option>
+                <mat-option [value]="type"
+                  >{{ 'QUESTION_TYPE.' + type | translate }}
+                </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -78,8 +78,8 @@ import { QuizzesFormStore } from '../quizzes-form/quizzes-form.store';
               <div class="flex w-full gap-3" [formGroupName]="i">
                 <mat-form-field class="w-full">
                   <mat-label
-                    >{{ 'QUIZZES.OPTION' | translate }} {{ i + 1 }}</mat-label
-                  >
+                    >{{ 'QUIZZES.OPTION' | translate }} {{ i + 1 }}
+                  </mat-label>
                   <input type="text" matInput formControlName="text" />
                 </mat-form-field>
                 <mat-slide-toggle

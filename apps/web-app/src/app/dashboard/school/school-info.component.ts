@@ -19,13 +19,14 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
     SchoolFormComponent,
   ],
   styles: `
-      .label {
-        @apply block font-mono text-sm text-gray-500 dark:text-gray-400;
-      }
-      .value {
-        @apply block font-sans text-gray-700 dark:text-gray-200;
-      }
-    `,
+    .label {
+      @apply block font-mono text-sm text-gray-500 dark:text-gray-400;
+    }
+
+    .value {
+      @apply block font-sans text-gray-700 dark:text-gray-200;
+    }
+  `,
   template: `
     <div class="flex flex-col items-center justify-center space-y-3">
       @if (school()?.crest_url) {
@@ -36,7 +37,7 @@ import { SchoolFormComponent } from '../../components/school-form/school-form.co
         />
       }
 
-      <h4 class="mat-headline-5">
+      <h4 class="mat-headline-large">
         {{ school()?.full_name }}
       </h4>
       <div>

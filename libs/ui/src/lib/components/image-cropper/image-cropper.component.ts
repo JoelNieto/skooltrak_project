@@ -5,8 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { provideIcons } from '@ng-icons/core';
-import { heroXMark } from '@ng-icons/heroicons/outline';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCropperOptions } from '@skooltrak/models';
 import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
@@ -22,7 +20,7 @@ import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
     TranslateModule,
     MatIcon,
   ],
-  providers: [provideIcons({ heroXMark })],
+
   template: ` <h2 mat-dialog-title>
       {{ 'IMAGE_CROPPER.TITLE' | translate }}
     </h2>

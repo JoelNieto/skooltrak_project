@@ -26,16 +26,14 @@ import { PublicationsStore } from './publications.store';
   selector: 'sk-publications',
   standalone: true,
   providers: [PublicationsStore],
-  template: `<h1 class="mat-headline-3">
+  template: `<h1 class="mat-display-medium">
       {{ 'WELCOME' | translate: { name: auth.user()?.first_name } }}
     </h1>
     <div class="flex gap-6 w-full">
       <div class="w-72">
         <mat-card>
           <mat-card-header>
-            <mat-card-title
-              class="text-xl font-semibold font-title text-gray-700"
-            >
+            <mat-card-title>
               {{ 'ASSIGNMENTS.TODAY' | translate }}
             </mat-card-title>
           </mat-card-header>
@@ -45,7 +43,7 @@ import { PublicationsStore } from './publications.store';
 
       <div class="flex-1 flex flex-col gap-4">
         <div>
-          <h3 class="mat-headline-5">
+          <h3 class="mat-headline-medium">
             {{ 'PUBLICATIONS.NEW' | translate }}
           </h3>
           <form [formGroup]="form" (ngSubmit)="newPost()">
@@ -62,14 +60,14 @@ import { PublicationsStore } from './publications.store';
               <mat-form-field class="w-3/5">
                 <mat-label>{{ 'PUBLICATIONS.COURSE' | translate }}</mat-label>
                 <mat-select formControlName="course_id">
-                  <mat-option>{{
-                    'PUBLICATIONS.PUBLIC_FILTER' | translate
-                  }}</mat-option>
+                  <mat-option
+                    >{{ 'PUBLICATIONS.PUBLIC_FILTER' | translate }}
+                  </mat-option>
                   @for (course of store.courses(); track course.id) {
                     <mat-option [value]="course.id"
                       >{{ course.subject?.name }} -
-                      {{ course.plan?.name }}</mat-option
-                    >
+                      {{ course.plan?.name }}
+                    </mat-option>
                   }
                 </mat-select>
               </mat-form-field>

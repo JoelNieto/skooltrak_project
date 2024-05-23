@@ -8,12 +8,16 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/web-app",
         "index": "apps/web-app/src/index.html",
         "browser": "apps/web-app/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/web-app/tsconfig.app.json",
         "assets": [
           "apps/web-app/src/_redirects",
@@ -38,7 +42,7 @@
         ],
         "scripts": [
           "./node_modules/flowbite/dist/flowbite.min.js",
-          "./node_modules/quill/dist/quill.min.js"
+          "./node_modules/quill/dist/quill.js"
         ]
       },
       "configurations": {
@@ -95,11 +99,15 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/web-app/jest.config.ts"
       }

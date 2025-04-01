@@ -14,20 +14,19 @@ import { v4 } from 'uuid';
 import { SchoolDegreesStore } from './degrees.store';
 
 @Component({
-  selector: 'sk-degrees-form',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    TranslateModule,
-    MatSelectModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatIcon,
-    MatProgressBar,
-  ],
-  template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
+    selector: 'sk-degrees-form',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        TranslateModule,
+        MatSelectModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatIcon,
+        MatProgressBar,
+    ],
+    template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
     @if (store.loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
@@ -60,7 +59,7 @@ import { SchoolDegreesStore } from './degrees.store';
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </mat-dialog-actions>
-  </form> `,
+  </form> `
 })
 export class DegreesFormComponent implements OnInit {
   private data: Degree | undefined = inject(MAT_DIALOG_DATA);

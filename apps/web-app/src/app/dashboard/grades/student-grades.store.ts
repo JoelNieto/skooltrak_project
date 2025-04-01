@@ -34,7 +34,7 @@ const initialState: State = {
 };
 
 export const StudentGradesStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       { periodId },

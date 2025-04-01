@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,10 +10,8 @@ import { CourseMeetingComponent } from '../../../components/course-meeting/cours
 import { CourseDetailsStore } from './course-details.store';
 
 @Component({
-  standalone: true,
   selector: 'sk-course-details',
   imports: [
-    NgClass,
     RouterLink,
     RouterLinkActive,
     TranslateModule,

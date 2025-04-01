@@ -27,28 +27,27 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { ScheduleStore } from './schedule.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    TranslateModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonDatetime,
-    IonList,
-    IonItem,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonLabel,
-    IonNote,
-    IonText,
-    ReactiveFormsModule,
-    AssignmentDetailsPage,
-    LoadingComponent,
-  ],
-  providers: [ScheduleStore],
-  template: `<ion-header class="ion-no-border">
+    imports: [
+        TranslateModule,
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        IonDatetime,
+        IonList,
+        IonItem,
+        IonGrid,
+        IonRow,
+        IonCol,
+        IonLabel,
+        IonNote,
+        IonText,
+        ReactiveFormsModule,
+        AssignmentDetailsPage,
+        LoadingComponent,
+    ],
+    providers: [ScheduleStore],
+    template: `<ion-header class="ion-no-border">
       <ion-toolbar color="primary">
         <ion-title size="large">
           {{ 'SCHEDULE' | translate }}
@@ -91,7 +90,7 @@ import { ScheduleStore } from './schedule.store';
           }
         }
       </ion-list>
-    </ion-content>`,
+    </ion-content>`
 })
 export class SchedulePage implements OnInit {
   public store = inject(ScheduleStore);

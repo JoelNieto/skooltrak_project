@@ -24,27 +24,26 @@ import { RoleEnum } from '@skooltrak/models';
 import { SchoolConnectorStore } from './school-connector.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    TranslateModule,
-    IonInput,
-    IonList,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
-    IonSpinner,
-    IonLabel,
-    IonButton,
-    IonButtons,
-    ReactiveFormsModule,
-    IonText,
-  ],
-  providers: [SchoolConnectorStore],
-  template: `<ion-header class="ion-no-border">
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        TranslateModule,
+        IonInput,
+        IonList,
+        IonSelect,
+        IonSelectOption,
+        IonItem,
+        IonSpinner,
+        IonLabel,
+        IonButton,
+        IonButtons,
+        ReactiveFormsModule,
+        IonText,
+    ],
+    providers: [SchoolConnectorStore],
+    template: `<ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title color="primary">
           {{ 'SCHOOL_CONNECTOR.CONNECT' | translate }}
@@ -108,7 +107,7 @@ import { SchoolConnectorStore } from './school-connector.store';
           }
         </ion-button>
       </form>
-    </ion-content>`,
+    </ion-content>`
 })
 export class SchoolConnectorPage {
   private numberRegEx = /^\d+$/;

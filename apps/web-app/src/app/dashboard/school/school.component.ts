@@ -4,16 +4,15 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  standalone: true,
-  selector: 'sk-school',
-  imports: [
-    RouterOutlet,
-    TranslateModule,
-    MatTabsModule,
-    RouterLink,
-    RouterLinkActive,
-  ],
-  template: `
+    selector: 'sk-school',
+    imports: [
+        RouterOutlet,
+        TranslateModule,
+        MatTabsModule,
+        RouterLink,
+        RouterLinkActive,
+    ],
+    template: `
     <h1 class="mat-display-medium">
       {{ 'SCHOOL.ADMINISTRATION' | translate }}
     </h1>
@@ -89,6 +88,6 @@ import { TranslateModule } from '@ngx-translate/core';
         <router-outlet />
       </div>
     </mat-tab-nav-panel>
-  `,
+  `
 })
 export class SchoolComponent {}

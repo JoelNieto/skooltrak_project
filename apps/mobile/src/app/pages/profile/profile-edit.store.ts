@@ -15,7 +15,7 @@ type State = {
 };
 
 export const ProfileEditStore = signalStore(
-  withState({ genders: [], loading: false } as State),
+  { protectedState: false }, withState({ genders: [], loading: false } as State),
   withMethods(
     (
       { ...state },

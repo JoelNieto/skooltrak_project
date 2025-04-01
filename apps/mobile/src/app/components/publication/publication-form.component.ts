@@ -29,35 +29,34 @@ import { RoleEnum } from '@skooltrak/models';
 import { PublicationFormStore } from './publication-form.store';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-publication-form',
-  imports: [
-    IonContent,
-    IonHeader,
-    IonButton,
-    IonButtons,
-    IonToolbar,
-    IonTitle,
-    IonInput,
-    IonList,
-    IonTextarea,
-    IonItem,
-    TranslateModule,
-    IonFooter,
-    IonGrid,
-    IonCol,
-    IonLabel,
-    IonSpinner,
-    IonRow,
-    IonToggle,
-    IonSelect,
-    IonSelectOption,
-    ReactiveFormsModule,
-  ],
-  providers: [PublicationFormStore],
-  styles: `
+    selector: 'skooltrak-publication-form',
+    imports: [
+        IonContent,
+        IonHeader,
+        IonButton,
+        IonButtons,
+        IonToolbar,
+        IonTitle,
+        IonInput,
+        IonList,
+        IonTextarea,
+        IonItem,
+        TranslateModule,
+        IonFooter,
+        IonGrid,
+        IonCol,
+        IonLabel,
+        IonSpinner,
+        IonRow,
+        IonToggle,
+        IonSelect,
+        IonSelectOption,
+        ReactiveFormsModule,
+    ],
+    providers: [PublicationFormStore],
+    styles: `
   `,
-  template: `
+    template: `
     <ion-header class="ion-no-border">
       <ion-toolbar
         ><ion-title>{{ 'PUBLICATIONS.NEW' | translate }}</ion-title>
@@ -139,7 +138,7 @@ import { PublicationFormStore } from './publication-form.store';
         </ion-grid>
       </ion-toolbar>
     </ion-footer>
-  `,
+  `
 })
 export class PublicationFormComponent implements OnInit {
   public modalCtrl = inject(ModalController);

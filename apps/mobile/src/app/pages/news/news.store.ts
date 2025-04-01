@@ -28,7 +28,7 @@ const initial: State = {
 };
 
 export const NewsStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(({ start, pageSize }, auth = inject(mobileStore.AuthStore)) => {
     const schoolId = computed(() => auth.schoolId());
     const end = computed(() => start() + (pageSize() - 1));

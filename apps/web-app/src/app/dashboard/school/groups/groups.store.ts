@@ -36,7 +36,7 @@ const initialState: State = {
 };
 
 export const SchoolGroupsStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       { start, pageSize, sortColumn, sortDirection },

@@ -9,15 +9,8 @@ import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { SchoolFormComponent } from '../../components/school-form/school-form.component';
 
 @Component({
-  standalone: true,
   selector: 'sk-school-info',
-  imports: [
-    AvatarComponent,
-    TranslateModule,
-    DatePipe,
-    MatButton,
-    SchoolFormComponent,
-  ],
+  imports: [AvatarComponent, TranslateModule, DatePipe, MatButton],
   styles: `
     .label {
       @apply block font-mono text-sm text-gray-500 dark:text-gray-400;

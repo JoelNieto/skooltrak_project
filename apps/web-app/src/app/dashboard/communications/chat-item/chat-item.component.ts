@@ -17,18 +17,17 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'sk-chat-item',
-  standalone: true,
-  providers: [ChatStore],
-  imports: [
-    AvatarComponent,
-    DatePipe,
-    NgClass,
-    QuillEditorComponent,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
-  template: `
+    selector: 'sk-chat-item',
+    providers: [ChatStore],
+    imports: [
+        AvatarComponent,
+        DatePipe,
+        NgClass,
+        QuillEditorComponent,
+        ReactiveFormsModule,
+        TranslateModule,
+    ],
+    template: `
     <div class="flex flex-col h-[80vh]">
       <div
         class="flex grow flex-col-reverse py-6 px-12 gap-6 overflow-y-scroll scroll-smooth"
@@ -90,8 +89,8 @@ import { TranslateModule } from '@ngx-translate/core';
       </form>
     </div>
   `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatItemComponent implements OnInit {
   public chatId = input.required<string>();

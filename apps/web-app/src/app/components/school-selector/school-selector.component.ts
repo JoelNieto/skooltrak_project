@@ -15,19 +15,18 @@ import { SchoolConnectorComponent } from '../school-connector/school-connector.c
 import { SchoolFormComponent } from '../school-form/school-form.component';
 
 @Component({
-  standalone: true,
-  selector: 'sk-school-selector',
-  imports: [
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    TranslateModule,
-    AvatarComponent,
-    NgClass,
-    DialogModule,
-  ],
-  providers: [ConfirmationService],
-  template: `<mat-card>
+    selector: 'sk-school-selector',
+    imports: [
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        TranslateModule,
+        AvatarComponent,
+        NgClass,
+        DialogModule,
+    ],
+    providers: [ConfirmationService],
+    template: `<mat-card>
     <mat-card-header header>
       <div class="flex items-start justify-between w-full">
         <mat-card-title>
@@ -91,7 +90,7 @@ import { SchoolFormComponent } from '../school-form/school-form.component';
         </button>
       </mat-card-actions>
     </mat-card-footer>
-  </mat-card>`,
+  </mat-card>`
 })
 export class SchoolSelectorComponent {
   private auth = inject(webStore.AuthStore);

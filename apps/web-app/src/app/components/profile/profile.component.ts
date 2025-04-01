@@ -28,23 +28,22 @@ import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileFormStore } from './profile.store';
 
 @Component({
-  selector: 'sk-profile',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    TranslateModule,
-    AvatarComponent,
-    DialogModule,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatInputModule,
-    MatOption,
-    MatButton,
-    MatDatepickerModule,
-  ],
-  providers: [ProfileFormStore],
-  template: `
+    selector: 'sk-profile',
+    imports: [
+        ReactiveFormsModule,
+        TranslateModule,
+        AvatarComponent,
+        DialogModule,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        MatInputModule,
+        MatOption,
+        MatButton,
+        MatDatepickerModule,
+    ],
+    providers: [ProfileFormStore],
+    template: `
     <div class="px-12">
       <h1 class="mat-display-medium">
         {{ 'PROFILE.TITLE' | translate }}
@@ -119,7 +118,7 @@ import { ProfileFormStore } from './profile.store';
         </div>
       </form>
     </div>
-  `,
+  `
 })
 export class ProfileComponent implements OnInit {
   public auth = inject(webStore.AuthStore);

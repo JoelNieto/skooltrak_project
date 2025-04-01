@@ -10,18 +10,17 @@ import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { NewChatComponent } from '../new-chat/new-chat.component';
 
 @Component({
-  selector: 'sk-inbox',
-  standalone: true,
-  imports: [
-    AvatarComponent,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    ButtonDirective,
-    TranslateModule,
-    DateAgoPipe,
-  ],
-  template: `
+    selector: 'sk-inbox',
+    imports: [
+        AvatarComponent,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+        ButtonDirective,
+        TranslateModule,
+        DateAgoPipe,
+    ],
+    template: `
     <div
       class="flex w-full h-[36rem] shadow-xl bg-white dark:bg-gray-700 rounded-lg"
     >
@@ -90,8 +89,8 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
       </div>
     </div>
   `,
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InboxComponent {
   public store = inject(webStore.MessagesStore);

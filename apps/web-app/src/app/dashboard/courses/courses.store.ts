@@ -29,7 +29,7 @@ const initialState: State = {
 };
 
 export const CoursesStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       { start, pageSize, courses, sortColumn, sortDirection, selectedId },

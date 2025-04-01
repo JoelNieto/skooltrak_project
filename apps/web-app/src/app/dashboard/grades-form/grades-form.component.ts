@@ -13,20 +13,19 @@ import { Course, Grade } from '@skooltrak/models';
 import { GradesFormStore } from './grades-form.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    TranslateModule,
-    MatButtonModule,
-    MatIcon,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatSelectModule,
-  ],
-  providers: [GradesFormStore],
-  template: `<form [formGroup]="gradeForm" (ngSubmit)="saveGrade()">
+    imports: [
+        MatDialogModule,
+        TranslateModule,
+        MatButtonModule,
+        MatIcon,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatSelectModule,
+    ],
+    providers: [GradesFormStore],
+    template: `<form [formGroup]="gradeForm" (ngSubmit)="saveGrade()">
     <h2 mat-dialog-title>
       {{ 'GRADES.DETAILS' | translate }}
     </h2>
@@ -102,7 +101,7 @@ import { GradesFormStore } from './grades-form.store';
         {{ 'GRADES.SAVE_CHANGES' | translate }}
       </button>
     </mat-dialog-actions>
-  </form>`,
+  </form>`
 })
 export class GradesFormComponent implements OnInit {
   public gradeForm = new FormGroup({

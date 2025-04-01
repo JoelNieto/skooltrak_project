@@ -3,10 +3,9 @@ import { RouterOutlet } from '@angular/router';
 import { webStore } from '@skooltrak/store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-home',
-  imports: [RouterOutlet],
-  template: `<router-outlet />`,
+    selector: 'sk-home',
+    imports: [RouterOutlet],
+    template: `<router-outlet />`
 })
 export class HomeComponent {
   public auth = inject(webStore.AuthStore);

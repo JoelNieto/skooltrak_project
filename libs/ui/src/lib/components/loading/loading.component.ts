@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: '[sk-loading]',
-  standalone: true,
-  imports: [],
-  template: `
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: '[sk-loading]',
+    imports: [],
+    template: `
     <td colspan="100%">
       <div class="animate-pulse">
         <div class="flex flex-col">
@@ -48,9 +47,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
     </td>
   `,
-  styles: `:host {
+    styles: `:host {
     display: contents;
   }`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadingComponent {}

@@ -20,19 +20,18 @@ import { AssignationFormComponent } from '../assignation-form/assignation-form.c
 import { QuizAssignationsStore } from './quiz-assignations.store';
 
 @Component({
-  selector: 'sk-quiz-assignations',
-  standalone: true,
-  imports: [
-    TranslateModule,
-    MatButton,
-    MatIcon,
-    MatTableModule,
-    DatePipe,
-    MatIconButton,
-    MatMenuModule,
-  ],
-  providers: [QuizAssignationsStore],
-  template: `
+    selector: 'sk-quiz-assignations',
+    imports: [
+        TranslateModule,
+        MatButton,
+        MatIcon,
+        MatTableModule,
+        DatePipe,
+        MatIconButton,
+        MatMenuModule,
+    ],
+    providers: [QuizAssignationsStore],
+    template: `
     <div class="flex items-center justify-between">
       <h2 class="mat-display-medium">
         {{ 'QUIZZES.ASSIGNATIONS' | translate }}
@@ -112,8 +111,8 @@ import { QuizAssignationsStore } from './quiz-assignations.store';
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizAssignationsComponent {
   public displayedColumns = [

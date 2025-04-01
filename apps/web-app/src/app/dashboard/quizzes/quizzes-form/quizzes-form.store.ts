@@ -36,7 +36,7 @@ const initial: State = {
 };
 
 export const QuizzesFormStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(
     ({ questions, title, description }, auth = inject(webStore.AuthStore)) => ({
       questionsCount: computed(() => questions().length),

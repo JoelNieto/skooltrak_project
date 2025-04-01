@@ -46,7 +46,7 @@ const initialState: State = {
 };
 
 export const AssignmentFormStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(({ courses, courseId }, auth = inject(webStore.AuthStore)) => ({
     schoolId: computed(() => auth.schoolId()),
     course: computed(() => courses().find((x) => x.id === courseId())),

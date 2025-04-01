@@ -45,7 +45,7 @@ const initial: State = {
 };
 
 export const ScheduleStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(
     ({ currentDate, courseId }, auth = inject(webStore.AuthStore)) => {
       const start = computed(() => {

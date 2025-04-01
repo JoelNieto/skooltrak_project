@@ -15,10 +15,9 @@ import { PublicationItemComponent } from '../../../components/publication-item/p
 import { CourseNewsStore } from './course-news.store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-course-news',
-  providers: [CourseNewsStore],
-  template: `<div class="flex gap-6 w-full mt-4 px-6">
+    selector: 'sk-course-news',
+    providers: [CourseNewsStore],
+    template: `<div class="flex gap-6 w-full mt-4 px-6">
     <div class="w-72">
       <mat-card>
         <mat-card-header class="text-xl font-semibold font-title text-gray-700">
@@ -86,15 +85,15 @@ import { CourseNewsStore } from './course-news.store';
       </div>
     </div>
   </div>`,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    TranslateModule,
-    MatButtonModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    PublicationItemComponent,
-  ],
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        TranslateModule,
+        MatButtonModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        PublicationItemComponent,
+    ]
 })
 export class CourseNewsComponent {
   public store = inject(CourseNewsStore);

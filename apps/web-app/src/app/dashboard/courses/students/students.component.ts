@@ -17,23 +17,22 @@ import { CourseDetailsStore } from '../details/course-details.store';
 import { CourseStudentsStore } from './students.store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-courses-students',
-  providers: [CourseStudentsStore],
-  imports: [
-    RouterLink,
-    TranslateModule,
-    MatButton,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatMenuModule,
-    MatIconButton,
-    MatDialogModule,
-  ],
-  template: `
+    selector: 'sk-courses-students',
+    providers: [CourseStudentsStore],
+    imports: [
+        RouterLink,
+        TranslateModule,
+        MatButton,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatMenuModule,
+        MatIconButton,
+        MatDialogModule,
+    ],
+    template: `
     <div class="mb-4 mt-2 flex justify-between items-center">
       <mat-form-field class="w-64">
         <mat-label>
@@ -82,7 +81,7 @@ import { CourseStudentsStore } from './students.store';
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-  `,
+  `
 })
 export class CoursesComponent implements OnInit {
   public course = inject(CourseDetailsStore);

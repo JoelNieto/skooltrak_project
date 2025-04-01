@@ -39,7 +39,7 @@ const initialState: State = {
 };
 
 export const CourseAssignmentStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(({ currentDate }, courses = inject(CoursesStore)) => {
     const startDate = computed(() =>
       isWeekend(currentDate()) || isMonday(currentDate())

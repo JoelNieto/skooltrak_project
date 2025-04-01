@@ -20,7 +20,7 @@ type State = {
 };
 
 export const UsersModalStore = signalStore(
-  withState({ users: [], queryText: '', loading: true } as State),
+  { protectedState: false }, withState({ users: [], queryText: '', loading: true } as State),
   withComputed((_, auth = inject(mobileStore.AuthStore)) => ({
     userId: computed(() => auth.userId()),
   })),

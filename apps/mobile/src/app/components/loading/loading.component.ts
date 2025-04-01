@@ -12,26 +12,25 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'skooltrak-loading',
-  standalone: true,
-  styles: `
+    selector: 'skooltrak-loading',
+    styles: `
     ion-skeleton-text {
       --border-radius: 9999px;
       --background: var(--ion-color-light);
     }
   `,
-  imports: [
-    IonCard,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonItem,
-    IonThumbnail,
-    IonLabel,
-    IonSkeletonText,
-    IonNote,
-  ],
-  template: `
+    imports: [
+        IonCard,
+        IonCardHeader,
+        IonCardSubtitle,
+        IonCardTitle,
+        IonItem,
+        IonThumbnail,
+        IonLabel,
+        IonSkeletonText,
+        IonNote,
+    ],
+    template: `
     @for (item of items(); track item) {
       @switch (type()) {
         @case ('card') {
@@ -79,7 +78,7 @@ import {
         }
       }
     }
-  `,
+  `
 })
 export class LoadingComponent {
   public type = input.required<'card' | 'users' | 'items'>();

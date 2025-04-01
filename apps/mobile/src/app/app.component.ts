@@ -8,13 +8,12 @@ import {
 import { mobileStore } from '@skooltrak/store';
 
 @Component({
-  selector: 'skooltrak-root',
-  standalone: true,
-  providers: [ModalController],
-  imports: [IonApp, IonRouterOutlet],
-  template: `<ion-app>
+    selector: 'skooltrak-root',
+    providers: [ModalController],
+    imports: [IonApp, IonRouterOutlet],
+    template: `<ion-app>
     <ion-router-outlet />
-  </ion-app>`,
+  </ion-app>`
 })
 export class AppComponent implements OnInit {
   private readonly auth = inject(mobileStore.AuthStore);

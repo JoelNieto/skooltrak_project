@@ -15,22 +15,21 @@ import { patchState } from '@ngrx/signals';
 import { UserProfile } from '@skooltrak/models';
 
 @Component({
-  selector: 'sk-users-search',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    TranslateModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatListModule,
-    FileUrlPipe,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-  ],
-  providers: [UsersSearchStore],
-  template: `
+    selector: 'sk-users-search',
+    imports: [
+        MatDialogModule,
+        TranslateModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatListModule,
+        FileUrlPipe,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+    ],
+    providers: [UsersSearchStore],
+    template: `
     <h2 mat-dialog-title>{{ 'USERS_SEARCH.TITLE' | translate }}</h2>
     <mat-dialog-content>
       <mat-form-field>
@@ -88,7 +87,7 @@ import { UserProfile } from '@skooltrak/models';
       </button>
     </mat-dialog-actions>
   `,
-  styles: ``,
+    styles: ``
 })
 export class UsersSearchComponent implements OnInit {
   public store = inject(UsersSearchStore);

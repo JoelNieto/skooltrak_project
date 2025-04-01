@@ -13,20 +13,19 @@ import { v4 } from 'uuid';
 import { SchoolSubjectsStore } from './subjects.store';
 
 @Component({
-  selector: 'sk-school-subjects-form',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatProgressBar,
-  ],
-  providers: [],
-  template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
+    selector: 'sk-school-subjects-form',
+    imports: [
+        MatDialogModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatProgressBar,
+    ],
+    providers: [],
+    template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
     @if (store.loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
@@ -62,7 +61,7 @@ import { SchoolSubjectsStore } from './subjects.store';
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </mat-dialog-actions>
-  </form>`,
+  </form>`
 })
 export class SubjectsFormComponent implements AfterViewInit {
   private data: Subject | undefined = inject(MAT_DIALOG_DATA);

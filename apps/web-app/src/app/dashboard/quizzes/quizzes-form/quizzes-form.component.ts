@@ -30,22 +30,21 @@ import { QuestionFormComponent } from '../question-form/question-form.component'
 import { QuizzesFormStore } from './quizzes-form.store';
 
 @Component({
-  selector: 'sk-quizzes-form',
-  standalone: true,
-  providers: [QuizzesFormStore],
-  imports: [
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatIconModule,
-    TranslateModule,
-    QuestionFormComponent,
-    ReactiveFormsModule,
-    FormsModule,
-    MatButtonModule,
-  ],
-  template: `
+    selector: 'sk-quizzes-form',
+    providers: [QuizzesFormStore],
+    imports: [
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatIconModule,
+        TranslateModule,
+        QuestionFormComponent,
+        ReactiveFormsModule,
+        FormsModule,
+        MatButtonModule,
+    ],
+    template: `
     <div class="flex justify-center">
       <div class="flex flex-col gap-5 w-full lg:w-3/5">
         <h1 class="mat-headline-large">
@@ -82,8 +81,8 @@ import { QuizzesFormStore } from './quizzes-form.store';
       </div>
     </div>
   `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizzesFormComponent implements OnInit {
   public quizId = input<string>();

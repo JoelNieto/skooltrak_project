@@ -20,7 +20,7 @@ const initialState: State = {
 };
 
 export const PublicationFormStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed((_, auth = inject(mobileStore.AuthStore)) => ({
     userId: computed(() => auth.userId()),
     schoolId: computed(() => auth.schoolId()),

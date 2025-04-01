@@ -4,10 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { Chart } from 'chart.js';
 
 @Component({
-  selector: 'sk-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  template: ` <router-outlet /> `,
+    selector: 'sk-root',
+    imports: [RouterOutlet],
+    template: ` <router-outlet /> `
 })
 export class AppComponent {
   constructor(iconRegistry: MatIconRegistry) {

@@ -19,7 +19,7 @@ type State = {
 };
 
 export const MessagesStore = signalStore(
-  { providedIn: 'root' },
+  { providedIn: 'root', protectedState: false },
   withState({
     chats: [],
     selectedId: undefined,

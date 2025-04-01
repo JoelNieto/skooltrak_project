@@ -36,38 +36,37 @@ import { PictureComponent } from '../../components/picture/picture.component';
 import { UsersModalComponent } from '../../components/users-modal/users-modal.component';
 
 @Component({
-  selector: 'skooltrak-messages',
-  standalone: true,
-  imports: [
-    JsonPipe,
-    TranslateModule,
-    DateAgoPipe,
-    RouterLink,
-    PictureComponent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonSearchbar,
-    IonIcon,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonSkeletonText,
-    IonLabel,
-    IonItemSliding,
-    IonText,
-    IonAvatar,
-    IonItemOption,
-    IonNote,
-    IonButtons,
-    IonButton,
-    IonItemOptions,
-    LoadingComponent,
-  ],
-  providers: [IonRouterOutlet, ModalController],
-  styles: [
-    `
+    selector: 'skooltrak-messages',
+    imports: [
+        JsonPipe,
+        TranslateModule,
+        DateAgoPipe,
+        RouterLink,
+        PictureComponent,
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        IonSearchbar,
+        IonIcon,
+        IonList,
+        IonItem,
+        IonThumbnail,
+        IonSkeletonText,
+        IonLabel,
+        IonItemSliding,
+        IonText,
+        IonAvatar,
+        IonItemOption,
+        IonNote,
+        IonButtons,
+        IonButton,
+        IonItemOptions,
+        LoadingComponent,
+    ],
+    providers: [IonRouterOutlet, ModalController],
+    styles: [
+        `
       ion-avatar {
         --border-radius: 1rem;
       }
@@ -90,8 +89,8 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
         text-overflow: ellipsis;
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <ion-header class="ion-no-border">
       <ion-toolbar color="primary">
         <ion-title size="large">
@@ -158,7 +157,7 @@ import { UsersModalComponent } from '../../components/users-modal/users-modal.co
       </ion-list>
     </ion-content>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessagesPage {
   public store = inject(mobileStore.MessagesStore);

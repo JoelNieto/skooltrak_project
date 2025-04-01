@@ -19,7 +19,7 @@ type State = {
 };
 
 export const ChatStore = signalStore(
-  withState({ loading: false, messages: [] } as State),
+  { protectedState: false }, withState({ loading: false, messages: [] } as State),
   withComputed(
     (
       _,

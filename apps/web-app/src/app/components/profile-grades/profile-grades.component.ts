@@ -1,4 +1,4 @@
-import { DecimalPipe, JsonPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,6 @@ import { ProfileGradesStore } from './profile-grades.store';
 
 @Component({
   selector: 'sk-profile-grades',
-  standalone: true,
   providers: [ProfileGradesStore],
   imports: [
     MatSelectModule,
@@ -19,7 +18,6 @@ import { ProfileGradesStore } from './profile-grades.store';
     ReactiveFormsModule,
     BaseChartDirective,
     TranslateModule,
-    JsonPipe,
     DecimalPipe,
   ],
   template: `<div class="p-4">

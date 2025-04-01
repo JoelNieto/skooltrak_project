@@ -12,11 +12,10 @@ import { User } from '@skooltrak/models';
 import { SupabaseService } from '@skooltrak/store';
 
 @Component({
-  selector: 'sk-user-chip',
-  standalone: true,
-  imports: [MatChipsModule, MatIcon],
-  providers: [],
-  template: `<mat-chip class="tertiary">
+    selector: 'sk-user-chip',
+    imports: [MatChipsModule, MatIcon],
+    providers: [],
+    template: `<mat-chip class="tertiary">
     <img [src]="avatarUrl()" matChipAvatar class="rounded-full" />
 
     {{ user().first_name }}
@@ -30,7 +29,7 @@ import { SupabaseService } from '@skooltrak/store';
         <mat-icon>cancel</mat-icon>
       </button>
     }
-  </mat-chip>`,
+  </mat-chip>`
 })
 export class UserChipComponent implements OnInit {
   public user = input.required<Partial<User>>();

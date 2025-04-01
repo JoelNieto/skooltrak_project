@@ -16,24 +16,23 @@ import { SchoolPeriodsFormComponent } from './periods-form.component';
 import { SchoolPeriodsStore } from './periods.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    TranslateModule,
-    MatButton,
-    DatePipe,
-    DialogModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatIcon,
-    MatPrefix,
-    MatTableModule,
-    MatSortModule,
-    MatIconButton,
-    MatMenuModule,
-  ],
-  providers: [SchoolPeriodsStore],
-  template: `<div class="relative ">
+    imports: [
+        TranslateModule,
+        MatButton,
+        DatePipe,
+        DialogModule,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatIcon,
+        MatPrefix,
+        MatTableModule,
+        MatSortModule,
+        MatIconButton,
+        MatMenuModule,
+    ],
+    providers: [SchoolPeriodsStore],
+    template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-full lg:w-96">
         <mat-label for="table-search">Search</mat-label>
@@ -110,7 +109,7 @@ import { SchoolPeriodsStore } from './periods.store';
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-  </div>`,
+  </div>`
 })
 export class SchoolPeriodsComponent {
   public store = inject(SchoolPeriodsStore);

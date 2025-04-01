@@ -1,4 +1,4 @@
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,7 +16,6 @@ import { StudentProfileStore } from './student-profile.store';
 
 @Component({
   selector: 'sk-student-profile',
-  standalone: true,
   providers: [StudentProfileStore],
   template: `
     <h3 class="mat-display-medium">
@@ -119,7 +118,6 @@ import { StudentProfileStore } from './student-profile.store';
     MatTabsModule,
     AgePipe,
     DatePipe,
-    JsonPipe,
     ProfileGradesComponent,
   ],
 })

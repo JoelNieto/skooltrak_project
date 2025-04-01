@@ -20,23 +20,22 @@ import { ConfirmationService } from '@skooltrak/ui';
 import { SchoolConnectorStore } from './school-connector.store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-school-connector',
-  imports: [
-    MatCardModule,
-    TranslateModule,
-    MatButtonModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
-  ],
-  providers: [SchoolConnectorStore, ConfirmationService],
-  styles: `
+    selector: 'sk-school-connector',
+    imports: [
+        MatCardModule,
+        TranslateModule,
+        MatButtonModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule,
+    ],
+    providers: [SchoolConnectorStore, ConfirmationService],
+    styles: `
 
   `,
-  template: `<form [formGroup]="form" (ngSubmit)="validateCode()">
+    template: `<form [formGroup]="form" (ngSubmit)="validateCode()">
     <mat-card>
       <mat-card-header>
         <mat-card-title>
@@ -81,7 +80,7 @@ import { SchoolConnectorStore } from './school-connector.store';
         </mat-card-actions>
       </mat-card-footer>
     </mat-card>
-  </form>`,
+  </form>`
 })
 export class SchoolConnectorComponent {
   public dialogRef = inject(DialogRef);

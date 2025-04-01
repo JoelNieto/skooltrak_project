@@ -1,15 +1,12 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
-@use '@angular/material-experimental' as matx;
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
+
+@import '@angular/material/prebuilt-themes/azure-blue.css';
 @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,131 +15,15 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$light-theme: matx.define-theme(
-    (
-      color: (
-        theme-type: light,
-        primary: matx.$m3-azure-palette,
-        tertiary: matx.$m3-rose-palette,
-      ),
-      typography: (
-        brand-family: 'Gabarito',
-        plain-family: 'Inter',
-        bold-weight: 900,
-      ),
-    )
-);
-
-$dark-theme: matx.define-theme(
-    (
-      color: (
-        theme-type: dark,
-        primary: matx.$m3-azure-palette,
-        tertiary: matx.$m3-rose-palette,
-      ),
-      typography: (
-        brand-family: 'Gabarito',
-        plain-family: 'Inter',
-        bold-weight: 900,
-      ),
-    )
-);
-
-$light-warn-theme: matx.define-theme(
-    (
-      color: (
-        theme-type: light,
-        primary: matx.$m3-rose-palette,
-        tertiary: matx.$m3-magenta-palette,
-      ),
-    )
-);
 
 html,
 body {
   height: 100%;
   font-weight: 400;
-  @include mat.all-component-themes($light-theme);
-  @include mat.typography-hierarchy($light-theme);
 }
 
 body {
   margin: 0;
-}
-
-mat-toolbar {
-  background: mat.get-theme-color($light-theme, primary) !important;
-  color: mat.get-theme-color($light-theme, on-primary) !important;
-  //--mat-list-active-indicator-color =
-  a.mdc-list-item.mdc-list-item--activated {
-    background-color: mat.get-theme-color($light-theme, primary-fixed-dim) !important;
-
-    .mdc-list-item__primary-text {
-      color: mat.get-theme-color($light-theme, primary) !important;
-    }
-
-    mat-icon {
-      color: mat.get-theme-color($light-theme, primary) !important;
-    }
-  }
-
-  mat-icon {
-    color: mat.get-theme-color($light-theme, on-primary) !important;
-  }
-}
-
-button.secondary {
-  @include mat.button-color($light-theme, $color-variant: secondary);
-}
-
-button.tertiary {
-  @include mat.button-color($light-theme, $color-variant: tertiary);
-}
-
-button.warn {
-  @include mat.button-color($light-warn-theme, $color-variant: primary);
-}
-
-mat-chip.primary {
-  background: mat.get-theme-color($light-theme, primary-fixed-dim) !important;
-  color: mat.get-theme-color($light-theme, primary) !important;
-  border-color: mat.get-theme-color($light-theme, primary) !important;
-  --mdc-chip-label-text-color: mat.get-theme-color(
-      $light-theme,
-      primary
-  ) !important;
-  --mdc-chip-outline-color: mat.get-theme-color(
-      $light-theme,
-      outline
-  ) !important;
-}
-
-mat-chip.secondary {
-  background: mat.get-theme-color($light-theme, secondary-fixed-dim) !important;
-  color: mat.get-theme-color($light-theme, secondary) !important;
-  border-color: mat.get-theme-color($light-theme, secondary) !important;
-  --mdc-chip-label-text-color: mat.get-theme-color(
-      $light-theme,
-      secondary
-  ) !important;
-  --mdc-chip-outline-color: mat.get-theme-color(
-      $light-theme,
-      secondary
-  ) !important;
-}
-
-mat-chip.tertiary {
-  background: mat.get-theme-color($light-theme, tertiary-fixed-dim) !important;
-  color: mat.get-theme-color($light-theme, tertiary) !important;
-  border-color: mat.get-theme-color($light-theme, tertiary) !important;
-  --mdc-chip-label-text-color: mat.get-theme-color(
-      $light-theme,
-      tertiary
-  ) !important;
-  --mdc-chip-outline-color: mat.get-theme-color(
-      $light-theme,
-      tertiary
-  ) !important;
 }
 
 .ql-container {
@@ -168,10 +49,11 @@ select:focus {
 }
 
 .material-symbols-rounded {
-  font-variation-settings: 'FILL' 0,
-  'wght' 300,
-  'GRAD' 200,
-  'opsz' 48;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 200,
+    'opsz' 48;
 }
 
 [multiple] {

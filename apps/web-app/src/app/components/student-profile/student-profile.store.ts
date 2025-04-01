@@ -16,7 +16,7 @@ const initial: State = {
 };
 
 export const StudentProfileStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withMethods(({ ...state }, supabase = inject(SupabaseService)) => {
     async function fetchProfile(id: string): Promise<void> {
       patchState(state, { loading: true });

@@ -25,7 +25,7 @@ const initialState: State = {
 };
 
 export const SchoolPeriodsStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       { sort_direction, sort_column, periods },

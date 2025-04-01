@@ -32,7 +32,7 @@ const initialState: State = {
 };
 
 export const SchoolPlansStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       { start, pageSize, sortDirection, sortColumn },

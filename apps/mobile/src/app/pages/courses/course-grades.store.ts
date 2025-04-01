@@ -30,7 +30,7 @@ const initial: State = {
 };
 
 export const CourseGradesStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(
     (
       { currentPeriod, grades },

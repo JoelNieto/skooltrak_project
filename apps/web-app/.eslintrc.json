@@ -28,7 +28,9 @@
         ],
         "@typescript-eslint/explicit-function-return-type": [
           "warn",
-          { "allowIIFEs": true }
+          {
+            "allowIIFEs": true
+          }
         ],
         "@angular-eslint/directive-selector": [
           "error",
@@ -58,7 +60,8 @@
             "prev": ["const", "let"],
             "next": ["const", "let"]
           }
-        ]
+        ],
+        "@angular-eslint/prefer-standalone": "off"
       }
     },
     {

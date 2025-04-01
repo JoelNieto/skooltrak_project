@@ -21,19 +21,18 @@ import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { SchoolPeopleStore } from './people.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    TranslateModule,
-    ReactiveFormsModule,
-    AvatarComponent,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatIcon,
-    MatButtonModule,
-    MatProgressBar,
-  ],
-  template: `
+    imports: [
+        MatDialogModule,
+        TranslateModule,
+        ReactiveFormsModule,
+        AvatarComponent,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatIcon,
+        MatButtonModule,
+        MatProgressBar,
+    ],
+    template: `
     <form [formGroup]="form" (ngSubmit)="savePerson()">
       @if (store.loading()) {
         <mat-progress-bar mode="indeterminate" />
@@ -99,7 +98,7 @@ import { SchoolPeopleStore } from './people.store';
         </button>
       </mat-dialog-actions>
     </form>
-  `,
+  `
 })
 export class SchoolPeopleFormComponent implements OnInit {
   public store = inject(SchoolPeopleStore);

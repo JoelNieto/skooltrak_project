@@ -19,25 +19,24 @@ import { AssignationFormComponent } from '../assignation-form/assignation-form.c
 import { QuizzesStore } from '../quizzes.store';
 
 @Component({
-  selector: 'sk-quizzes-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    RouterLink,
-    TranslateModule,
-    MatIconModule,
-    MatTableModule,
-    DatePipe,
-    MatMenuModule,
-    RouterLink,
-    MatSortModule,
-    MatChipsModule,
-    NgClass,
-    MatPaginatorModule,
-  ],
-  template: `
+    selector: 'sk-quizzes-list',
+    imports: [
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        RouterLink,
+        TranslateModule,
+        MatIconModule,
+        MatTableModule,
+        DatePipe,
+        MatMenuModule,
+        RouterLink,
+        MatSortModule,
+        MatChipsModule,
+        NgClass,
+        MatPaginatorModule,
+    ],
+    template: `
     <h1 class="mat-display-medium">
       {{ 'QUIZZES.TITLE' | translate }}
     </h1>
@@ -161,8 +160,8 @@ import { QuizzesStore } from '../quizzes.store';
       (page)="pageEvent($event)"
     />
   `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizzesListComponent {
   public displayedColumns = [

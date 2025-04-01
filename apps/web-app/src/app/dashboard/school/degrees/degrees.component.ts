@@ -19,22 +19,21 @@ import { DegreesFormComponent } from './degrees-form.component';
 import { SchoolDegreesStore } from './degrees.store';
 
 @Component({
-  selector: 'sk-school-degrees',
-  standalone: true,
-  imports: [
-    TranslateModule,
-    DatePipe,
-    MatPaginatorModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIcon,
-    MatTableModule,
-    MatSortModule,
-  ],
-  providers: [SchoolDegreesStore, ConfirmationService],
-  template: `<div class="relative ">
+    selector: 'sk-school-degrees',
+    imports: [
+        TranslateModule,
+        DatePipe,
+        MatPaginatorModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIcon,
+        MatTableModule,
+        MatSortModule,
+    ],
+    providers: [SchoolDegreesStore, ConfirmationService],
+    template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-96">
         <mat-label for="table-search">Search</mat-label>
@@ -106,7 +105,7 @@ import { SchoolDegreesStore } from './degrees.store';
       [showFirstLastButtons]="true"
       (page)="pageEvent($event)"
     />
-  </div>`,
+  </div>`
 })
 export class SchoolDegreesComponent {
   public store = inject(SchoolDegreesStore);

@@ -30,7 +30,7 @@ const initial: State = {
 };
 
 export const ProfileGradesStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed((state, profileStore = inject(StudentProfileStore)) => {
     const studentId = computed(() => profileStore.studentId());
     const subjects = computed(() => state.grades().map((x) => x.subject));

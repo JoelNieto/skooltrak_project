@@ -9,11 +9,10 @@ import { ButtonDirective } from '@skooltrak/ui';
 import { NewChatComponent } from '../new-chat/new-chat.component';
 
 @Component({
-  selector: 'sk-start-message',
-  standalone: true,
-  imports: [NgOptimizedImage, ButtonDirective, TranslateModule],
-  providers: [],
-  template: `
+    selector: 'sk-start-message',
+    imports: [NgOptimizedImage, ButtonDirective, TranslateModule],
+    providers: [],
+    template: `
     <div
       class="flex flex-col items-center justify-center pt-12 gap-4 w-full h-full"
     >
@@ -37,8 +36,8 @@ import { NewChatComponent } from '../new-chat/new-chat.component';
       </button>
     </div>
   `,
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WelcomeComponent {
   private dialog = inject(Dialog);

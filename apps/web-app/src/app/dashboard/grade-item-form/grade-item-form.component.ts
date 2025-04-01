@@ -21,17 +21,16 @@ import { CourseGradesStore } from '../grades/course-grades.store';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'sk-grade-item-form',
-  standalone: true,
-  imports: [ReactiveFormsModule, InputDirective],
-  template: ` <input
+    selector: 'sk-grade-item-form',
+    imports: [ReactiveFormsModule, InputDirective],
+    template: ` <input
     [formControl]="scoreControl"
     skInput
     type="number"
     step=".1"
   />`,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GradeItemFormComponent implements OnInit {
   public gradeId = input.required<string>();

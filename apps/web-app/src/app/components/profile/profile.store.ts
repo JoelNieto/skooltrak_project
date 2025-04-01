@@ -9,7 +9,7 @@ type State = {
 };
 
 export const ProfileFormStore = signalStore(
-  withState({ genders: [], loading: false } as State),
+  { protectedState: false }, withState({ genders: [], loading: false } as State),
   withMethods(
     (
       { ...state },

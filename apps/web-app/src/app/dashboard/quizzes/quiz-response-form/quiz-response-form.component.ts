@@ -8,7 +8,6 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { TranslateModule } from '@ngx-translate/core';
 import { QuestionTypeEnum } from '@skooltrak/models';
@@ -17,14 +16,12 @@ import { QuizResponseStore } from './quiz-response.store';
 
 @Component({
   selector: 'sk-quiz-response-form',
-  standalone: true,
   imports: [
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
     TranslateModule,
-    MatProgressBar,
   ],
   providers: [QuizResponseStore],
   template: `<div class="flex justify-center">

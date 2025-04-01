@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'sk-chats-loading',
-  standalone: true,
-  imports: [],
-  template: `<div
+    selector: 'sk-chats-loading',
+    imports: [],
+    template: `<div
     class="flex grow flex-col-reverse gap-2 p-6 overflow-y-scroll"
   >
     <div class="flex">
@@ -44,7 +43,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
     </div>
   </div>`,
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatsLoadingComponent {}

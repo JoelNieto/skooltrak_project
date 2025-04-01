@@ -9,18 +9,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 
 @Component({
-  selector: 'sk-password-reset',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    TranslateModule,
-    NgOptimizedImage,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-  ],
-  template: `<div class="flex flex-col items-center justify-center pt-24">
+    selector: 'sk-password-reset',
+    imports: [
+        MatCardModule,
+        TranslateModule,
+        NgOptimizedImage,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+    ],
+    template: `<div class="flex flex-col items-center justify-center pt-24">
     <a href="#" class=" mb-6">
       <img
         width="240"
@@ -67,8 +66,8 @@ import { webStore } from '@skooltrak/store';
       </mat-card-footer>
     </mat-card>
   </div>`,
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordResetComponent {
   public emailControl = new FormControl('', {

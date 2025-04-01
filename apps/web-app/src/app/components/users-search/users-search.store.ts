@@ -24,7 +24,7 @@ const initial: State = {
 };
 
 export const UsersSearchStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withMethods(({ searchText, people }, auth = inject(webStore.AuthStore)) => {
     const schoolId = computed(() => auth.schoolId());
     const filteredPeople = computed(() =>

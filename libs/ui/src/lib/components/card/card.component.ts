@@ -2,10 +2,9 @@ import { Component, input } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'sk-card',
-  standalone: true,
-  imports: [MatProgressSpinner],
-  template: `
+    selector: 'sk-card',
+    imports: [MatProgressSpinner],
+    template: `
     <div
       class="w-100 rounded-xl bg-white border border-gray-300 p-5 dark:border-gray-700 dark:bg-gray-800 relative"
       [class.opacity-20]="loading()"
@@ -23,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
       <ng-content select="[footer]"></ng-content>
     </div>
-  `,
+  `
 })
 export class CardComponent {
   public loading = input(false);

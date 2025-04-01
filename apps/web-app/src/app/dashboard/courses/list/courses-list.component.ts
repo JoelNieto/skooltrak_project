@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,18 +10,16 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MatMenuModule } from '@angular/material/menu';
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { CoursesStore } from '../courses.store';
-import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
-  standalone: true,
   selector: 'sk-courses-list',
   imports: [
     TranslateModule,
     UserChipComponent,
     RouterLink,
-    DatePipe,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,

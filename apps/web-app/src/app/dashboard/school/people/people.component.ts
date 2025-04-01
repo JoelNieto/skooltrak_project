@@ -1,5 +1,11 @@
-import { DatePipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ViewContainerRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
@@ -16,27 +22,20 @@ import { RouterLink } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleEnum, SchoolProfile, StatusEnum } from '@skooltrak/models';
-import { EmptyTableComponent, LoadingComponent } from '@skooltrak/ui';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
-import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolPeopleFormComponent } from './people-form.component';
 import { SchoolPeopleStore } from './people.store';
 
 @Component({
-  standalone: true,
   selector: 'sk-school-people',
   imports: [
     TranslateModule,
     ReactiveFormsModule,
     MatPaginatorModule,
-    UserChipComponent,
     RouterLink,
     DatePipe,
-    JsonPipe,
     AvatarComponent,
-    LoadingComponent,
-    EmptyTableComponent,
     MatFormField,
     MatLabel,
     MatSelect,

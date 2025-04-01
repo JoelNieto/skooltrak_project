@@ -11,7 +11,7 @@ type State = {
 const initialState: State = { loading: false, groupId: undefined };
 
 export const CourseStudentsStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed((state, course = inject(CourseDetailsStore)) => ({
     students: computed(() =>
       course

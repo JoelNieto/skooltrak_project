@@ -34,41 +34,40 @@ import { PictureComponent } from '../../components/picture/picture.component';
 import { CoursesStore } from './courses.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    LoadingComponent,
-    TranslateModule,
-    PictureComponent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonCardSubtitle,
-    RouterLink,
-    IonGrid,
-    IonCol,
-    IonRow,
-    IonButton,
-    IonIcon,
-    IonText,
-    IonChip,
-    IonAvatar,
-    IonLabel,
-    IonRefresher,
-    IonSearchbar,
-    IonRefresherContent,
-  ],
-  selector: 'skooltrak-courses-list',
-  styles: `
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        LoadingComponent,
+        TranslateModule,
+        PictureComponent,
+        IonCard,
+        IonCardHeader,
+        IonCardTitle,
+        IonCardContent,
+        IonCardSubtitle,
+        RouterLink,
+        IonGrid,
+        IonCol,
+        IonRow,
+        IonButton,
+        IonIcon,
+        IonText,
+        IonChip,
+        IonAvatar,
+        IonLabel,
+        IonRefresher,
+        IonSearchbar,
+        IonRefresherContent,
+    ],
+    selector: 'skooltrak-courses-list',
+    styles: `
   .header-avatar {
     padding: .5rem;
   }
   `,
-  template: ` <ion-header class="ion-no-border">
+    template: ` <ion-header class="ion-no-border">
       <ion-toolbar color="primary">
         <ion-title size="large">{{ 'COURSES.TITLE' | translate }} </ion-title>
       </ion-toolbar>
@@ -149,7 +148,7 @@ import { CoursesStore } from './courses.store';
           No items
         }
       }
-    </ion-content>`,
+    </ion-content>`
 })
 export class CoursesListPage {
   public readonly store = inject(CoursesStore);

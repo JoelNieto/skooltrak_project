@@ -22,35 +22,34 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { CourseGradesStore } from './course-grades.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    IonTitle,
-    IonHeader,
-    IonToolbar,
-    IonContent,
-    TranslateModule,
-    IonChip,
-    IonSelect,
-    IonList,
-    IonItem,
-    IonItemGroup,
-    IonItemDivider,
-    IonLabel,
-    IonNote,
-    IonSelectOption,
-    DecimalPipe,
-    KeyValuePipe,
-    DatePipe,
-    LoadingComponent,
-  ],
-  providers: [CourseGradesStore],
-  styles: `
+    imports: [
+        IonTitle,
+        IonHeader,
+        IonToolbar,
+        IonContent,
+        TranslateModule,
+        IonChip,
+        IonSelect,
+        IonList,
+        IonItem,
+        IonItemGroup,
+        IonItemDivider,
+        IonLabel,
+        IonNote,
+        IonSelectOption,
+        DecimalPipe,
+        KeyValuePipe,
+        DatePipe,
+        LoadingComponent,
+    ],
+    providers: [CourseGradesStore],
+    styles: `
   ion-toolbar {
     --ion-safe-area-top: 0;
   }
 `,
-  selector: 'skooltrak-course-grades',
-  template: `<ion-header class="ion-no-border">
+    selector: 'skooltrak-course-grades',
+    template: `<ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-select
           class="ion-padding-horizontal"
@@ -96,7 +95,7 @@ import { CourseGradesStore } from './course-grades.store';
           }
         }
       </ion-list>
-    </ion-content>`,
+    </ion-content>`
 })
 export class CourseGradesPage {
   public store = inject(CourseGradesStore);

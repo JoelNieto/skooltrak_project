@@ -4,9 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ScheduleComponent } from '../../../components/schedule/schedule.component';
 
 @Component({
-  standalone: true,
-  selector: 'sk-home-schedule',
-  template: `
+    selector: 'sk-home-schedule',
+    template: `
     <div>
       <h1 class="mat-display-medium">
         {{ 'SCHEDULE' | translate }}
@@ -15,7 +14,7 @@ import { ScheduleComponent } from '../../../components/schedule/schedule.compone
       <sk-schedule />
     </div>
   `,
-  imports: [TranslateModule, ScheduleComponent],
+    imports: [TranslateModule, ScheduleComponent]
 })
 export class HomeScheduleComponent {
   public course_id = input.required<string>();

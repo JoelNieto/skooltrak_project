@@ -26,32 +26,31 @@ import { TranslateModule } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-sign-in',
-  providers: [ModalController],
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonLabel,
-    IonItem,
-    IonInput,
-    IonFooter,
-    IonToolbar,
-    IonButton,
-    IonSpinner,
-    IonText,
-    TranslateModule,
-    NgOptimizedImage,
-    ReactiveFormsModule,
-    RouterLink,
-  ],
-  styles: `
+    selector: 'skooltrak-sign-in',
+    providers: [ModalController],
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonLabel,
+        IonItem,
+        IonInput,
+        IonFooter,
+        IonToolbar,
+        IonButton,
+        IonSpinner,
+        IonText,
+        TranslateModule,
+        NgOptimizedImage,
+        ReactiveFormsModule,
+        RouterLink,
+    ],
+    styles: `
 
   `,
-  template: `<ion-header class="ion-no-border" [translucent]="true">
+    template: `<ion-header class="ion-no-border" [translucent]="true">
       <ion-toolbar>
         <ion-title color="primary">{{ 'SIGN_IN.TITLE' | translate }}</ion-title>
       </ion-toolbar>
@@ -106,7 +105,7 @@ import { mobileStore } from '@skooltrak/store';
       <ion-button fill="clear" color="danger" routerLink="../reset-password">
         {{ 'SIGN_IN.FORGOT_PASSWORD' | translate }}
       </ion-button>
-    </ion-content>`,
+    </ion-content>`
 })
 export class SignInPage {
   public readonly auth = inject(mobileStore.AuthStore);

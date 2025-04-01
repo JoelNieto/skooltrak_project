@@ -33,7 +33,7 @@ const initial: State = {
 };
 
 export const QuizAssignationsStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(
     (
       { start, pageSize, sortDirection, sortColumn },

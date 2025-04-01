@@ -24,9 +24,8 @@ import { CourseGradesPage } from './course-grades.page';
 import { CoursesStore } from './courses.store';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-course',
-  template: `<ion-header class="ion-no-border">
+    selector: 'skooltrak-course',
+    template: `<ion-header class="ion-no-border">
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/tabs" />
@@ -60,24 +59,24 @@ import { CoursesStore } from './courses.store';
         }
       }
     </ion-content>`,
-  imports: [
-    IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonBackButton,
-    TranslateModule,
-    IonIcon,
-    IonLabel,
-    IonSegment,
-    IonSegmentButton,
-    IonDatetime,
-    IonDatetimeButton,
-    IonModal,
-    CourseAssignmentsPage,
-    CourseGradesPage,
-  ],
+    imports: [
+        IonContent,
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonButtons,
+        IonBackButton,
+        TranslateModule,
+        IonIcon,
+        IonLabel,
+        IonSegment,
+        IonSegmentButton,
+        IonDatetime,
+        IonDatetimeButton,
+        IonModal,
+        CourseAssignmentsPage,
+        CourseGradesPage,
+    ]
 })
 export class CourseDetailsPage {
   private course_id = input<string>();

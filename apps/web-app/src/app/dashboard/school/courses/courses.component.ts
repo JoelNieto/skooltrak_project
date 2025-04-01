@@ -22,25 +22,24 @@ import { SchoolCoursesFormComponent } from './courses-form.component';
 import { SchoolCoursesStore } from './courses.store';
 
 @Component({
-  selector: 'sk-school-courses',
-  standalone: true,
-  imports: [
-    TranslateModule,
-    UserChipComponent,
-    MatPaginatorModule,
-    DatePipe,
-    RouterLink,
-    MatSelectModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatIcon,
-    MatSortModule,
-    MatMenuModule,
-    MatButtonModule,
-  ],
-  providers: [UtilService, SchoolCoursesStore],
-  template: ` <div class="relative ">
+    selector: 'sk-school-courses',
+    imports: [
+        TranslateModule,
+        UserChipComponent,
+        MatPaginatorModule,
+        DatePipe,
+        RouterLink,
+        MatSelectModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatIcon,
+        MatSortModule,
+        MatMenuModule,
+        MatButtonModule,
+    ],
+    providers: [UtilService, SchoolCoursesStore],
+    template: ` <div class="relative ">
     <div class="flex flex-nowrap justify-between items-baseline gap-4 px-1">
       <mat-form-field class="w-96">
         <mat-label>{{ 'COURSES.SELECT_PLAN' | translate }}</mat-label>
@@ -136,7 +135,7 @@ import { SchoolCoursesStore } from './courses.store';
       [showFirstLastButtons]="true"
       (page)="pageEvent($event)"
     />
-  </div>`,
+  </div>`
 })
 export class SchoolCoursesComponent implements OnInit {
   public store = inject(SchoolCoursesStore);

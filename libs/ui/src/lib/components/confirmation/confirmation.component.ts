@@ -3,22 +3,13 @@ import { NgClass } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ConfirmationOptions } from './confirmation.type';
 
 @Component({
   selector: 'sk-confirmation',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    TranslateModule,
-    DialogModule,
-    MatButton,
-    MatIcon,
-    NgClass,
-  ],
+  imports: [MatDialogModule, TranslateModule, DialogModule, MatButton, NgClass],
   providers: [],
   styles: `
     .mat-icon{

@@ -12,7 +12,6 @@ import { ActivatedRoute } from '@angular/router';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
-import { InputDirective } from '@skooltrak/ui';
 import { QuillModule } from 'ngx-quill';
 
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
@@ -21,7 +20,6 @@ import { ChatStore } from './chat.store';
 
 @Component({
   selector: 'sk-chat',
-  standalone: true,
   template: ` <div class="flex flex-col h-[32rem]">
     @if (store.loading()) {
       <sk-chats-loading />
@@ -115,7 +113,6 @@ import { ChatStore } from './chat.store';
   providers: [ChatStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    InputDirective,
     ReactiveFormsModule,
     TranslateModule,
     NgClass,

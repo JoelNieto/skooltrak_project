@@ -29,29 +29,28 @@ import { mobileStore } from '@skooltrak/store';
 import { ProfileEditStore } from './profile-edit.store';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-profile-edit',
-  providers: [ProfileEditStore],
-  imports: [
-    IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    TranslateModule,
-    IonButton,
-    IonButtons,
-    IonList,
-    IonItem,
-    IonInput,
-    IonLabel,
-    IonNote,
-    ReactiveFormsModule,
-    IonDatetime,
-    IonPopover,
-    IonSelect,
-    IonSelectOption,
-  ],
-  template: `
+    selector: 'skooltrak-profile-edit',
+    providers: [ProfileEditStore],
+    imports: [
+        IonContent,
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        TranslateModule,
+        IonButton,
+        IonButtons,
+        IonList,
+        IonItem,
+        IonInput,
+        IonLabel,
+        IonNote,
+        ReactiveFormsModule,
+        IonDatetime,
+        IonPopover,
+        IonSelect,
+        IonSelectOption,
+    ],
+    template: `
     <ion-header translucent="true">
       <ion-toolbar>
         <ion-buttons slot="end">
@@ -153,7 +152,7 @@ import { ProfileEditStore } from './profile-edit.store';
         >
       </form>
     </ion-content>
-  `,
+  `
 })
 export class ProfileEditPage implements OnInit {
   public readonly modalCtrl = inject(ModalController);

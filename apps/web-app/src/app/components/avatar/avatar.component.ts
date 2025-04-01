@@ -11,7 +11,6 @@ import { SupabaseService } from '@skooltrak/store';
 
 @Component({
   selector: 'sk-avatar',
-  standalone: true,
   imports: [],
   template: `<img
     [attr.src]="avatarUrl()"

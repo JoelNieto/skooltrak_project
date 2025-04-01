@@ -1,11 +1,21 @@
 import { DialogModule } from '@angular/cdk/dialog';
-import { DatePipe, NgClass } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ViewContainerRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
@@ -23,20 +33,16 @@ import { SchoolSubjectsStore } from './subjects.store';
 
 @Component({
   selector: 'sk-school-subjects',
-  standalone: true,
   imports: [
     MatButton,
     MatPaginatorModule,
     DialogModule,
-    NgClass,
-    SubjectsFormComponent,
     DatePipe,
     TranslateModule,
     ReactiveFormsModule,
     MatFormField,
     MatLabel,
     MatInput,
-    MatSuffix,
     MatPrefix,
     MatIcon,
     MatTableModule,

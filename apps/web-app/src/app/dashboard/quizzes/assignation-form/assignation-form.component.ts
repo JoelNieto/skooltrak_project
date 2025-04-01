@@ -17,22 +17,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { QuizAssignationsStore } from '../quiz-assignations/quiz-assignations.store';
 
 @Component({
-  selector: 'sk-assignation-form',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    TranslateModule,
-    MatIcon,
-    MatDatepickerModule,
-    MatInput,
-    MatSlideToggle,
-    MatButtonModule,
-    MatProgressBar,
-  ],
-  template: `<form [formGroup]="form" (ngSubmit)="saveAssignation()">
+    selector: 'sk-assignation-form',
+    imports: [
+        MatDialogModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        TranslateModule,
+        MatIcon,
+        MatDatepickerModule,
+        MatInput,
+        MatSlideToggle,
+        MatButtonModule,
+        MatProgressBar,
+    ],
+    template: `<form [formGroup]="form" (ngSubmit)="saveAssignation()">
     @if (state.loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
@@ -98,8 +97,8 @@ import { QuizAssignationsStore } from '../quiz-assignations/quiz-assignations.st
       </button>
     </mat-dialog-actions>
   </form> `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssignationFormComponent implements OnInit {
   private data: QuizAssignation | undefined = inject(MAT_DIALOG_DATA);

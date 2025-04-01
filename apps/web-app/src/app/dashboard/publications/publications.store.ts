@@ -29,7 +29,7 @@ const initial: State = {
 };
 
 export const PublicationsStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(({ start, pageSize }, auth = inject(webStore.AuthStore)) => {
     const schoolId = computed(() => auth.schoolId());
     const end = computed(() => start() + (pageSize() - 1));

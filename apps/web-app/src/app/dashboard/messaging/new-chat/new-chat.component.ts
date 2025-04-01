@@ -6,9 +6,8 @@ import { User } from '@skooltrak/models';
 import { ButtonDirective, CardComponent } from '@skooltrak/ui';
 
 @Component({
-  selector: 'sk-new-chat',
-  standalone: true,
-  template: ` <sk-card>
+    selector: 'sk-new-chat',
+    template: ` <sk-card>
     <div class="flex items-start justify-between" header>
       <h3
         class=" font-title sticky top-0 flex pb-3 text-2xl font-bold leading-tight tracking-tight text-gray-700 dark:text-white"
@@ -30,14 +29,14 @@ import { ButtonDirective, CardComponent } from '@skooltrak/ui';
       </button>
     </div>
   </sk-card>`,
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CardComponent,
-    TranslateModule,
-    ButtonDirective,
-    ReactiveFormsModule,
-  ],
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CardComponent,
+        TranslateModule,
+        ButtonDirective,
+        ReactiveFormsModule,
+    ]
 })
 export class NewChatComponent {
   public readonly usersControl = new FormControl<Partial<User>[]>([], {

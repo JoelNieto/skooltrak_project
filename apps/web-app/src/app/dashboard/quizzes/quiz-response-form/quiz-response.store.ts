@@ -14,7 +14,7 @@ const initial: State = {
   previewMode: false,
 };
 export const QuizResponseStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withMethods((state, supabase = inject(SupabaseService)) => {
     async function getQuiz(id: string): Promise<void> {
       patchState(state, { loading: true });

@@ -38,36 +38,35 @@ import { PublicationFormComponent } from '../../components/publication/publicati
 import { NewsStore } from './news.store';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-news',
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    TranslateModule,
-    IonFab,
-    IonIcon,
-    IonFabButton,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
-    IonFooter,
-    IonRow,
-    IonCol,
-    DatePipe,
-    IonChip,
-    IonAvatar,
-    PictureComponent,
-    IonLabel,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonSearchbar,
-    IonItem,
-  ],
-  providers: [NewsStore],
-  styles: `
+    selector: 'skooltrak-news',
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        TranslateModule,
+        IonFab,
+        IonIcon,
+        IonFabButton,
+        IonCard,
+        IonCardHeader,
+        IonCardContent,
+        IonCardTitle,
+        IonFooter,
+        IonRow,
+        IonCol,
+        DatePipe,
+        IonChip,
+        IonAvatar,
+        PictureComponent,
+        IonLabel,
+        IonInfiniteScroll,
+        IonInfiniteScrollContent,
+        IonSearchbar,
+        IonItem,
+    ],
+    providers: [NewsStore],
+    styles: `
     .text-preview {
       height: 2.5rem;
       text-overflow: ellipsis;
@@ -81,7 +80,7 @@ import { NewsStore } from './news.store';
       white-space: nowrap;
     }
   `,
-  template: `<ion-header class="ion-no-border">
+    template: `<ion-header class="ion-no-border">
       <ion-toolbar color="primary"
         ><ion-title size="large">{{ 'NEWS.TITLE' | translate }}</ion-title>
       </ion-toolbar>
@@ -132,7 +131,7 @@ import { NewsStore } from './news.store';
           </ion-fab-button>
         </ion-fab>
       }
-    </ion-content>`,
+    </ion-content>`
 })
 export class NewsPage {
   private modalCtrl = inject(ModalController);

@@ -1,5 +1,4 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { NgStyle } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -11,16 +10,13 @@ import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
 
 @Component({
   selector: 'sk-image-cropper',
-  standalone: true,
   imports: [
     ImageCropperModule,
     MatButtonModule,
     MatDialogModule,
-    NgStyle,
     TranslateModule,
     MatIcon,
   ],
-
   template: ` <h2 mat-dialog-title>
       {{ 'IMAGE_CROPPER.TITLE' | translate }}
     </h2>

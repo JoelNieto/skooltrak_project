@@ -33,29 +33,28 @@ import { PictureComponent } from '../../components/picture/picture.component';
 import { ChatStore } from './chat.store';
 
 @Component({
-  standalone: true,
-  providers: [ChatStore, LoadingController],
-  imports: [
-    PictureComponent,
-    ReactiveFormsModule,
-    TranslateModule,
-    IonHeader,
-    IonToolbar,
-    IonChip,
-    IonBackButton,
-    IonButtons,
-    IonTitle,
-    IonAvatar,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonLabel,
-    IonList,
-    IonFooter,
-    IonItem,
-    IonInput,
-  ],
-  styles: `
+    providers: [ChatStore, LoadingController],
+    imports: [
+        PictureComponent,
+        ReactiveFormsModule,
+        TranslateModule,
+        IonHeader,
+        IonToolbar,
+        IonChip,
+        IonBackButton,
+        IonButtons,
+        IonTitle,
+        IonAvatar,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonLabel,
+        IonList,
+        IonFooter,
+        IonItem,
+        IonInput,
+    ],
+    styles: `
      ::ng-deep p {
       margin: 0;
     }
@@ -89,7 +88,7 @@ import { ChatStore } from './chat.store';
       margin-bottom: 0;
     }
   `,
-  template: `<ion-header>
+    template: `<ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button
@@ -155,7 +154,7 @@ import { ChatStore } from './chat.store';
             />
           </ion-toolbar></form
       ></ion-toolbar>
-    </ion-footer>`,
+    </ion-footer>`
 })
 export class ChatPage implements OnInit {
   private route = inject(ActivatedRoute);

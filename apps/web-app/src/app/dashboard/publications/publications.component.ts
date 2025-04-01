@@ -23,10 +23,9 @@ import { PublicationItemComponent } from '../../components/publication-item/publ
 import { PublicationsStore } from './publications.store';
 
 @Component({
-  selector: 'sk-publications',
-  standalone: true,
-  providers: [PublicationsStore],
-  template: `<h1 class="mat-display-medium">
+    selector: 'sk-publications',
+    providers: [PublicationsStore],
+    template: `<h1 class="mat-display-medium">
       {{ 'WELCOME' | translate: { name: auth.user()?.first_name } }}
     </h1>
     <div class="flex gap-6 w-full">
@@ -124,20 +123,20 @@ import { PublicationsStore } from './publications.store';
       </div>
       <div class="w-72"></div>
     </div> `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatCardModule,
-    TranslateModule,
-    ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    PublicationItemComponent,
-  ],
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        MatCardModule,
+        TranslateModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        PublicationItemComponent,
+    ]
 })
 export class PublicationsComponent implements OnInit {
   public auth = inject(webStore.AuthStore);

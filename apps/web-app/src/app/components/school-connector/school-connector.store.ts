@@ -13,7 +13,7 @@ type State = {
 };
 
 export const SchoolConnectorStore = signalStore(
-  withState({ role: undefined, loading: false } as State),
+  { protectedState: false }, withState({ role: undefined, loading: false } as State),
   withMethods(
     (
       { role, ...state },

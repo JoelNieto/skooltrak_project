@@ -17,7 +17,7 @@ const initialState: State = {
 };
 
 export const AssignmentDetailsStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withMethods(
     (
       state,

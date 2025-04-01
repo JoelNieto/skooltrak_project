@@ -14,20 +14,19 @@ import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 
 @Component({
-  selector: 'sk-sign-up',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatCardModule,
-    TranslateModule,
-    NgOptimizedImage,
-    MatButton,
-    MatInput,
-    MatFormField,
-    MatLabel,
-    RouterLink,
-  ],
-  template: `<div
+    selector: 'sk-sign-up',
+    imports: [
+        ReactiveFormsModule,
+        MatCardModule,
+        TranslateModule,
+        NgOptimizedImage,
+        MatButton,
+        MatInput,
+        MatFormField,
+        MatLabel,
+        RouterLink,
+    ],
+    template: `<div
     class="flex min-h-screen w-screen flex-col items-center justify-center px-8 dark:bg-gray-700"
   >
     <a
@@ -132,8 +131,7 @@ import { webStore } from '@skooltrak/store';
       </mat-card-footer>
     </mat-card>
   </div> `,
-
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignUpComponent {
   private auth = inject(webStore.AuthStore);

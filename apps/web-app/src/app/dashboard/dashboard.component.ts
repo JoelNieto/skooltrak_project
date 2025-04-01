@@ -32,27 +32,26 @@ import { SchoolSelectorComponent } from '../components/school-selector/school-se
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'sk-dashboard',
-  standalone: true,
-  imports: [
-    AvatarComponent,
-    TranslateModule,
-    RouterOutlet,
-    NgClass,
-    RouterLink,
-    RouterLinkActive,
-    MatListModule,
-    MatMenuModule,
-    MatIconModule,
-    MatSnackBarModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    NgOptimizedImage,
-    MatTooltipModule,
-  ],
-  providers: [],
-  template: `
+    selector: 'sk-dashboard',
+    imports: [
+        AvatarComponent,
+        TranslateModule,
+        RouterOutlet,
+        NgClass,
+        RouterLink,
+        RouterLinkActive,
+        MatListModule,
+        MatMenuModule,
+        MatIconModule,
+        MatSnackBarModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        NgOptimizedImage,
+        MatTooltipModule,
+    ],
+    providers: [],
+    template: `
     @if (isMobile()) {
       <mat-toolbar>
         <div class="flex items-center">
@@ -242,8 +241,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
   public auth = inject(webStore.AuthStore);

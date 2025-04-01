@@ -3,7 +3,7 @@ import { Component, inject, input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SupabaseService } from '@skooltrak/store';
 import { ConfirmationService } from '@skooltrak/ui';
@@ -14,13 +14,11 @@ import { AssignmentStudentsWorkComponent } from '../students-work/assignment-stu
 import { AssignmentDetailsStore } from './assignment-details.store';
 
 @Component({
-  standalone: true,
   selector: 'sk-assignment-details',
   imports: [
     DatePipe,
     TranslateModule,
     MatButtonModule,
-    RouterOutlet,
     MatTabsModule,
     MatChipsModule,
     RouterLink,

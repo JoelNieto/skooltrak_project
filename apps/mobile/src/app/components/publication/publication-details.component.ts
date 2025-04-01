@@ -22,27 +22,26 @@ import { PublicationObject } from '@skooltrak/models';
 import { PictureComponent } from '../picture/picture.component';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-publication-details',
-  imports: [
-    TranslateModule,
-    IonContent,
-    IonHeader,
-    IonButtons,
-    IonText,
-    IonButton,
-    IonTitle,
-    IonToolbar,
-    IonList,
-    IonItem,
-    DatePipe,
-    IonIcon,
-    IonChip,
-    IonAvatar,
-    IonLabel,
-    PictureComponent,
-  ],
-  template: `
+    selector: 'skooltrak-publication-details',
+    imports: [
+        TranslateModule,
+        IonContent,
+        IonHeader,
+        IonButtons,
+        IonText,
+        IonButton,
+        IonTitle,
+        IonToolbar,
+        IonList,
+        IonItem,
+        DatePipe,
+        IonIcon,
+        IonChip,
+        IonAvatar,
+        IonLabel,
+        PictureComponent,
+    ],
+    template: `
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>{{ 'PUBLICATIONS.DETAILS' | translate }}</ion-title>
@@ -81,7 +80,7 @@ import { PictureComponent } from '../picture/picture.component';
         <p [innerText]="publication.body"></p>
       </ion-text>
     </ion-content>
-  `,
+  `
 })
 export class PublicationsDetailsComponent {
   public publication!: PublicationObject;

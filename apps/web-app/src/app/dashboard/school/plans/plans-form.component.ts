@@ -17,20 +17,19 @@ import { v4 } from 'uuid';
 import { SchoolPlansStore } from './plans.store';
 
 @Component({
-  selector: 'sk-admin-plans-form',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    TranslateModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatProgressBar,
-    MatIcon,
-  ],
-  template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
+    selector: 'sk-admin-plans-form',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        TranslateModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatProgressBar,
+        MatIcon,
+    ],
+    template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
     @if (store.loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
@@ -81,7 +80,7 @@ import { SchoolPlansStore } from './plans.store';
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </mat-dialog-actions>
-  </form>`,
+  </form>`
 })
 export class StudyPlansFormComponent implements OnInit {
   public dialogRef = inject(DialogRef<Partial<StudyPlan>>);

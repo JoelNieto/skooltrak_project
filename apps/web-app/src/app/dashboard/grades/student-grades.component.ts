@@ -7,16 +7,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { StudentGradesStore } from './student-grades.store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-student-grades',
-  imports: [
-    MatSelectModule,
-    MatFormFieldModule,
-    TranslateModule,
-    ReactiveFormsModule,
-  ],
-  providers: [StudentGradesStore],
-  template: `<div class="mb-4 mt-2 flex justify-between">
+    selector: 'sk-student-grades',
+    imports: [
+        MatSelectModule,
+        MatFormFieldModule,
+        TranslateModule,
+        ReactiveFormsModule,
+    ],
+    providers: [StudentGradesStore],
+    template: `<div class="mb-4 mt-2 flex justify-between">
     <mat-form-field class="w-64">
       <mat-label>{{ 'PERIODS.TITLE' | translate }}</mat-label>
       <mat-select [formControl]="periodControl">
@@ -25,7 +24,7 @@ import { StudentGradesStore } from './student-grades.store';
         }
       </mat-select>
     </mat-form-field>
-  </div> `,
+  </div> `
 })
 export class StudentGradesComponent {
   public store = inject(StudentGradesStore);

@@ -26,37 +26,36 @@ import { PictureComponent } from '../picture/picture.component';
 import { UsersModalStore } from './users-modal.store';
 
 @Component({
-  standalone: true,
-  providers: [UsersModalStore, ModalController],
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonButton,
-    IonContent,
-    IonSearchbar,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonSkeletonText,
-    IonLabel,
-    IonAvatar,
-    IonText,
-    LoadingComponent,
-    TranslateModule,
-    PictureComponent,
-    ReactiveFormsModule,
-  ],
-  styles: [
-    `
+    providers: [UsersModalStore, ModalController],
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonButtons,
+        IonButton,
+        IonContent,
+        IonSearchbar,
+        IonList,
+        IonItem,
+        IonThumbnail,
+        IonSkeletonText,
+        IonLabel,
+        IonAvatar,
+        IonText,
+        LoadingComponent,
+        TranslateModule,
+        PictureComponent,
+        ReactiveFormsModule,
+    ],
+    styles: [
+        `
       ion-skeleton-text {
         --border-radius: 9999px;
         --background: var(--ion-color-light);
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>{{ 'CHAT.NEW_CHAT' | translate }}</ion-title>
@@ -101,7 +100,7 @@ import { UsersModalStore } from './users-modal.store';
         }
       </ion-list>
     </ion-content>
-  `,
+  `
 })
 export class UsersModalComponent implements OnInit {
   public readonly modalCtrl = inject(ModalController);

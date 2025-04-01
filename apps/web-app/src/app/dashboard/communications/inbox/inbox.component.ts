@@ -10,19 +10,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'sk-inbox',
-  standalone: true,
-  imports: [
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    RouterOutlet,
-    RouterLink,
-    FileUrlPipe,
-    MatButtonModule,
-    TranslateModule,
-  ],
-  template: ` <mat-sidenav-container class="h-[82vh]">
+    selector: 'sk-inbox',
+    imports: [
+        MatSidenavModule,
+        MatListModule,
+        MatIconModule,
+        RouterOutlet,
+        RouterLink,
+        FileUrlPipe,
+        MatButtonModule,
+        TranslateModule,
+    ],
+    template: ` <mat-sidenav-container class="h-[82vh]">
     <mat-sidenav opened mode="side">
       <button mat-stroked-button class="self-center">
         <mat-icon>add_comment</mat-icon>
@@ -53,8 +52,8 @@ import { TranslateModule } from '@ngx-translate/core';
       <router-outlet />
     </mat-sidenav-content>
   </mat-sidenav-container>`,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InboxComponent {
   public store = inject(webStore.MessagesStore);

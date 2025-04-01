@@ -27,7 +27,7 @@ const initialState: State = {
 };
 
 export const SchoolFormStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withMethods(
     (
       { school, ...state },

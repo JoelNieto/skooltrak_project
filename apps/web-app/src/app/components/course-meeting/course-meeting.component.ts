@@ -9,10 +9,9 @@ import { webStore } from '@skooltrak/store';
 declare let JitsiMeetExternalAPI: any;
 
 @Component({
-  selector: 'sk-course-meeting',
-  standalone: true,
-  imports: [TranslateModule, MatDialogModule, MatButtonModule],
-  template: `
+    selector: 'sk-course-meeting',
+    imports: [TranslateModule, MatDialogModule, MatButtonModule],
+    template: `
     <h2 mat-dialog-title>
       {{ 'MEETING.TITLE' | translate }}
     </h2>
@@ -26,7 +25,7 @@ declare let JitsiMeetExternalAPI: any;
       </button>
     </mat-dialog-actions>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CourseMeetingComponent implements OnInit {
   private options: unknown;

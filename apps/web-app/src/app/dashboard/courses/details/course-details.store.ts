@@ -21,7 +21,7 @@ const initialState: State = {
 };
 
 export const CourseDetailsStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(({ course }) => ({
     courseId: computed(() => course()?.id),
     planId: computed(() => course()?.plan_id),

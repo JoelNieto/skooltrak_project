@@ -26,7 +26,7 @@ const initialState: State = {
 };
 
 export const GradesFormStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withMethods(
     (
       { ...state },

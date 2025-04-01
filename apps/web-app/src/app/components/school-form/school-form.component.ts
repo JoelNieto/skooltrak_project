@@ -34,23 +34,22 @@ import { AvatarComponent } from '../avatar/avatar.component';
 import { SchoolFormStore } from './school-form.store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-school-form',
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButton,
-    AvatarComponent,
-    TranslateModule,
-    MatIcon,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatSelect,
-    MatOption,
-  ],
-  providers: [SchoolFormStore],
-  template: ` <form [formGroup]="form" (ngSubmit)="saveChanges()">
+    selector: 'sk-school-form',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButton,
+        AvatarComponent,
+        TranslateModule,
+        MatIcon,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatSelect,
+        MatOption,
+    ],
+    providers: [SchoolFormStore],
+    template: ` <form [formGroup]="form" (ngSubmit)="saveChanges()">
     <h2 mat-dialog-title>
       {{ 'SCHOOL.INFO' | translate }}
     </h2>
@@ -130,7 +129,7 @@ import { SchoolFormStore } from './school-form.store';
       </button>
     </mat-dialog-actions>
   </form>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SchoolFormComponent implements OnInit {
   public store = inject(SchoolFormStore);

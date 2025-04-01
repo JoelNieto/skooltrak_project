@@ -15,19 +15,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 
 @Component({
-  selector: 'sk-sign-in',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    TranslateModule,
-    NgOptimizedImage,
-    MatButtonModule,
-    RouterLink,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
-  template: `<div class="w-min-screen flex h-screen">
+    selector: 'sk-sign-in',
+    imports: [
+        ReactiveFormsModule,
+        TranslateModule,
+        NgOptimizedImage,
+        MatButtonModule,
+        RouterLink,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+    ],
+    template: `<div class="w-min-screen flex h-screen">
     <section class="w-full flex-none font-sans  md:w-1/2 lg:w-1/3">
       <div
         class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0"
@@ -106,15 +105,15 @@ import { webStore } from '@skooltrak/store';
     </section>
     <div class="bg grow"></div>
   </div> `,
-  styles: [
-    `
+    styles: [
+        `
       .bg {
         background-image: url('/assets/images/sign-in-bg.jpg');
         background-size: cover;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignInComponent {
   private auth = inject(webStore.AuthStore);

@@ -3,7 +3,11 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, ViewContainerRef } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,7 +17,6 @@ import { MatTableModule } from '@angular/material/table';
 import { patchState } from '@ngrx/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { ClassGroup } from '@skooltrak/models';
-import { CardComponent } from '@skooltrak/ui';
 
 import { UserChipComponent } from '../../../components/user-chip/user-chip.component';
 import { SchoolGroupsFormComponent } from './groups-form.component';
@@ -21,10 +24,8 @@ import { SchoolGroupsStore } from './groups.store';
 
 @Component({
   selector: 'sk-admin-groups-list',
-  standalone: true,
   imports: [
     TranslateModule,
-    CardComponent,
     MatPaginatorModule,
     MatButton,
     DatePipe,

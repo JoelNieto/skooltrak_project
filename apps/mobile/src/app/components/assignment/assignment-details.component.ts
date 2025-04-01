@@ -25,29 +25,28 @@ import { addIcons } from 'ionicons';
 import { cloudUploadOutline } from 'ionicons/icons';
 
 @Component({
-  selector: 'skooltrak-assignment-details',
-  standalone: true,
-  imports: [
-    IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonFooter,
-    IonText,
-    TranslateModule,
-    IonList,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonItem,
-    IonLabel,
-    IonNote,
-    DatePipe,
-    IonButton,
-    IonButtons,
-    IonIcon,
-  ],
-  template: ` <ion-header translucent="true" class="ion-no-border">
+    selector: 'skooltrak-assignment-details',
+    imports: [
+        IonContent,
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonFooter,
+        IonText,
+        TranslateModule,
+        IonList,
+        IonGrid,
+        IonRow,
+        IonCol,
+        IonItem,
+        IonLabel,
+        IonNote,
+        DatePipe,
+        IonButton,
+        IonButtons,
+        IonIcon,
+    ],
+    template: ` <ion-header translucent="true" class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="end">
           <ion-button (click)="modalCtrl.dismiss()" color="primary">
@@ -133,7 +132,7 @@ import { cloudUploadOutline } from 'ionicons/icons';
           </ion-grid>
         </ion-toolbar>
       </ion-footer>
-    }`,
+    }`
 })
 export class AssignmentDetailsPage {
   public assignment!: AssignmentView;

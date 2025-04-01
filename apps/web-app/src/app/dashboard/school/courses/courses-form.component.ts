@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
@@ -27,12 +26,10 @@ import { PictureComponent } from '../../../components/picture/picture.component'
 import { SchoolCoursesStore } from './courses.store';
 
 @Component({
-  standalone: true,
   imports: [
     MatDialogModule,
     TranslateModule,
     ReactiveFormsModule,
-    NgOptimizedImage,
     PictureComponent,
     MatFormFieldModule,
     MatInputModule,

@@ -32,7 +32,7 @@ const initialState: State = {
 };
 
 export const AuthStore = signalStore(
-  { providedIn: 'root' },
+  { providedIn: 'root', protectedState: false },
   withState(initialState),
   withComputed(({ profiles, user, schoolId }) => {
     const userId = computed(() => user()?.id);

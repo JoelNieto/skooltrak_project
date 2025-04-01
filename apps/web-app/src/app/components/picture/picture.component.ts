@@ -3,16 +3,15 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from '@skooltrak/store';
 
 @Component({
-  selector: 'sk-picture',
-  standalone: true,
-  imports: [],
-  template: `<img [attr.src]="src()" class="rounded shadow h-full" />`,
-  styles: `
+    selector: 'sk-picture',
+    imports: [],
+    template: `<img [attr.src]="src()" class="rounded shadow h-full" />`,
+    styles: `
       :host {
         display: block;
       }
     `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PictureComponent {
   public bucket = input.required<string>();

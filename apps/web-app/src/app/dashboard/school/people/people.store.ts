@@ -36,7 +36,7 @@ const initialState: State = {
 };
 
 export const SchoolPeopleStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       {

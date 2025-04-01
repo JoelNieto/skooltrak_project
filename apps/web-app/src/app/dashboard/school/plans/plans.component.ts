@@ -18,23 +18,22 @@ import { StudyPlansFormComponent } from './plans-form.component';
 import { SchoolPlansStore } from './plans.store';
 
 @Component({
-  selector: 'sk-school-study-plans',
-  standalone: true,
-  imports: [
-    TranslateModule,
-    MatPaginatorModule,
-    DatePipe,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatTableModule,
-    MatIconButton,
-    MatMenuModule,
-    MatSortModule,
-  ],
-  providers: [SchoolPlansStore, ConfirmationService],
-  template: `<div class="relative ">
+    selector: 'sk-school-study-plans',
+    imports: [
+        TranslateModule,
+        MatPaginatorModule,
+        DatePipe,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatTableModule,
+        MatIconButton,
+        MatMenuModule,
+        MatSortModule,
+    ],
+    providers: [SchoolPlansStore, ConfirmationService],
+    template: `<div class="relative ">
     <div class="flex justify-between items-baseline px-1">
       <mat-form-field class="w-full lg:w-72 ">
         <mat-label for="table-search">Search</mat-label>
@@ -118,7 +117,7 @@ import { SchoolPlansStore } from './plans.store';
       [showFirstLastButtons]="true"
       (page)="pageEvent($event)"
     />
-  </div>`,
+  </div>`
 })
 export class StudyPlansComponent {
   public store = inject(SchoolPlansStore);

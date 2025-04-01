@@ -12,19 +12,18 @@ import { getDay } from 'date-fns';
 import { ScheduleStore } from './schedule.store';
 
 @Component({
-  selector: 'sk-schedule',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    DatePipe,
-    MatChipsModule,
-    MatCardModule,
-    TranslateModule,
-    RouterLink,
-  ],
-  providers: [ScheduleStore],
-  template: `
+    selector: 'sk-schedule',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        DatePipe,
+        MatChipsModule,
+        MatCardModule,
+        TranslateModule,
+        RouterLink,
+    ],
+    providers: [ScheduleStore],
+    template: `
     <button
       mat-raised-button
       color="primary"
@@ -119,12 +118,12 @@ import { ScheduleStore } from './schedule.store';
       }
     </div>
   `,
-  styles: `
+    styles: `
     mat-card {
       @apply mb-2
     }
     `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleComponent {
   public store = inject(ScheduleStore);

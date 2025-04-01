@@ -21,23 +21,22 @@ import { TranslateModule } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-sign-up',
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonInput,
-    IonItem,
-    IonText,
-    IonButton,
-    RouterLink,
-    TranslateModule,
-    ReactiveFormsModule,
-  ],
-  template: `<ion-header translucent="true">
+    selector: 'skooltrak-sign-up',
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonInput,
+        IonItem,
+        IonText,
+        IonButton,
+        RouterLink,
+        TranslateModule,
+        ReactiveFormsModule,
+    ],
+    template: `<ion-header translucent="true">
       <ion-toolbar>
         <ion-title>{{ 'SIGN_UP.TITLE' | translate }}</ion-title>
       </ion-toolbar>
@@ -115,7 +114,7 @@ import { mobileStore } from '@skooltrak/store';
       <ion-button color="primary" fill="clear" routerLink="../sign-in">{{
         'SIGN_UP.SIGN_IN' | translate
       }}</ion-button>
-    </ion-content>`,
+    </ion-content>`
 })
 export class SignUpPage {
   private readonly auth = inject(mobileStore.AuthStore);

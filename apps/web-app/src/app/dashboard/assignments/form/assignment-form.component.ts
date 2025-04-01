@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -37,13 +36,11 @@ import { AssignmentFormStore } from './assignment-form.store';
 
 @Component({
   selector: 'sk-assignment-form',
-  standalone: true,
   imports: [
     TranslateModule,
     MatButton,
     MatIconModule,
     ReactiveFormsModule,
-    NgClass,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,

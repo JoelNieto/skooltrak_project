@@ -31,7 +31,7 @@ const initialState: State = {
   sortColumn: '',
 };
 export const SchoolSubjectsStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(
     (
       { start, pageSize, queryText, sortDirection, sortColumn },

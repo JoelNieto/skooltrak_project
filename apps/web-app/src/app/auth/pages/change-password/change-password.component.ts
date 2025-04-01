@@ -13,17 +13,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { webStore } from '@skooltrak/store';
 
 @Component({
-  selector: 'sk-change-password',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule,
-    TranslateModule,
-  ],
-  template: `<div class="flex flex-col items-center justify-center">
+    selector: 'sk-change-password',
+    imports: [
+        MatCardModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatInputModule,
+        MatFormFieldModule,
+        TranslateModule,
+    ],
+    template: `<div class="flex flex-col items-center justify-center">
     <mat-card class="w-full md:w-2/5 lg:w-3/5 xl:w-1/3 ">
       <mat-card-header>
         <mat-card-title>
@@ -76,8 +75,8 @@ import { webStore } from '@skooltrak/store';
       </mat-card-footer>
     </mat-card>
   </div>`,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangePasswordComponent {
   public form = new FormGroup({

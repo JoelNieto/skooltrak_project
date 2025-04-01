@@ -16,23 +16,22 @@ import { GradesFormComponent } from '../grades-form/grades-form.component';
 import { CourseGradesStore } from './course-grades.store';
 
 @Component({
-  standalone: true,
-  selector: 'sk-course-grades',
-  imports: [
-    TranslateModule,
-    MatIcon,
-    MatButton,
-    DialogModule,
-    ReactiveFormsModule,
-    GradeItemFormComponent,
-    MatFormField,
-    MatSelect,
-    MatLabel,
-    MatOption,
-    MatIconButton,
-  ],
-  styles: [
-    `
+    selector: 'sk-course-grades',
+    imports: [
+        TranslateModule,
+        MatIcon,
+        MatButton,
+        DialogModule,
+        ReactiveFormsModule,
+        GradeItemFormComponent,
+        MatFormField,
+        MatSelect,
+        MatLabel,
+        MatOption,
+        MatIconButton,
+    ],
+    styles: [
+        `
       th {
         width: 5.5rem;
       }
@@ -41,9 +40,9 @@ import { CourseGradesStore } from './course-grades.store';
         width: 8rem;
       }
     `,
-  ],
-  providers: [CourseGradesStore],
-  template: `
+    ],
+    providers: [CourseGradesStore],
+    template: `
     <div class="mb-4 mt-2 flex justify-between items-baseline">
       <mat-form-field class="w-64">
         <mat-label>{{ 'SELECT.SELECT_VALUE' | translate }}</mat-label>
@@ -109,7 +108,7 @@ import { CourseGradesStore } from './course-grades.store';
         </tbody>
       </table>
     </div>
-  `,
+  `
 })
 export class CourseGradesComponent implements OnInit {
   private courseStore = inject(CourseDetailsStore);

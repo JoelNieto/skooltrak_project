@@ -15,20 +15,19 @@ import { v4 } from 'uuid';
 import { SchoolPeriodsStore } from './periods.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatIcon,
-    MatProgressBar,
-  ],
-  providers: [],
-  template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
+    imports: [
+        MatDialogModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatIcon,
+        MatProgressBar,
+    ],
+    providers: [],
+    template: `<form [formGroup]="form" (ngSubmit)="saveChanges()">
     @if (store.loading()) {
       <mat-progress-bar mode="indeterminate" />
     }
@@ -71,7 +70,7 @@ import { SchoolPeriodsStore } from './periods.store';
         {{ 'SAVE_CHANGES' | translate }}
       </button>
     </mat-dialog-actions>
-  </form> `,
+  </form> `
 })
 export class SchoolPeriodsFormComponent implements OnInit {
   public data: Period | undefined = inject(MAT_DIALOG_DATA);

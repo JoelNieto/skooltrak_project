@@ -17,17 +17,16 @@ import {
 } from 'ionicons/icons';
 
 @Component({
-  selector: 'skooltrak-tabs',
-  standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, TranslateModule],
-  styles: [
-    `
+    selector: 'skooltrak-tabs',
+    imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, TranslateModule],
+    styles: [
+        `
       ion-tab-bar {
         --border: 0;
       }
     `,
-  ],
-  template: `<ion-tabs>
+    ],
+    template: `<ion-tabs>
     <ion-tab-bar id="app-tab-bar" slot="bottom">
       <ion-tab-button tab="news">
         <ion-icon aria-hidden="true" name="newspaper-outline" />
@@ -50,7 +49,7 @@ import {
         {{ 'PROFILE.NAME' | translate }}
       </ion-tab-button>
     </ion-tab-bar>
-  </ion-tabs> `,
+  </ion-tabs> `
 })
 export class TabsPage {
   constructor() {

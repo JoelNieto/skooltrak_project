@@ -22,19 +22,18 @@ import { UserChipComponent } from '../user-chip/user-chip.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'sk-publication-item',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    UserChipComponent,
-    MatIconModule,
-    MatMenuModule,
-    MatChipsModule,
-    RouterLink,
-    TranslateModule,
-    DatePipe,
-  ],
-  template: ` <mat-card>
+    selector: 'sk-publication-item',
+    imports: [
+        MatCardModule,
+        UserChipComponent,
+        MatIconModule,
+        MatMenuModule,
+        MatChipsModule,
+        RouterLink,
+        TranslateModule,
+        DatePipe,
+    ],
+    template: ` <mat-card>
     <mat-card-header>
       <div class="flex justify-between w-full">
         <div class="flex items-center gap-2">
@@ -67,8 +66,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
       <p class="mat-body py-4" [innerText]="post().body"></p>
     </mat-card-content>
   </mat-card>`,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PublicationItemComponent {
   public post = input.required<Publication>();

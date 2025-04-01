@@ -39,34 +39,33 @@ import { SchoolConnectorPage } from '../school/school-connector.page';
 import { ProfileEditPage } from './profile-edit.page';
 
 @Component({
-  standalone: true,
-  selector: 'skooltrak-profile',
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonSearchbar,
-    IonContent,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonText,
-    IonAvatar,
-    IonList,
-    IonListHeader,
-    IonIcon,
-    PictureComponent,
-    TranslateModule,
-    IonLabel,
-    IonItem,
-    IonNote,
-    IonButton,
-    IonButtons,
-    DatePipe,
-    SchoolConnectorPage,
-  ],
-  styles: [
-    `
+    selector: 'skooltrak-profile',
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonSearchbar,
+        IonContent,
+        IonGrid,
+        IonRow,
+        IonCol,
+        IonText,
+        IonAvatar,
+        IonList,
+        IonListHeader,
+        IonIcon,
+        PictureComponent,
+        TranslateModule,
+        IonLabel,
+        IonItem,
+        IonNote,
+        IonButton,
+        IonButtons,
+        DatePipe,
+        SchoolConnectorPage,
+    ],
+    styles: [
+        `
       ion-avatar {
         height: 3.5rem;
         width: 3.5rem;
@@ -77,8 +76,8 @@ import { ProfileEditPage } from './profile-edit.page';
         }
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <ion-header class="ion-no-border">
       <ion-toolbar color="primary">
         <ion-title size="large">
@@ -157,7 +156,7 @@ import { ProfileEditPage } from './profile-edit.page';
         >{{ 'SIGN_OUT.TITLE' | translate }}</ion-button
       >
     </ion-content>
-  `,
+  `
 })
 export class ProfilePage {
   public auth = inject(mobileStore.AuthStore);

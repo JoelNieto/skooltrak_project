@@ -17,7 +17,7 @@ type State = {
 };
 
 export const SchoolConnectorStore = signalStore(
-  withState({ loading: false, role: RoleEnum.Student } as State),
+  { protectedState: false }, withState({ loading: false, role: RoleEnum.Student } as State),
   withMethods(
     (
       { role, ...state },

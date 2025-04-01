@@ -31,7 +31,7 @@ const initialState: State = {
 };
 
 export const MessagesStore = signalStore(
-  { providedIn: 'root' },
+  { providedIn: 'root', protectedState: false },
   withState(initialState),
   withComputed(({ chats, selectedId }, auth = inject(AuthStore)) => ({
     userId: computed(() => auth.userId()),

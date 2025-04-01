@@ -23,32 +23,31 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { CourseAssignmentStore } from './course-assignments.store';
 
 @Component({
-  standalone: true,
-  imports: [
-    IonTitle,
-    IonContent,
-    IonHeader,
-    IonToolbar,
-    DatePipe,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonNote,
-    DatePipe,
-    AssignmentDetailsPage,
-    LoadingComponent,
-  ],
-  selector: 'skooltrak-course-assignments',
-  styles: `
+    imports: [
+        IonTitle,
+        IonContent,
+        IonHeader,
+        IonToolbar,
+        DatePipe,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonNote,
+        DatePipe,
+        AssignmentDetailsPage,
+        LoadingComponent,
+    ],
+    selector: 'skooltrak-course-assignments',
+    styles: `
     ion-toolbar {
       --ion-safe-area-top: 0;
     }
   `,
-  providers: [CourseAssignmentStore],
-  template: `<ion-header class="ion-no-border"
+    providers: [CourseAssignmentStore],
+    template: `<ion-header class="ion-no-border"
       ><ion-toolbar>
         <ion-buttons slot="start">
           <ion-button color="secondary" (click)="store.previousWeek()"
@@ -81,7 +80,7 @@ import { CourseAssignmentStore } from './course-assignments.store';
           }
         }
       </ion-list>
-    </ion-content> `,
+    </ion-content> `
 })
 export class CourseAssignmentsPage {
   public store = inject(CourseAssignmentStore);

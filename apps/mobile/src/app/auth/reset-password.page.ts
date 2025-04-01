@@ -15,22 +15,21 @@ import { TranslateModule } from '@ngx-translate/core';
 import { mobileStore } from '@skooltrak/store';
 
 @Component({
-  standalone: true,
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonInput,
-    IonText,
-    IonItem,
-    IonButton,
-    RouterLink,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
-  selector: 'skooltrak-reset-password',
-  template: `<ion-header translucent="true">
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonContent,
+        IonInput,
+        IonText,
+        IonItem,
+        IonButton,
+        RouterLink,
+        ReactiveFormsModule,
+        TranslateModule,
+    ],
+    selector: 'skooltrak-reset-password',
+    template: `<ion-header translucent="true">
       <ion-toolbar>
         <ion-title color="primary" size="large">{{
           'RESET_PASSWORD.TITLE' | translate
@@ -71,7 +70,7 @@ import { mobileStore } from '@skooltrak/store';
       <ion-button color="primary" fill="clear" routerLink="../sign-in">{{
         'SIGN_UP.SIGN_IN' | translate
       }}</ion-button>
-    </ion-content> `,
+    </ion-content> `
 })
 export class ResetPasswordPage {
   private auth = inject(mobileStore.AuthStore);

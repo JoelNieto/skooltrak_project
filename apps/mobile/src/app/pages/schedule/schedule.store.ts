@@ -26,7 +26,7 @@ const initialState: State = {
 };
 
 export const ScheduleStore = signalStore(
-  withState(initialState),
+  { protectedState: false }, withState(initialState),
   withComputed(({ date }) => ({
     endDate: computed(() => format(addDays(new Date(date()), 1), 'yyyy-MM-dd')),
   })),

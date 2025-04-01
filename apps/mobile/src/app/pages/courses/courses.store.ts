@@ -21,7 +21,7 @@ type State = {
 };
 
 export const CoursesStore = signalStore(
-  withState({
+  { protectedState: false }, withState({
     loading: false,
     courses: [],
     selectedId: undefined,

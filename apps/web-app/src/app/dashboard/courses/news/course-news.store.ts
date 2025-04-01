@@ -25,7 +25,7 @@ type State = {
 const initial: State = { loading: false, publications: [], error: false };
 
 export const CourseNewsStore = signalStore(
-  withState(initial),
+  { protectedState: false }, withState(initial),
   withComputed(
     (
       _,

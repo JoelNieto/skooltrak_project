@@ -40,9 +40,7 @@ export class PictureComponent {
       () => {
         const bucket = this.bucket();
         if (bucket) {
-          this.src.set(
-            this.supabase.getFileURL(this.fileName(), bucket).data.publicUrl,
-          );
+          this.src.set(this.supabase.getFileURL(this.fileName(), bucket));
         } else {
           this.src.set(this.fileName());
         }
